@@ -1,7 +1,7 @@
-<!-- templates/gallery.html -->
 {% extends 'base.html' %}
 
-{% block title %}Gallery{% endblock %}
+{% block title %}My Gallery{% endblock %}
+{% block head %}My Gallery{% endblock %}
 
 {% block content %}
 <section id="gallery">
@@ -9,7 +9,8 @@
     <div class="gallery-container">
         {% for item in gallery_data %}
         <div class="gallery-item">
-            <img src="{{ image_path }}{{ item.image_name }}" alt="{{ item.title }}" />
+            <img src="{{ image_path }}{{ item.image_name }}" alt="{{ item.title }}" class="gallery-image"
+                onclick="openModal('{{ image_path }}{{ item.image_name }}', '{{ item.title }}', '{{ item.description }}')" />
             <h3>{{ item.title }}</h3>
             <p>{{ item.description }}</p>
         </div>
@@ -19,4 +20,5 @@
 
 <!-- Link to the external CSS file for the gallery -->
 <link rel="stylesheet" href="{{ url_for('static', filename='css/gallery.css') }}" />
+
 {% endblock %}

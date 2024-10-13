@@ -1,0 +1,35 @@
+# Python
+*.pyc
+__pycache__/
+
+# Virtual Environment
+venv/
+env/
+.env
+
+# Flask instance folder
+instance/
+
+# Config files
+config.py
+
+# Pytest
+.cache
+*.cover
+*.log
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# VSCode
+.vscode/
+
+# PyCharm
+.idea/
+
+# Miscellaneous
+.DS_Store
+*.sqlite3
+*.db
+*.egg-info/
+*.egg

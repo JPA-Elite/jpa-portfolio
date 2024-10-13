@@ -6,41 +6,68 @@
 {% block content %}
 <section id="portfolio" class="project-intro">
     <div class="project-image">
-        <img src="{{ profile_image }}" alt="Profile Image" />
+        <img src="{{ profile_image }}" alt="Profile Image"
+            onclick="openModal('{{ profile_image }}', 'My Profile', 'My name is Joshua Algadipe, 23 years old from Vallehermoso, Negros Oriental. <br>I\'m an introvert and not great at starting conversations, <br>so feel free to message me first—let\'s chat! I\'m currently working as a software engineer,<br> and I have big goals for the future, aiming to build wealth and achieve success.')" />
     </div>
     <div class="project-details">
-        <h2>Joshua Algadipe</h2>
-        <p>
-            I have developed extensive software expertise through diverse
-            roles in different environments.
-        </p>
-        <p>
-            I am highly adaptable to a variety of technologies, quickly
-            understanding and applying them to meet the needs of growing
-            businesses.
-        </p>
-        <p>
-            I'm eager to share my experience and skills to help further drive
-            success and innovation.
-        </p>
+        <h3>Summary:</h3>
+        <p>I have developed extensive software expertise through diverse roles in different environments.</p>
+        <p>I am highly adaptable to a variety of technologies, quickly understanding and applying them to meet the needs
+            of growing businesses.</p>
+        <p>I'm eager to share my experience and skills to help further drive success and innovation.</p>
+        <h3>Key Projects:</h3>
+        <ul>
+            <li>
+                <b>Project A:</b>
+                <ul>
+                    <li>Description: Developed a web application using React and Node.js.</li>
+                    <li>Key Technologies: React, Node.js, MongoDB.</li>
+                </ul>
+            </li>
+            <li>
+                <b>Project B:</b>
+                <ul>
+                    <li>Description: Built a mobile application that helps users track their fitness goals.</li>
+                    <li>Key Technologies: Flutter, Firebase.</li>
+                </ul>
+            </li>
+            <li>
+                <b>Project C:</b>
+                <ul>
+                    <li>Description: Created an e-commerce platform with a responsive design.</li>
+                    <li>Key Technologies: HTML, CSS, JavaScript, PHP, MySQL.</li>
+                </ul>
+            </li>
+        </ul>
     </div>
 </section>
 
 <section id="about">
     <h2>About Me</h2>
-    <p>
-        I am a passionate software developer with a knack for
-        problem-solving and a strong foundation in programming languages.
-    </p>
-    <p>
-        With experience in both front-end and back-end development, I enjoy
-        creating user-friendly applications that provide meaningful
-        experiences.
-    </p>
-    <p>
-        My goal is to leverage technology to create solutions that make
-        people's lives easier and more enjoyable.
-    </p>
+    <p>Here are some highlights about me and my skills:</p>
+    <ul>
+        <li>
+            <b>Passionate Software Developer:</b>
+            <ul>
+                <li>I have a strong foundation in programming and problem-solving.</li>
+                <li>I enjoy creating solutions that make people's lives easier.</li>
+            </ul>
+        </li>
+        <li>
+            <b>Front-end & Back-end Development:</b>
+            <ul>
+                <li>I have experience in both front-end and back-end development.</li>
+                <li>Creating user-friendly applications is my forte.</li>
+            </ul>
+        </li>
+        <li>
+            <b>Goal-oriented:</b>
+            <ul>
+                <li>My aim is to leverage technology to build meaningful experiences.</li>
+                <li>I’m always eager to learn new technologies and adapt to evolving environments.</li>
+            </ul>
+        </li>
+    </ul>
 </section>
 
 <section id="resume">
@@ -48,53 +75,70 @@
     <p>Here are some highlights from my professional experience:</p>
     <ul>
         <li>
-            Electrical & Electronic Repair Service, Cabulihan, Vallehermoso,
-            Negros Oriental (2019 - 2020): Fixed broken electronics and
-            appliances.
+            Electrical & Electronic Repair Service, Cabulihan, Vallehermoso, Negros Oriental (2019 - 2020)
+            <ul>
+                <li>Fixed broken electronics and appliances.</li>
+            </ul>
         </li>
         <li>
-            Business Intern, Vallehermoso, Negros Oriental (2019 - 2020): Made
-            good stuff, talked formally to fix problems, and answered
-            questions.
+            Business Intern, Vallehermoso, Negros Oriental (2019 - 2020)
+            <ul>
+                <li>Made good stuff, talked formally to fix problems, and answered questions.</li>
+            </ul>
         </li>
         <li>
-            Software Development Intern at TrustArc, Bohol Ave, Cebu City
-            (2023): Helped make safe and secure API requests and used Spring
-            Boot for the backend and Angular for the frontend.
+            Software Development Intern at TrustArc, Bohol Ave, Cebu City (2023)
+            <ul>
+                <li>Helped make safe and secure API requests.</li>
+                <li>Worked on backend with Spring Boot and frontend with Angular.</li>
+            </ul>
         </li>
         <li>
-            Backend Development Intern at Chronostep, 6th Floor, Gagfa
-            Building, Cebu City (2023): Developed projects internally for
-            company use, utilizing Laravel and Vue as our primary technology
-            used.
+            Backend Development Intern at Chronostep, 6th Floor, Gagfa Building, Cebu City (2023)
+            <ul>
+                <li>Developed internal projects for company use.</li>
+                <li>Used Laravel and Vue as primary technologies.</li>
+            </ul>
         </li>
     </ul>
     <p>
         For a detailed view, you can view and download my resume
-        <a href="{{ resume_pdf }}" target="_blank" class="cta-button">here</a>.
+        <a href="{{ resume_pdf }}" target="_blank" class="cta-button">here</a>
     </p>
 </section>
-
 <section id="contact">
     <h2>Contact Me</h2>
-    <p>
-        If you would like to get in touch, please feel free to reach out via
-        the following methods:
-    </p>
+    <p>If you would like to get in touch, please reach out via the methods below:</p>
     <ul>
         <li>
-            Email:
-            <a href="mailto:algadipej962@gmail.com">algadipej962@gmail.com</a>
+            <b>Phone Number:</b>
+            <ul>
+                <li><a href="tel:+639319127640">0931 912 7640</a></li>
+            </ul>
         </li>
         <li>
-            LinkedIn:
-            <a href="https://www.linkedin.com/in/joshua-algadipe-53933924b/"
-                target="_blank">linkedin.com/in/joshua-algadipe-53933924b/</a>
+            <b>Email:</b>
+            <ul>
+                <li><a href="mailto:algadipej962@gmail.com">algadipej962@gmail.com</a></li>
+            </ul>
         </li>
         <li>
-            GitHub:
-            <a href="https://github.com/JPA-Elite" target="_blank">github.com/JPA-Elite</a>
+            <b>LinkedIn:</b>
+            <ul>
+                <li>
+                    <a href="https://www.linkedin.com/in/joshua-algadipe-53933924b/" target="_blank">
+                        linkedin.com/in/joshua-algadipe-53933924b/
+                    </a>
+                </li>
+            </ul>
+        </li>
+        <li>
+            <b>GitHub:</b>
+            <ul>
+                <li><a href="https://github.com/JPA-Elite" target="_blank">github.com/JPA-Elite</a></li>
+            </ul>
         </li>
     </ul>
 </section>
+
 {% endblock %}

@@ -1,0 +1,36 @@
+<!-- Modal for previewing the image -->
+<div id="imageModal" class="modal" style="display: none;">
+    <span class="close" onclick="closeModal()">&times;</span>
+    <img class="modal-content" id="modalImage">
+    <div id="caption"></div>
+</div>
+
+<!-- Link to the external CSS file for the modal -->
+<link rel="stylesheet" href="{{ url_for('static', filename='css/modal.css') }}" />
+
+<script>
+    // Function to open the modal and show the image
+    function openModal(imageSrc, title = '', description = '') {
+        document.getElementById("imageModal").style.display = "block";
+        document.getElementById("modalImage").src = imageSrc;
+
+        // Create a caption element
+        const captionElement = document.getElementById("caption");
+
+        // Set title if available
+        captionElement.innerHTML = ""; // Clear previous content
+        if (title && title.trim() !== "") {
+            captionElement.innerHTML += "<h3>" + title + "</h3>";
+        }
+
+        // Set description if available
+        if (description && description.trim() !== "") {
+            captionElement.innerHTML += "<p>" + description + "</p>";
+        }
+    }
+
+    // Function to close the modal
+    function closeModal() {
+        document.getElementById("imageModal").style.display = "none";
+    }
+</script>

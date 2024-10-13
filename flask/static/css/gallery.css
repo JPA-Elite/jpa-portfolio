@@ -15,9 +15,34 @@
     text-align: center;
 }
 
-.gallery-item img {
+.gallery-item .gallery-image {
     width: 100%; /* Makes the image responsive */
     height: 200px; /* Fixed height */
     object-fit: cover; /* Ensures the image covers the space without distortion */
     border-radius: 8px; /* Optional: add rounded corners */
+    cursor: pointer;
+}
+
+/* Mobile responsiveness */
+@media only screen and (max-width: 768px) {
+    /* For tablets and smaller screens */
+    .gallery-item {
+        width: 45%; /* Two items per row */
+        margin-bottom: 15px;
+    }
+
+    .gallery-item .gallery-image {
+        height: 150px; /* Reduced height for smaller screens */
+    }
+}
+
+@media only screen and (max-width: 480px) {
+    /* For mobile screens */
+    .gallery-item {
+        width: 100%; /* One item per row */
+    }
+
+    .gallery-item .gallery-image {
+        height: auto; /* Adjust height based on the image aspect ratio */
+    }
 }

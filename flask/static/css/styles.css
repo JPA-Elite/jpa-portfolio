@@ -1,0 +1,118 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f9f9f9;
+}
+
+.container {
+    max-width: 1200px;
+    margin: auto;
+    padding: 20px;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #f9f9f9;
+}
+
+header h1 {
+    font-size: 2rem;
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+}
+
+nav a {
+    text-decoration: none;
+    color: #333;
+    font-weight: bold;
+}
+
+.cta-button {
+    display: inline-block;
+    padding: 5px;
+    background-color: #007bff;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.cta-button:hover {
+    background-color: #0056b3;
+}
+
+footer {
+    text-align: center;
+    padding: 20px 0;
+    font-size: 0.9rem;
+    color: #666;
+}
+
+/* New Section Styles */
+section {
+    margin: 50px 0;
+    padding: 20px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+section h2 {
+    font-size: 2rem;
+    margin-bottom: 10px;
+}
+
+section p {
+    font-size: 1rem;
+    margin: 5px 0;
+}
+
+/* Mobile Styles */
+@media (max-width: 768px) {
+    nav ul {
+        flex-direction: column; /* Stack navigation links vertically */
+        padding: 0; /* Remove padding */
+        margin-top: 10px; /* Space between header and navigation */
+    }
+
+    nav a {
+        padding: 10px; /* Padding for clickable links */
+        text-align: center; /* Center align text in links */
+        border-bottom: 1px solid #ccc; /* Optional border for separation */
+    }
+
+    .project-intro {
+        flex-direction: column; /* Stack the image and text vertically */
+        align-items: center;
+        text-align: center; /* Center text on mobile */
+    }
+
+    .project-image img {
+        max-width: 100%; /* Responsive image */
+        height: auto; 
+        margin-bottom: 20px; /* Space below the image */
+    }
+
+    .project-details {
+        max-width: 100%; /* Allow full width */
+    }
+
+    section h2 {
+        font-size: 1.8rem; /* Smaller font size for headings */
+    }
+}
+
+/* Additional Responsive Styles */
+@media (max-width: 480px) {
+    header h1 {
+        font-size: 1.5rem; /* Smaller header size for small screens */
+    }
+}

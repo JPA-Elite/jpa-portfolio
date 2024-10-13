@@ -1,0 +1,23 @@
+#gallery h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.gallery-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.gallery-item {
+    width: 30%; /* Adjust this value based on your layout */
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.gallery-item img {
+    width: 100%; /* Makes the image responsive */
+    height: 200px; /* Fixed height */
+    object-fit: cover; /* Ensures the image covers the space without distortion */
+    border-radius: 8px; /* Optional: add rounded corners */
+}

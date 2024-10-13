@@ -1,0 +1,22 @@
+<!-- templates/gallery.html -->
+{% extends 'base.html' %}
+
+{% block title %}Gallery{% endblock %}
+
+{% block content %}
+<section id="gallery">
+    <h2>Gallery</h2>
+    <div class="gallery-container">
+        {% for item in gallery_data %}
+        <div class="gallery-item">
+            <img src="{{ image_path }}{{ item.image_name }}" alt="{{ item.title }}" />
+            <h3>{{ item.title }}</h3>
+            <p>{{ item.description }}</p>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+
+<!-- Link to the external CSS file for the gallery -->
+<link rel="stylesheet" href="{{ url_for('static', filename='css/gallery.css') }}" />
+{% endblock %}

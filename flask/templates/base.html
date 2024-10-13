@@ -1,0 +1,41 @@
+<!-- templates/base.html -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %}My Portfolio{% endblock %}</title>
+    <!-- Link to the general CSS file -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}" />
+    <!-- Link to the profile-specific CSS file -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/profile.css') }}" />
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h1>My Portfolio</h1>
+            <nav>
+                <ul>
+                    <li><a href="/#portfolio">Portfolio</a></li>
+                    <li><a href="/#about">About</a></li>
+                    <li><a href="/#resume">Resume</a></li>
+                    <li><a href="/#contact">Contact</a></li>
+                    <li><a href="/gallery">Gallery</a></li>
+                </ul>
+            </nav>
+        </header>
+
+        <main>
+            {% block content %}
+            {% endblock %}
+        </main>
+
+        <footer>
+            <p>&copy; 2024 Joshua Algadipe. All Rights Reserved.</p>
+        </footer>
+    </div>
+</body>
+
+</html>

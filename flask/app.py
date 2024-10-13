@@ -46,6 +46,12 @@ def add_project():
     # Redirect back to the main page to display updated project list
     return redirect('/')
 
+# Route to display the project list and form
+@app.route('/profile')
+def profile():
+    data = load_projects()  # Load project data from JSON file
+    return render_template('profile.html')  # Render HTML with project data
+
 # Run the Flask app
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0')

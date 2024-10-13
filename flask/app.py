@@ -1,49 +1,51 @@
-from flask import Flask, jsonify, request, render_template_string
+from flask import Flask, render_template, request, redirect # type: ignore
+import json
 
 app = Flask(__name__)
 
-# A simple in-memory structure to store tasks
-tasks = []
+# Load existing projects from the JSON file
+def load_projects():
+    try:
+        with open('data.json', 'r') as json_file:
+            data = json.load(json_file)
+    except FileNotFoundError:
+        data = {"projects": []}
+    return data
 
-@app.route('/', methods=['GET'])
-def home():
-    # Display existing tasks and a form to add a new task
-    html = '''
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Todo List</title>
-</head>
-<body>
-    <h1>Todo List</h1>
-    <form action="/add" method="POST">
-        <input type="text" name="task" placeholder="Enter a new task">
-        <input type="submit" value="Add Task">
-    </form>
-    <ul>
-        {% for task in tasks %}
-        <li>{{ task }} <a href="/delete/{{ loop.index0 }}">x</a></li>
-        {% endfor %}
-    </ul>
-</body>
-</html>
-'''
-    return render_template_string(html, tasks=tasks)
+# Save projects to the JSON file
+def save_projects(data):
+    with open('data.json', 'w') as json_file:
+        json.dump(data, json_file, indent=4)
 
-@app.route('/add', methods=['POST'])
-def add_task():
-    # Add a new task from the form data
-    task = request.form.get('task')
-    if task:
-        tasks.append(task)
-    return home()
+# Route to display the project list and form
+@app.route('/')
+def index():
+    data = load_projects()  # Load project data from JSON file
+    return render_template('index.html', projects=data['projects'])  # Render HTML with project data
 
-@app.route('/delete/<int:index>', methods=['GET'])
-def delete_task(index):
-    # Delete a task based on its index
-    if index < len(tasks):
-        tasks.pop(index)
-    return home()
+# Route to handle form submission and add a new project
+@app.route('/add_project', methods=['POST'])
+def add_project():
+    # Get the data submitted from the form
+    name = request.form['name']
+    status = request.form['status']
+    description = request.form['description']
+    
+    # Load current projects and append the new project
+    data = load_projects()
+    new_project = {
+        "name": name,
+        "status": status,
+        "description": description
+    }
+    data['projects'].append(new_project)  # Add the new project to the list
+    
+    # Save updated data back to the JSON file
+    save_projects(data)
+    
+    # Redirect back to the main page to display updated project list
+    return redirect('/')
 
+# Run the Flask app
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0')

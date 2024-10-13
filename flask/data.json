@@ -1,0 +1,24 @@
+{
+    "projects": [
+        {
+            "name": "Project A",
+            "status": "In Progress",
+            "description": "This is the first project."
+        },
+        {
+            "name": "Project B",
+            "status": "Completed",
+            "description": "This is the second project."
+        },
+        {
+            "name": "Project C",
+            "status": "not completed",
+            "description": "hello world this is python"
+        },
+        {
+            "name": "scs",
+            "status": "csc",
+            "description": "scsc"
+        }
+    ]
+}

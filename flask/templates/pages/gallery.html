@@ -4,6 +4,8 @@
 {% block head %}{% endblock %}
 
 {% block content %}
+<!-- Link to the external CSS file for the gallery -->
+<link rel="stylesheet" href="{{ url_for('static', filename='css/gallery.css') }}" />
 <section id="gallery">
     <h2>Gallery</h2>
     <div class="gallery-container">
@@ -17,7 +19,4 @@
         {% endfor %}
     </div>
 </section>
-
-<!-- Link to the external CSS file for the gallery -->
-<link rel="stylesheet" href="{{ url_for('static', filename='css/gallery.css') }}" />
 {% endblock %}

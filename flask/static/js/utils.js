@@ -8,10 +8,10 @@
 function calculateAge() {
     const today = new Date();
     const birthDate = new Date('2001-09-16');
-    
+
     let age = today.getFullYear() - birthDate.getFullYear();
     const monthDiff = today.getMonth() - birthDate.getMonth();
-    
+
     // Adjust age if the birthday hasn't occurred yet this year
     if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
         age--;
@@ -36,9 +36,11 @@ function startTypingAnimation(elementId, text, typingSpeed = 200, deletingSpeed 
             }
         } else { // Deleting mode
             if (index > 0) {
-                headingElement.textContent = text.substring(0, index - 1);
-                index--;
-                setTimeout(animateText, deletingSpeed);
+                if (deletingSpeed != false) {
+                    headingElement.textContent = text.substring(0, index - 1);
+                    index--;
+                    setTimeout(animateText, deletingSpeed);
+                }
             } else {
                 direction = 1;  // Switch back to typing mode
                 setTimeout(animateText, pauseDuration); // Pause before typing

@@ -43,7 +43,7 @@
     {% include 'components/chatbox.html' %}
     <script>
         window.addEventListener('load', function() {
-            startTypingAnimation("animated-heading", "{{ title }}", 200, 100, 500);
+            startTypingAnimation("animated-heading", "{{ title }}", 200, false, 10000);
         });
     </script>
 </body>

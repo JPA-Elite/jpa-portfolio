@@ -36,7 +36,7 @@
     }
 
     .gallery-item .gallery-image {
-        height: 150px; /* Reduced height for smaller screens */
+        max-height: 200px; /* Reduced height for smaller screens */
     }
 }
 
@@ -44,9 +44,5 @@
     /* For mobile screens */
     .gallery-item {
         width: 100%; /* One item per row */
-    }
-
-    .gallery-item .gallery-image {
-        height: auto; /* Adjust height based on the image aspect ratio */
     }
 }

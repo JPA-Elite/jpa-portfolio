@@ -1,0 +1,35 @@
+#vlog {
+    padding: 20px;
+}
+
+.video-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.video-item {
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    padding: 10px;
+    transition: transform 0.2s;
+}
+
+.video-item:hover {
+    transform: scale(1.05);
+}
+
+video {
+    width: 100%;
+    border-radius: 8px;
+}
+
+h3 {
+    margin: 10px 0 5px;
+    font-size: 1.2em;
+}
+
+p {
+    color: #666;
+}

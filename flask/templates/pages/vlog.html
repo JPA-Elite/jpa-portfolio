@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block title %}My Vlog{% endblock %}
+{% block head %}My Vlog{% endblock %}
+
+{% block content %}
+<!-- Link to the external CSS file for the vlog -->
+<link rel="stylesheet" href="{{ url_for('static', filename='css/vlog.css') }}" />
+<section id="vlog">
+    <div class="video-container">
+        {% for vlog in vlogs %}
+        <div class="video-item">
+            <video controls class="vlog-video">
+                <source src="{{ url_for('static', filename=vlog.file) }}" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+            <h3>{{ vlog.title }}</h3>
+            <p>{{ vlog.description }}</p>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+
+<script>
+    // Select all video elements
+    const videos = document.querySelectorAll('.vlog-video');
+
+    // Add event listeners to each video
+    videos.forEach(video => {
+        video.addEventListener('play', () => {
+            // Pause all other videos when one plays
+            videos.forEach(otherVideo => {
+                if (otherVideo !== video) {
+                    otherVideo.pause(); // Pause the other video
+                }
+            });
+        });
+    });
+</script>
+{% endblock %}

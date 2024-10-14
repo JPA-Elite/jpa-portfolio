@@ -1,35 +1,65 @@
-from flask import Flask, render_template, url_for, redirect # type: ignore
+from flask import Flask, render_template, url_for, redirect  # type: ignore
 import json
-from config import PROFILE_IMAGE, RESUME_PDF, GALLERY_JSON_PATH, IMAGE_PATH
+from config import (
+    PROFILE_IMAGE,
+    RESUME_PDF,
+    GALLERY_JSON_PATH,
+    IMAGE_PATH,
+    VLOG_JSON_PATH,
+)
 
 app = Flask(__name__)
 
-@app.route('/')
+
+@app.route("/")
 def index():
     # Redirect to the '/profile' route
-    return redirect(url_for('profile'))
+    return redirect(url_for("profile"))
 
-@app.route('/profile')
+
+@app.route("/profile")
 def profile():
     # Use the profile_image and resume_pdf in this route
-    return render_template('pages/profile.html', profile_image=PROFILE_IMAGE, resume_pdf=RESUME_PDF, title='My Portfolio')
+    return render_template(
+        "pages/profile.html",
+        profile_image=PROFILE_IMAGE,
+        resume_pdf=RESUME_PDF,
+        title="My Portfolio",
+    )
 
-@app.route('/gallery')
+
+@app.route("/gallery")
 def gallery():
     # Load the gallery data from JSON using the config constant
     with open(GALLERY_JSON_PATH) as f:
         gallery_data = json.load(f)
-    return render_template('pages/gallery.html', gallery_data=gallery_data, image_path=IMAGE_PATH, title='My Gallery')
+    return render_template(
+        "pages/gallery.html",
+        gallery_data=gallery_data,
+        image_path=IMAGE_PATH,
+        title="My Gallery",
+    )
 
-@app.route('/concern')
+
+@app.route("/vlog")
+def vlog():
+    # Load the JSON data
+    with open(VLOG_JSON_PATH) as f:
+        vlog_data = json.load(f)
+    return render_template("pages/vlog.html", title="My Vlogs", vlogs=vlog_data)
+
+
+@app.route("/concern")
 def concern():
-    return render_template('pages/concern.html', title='My Concern')
+    return render_template("pages/concern.html", title="My Concern")
+
 
 # Custom error handler for 404 Not Found
 @app.errorhandler(404)
 def not_found(error):
-    return render_template('error/404.html', title='Not Found', error=error), 404
+    return render_template("error/404.html", title="Not Found", error=error), 404
+
 
 # Run the Flask app
-if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0')
+if __name__ == "__main__":
+    app.run(debug=True, host="0.0.0.0")

@@ -14,3 +14,10 @@ CHAT_ICON = f"{IMAGE_PATH}chat.png"
 GALLERY_JSON_PATH = os.path.join('static', 'json', 'gallery.json')
 # Define the path for the vlog JSON file
 VLOG_JSON_PATH = os.path.join('static', 'json', 'vlog.json')
+
+# pages
+PROFILE_PAGE = "pages/profile.html"
+GALLERY_PAGE = "pages/gallery.html"
+VLOG_PAGE = "pages/vlog.html"
+CONCERN_PAGE = "pages/concern.html"
+ERROR_404_PAGE = "error/404.html"

@@ -18,5 +18,31 @@
         "title": "Evening Photo",
         "image_name": "FB4.jpg",
         "description": "Taken at home during a chilly night."
+    },
+    {
+        "title": "Hiking to the Mountain",
+        "image_name": "FB5.jpg",
+        "description": "Captured at the peak with a stunning mountain view."
+    },
+    {
+        "title": "DJ Jamming Session",
+        "image_name": "FB6.jpg",
+        "description": "Practicing music mixing during a party at our place."
+    },
+    {
+        "title": "Forced Smile",
+        "image_name": "FB7.jpg",
+        "description": "Trying to smile while getting a picture taken."
+    },
+    {
+        "title": "Posing by the Tower",
+        "image_name": "FB8.jpg",
+        "description": "I admire the height of the tower and its amazing view."
+    },
+    {
+        "title": "Selfie Attempt with a Good Camera",
+        "image_name": "FB9.jpg",
+        "description": "We were on vacation in Carcar during this photo."
     }
+    
 ]

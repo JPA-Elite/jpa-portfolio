@@ -18,5 +18,9 @@
         </div>
         {% endfor %}
     </div>
+
+    <!-- Include the pagination component and pass the base URL -->
+    {% include 'components/pagination.html' %}
+    {% set base_url = url_for('gallery') %}
 </section>
 {% endblock %}

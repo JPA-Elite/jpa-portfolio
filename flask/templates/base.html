@@ -20,10 +20,10 @@
             <h1 id="animated-heading">{% block head %}My Portfolio{% endblock %}</h1>
             <nav>
                 <ul>
-                    <li><a href="/profile">Portfolio</a></li>
-                    <li><a href="/gallery">Gallery</a></li>
-                    <li><a href="/vlog">Vlog</a></li>
-                    <li><a href="/concern">Concern</a></li>
+                    <li><a href="{{ url_for('profile') }}">Portfolio</a></li>
+                    <li><a href="{{ url_for('gallery') }}">Gallery</a></li>
+                    <li><a href="{{ url_for('vlog') }}">Vlog</a></li>
+                    <li><a href="{{ url_for('concern') }}">Concern</a></li>
                 </ul>
             </nav>
         </header>

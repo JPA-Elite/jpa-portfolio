@@ -1,0 +1,150 @@
+<!-- Link to the external CSS file for the modal -->
+<link rel="stylesheet" href="{{ url_for('static', filename='css/chatbox.css') }}" />
+
+<div class="chatbox-container">
+    <div class="chatbox-icon" onclick="toggleChatbox()">
+        <img src="{{ url_for('static', filename='images/chat.png') }}" alt="Chat" />
+    </div>
+
+    <!-- Chatbox modal (hidden by default) -->
+    <div id="chatboxModal" class="chatbox-modal">
+        <div class="chatbox-header">
+            <span class="chatbox-title">Chat with Me?</span>
+            <span class="chatbox-close" onclick="toggleChatbox()">&times;</span>
+        </div>
+        <div class="chatbox-body">
+            <p>How can I help you?</p>
+            <div id="chatMessages" class="chat-messages"></div>
+            <div class="chat-options grid" id="chatOptions"></div>
+        </div>
+        <!-- Clear button to clear chat messages -->
+        <button id="clearChat" onclick="clearChat()" style="display: none;">Clear Chat</button>
+    </div>
+</div>
+
+<script>
+    const cacheMessage = 'chatMessages';
+    const cacheChatboxVisible = 'chatboxVisible';
+    
+    // Array of questions and answers
+    const qaArray = [
+        { question: 'What is your name?', answer: "My name is Joshua Algadipe." },
+        { question: 'What is your age?', answer: `I am ${calculateAge()} years old.` },
+        { question: 'What is your job?', answer: "I am a software engineer." },
+        { question: 'What is your favorite sport?', answer: "I enjoy basketball." },
+        { question: 'Who is your crush?', answer: "Secret I can't tell! Girls are idiots!" },
+        { question: 'What is your favorite subject?', answer: "My favorite subject is Math." },
+        { question: 'Where do you live?', answer: "I live in Cabulihan, Vallehermoso, Negros Oriental." },
+        { question: 'What is your dream job?', answer: "Primarily my dream job is Electrical Engineering, but my current job now is Software Engineer." },
+        { question: 'What type of person are you?', answer: "I'm a bit enigmatic and won't laugh if someone doesn't match my vibe, but once I'm comfortable with someone, I'm the one who laughs the most." }
+    ];
+
+    // Initialize chat options dynamically
+    function initializeChatOptions() {
+        const chatOptions = document.getElementById("chatOptions");
+        qaArray.forEach(item => {
+            const button = document.createElement("button");
+            button.textContent = item.question;
+            button.onclick = () => sendPredefinedMessage(item.question);
+            chatOptions.appendChild(button);
+        });
+    }
+
+    // Toggle chatbox modal visibility
+    function toggleChatbox() {
+        const modal = document.getElementById("chatboxModal");
+        const isVisible = modal.style.display === "block";
+        modal.style.display = isVisible ? "none" : "block";
+        // Cache the visibility state
+        localStorage.setItem(cacheChatboxVisible, !isVisible);
+    }
+
+    // Send a message from the input field
+    function sendMessage() {
+        const input = document.getElementById("chatInput");
+        const message = input.value.trim();
+        if (message) {
+            displayMessage(message);
+            input.value = ""; // Clear input field
+            cacheMessages(message); // Cache the message
+            updateClearChatButtonVisibility(); // Update visibility of the clear button
+        }
+    }
+
+    // Send a predefined message with automatic answers
+    function sendPredefinedMessage(question) {
+        displayMessage(question, "transparent", "");
+        const answer = getAutomaticAnswer(question);
+        displayMessage(answer);
+        cacheMessages(question); // Cache the predefined question
+        cacheMessages(answer); // Cache the answer
+        updateClearChatButtonVisibility(); // Update visibility of the clear button
+    }
+
+    // Function to get automatic answers based on the question
+    function getAutomaticAnswer(question) {
+        const qa = qaArray.find(item => item.question === question);
+        return qa ? qa.answer : "I'm not sure how to answer that.";
+    }
+
+    // Function to display messages in the chat
+    function displayMessage(message, backgroundColor = '', color = '') {
+        const chatMessages = document.getElementById("chatMessages");
+        const messageElement = document.createElement("div");
+        messageElement.classList.add("chat-message");
+        messageElement.textContent = message;
+
+        // Apply background color if provided
+        if (backgroundColor) {
+            messageElement.style.backgroundColor = backgroundColor; // Set the background color
+        }
+
+        if (color) {
+            messageElement.style.color = color; // Set the text color
+        }
+
+        chatMessages.appendChild(messageElement);
+    }
+
+    // Cache messages to localStorage
+    function cacheMessages(message) {
+        let cachedMessages = JSON.parse(localStorage.getItem(cacheMessage)) || [];
+        cachedMessages.push(message);
+        localStorage.setItem(cacheMessage, JSON.stringify(cachedMessages));
+    }
+
+    // Load cached messages and visibility state
+    function loadCachedChat() {
+        const cachedMessages = JSON.parse(localStorage.getItem(cacheMessage)) || [];
+        cachedMessages.forEach(message => displayMessage(message, qaArray.find(item => item.question == message) ? 'transparent' : ''));
+
+        const chatboxVisible = localStorage.getItem(cacheChatboxVisible) === 'true';
+        const modal = document.getElementById("chatboxModal");
+        modal.style.display = chatboxVisible ? "block" : "none";
+
+        updateClearChatButtonVisibility(); // Check if clear button should be displayed
+    }
+
+    // Clear chat messages
+    function clearChat() {
+        // Clear messages from localStorage
+        localStorage.removeItem(cacheMessage);
+        // Clear the displayed messages
+        const chatMessages = document.getElementById("chatMessages");
+        chatMessages.innerHTML = ''; // Remove all child elements
+        updateClearChatButtonVisibility(); // Hide the clear button
+    }
+
+    // Update visibility of the Clear Chat button
+    function updateClearChatButtonVisibility() {
+        const cachedMessages = JSON.parse(localStorage.getItem(cacheMessage)) || [];
+        const clearChatButton = document.getElementById("clearChat");
+        clearChatButton.style.display = cachedMessages.length > 0 ? "block" : "none";
+    }
+
+    // Initialize chat options and load cached chat when the page loads
+    window.onload = () => {
+        initializeChatOptions();
+        loadCachedChat();
+    };
+</script>

@@ -23,6 +23,10 @@
     cursor: pointer;
 }
 
+.gallery-item .description {
+    color: #555;
+}
+
 /* Mobile responsiveness */
 @media only screen and (max-width: 768px) {
     /* For tablets and smaller screens */

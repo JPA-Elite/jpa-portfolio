@@ -10,17 +10,20 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}" />
     <!-- Link to the profile-specific CSS file -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/profile.css') }}" />
+    <script src="{{ url_for('static', filename='js/utils.js') }}"></script>
+
 </head>
 
 <body>
     <div class="container">
         <header>
-            <h1>{% block head %}My Portfolio{% endblock %}</h1>
+            <h1 id="animated-heading">{% block head %}My Portfolio{% endblock %}</h1>
             <nav>
                 <ul>
                     <li><a href="/profile">Portfolio</a></li>
                     <li><a href="/gallery">Gallery</a></li>
                     <li class="disabled"><a href="#">Vlog</a></li>
+                    <li><a href="/concern">Concern</a></li>
                 </ul>
             </nav>
         </header>
@@ -36,6 +39,13 @@
     </div>
     <!-- Include the modal component -->
     {% include 'components/modal.html' %}
+    <!-- Include the chatbox component -->
+    {% include 'components/chatbox.html' %}
+    <script>
+        window.addEventListener('load', function() {
+            startTypingAnimation("animated-heading", "{{ title }}", 200, 100, 500);
+        });
+    </script>
 </body>
 
 </html>

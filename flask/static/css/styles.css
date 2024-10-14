@@ -17,6 +17,7 @@ header {
     align-items: center;
     padding: 10px 20px;
     background-color: #f9f9f9;
+    height: 50px;
 }
 
 header h1 {
@@ -29,10 +30,33 @@ nav ul {
     gap: 20px;
 }
 
+nav ul li {
+    position: relative;
+    /* Make the li the relative container */
+}
+
 nav a {
     text-decoration: none;
     color: #333;
     font-weight: bold;
+}
+
+/* Add the underline animation to each li */
+nav ul li::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background-color: #000;
+    /* Underline color */
+    transition: width 0.3s ease;
+}
+
+/* Expand the underline on li hover */
+nav ul li:hover::after {
+    width: 100%;
 }
 
 .cta-button {
@@ -84,9 +108,48 @@ section p {
     /* Changes the cursor to indicate the element is disabled */
 }
 
+#animated-heading {
+    font-size: 2.5rem;
+    /* Adjust font size as needed */
+    font-weight: bold;
+    /* Make the text bold */
+    position: relative;
+    /* To position the cursor */
+    display: inline-block;
+    /* To allow width to shrink */
+}
+
+#animated-heading::after {
+    content: "";
+    width: 2px;
+    /* Width of the cursor */
+    height: 100%;
+    /* Height of the cursor */
+    background: black;
+    /* Color of the cursor */
+    display: inline-block;
+    position: absolute;
+    right: 0;
+    /* Position at the end of the text */
+    animation: blink 0.7s step-end infinite;
+    /* Blinking effect */
+}
+
+@keyframes blink {
+    50% {
+        opacity: 0;
+        /* Blink effect */
+    }
+}
+
 /* Mobile Styles */
 @media (max-width: 768px) {
+    header {
+        height: auto;
+    }
+
     nav ul {
+        align-items: center;
         flex-direction: column;
         /* Stack navigation links vertically */
         padding: 0;
@@ -134,7 +197,7 @@ section p {
 /* Additional Responsive Styles */
 @media (max-width: 480px) {
     header h1 {
-        font-size: 1.5rem;
+        font-size: 2rem !important;
         /* Smaller header size for small screens */
     }
 }

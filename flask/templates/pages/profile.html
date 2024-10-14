@@ -1,12 +1,13 @@
 {% extends 'base.html' %}
 
 {% block title %}My Portfolio{% endblock %}
+{% block head %}{% endblock %}
 
 {% block content %}
 <section id="portfolio" class="project-intro">
     <div class="project-image">
         <img src="{{ profile_image }}" alt="Profile Image"
-            onclick="openModal('{{ profile_image }}', 'My Profile', 'My name is Joshua Algadipe, 23 years old from Vallehermoso, Negros Oriental. <br>I\'m an introvert and not great at starting conversations, <br>so feel free to message me first—let\'s chat! I\'m currently working as a software engineer,<br> and I have big goals for the future, aiming to build wealth and achieve success.')" />
+            onclick="openModal('{{ profile_image }}', 'My Profile', 'My name is Joshua Algadipe, ' + calculateAge() + ' years old from Vallehermoso, Negros Oriental. <br>I\'m an introvert and not great at starting conversations, <br>so feel free to message me first—let\'s chat! I\'m currently working as a software engineer,<br> and I have big goals for the future, aiming to build wealth and achieve success.')" />
     </div>
     <div class="project-details">
         <h3>Summary:</h3>
@@ -101,7 +102,7 @@
         </li>
     </ul>
     <p>
-        For a detailed view, you can view and download my resume
+        <a>For a detailed view, you can view and download my resume</a>
         <a href="{{ resume_pdf }}" target="_blank" class="cta-button">here</a>
     </p>
 </section>
@@ -120,6 +121,14 @@
             <ul>
                 <li><a href="mailto:algadipej962@gmail.com">algadipej962@gmail.com</a></li>
             </ul>
+        </li>
+        <li></li>
+        <b>Facebook:</b>
+        <ul>
+            <li><a
+                    href="https://www.facebook.com/profile.php?id=100017724583212">facebook.com/profile.php?id=100017724583212</a>
+            </li>
+        </ul>
         </li>
         <li>
             <b>LinkedIn:</b>

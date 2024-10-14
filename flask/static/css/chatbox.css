@@ -1,0 +1,131 @@
+/* chatbox.css */
+.chatbox-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1000;
+    /* Ensure it stays above other elements */
+}
+
+.chatbox-icon img {
+    width: 50px;
+    height: 50px;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.chatbox-icon img:hover {
+    transform: scale(1.1);
+    /* Slightly enlarge the icon on hover */
+}
+
+.chatbox-modal {
+    display: none;
+    /* Hidden by default */
+    position: fixed;
+    bottom: 80px;
+    right: 20px;
+    width: 300px;
+    height: 500px;
+    background-color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+    z-index: 1000;
+    flex-direction: column;
+    overflow-y: auto; /* Allow scrolling */
+}
+
+.chatbox-header {
+    background-color: #007bff;
+    color: white;
+    padding: 10px;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+}
+
+.chatbox-title {
+    font-size: 16px;
+}
+
+.chatbox-close {
+    font-size: 24px;
+    cursor: pointer;
+}
+
+.chatbox-body {
+    padding: 20px;
+    font-size: 14px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.chat-messages {
+    margin-bottom: 10px;
+}
+
+.chat-message {
+    background-color: #f1f1f1;
+    border-radius: 5px;
+    padding: 5px 10px;
+    margin: 5px 0;
+}
+
+.chat-options.grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* Create 3 equal columns */
+    gap: 10px; /* Space between buttons */
+}
+
+.chat-options button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px; /* Increased padding for better touch area */
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    text-align: center; /* Center text in button */
+}
+
+.chat-options button:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+}
+
+input[type="text"] {
+    width: calc(100% - 80px); /* Adjust based on button width */
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+/* Clear Chat Button Styles */
+#clearChat {
+    background-color: #ff4d4d; /* Red background */
+    color: white;              /* White text */
+    border: none;              /* No border */
+    padding: 10px 15px;       /* Top/bottom and left/right padding */
+    border-radius: 5px;       /* Rounded corners */
+    font-size: 16px;          /* Font size */
+    cursor: pointer;           /* Pointer cursor on hover */
+    transition: background-color 0.3s ease; /* Smooth background change */
+    width: 100%;
+}
+
+/* Hover effect */
+#clearChat:hover {
+    background-color: #ff1a1aa8; /* Darker red on hover */
+}
+
+@media only screen and (max-width: 480px) {
+    /* For mobile screens */
+    .chatbox-icon img {
+        width: 50px;
+        height: 50px;
+    }
+}

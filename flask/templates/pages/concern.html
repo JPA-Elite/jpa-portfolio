@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block title %}My Concern{% endblock %}
+{% block head %}{% endblock %}
+
+{% block content %}
+<section id="concern">
+    <h2>Concern</h2>
+    <p>If you have any feedback or thoughts to share about me, feel free to click this button—don’t be shy!</p>
+
+    <div class="concern-button">
+        <a href="https://forms.gle/QV5kHc3STEFDFUYf9" target="_blank">
+            <button class="concern-btn">Take the survey</button>
+        </a>
+    </div>
+</section>
+
+<!-- Link to the external CSS file for the concern -->
+<link rel="stylesheet" href="{{ url_for('static', filename='css/concern.css') }}" />
+{% endblock %}

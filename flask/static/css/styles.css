@@ -75,44 +75,66 @@ section p {
     margin: 5px 0;
 }
 
+.disabled {
+    opacity: 0.5;
+    /* Makes the element appear faded */
+    pointer-events: none;
+    /* Prevents any mouse interactions */
+    cursor: not-allowed;
+    /* Changes the cursor to indicate the element is disabled */
+}
+
 /* Mobile Styles */
 @media (max-width: 768px) {
     nav ul {
-        flex-direction: column; /* Stack navigation links vertically */
-        padding: 0; /* Remove padding */
-        margin-top: 10px; /* Space between header and navigation */
+        flex-direction: column;
+        /* Stack navigation links vertically */
+        padding: 0;
+        /* Remove padding */
+        margin-top: 10px;
+        /* Space between header and navigation */
     }
 
     nav a {
-        padding: 10px; /* Padding for clickable links */
-        text-align: center; /* Center align text in links */
-        border-bottom: 1px solid #ccc; /* Optional border for separation */
+        padding: 10px;
+        /* Padding for clickable links */
+        text-align: center;
+        /* Center align text in links */
+        border-bottom: 1px solid #ccc;
+        /* Optional border for separation */
     }
 
     .project-intro {
-        flex-direction: column; /* Stack the image and text vertically */
+        flex-direction: column;
+        /* Stack the image and text vertically */
         align-items: center;
-        text-align: center; /* Center text on mobile */
+        text-align: center;
+        /* Center text on mobile */
     }
 
     .project-image img {
-        max-width: 100%; /* Responsive image */
-        height: auto; 
-        margin-bottom: 20px; /* Space below the image */
+        max-width: 100%;
+        /* Responsive image */
+        height: auto;
+        margin-bottom: 20px;
+        /* Space below the image */
     }
 
     .project-details {
-        max-width: 100%; /* Allow full width */
+        max-width: 100%;
+        /* Allow full width */
     }
 
     section h2 {
-        font-size: 1.8rem; /* Smaller font size for headings */
+        font-size: 1.8rem;
+        /* Smaller font size for headings */
     }
 }
 
 /* Additional Responsive Styles */
 @media (max-width: 480px) {
     header h1 {
-        font-size: 1.5rem; /* Smaller header size for small screens */
+        font-size: 1.5rem;
+        /* Smaller header size for small screens */
     }
 }

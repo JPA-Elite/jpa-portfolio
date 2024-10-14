@@ -38,7 +38,8 @@
 }
 
 #resume ul {
-    list-style: none; /* Remove bullet points */
+    list-style: none;
+    /* Remove bullet points */
     padding-left: 0;
     margin-bottom: 20px;
 }
@@ -51,14 +52,17 @@
 
 #resume ul ul {
     margin-top: 5px;
-    margin-left: 20px; /* Add indentation for sublist */
-    list-style-type: disc; /* Change sublist bullet style */
+    margin-left: 20px;
+    /* Add indentation for sublist */
+    list-style-type: disc;
+    /* Change sublist bullet style */
 }
 
 #resume ul ul li {
     font-size: 1rem;
     margin-bottom: 8px;
-    color: #555; /* Slightly different color for sublist */
+    color: #555;
+    /* Slightly different color for sublist */
 }
 
 /* CTA Button styling for resume download */
@@ -125,7 +129,8 @@
 
 #portfolio {
     display: flex;
-    align-items: flex-start; /* Aligns items at the top */
+    align-items: flex-start;
+    /* Aligns items at the top */
     margin-top: 50px;
 }
 
@@ -182,13 +187,31 @@
 
 /* Mobile responsiveness */
 @media only screen and (max-width: 768px) {
+
     /* For tablets and smaller screens */
     #portfolio .project-image img {
         margin: 0;
     }
-    
+
     #portfolio .project-image {
         width: 100%;
     }
-    
+}
+
+@media only screen and (max-width: 480px) {
+
+    /* For mobile screens */
+    #portfolio .project-image img {
+        width: 100%;
+    }
+
+    #portfolio .project-details p,
+    #portfolio ul li ul li {
+        text-align: justify;
+    }
+
+    #portfolio .project-details p {
+        font-size: 16px;
+        color: #555;
+    }
 }

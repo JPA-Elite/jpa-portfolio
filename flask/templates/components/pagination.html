@@ -2,12 +2,12 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='css/components/pagination.css') }}" />
 <div class="pagination">
     {% if current_page > 1 %}
-        <a href="{{ base_url }}?page={{ current_page - 1 }}">Previous</a>
+        <a href="{{ base_url }}?page={{ current_page - 1 }}">{{ _('pagination_previous') }}</a>
     {% endif %}
 
-    <span>Page {{ current_page }} of {{ total_pages }}</span>
+    <span>{{ _('pagination_page') }} {{ current_page }} {{ _('pagination_of') }} {{ total_pages }}</span>
 
     {% if current_page < total_pages %}
-        <a href="{{ base_url }}?page={{ current_page + 1 }}">Next</a>
+        <a href="{{ base_url }}?page={{ current_page + 1 }}">{{ _('pagination_next') }}</a>
     {% endif %}
 </div>

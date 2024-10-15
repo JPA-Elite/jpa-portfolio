@@ -19,13 +19,44 @@
         <header>
             <h1 id="animated-heading">{% block head %}My Portfolio{% endblock %}</h1>
             <nav>
-                <ul>
+                <div class="nav-toggle" onclick="toggleNav()">&#9776;</div> <!-- Hamburger Icon -->
+                <ul id="navList">
                     <li><a href="{{ url_for('profile') }}">Portfolio</a></li>
                     <li><a href="{{ url_for('gallery') }}">Gallery</a></li>
                     <li><a href="{{ url_for('vlog') }}">Vlog</a></li>
                     <li><a href="{{ url_for('concern') }}">Concern</a></li>
                 </ul>
+                <div class="language-selector">
+                    <a class="mobile-concern-btn" href="{{ url_for('concern') }}">Concern</a>
+                    <div class="dropdown">
+                        <button class="dropbtn">
+                            {% if get_locale() == en_locale %}
+                            <img src="{{ url_for('static', filename='images/en_flag.png') }}" alt="English"
+                                class="flag-icon">
+                            {% elif get_locale() == ceb_locale %}
+                            <img src="{{ url_for('static', filename='images/ph_flag.png') }}" alt="Cebuano"
+                                class="flag-icon">
+                            {% else %}
+                            <img src="{{ url_for('static', filename='images/en_flag.png') }}" alt="Default"
+                                class="flag-icon">
+                            {% endif %}
+                        </button>
+                        <div class="dropdown-content">
+                            <a href="{{ url_for('change_language', lang_code=en_locale) }}"
+                                class="{% if get_locale()==en_locale %}active{% endif %}">
+                                <img src="{{ url_for('static', filename='images/en_flag.png') }}" alt="English"
+                                    class="flag-icon"> {{ _('English') }}
+                            </a>
+                            <a href="{{ url_for('change_language', lang_code=ceb_locale) }}"
+                                class="{% if get_locale()==ceb_locale %}active{% endif %}">
+                                <img src="{{ url_for('static', filename='images/ph_flag.png') }}" alt="Cebuano"
+                                    class="flag-icon"> {{ _('Cebuano') }}
+                            </a>
+                        </div>
+                    </div>
+                </div>
             </nav>
+
         </header>
 
         <main>
@@ -41,11 +72,24 @@
     {% include 'components/modal.html' %}
     <!-- Include the chatbox component -->
     {% include 'components/chatbox.html' %}
-    <script>
+
+    <!-- disable for a meantime -->
+    <!-- <script>
         window.addEventListener('load', function () {
             startTypingAnimation("animated-heading", "{{ title }}", 200, false, 10000);
         });
+    </script> -->
+    <script>
+        if (typeof window !== 'undefined') {
+            localStorage.removeItem('chatMessages');
+        }
+
+        function toggleNav() {
+            const navList = document.getElementById('navList');
+            navList.classList.toggle('show');
+        }
     </script>
+
 </body>
 
 </html>

@@ -28,3 +28,9 @@ Short Description: A basic Flask todo app.
 Tags: flask, python
 
 Languages: python
+
+## COMMANDS
+pybabel extract -F babel.cfg -o messages.pot .
+pybabel init -i messages.pot -d translations -l ceb
+pybabel init -i messages.pot -d translations -l en
+pybabel compile -d translations

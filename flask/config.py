@@ -21,3 +21,16 @@ GALLERY_PAGE = "pages/gallery.html"
 VLOG_PAGE = "pages/vlog.html"
 CONCERN_PAGE = "pages/concern.html"
 ERROR_404_PAGE = "error/404.html"
+
+# Configure available languages
+LANGUAGES = {
+    'en': 'English',
+    'ceb': 'Cebuano',
+    'fr': 'French',
+}
+
+# Set the default locale
+BABEL_DEFAULT_LOCALE = 'en'
+EN_LOCALE = 'en'
+CEB_LOCALE = 'ceb'
+FR_LOCALE = 'fr'

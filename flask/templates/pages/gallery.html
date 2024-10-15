@@ -11,10 +11,10 @@
     <div class="gallery-container">
         {% for item in gallery_data %}
         <div class="gallery-item">
-            <img src="{{ image_path }}{{ item.image_name }}" alt="{{ item.title }}" class="gallery-image"
-                onclick="openModal('{{ image_path }}{{ item.image_name }}', '{{ item.title }}', '{{ item.description }}')" />
-            <h3>{{ item.title }}</h3>
-            <p class="description">{{ item.description }}</p>
+            <img src="{{ image_path }}{{ item.image_name }}" alt="{{ item.title[get_locale()] }}" class="gallery-image"
+                onclick="openModal('{{ image_path }}{{ item.image_name }}', '{{ item.title[get_locale()] }}', '{{ item.description[get_locale()] }}')" />
+            <h3>{{ item.title[get_locale()] }}</h3>
+            <p class="description">{{ item.description[get_locale()] }}</p>
         </div>
         {% endfor %}
     </div>

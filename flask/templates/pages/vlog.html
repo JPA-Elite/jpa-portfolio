@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block title %}My Vlog{% endblock %}
-{% block head %}My Vlog{% endblock %}
+{% block head %}{% endblock %}
 
 {% block content %}
 <!-- Link to the external CSS file for the vlog -->
@@ -14,8 +14,8 @@
                 <source src="{{ url_for('static', filename=vlog.file) }}" type="video/mp4">
                 Your browser does not support the video tag.
             </video>
-            <h3>{{ vlog.title }}</h3>
-            <p>{{ vlog.description }}</p>
+            <h3>{{ vlog.title[get_locale()] }}</h3>
+            <p>{{ vlog.description[get_locale()] }}</p>
         </div>
         {% endfor %}
     </div>

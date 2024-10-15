@@ -11,26 +11,79 @@ from config import (
     VLOG_PAGE,
     CONCERN_PAGE,
     ERROR_404_PAGE,
+    LANGUAGES,
+    BABEL_DEFAULT_LOCALE,
+    EN_LOCALE,
+    CEB_LOCALE
 )
 from utils import paginate_data
+from flask_babel import Babel, gettext  # type: ignore
+from markupsafe import escape # type: ignore
 
 app = Flask(__name__)
 
+# Configure Flask-Babel
+app.config["LANGUAGES"] = LANGUAGES
+app.config["BABEL_DEFAULT_LOCALE"] = BABEL_DEFAULT_LOCALE
+
+
+def get_locale():
+    lang = request.cookies.get("lang") or request.accept_languages.best_match(
+        LANGUAGES.keys()
+    )
+    return lang
+
+
+# Initialize Flask-Babel
+babel = Babel(app)
+babel.init_app(app, locale_selector=get_locale)
+
+
+@app.context_processor
+def inject_locale():
+    return dict(get_locale=get_locale)
+
+# locale constants
+@app.context_processor
+def en_locale():
+    return dict(en_locale=EN_LOCALE)
+
+@app.context_processor
+def ceb_locale():
+    return dict(ceb_locale=CEB_LOCALE)
 
 @app.route("/")
 def index():
-    # Redirect to the '/profile' route
     return redirect(url_for("profile"))
+
+
+@app.route("/change_language/<lang_code>")
+def change_language(lang_code):
+    referrer = request.referrer or url_for("index")
+    response = redirect(referrer)
+    response.set_cookie("lang", lang_code)
+    return response
 
 
 @app.route("/profile")
 def profile():
-    # Use the profile_image and resume_pdf in this route
+    # Retrieve translations
+    profile_name = gettext("profile_name")
+    profile_intro = gettext("profile_intro")
+    profile_age = gettext("profile_age")
+    profile_introvert = gettext("profile_introvert")
+    profile_job = gettext("profile_job")
+    profile_goals = gettext("profile_goals")
+    # Construct profile_desc with proper escaping
+    profile_desc = f"{escape(profile_intro)} {escape(profile_age)}<br>{escape(profile_introvert)}<br>{escape(profile_job)} {escape(profile_goals)}"
+
     return render_template(
         PROFILE_PAGE,
         profile_image=PROFILE_IMAGE,
         resume_pdf=RESUME_PDF,
         title="My Portfolio",
+        profile_name=profile_name,
+        profile_desc=profile_desc,
     )
 
 

@@ -3,40 +3,40 @@
 
 <div class="chatbox-container">
     <div class="chatbox-icon" onclick="toggleChatbox()">
-        <img src="{{ url_for('static', filename='images/chat.png') }}" alt="Chat" />
+        <img src="{{ url_for('static', filename='images/chat.png') }}" alt="{{ _('chat_icon_alt') }}" />
     </div>
 
     <!-- Chatbox modal (hidden by default) -->
     <div id="chatboxModal" class="chatbox-modal">
         <div class="chatbox-header">
-            <span class="chatbox-title">Chat with Me?</span>
+            <span class="chatbox-title">{{ _('chat_title') }}</span>
             <span class="chatbox-close" onclick="toggleChatbox()">&times;</span>
         </div>
         <div class="chatbox-body">
-            <p>How can I help you?</p>
+            <p>{{ _('chat_help_message') }}</p>
             <div id="chatMessages" class="chat-messages"></div>
             <div class="chat-options grid" id="chatOptions"></div>
         </div>
         <!-- Clear button to clear chat messages -->
-        <button id="clearChat" onclick="clearChat()" style="display: none;">Clear Chat</button>
+        <button id="clearChat" onclick="clearChat()" style="display: none;">{{ _('chat_clear_button') }}</button>
     </div>
 </div>
 
 <script>
     const cacheMessage = 'chatMessages';
     const cacheChatboxVisible = 'chatboxVisible';
-    
+
     // Array of questions and answers
     const qaArray = [
-        { question: 'What is your name?', answer: "My name is Joshua Algadipe." },
-        { question: 'What is your age?', answer: `I am ${calculateAge()} years old.` },
-        { question: 'What is your job?', answer: "I am a software engineer." },
-        { question: 'What is your favorite sport?', answer: "I enjoy basketball." },
-        { question: 'Who is your crush?', answer: "Secret I can't tell! Girls are idiots!" },
-        { question: 'What is your favorite subject?', answer: "My favorite subject is Math." },
-        { question: 'Where do you live?', answer: "I live in Cabulihan, Vallehermoso, Negros Oriental." },
-        { question: 'What is your dream job?', answer: "Primarily my dream job is Electrical Engineering, but my current job now is Software Engineer." },
-        { question: 'What type of person are you?', answer: "I'm a bit enigmatic and won't laugh if someone doesn't match my vibe, but once I'm comfortable with someone, I'm the one who laughs the most." }
+        { question: "{{ _('qa_name') }}", answer: "{{ _('qa_name_answer') }}" },
+        { question: "{{ _('qa_age') }}", answer: "{{ _('qa_age_answer') }}" },
+        { question: "{{ _('qa_job') }}", answer: "{{ _('qa_job_answer') }}" },
+        { question: "{{ _('qa_favorite_sport') }}", answer: "{{ _('qa_favorite_sport_answer') }}" },
+        { question: "{{ _('qa_crush') }}", answer: "{{ _('qa_crush_answer') }}" },
+        { question: "{{ _('qa_favorite_subject') }}", answer: "{{ _('qa_favorite_subject_answer') }}" },
+        { question: "{{ _('qa_live') }}", answer: "{{ _('qa_live_answer') }}" },
+        { question: "{{ _('qa_dream_job') }}", answer: "{{ _('qa_dream_job_answer') }}" },
+        { question: "{{ _('qa_type_of_person') }}", answer: "{{ _('qa_type_of_person_answer') }}" }
     ];
 
     // Initialize chat options dynamically
@@ -84,7 +84,17 @@
     // Function to get automatic answers based on the question
     function getAutomaticAnswer(question) {
         const qa = qaArray.find(item => item.question === question);
-        return qa ? qa.answer : "I'm not sure how to answer that.";
+        if (qa) {
+            let answer = qa.answer;
+
+            // Check if the answer contains the placeholder for age
+            if (answer.includes("{age}")) {
+                answer = answer.replace("{age}", calculateAge());
+            }
+
+            return answer;
+        }
+        return null;
     }
 
     // Function to display messages in the chat

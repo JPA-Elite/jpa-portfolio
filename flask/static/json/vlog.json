@@ -1,32 +1,80 @@
 [
     {
-        "title": "Pranking Our Housemate",
-        "description": "Being the first to arrive back at the house, we decided to play a prank on our housemate.",
+        "title": {
+            "en": "Pranking Our Housemate",
+            "ceb": "Pagbinuang sa Among Kauban sa Balay",
+            "fr": "Faire une Farce à Notre Colocataire"
+        },
+        "description": {
+            "en": "Being the first to arrive back at the house, we decided to play a prank on our housemate.",
+            "ceb": "Isang ako ang unang nakauli sa balay, nakahukom kami nga magbinuang sa among kauban sa balay.",
+            "fr": "Étant le premier à revenir à la maison, nous avons décidé de faire une farce à notre colocataire."
+        },
         "file": "videos/prank1.mp4"
     },
     {
-        "title": "A Heartbreaking Story",
-        "description": "Out of jealousy over a silly relationship, I made this video for myself.",
+        "title": {
+            "en": "A Heartbreaking Story",
+            "ceb": "Usa ka Makapait nga Istorya",
+            "fr": "Une Histoire Déchirante"
+        },
+        "description": {
+            "en": "Out of jealousy over a silly relationship, I made this video for myself.",
+            "ceb": "Tungod sa kainggit sa usa ka binuang nga relasyon, gihimo ko kini nga video para sa akong kaugalingon.",
+            "fr": "Par jalousie envers une relation ridicule, j'ai fait cette vidéo pour moi-même."
+        },
         "file": "videos/prank2.mp4"
     },
     {
-        "title": "Viral Dance by an Attractive Girl",
-        "description": "I'm not impressed by this girl's dancing, and I'm not the type of guy who appreciates overly sexualized performances.",
+        "title": {
+            "en": "Viral Dance by an Attractive Girl",
+            "ceb": "Viral nga Sayaw sa Usa ka Guwapa nga Babaye",
+            "fr": "Danse Virale par une Fille Attrayante"
+        },
+        "description": {
+            "en": "I'm not impressed by this girl's dancing, and I'm not the type of guy who appreciates overly sexualized performances.",
+            "ceb": "Dili ko ma-impress sa sayaw sa maong babaye, ug dili ako ang tipo nga lalaki nga magpahalipay sa sobra nga sekswal nga mga pasundayag.",
+            "fr": "Je ne suis pas impressionné par la danse de cette fille, et je ne suis pas le genre de gars qui apprécie les performances trop sexualisées."
+        },
         "file": "videos/prank3.mp4"
     },
     {
-        "title": "Struggling with Dance Moves",
-        "description": "I'm not a great dancer, so I challenged myself to dance with my brother.",
+        "title": {
+            "en": "Struggling with Dance Moves",
+            "ceb": "Naglisod sa mga Sayaw",
+            "fr": "Lutter avec les Pas de Danse"
+        },
+        "description": {
+            "en": "I'm not a great dancer, so I challenged myself to dance with my brother.",
+            "ceb": "Dili ko maayo nga mananayaw, busa gichallenge nako akong kaugalingon nga mosayaw uban sa akong igsoon.",
+            "fr": "Je ne suis pas un grand danseur, alors je me suis lancé le défi de danser avec mon frère."
+        },
         "file": "videos/prank4.mp4"
     },
     {
-        "title": "TikTok Picture Challenge",
-        "description": "I synchronized the beat with my picture, and it turned out amazing.",
+        "title": {
+            "en": "TikTok Picture Challenge",
+            "ceb": "TikTok Picture Challenge",
+            "fr": "Défi Photo TikTok"
+        },
+        "description": {
+            "en": "I synchronized the beat with my picture, and it turned out amazing.",
+            "ceb": "Gisynchronize nako ang ritmo sa akong litrato, ug nindot kaayo ang resulta.",
+            "fr": "J'ai synchronisé le rythme avec ma photo, et le résultat était incroyable."
+        },
         "file": "videos/prank5.mp4"
     },
     {
-        "title": "Hokage Chat Skills",
-        "description": "Chatting with my fellow scholar using hokage moves for fun.",
+        "title": {
+            "en": "Hokage Chat Skills",
+            "ceb": "Hokage Chat Skills",
+            "fr": "Compétences de Chat Hokage"
+        },
+        "description": {
+            "en": "Chatting with my fellow scholar using hokage moves for fun.",
+            "ceb": "Nag-chat uban sa akong kauban nga estudyante gamit ang hokage moves alang sa kalipay.",
+            "fr": "Discuter avec mon camarade érudit en utilisant des mouvements de hokage pour le plaisir."
+        },
         "file": "videos/prank6.mp4"
     }
 ]

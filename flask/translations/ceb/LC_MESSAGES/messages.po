@@ -1,0 +1,262 @@
+# Cebuano translations for PROJECT.
+# Copyright (C) 2024 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2024.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2024-10-15 11:53+0800\n"
+"PO-Revision-Date: 2024-10-15 11:28+0800\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: ceb\n"
+"Language-Team: ceb <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.16.0\n"
+
+msgid "Contact_Me"
+msgstr "Kontaka Ko"
+
+msgid "Contact_Description"
+msgstr "Kung gusto nimo makig-uban, palihug ablihi ang mga pamaagi sa ubos:"
+
+msgid "Portfolio"
+msgstr "Portfolio"
+
+msgid "Gallery"
+msgstr "Gallery"
+
+msgid "Vlog"
+msgstr "Vlog"
+
+msgid "Concern"
+msgstr "Kababalaghan"
+
+msgid "Summary"
+msgstr "Sulyap"
+
+msgid "Software_Expertise_Description"
+msgstr "Nakahimo ako og daghang kaalam sa software pinaagi sa nagkalain-laing mga papel sa nagkalain-laing mga palibot."
+
+msgid "Technology_Adaptability_Description"
+msgstr "Ako usa ka maayong mag-usab sa nagkalain-laing mga teknolohiya, nga dali nga nakasabot ug nag-apply niini aron matubag ang mga panginahanglan sa nagkadako nga mga negosyo."
+
+msgid "Experience_Share_Description"
+msgstr "Nanghinaut ako nga ibahin ang akong kasinatian ug abilidad aron makatabang sa pagpadayon sa kalampusan ug inobasyon."
+
+msgid "Key_Projects"
+msgstr "Mga Panguna nga Proyekto"
+
+msgid "Project_A"
+msgstr "Proyekto A"
+
+msgid "Project_A_Description"
+msgstr "Paghulagway: Nakahimo og usa ka web application gamit ang React ug Node.js."
+
+msgid "Project_A_Technologies"
+msgstr "Mga Panguna nga Teknolohiya: React, Node.js, MongoDB."
+
+msgid "Project_B"
+msgstr "Proyekto B"
+
+msgid "Project_B_Description"
+msgstr "Paghulagway: Naghimo og usa ka mobile application nga nagtabang sa mga tiggamit nga masubay ang ilang mga fitness goals."
+
+msgid "Project_B_Technologies"
+msgstr "Mga Panguna nga Teknolohiya: Flutter, Firebase."
+
+msgid "Project_C"
+msgstr "Proyekto C"
+
+msgid "Project_C_Description"
+msgstr "Paghulagway: Naghimo og usa ka e-commerce platform nga adunay responsive design."
+
+msgid "Project_C_Technologies"
+msgstr "Mga Panguna nga Teknolohiya: HTML, CSS, JavaScript, PHP, MySQL."
+
+msgid "About_Me"
+msgstr "Mahitungod Kanako"
+
+msgid "Highlights_Description"
+msgstr "Aniya ang pipila ka mga pang-highlight mahitungod kanako ug sa akong mga abilidad:"
+
+msgid "Passionate_Software_Developer"
+msgstr "Mapinadayunon nga Software Developer"
+
+msgid "Programming_Foundation_Description"
+msgstr "Adunay ako lig-on nga pundasyon sa programming ug paghusay sa problema."
+
+msgid "Solution_Creation_Description"
+msgstr "Gusto ko nga maghimo og mga solusyon nga makapahapsay sa kinabuhi sa mga tawo."
+
+msgid "Development_Experience"
+msgstr "Front-end & Back-end Development"
+
+msgid "Development_Experience_Description"
+msgstr "Adunay ako kasinatian sa parehas nga front-end ug back-end development."
+
+msgid "User_Friendly_Applications_Description"
+msgstr "Ang paghimog mga user-friendly nga aplikasyon mao ang akong kahanas."
+
+msgid "Goal_Oriented"
+msgstr "Nakatutok sa Tumong"
+
+msgid "Leverage_Technology_Description"
+msgstr "Ang akong tumong mao ang paggamit sa teknolohiya aron makahimo og mga makahuluganon nga kasinatian."
+
+msgid "Eager_to_Learn_Description"
+msgstr "Kanunay akong nagtinguha nga makakat-on sa mga bag-ong teknolohiya ug mag-usab sa nagkalain-laing mga palibot."
+
+msgid "Resume"
+msgstr "Resume"
+
+msgid "Professional_Highlights_Description"
+msgstr "Aniya ang pipila ka mga pang-highlight gikan sa akong propesyonal nga kasinatian:"
+
+msgid "Repair_Service_Experience"
+msgstr "Serbisyo sa Pag-ayo sa Elektrikal & Elektronika, Cabulihan, Vallehermoso, Negros Oriental (2019 - 2020)"
+
+msgid "Repair_Service_Description"
+msgstr "Nakahimo sa pag-ayo sa mga sirang elektronika ug kagamitan."
+
+msgid "Business_Intern_Experience"
+msgstr "Business Intern, Vallehermoso, Negros Oriental (2019 - 2020)"
+
+msgid "Business_Intern_Description"
+msgstr "Naghimo og maayong butang, formal nga nakig-istorya aron masulbad ang mga problema, ug nitubag sa mga pangutana."
+
+msgid "TrustArc_Internship"
+msgstr "Software Development Intern sa TrustArc, Bohol Ave, Cebu City (2023)"
+
+msgid "API_Security_Description"
+msgstr "Nakatabang sa paghimo og luwas ug segurado nga mga API requests."
+
+msgid "Backend_Frontend_Description"
+msgstr "Nagtukod sa backend gamit ang Spring Boot ug frontend gamit ang Angular."
+
+msgid "Chronostep_Internship"
+msgstr "Backend Development Intern sa Chronostep, 6th Floor, Gagfa Building, Cebu City (2023)"
+
+msgid "Internal_Projects_Description"
+msgstr "Nakahimo og mga internal nga proyekto alang sa paggamit sa kompanya."
+
+msgid "Primary_Technologies_Description"
+msgstr "Gamit ang Laravel ug Vue ingon panguna nga mga teknolohiya."
+
+msgid "Detailed_Resume_Description"
+msgstr "Alang sa detalyado nga pagtan-aw, mahimo nimo tan-awon ug i-download ang akong resume"
+
+msgid "Here_Link"
+msgstr "dinhi"
+
+msgid "concern_title"
+msgstr "Akong Kabalak-an"
+
+msgid "concern_header"
+msgstr "Kabalak-an"
+
+msgid "concern_feedback_message"
+msgstr "Kung adunay kay feedback o mga hunahuna nga ibahinbahin bahin kanako, ayaw pagduha-duha nga i-klik ang kini nga button—ayaw kaulaw!"
+
+msgid "concern_button"
+msgstr "Kuhaa ang survey"
+
+msgid "pagination_previous"
+msgstr "Previous"
+
+msgid "pagination_page"
+msgstr "Page"
+
+msgid "pagination_of"
+msgstr "of"
+
+msgid "pagination_next"
+msgstr "Next"
+
+msgid "chat_icon_alt"
+msgstr "Chat"
+
+msgid "chat_title"
+msgstr "Makig-chat kanako?"
+
+msgid "chat_help_message"
+msgstr "Unsaon nako pagtabang kanimo?"
+
+msgid "chat_clear_button"
+msgstr "Limpyohi ang Chat"
+
+msgid "qa_name"
+msgstr "Unsa imong ngalan?"
+
+msgid "qa_name_answer"
+msgstr "Ang akong ngalan kay Joshua Algadipe."
+
+msgid "qa_age"
+msgstr "Unsay imong edad?"
+
+msgid "qa_age_answer"
+msgstr "Ako kay {age} ka tuig."
+
+msgid "qa_job"
+msgstr "Unsay imong trabaho?"
+
+msgid "qa_job_answer"
+msgstr "Ako usa ka software engineer."
+
+msgid "qa_favorite_sport"
+msgstr "Unsay imong paboritong isport?"
+
+msgid "qa_favorite_sport_answer"
+msgstr "Gusto ko ang basketball."
+
+msgid "qa_crush"
+msgstr "Kinsa imong crush?"
+
+msgid "qa_crush_answer"
+msgstr "Sikreto, dili ko makasulti! Walo'y klaro mga bayi!"
+
+msgid "qa_favorite_subject"
+msgstr "Unsay imong paboritong asignatura?"
+
+msgid "qa_favorite_subject_answer"
+msgstr "Ang akong paboritong asignatura kay Matematika."
+
+msgid "qa_live"
+msgstr "Asa ka nagpuyo?"
+
+msgid "qa_live_answer"
+msgstr "Nagpuyo ko sa Cabulihan, Vallehermoso, Negros Oriental."
+
+msgid "qa_dream_job"
+msgstr "Unsay imong pangandoy nga trabaho?"
+
+msgid "qa_dream_job_answer"
+msgstr "Ang akong pangandoy nga trabaho kay Electrical Engineering, pero ang akong trabaho karon kay Software Engineer."
+
+msgid "qa_type_of_person"
+msgstr "Unsang klase nga tawo ka?"
+
+msgid "qa_type_of_person_answer"
+msgstr "Medyo misteryoso ko ug dili ko katawa kung ang usa ka tawo dili mo match sa akong vibes, pero kung komportable na ako sa usa, ako na ang magkatawa sa tanan."
+
+msgid "profile_name"
+msgstr "Akong Profile"
+
+msgid "profile_intro"
+msgstr "Ang akong ngalan kay Joshua Algadipe,"
+
+msgid "profile_age"
+msgstr "Ako {age} ka tuig ang edad gikan sa Vallehermoso, Negros Oriental."
+
+msgid "profile_introvert"
+msgstr "Usa akong introvert ug dili maayo sa pagsugod og panag-istorya, mao nga ayaw pagpanuko sa pagtext nako—mag-istorya ta!"
+
+msgid "profile_job"
+msgstr "Karon nagtrabaho ko isip usa ka software engineer,"
+
+msgid "profile_goals"
+msgstr "ug aduna koy dagkong tumong sa umaabot, nagtinguha nga magtukod og bahandi ug makab-ot ang kalampusan."

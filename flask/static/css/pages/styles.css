@@ -24,11 +24,31 @@ header h1 {
     font-size: 2rem;
 }
 
+nav {
+    display: flex;
+    /* Use flexbox for nav */
+    justify-content: space-between;
+    /* Space out the items */
+    align-items: center;
+    /* Center vertically */
+    width: 100%;
+    /* Ensure it uses full width */
+}
+
 nav ul {
     list-style: none;
     display: flex;
     gap: 20px;
+    /* Space between the navigation links */
+    margin: 0;
+    /* Reset margin */
 }
+
+/* nav ul {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+} */
 
 nav ul li {
     position: relative;
@@ -135,11 +155,107 @@ section p {
     /* Blinking effect */
 }
 
+.language-selector {
+    margin-left: auto;
+    /* Pushes language selector to the right */
+    display: flex;
+    /* Use flex to align the dropdown properly */
+}
+
+.dropdown {
+    position: relative;
+}
+
+.dropbtn {
+    background-color: transparent;
+    /* Make the button background transparent */
+    border: none;
+    /* No border */
+    cursor: pointer;
+    /* Change cursor to pointer */
+    padding: 0;
+    /* Remove padding */
+}
+
+.flag-icon {
+    width: 40px;
+    /* Set width for flag icons */
+    height: 40px;
+    /* Set height for flag icons */
+    border-radius: 50%;
+    /* Make flags circular */
+    transition: transform 0.3s;
+    /* Smooth transition for scaling */
+}
+
+.dropdown-content {
+    display: none;
+    /* Initially hidden */
+    position: absolute;
+    background-color: white;
+    /* Background for dropdown */
+    min-width: 160px;
+    /* Minimum width */
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+    /* Shadow effect */
+    z-index: 1;
+    /* Position above other content */
+    border-radius: 8px;
+    /* Rounded corners */
+}
+
+.dropdown-content .flag-icon {
+    margin-right: 10px;
+}
+
+.dropdown-content a {
+    color: black;
+    /* Text color */
+    padding: 12px 16px;
+    /* Padding for links */
+    text-decoration: none;
+    /* No underline */
+    display: flex;
+    /* Flexbox for flag and text */
+    align-items: center;
+    /* Center items vertically */
+}
+
+.dropdown-content a:hover {
+    background-color: #f1f1f1;
+    /* Background on hover */
+}
+
+/* Show the dropdown when the button is clicked */
+.dropdown:hover .dropdown-content {
+    display: block;
+    /* Show dropdown on hover */
+}
+
+/* Optional: Add transition for dropdown */
+.dropdown-content {
+    transition: visibility 0.3s, opacity 0.3s;
+}
+
+.mobile-concern-btn {
+    display: none;
+}
+
 @keyframes blink {
     50% {
         opacity: 0;
         /* Blink effect */
     }
+}
+
+@media (max-width: 1400px) {
+    .dropdown-content {
+        right: 0;
+    }
+}
+
+.nav-toggle {
+    display: none;
 }
 
 /* Mobile Styles */
@@ -148,23 +264,63 @@ section p {
         height: auto;
     }
 
-    nav ul {
+    nav {
+        display: flex;
         align-items: center;
-        flex-direction: column;
-        /* Stack navigation links vertically */
-        padding: 0;
-        /* Remove padding */
-        margin-top: 10px;
-        /* Space between header and navigation */
+        position: relative;
+    }
+
+    nav ul li:hover::after {
+        width: 0%;
+    }
+
+    nav ul li:hover {
+        background-color: #ccc;
+    }
+
+    .nav-toggle {
+        display: block;
+        cursor: pointer;
+        font-size: 30px;
+        /* Adjust size as needed */
+        margin-bottom: 10px;
+        /* Space below the toggle */
+    }
+
+    nav #navList {
+        display: none; /* Hide the navigation by default */
+        flex-direction: column; /* Change to row direction */
+        flex-wrap: wrap; /* Allow items to wrap */
+        width: auto; /* Full width */
+        padding: 0; /* Remove padding */
+        margin: 0; /* Remove margin */
+        position: absolute;
+        top: 50px;
+        background-color: white;
+        z-index: 1000;
+        border-radius: 8px;
+        gap: 0px;
+        box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+    }
+
+    nav #navList.show {
+        display: flex;
+        /* Show when toggled */
+    }
+
+    nav #navList li {
+        padding: 10px 20px;
     }
 
     nav a {
-        padding: 10px;
-        /* Padding for clickable links */
-        text-align: center;
-        /* Center align text in links */
-        border-bottom: 1px solid #ccc;
+        padding: 10px 20px;
+        /* Adjust padding */
+        text-align: left;
+        /* Align text to the left */
+        /* border-bottom: 1px solid #ccc; */
         /* Optional border for separation */
+        width: 100%;
+        /* Full width */
     }
 
     .project-intro {
@@ -191,6 +347,32 @@ section p {
     section h2 {
         font-size: 1.8rem;
         /* Smaller font size for headings */
+    }
+
+    .dropdown-content {
+        overflow-y: hidden;
+    }
+
+    .mobile-concern-btn {
+        display: block; /* Show on mobile */
+        padding: 10px; /* Adjust padding for the button */
+        background-color: #007bffd2; /* Change the background color as needed */
+        color: white; /* Text color */
+        border: none; /* Remove border */
+        border-radius: 5px; /* Rounded corners */
+        cursor: pointer; /* Pointer cursor on hover */
+        font-size: 14px; /* Font size */
+        transition: background-color 0.3s; /* Transition effect */
+    }
+
+    .mobile-concern-btn:hover {
+        background-color: #0056b3; /* Darken background on hover */
+    }
+
+    .language-selector {
+        display: flex;
+        align-items: center;
+        gap: 20px;
     }
 }
 

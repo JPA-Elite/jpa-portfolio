@@ -1,0 +1,262 @@
+# English translations for PROJECT.
+# Copyright (C) 2024 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2024.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2024-10-15 11:53+0800\n"
+"PO-Revision-Date: 2024-10-15 11:28+0800\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: en\n"
+"Language-Team: en <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.16.0\n"
+
+msgid "Contact_Me"
+msgstr "Contact Me"
+
+msgid "Contact_Description"
+msgstr "If you would like to get in touch, please reach out via the methods below:"
+
+msgid "Portfolio"
+msgstr "Portfolio"
+
+msgid "Gallery"
+msgstr "Gallery"
+
+msgid "Vlog"
+msgstr "Vlog"
+
+msgid "Concern"
+msgstr "Concern"
+
+msgid "Summary"
+msgstr "Summary"
+
+msgid "Software_Expertise_Description"
+msgstr "I have developed extensive software expertise through diverse roles in different environments."
+
+msgid "Technology_Adaptability_Description"
+msgstr "I am highly adaptable to a variety of technologies, quickly understanding and applying them to meet the needs of growing businesses."
+
+msgid "Experience_Share_Description"
+msgstr "I'm eager to share my experience and skills to help further drive success and innovation."
+
+msgid "Key_Projects"
+msgstr "Key Projects"
+
+msgid "Project_A"
+msgstr "Project A"
+
+msgid "Project_A_Description"
+msgstr "Description: Developed a web application using React and Node.js."
+
+msgid "Project_A_Technologies"
+msgstr "Key Technologies: React, Node.js, MongoDB."
+
+msgid "Project_B"
+msgstr "Project B"
+
+msgid "Project_B_Description"
+msgstr "Description: Built a mobile application that helps users track their fitness goals."
+
+msgid "Project_B_Technologies"
+msgstr "Key Technologies: Flutter, Firebase."
+
+msgid "Project_C"
+msgstr "Project C"
+
+msgid "Project_C_Description"
+msgstr "Description: Created an e-commerce platform with a responsive design."
+
+msgid "Project_C_Technologies"
+msgstr "Key Technologies: HTML, CSS, JavaScript, PHP, MySQL."
+
+msgid "About_Me"
+msgstr "About Me"
+
+msgid "Highlights_Description"
+msgstr "Here are some highlights about me and my skills:"
+
+msgid "Passionate_Software_Developer"
+msgstr "Passionate Software Developer"
+
+msgid "Programming_Foundation_Description"
+msgstr "I have a strong foundation in programming and problem-solving."
+
+msgid "Solution_Creation_Description"
+msgstr "I enjoy creating solutions that make people's lives easier."
+
+msgid "Development_Experience"
+msgstr "Front-end & Back-end Development"
+
+msgid "Development_Experience_Description"
+msgstr "I have experience in both front-end and back-end development."
+
+msgid "User_Friendly_Applications_Description"
+msgstr "Creating user-friendly applications is my forte."
+
+msgid "Goal_Oriented"
+msgstr "Goal-oriented"
+
+msgid "Leverage_Technology_Description"
+msgstr "My aim is to leverage technology to build meaningful experiences."
+
+msgid "Eager_to_Learn_Description"
+msgstr "I’m always eager to learn new technologies and adapt to evolving environments."
+
+msgid "Resume"
+msgstr "Resume"
+
+msgid "Professional_Highlights_Description"
+msgstr "Here are some highlights from my professional experience:"
+
+msgid "Repair_Service_Experience"
+msgstr "Electrical & Electronic Repair Service, Cabulihan, Vallehermoso, Negros Oriental (2019 - 2020)"
+
+msgid "Repair_Service_Description"
+msgstr "Fixed broken electronics and appliances."
+
+msgid "Business_Intern_Experience"
+msgstr "Business Intern, Vallehermoso, Negros Oriental (2019 - 2020)"
+
+msgid "Business_Intern_Description"
+msgstr "Made good stuff, talked formally to fix problems, and answered questions."
+
+msgid "TrustArc_Internship"
+msgstr "Software Development Intern at TrustArc, Bohol Ave, Cebu City (2023)"
+
+msgid "API_Security_Description"
+msgstr "Helped make safe and secure API requests."
+
+msgid "Backend_Frontend_Description"
+msgstr "Worked on backend with Spring Boot and frontend with Angular."
+
+msgid "Chronostep_Internship"
+msgstr "Backend Development Intern at Chronostep, 6th Floor, Gagfa Building, Cebu City (2023)"
+
+msgid "Internal_Projects_Description"
+msgstr "Developed internal projects for company use."
+
+msgid "Primary_Technologies_Description"
+msgstr "Used Laravel and Vue as primary technologies."
+
+msgid "Detailed_Resume_Description"
+msgstr "For a detailed view, you can view and download my resume"
+
+msgid "Here_Link"
+msgstr "here"
+
+msgid "concern_title"
+msgstr "My Concern"
+
+msgid "concern_header"
+msgstr "Concern"
+
+msgid "concern_feedback_message"
+msgstr "If you have any feedback or thoughts to share about me, feel free to click this button—don’t be shy!"
+
+msgid "concern_button"
+msgstr "Take the survey"
+
+msgid "pagination_previous"
+msgstr "Previous"
+
+msgid "pagination_page"
+msgstr "Page"
+
+msgid "pagination_of"
+msgstr "of"
+
+msgid "pagination_next"
+msgstr "Next"
+
+msgid "chat_icon_alt"
+msgstr "Chat"
+
+msgid "chat_title"
+msgstr "Chat with Me?"
+
+msgid "chat_help_message"
+msgstr "How can I help you?"
+
+msgid "chat_clear_button"
+msgstr "Clear Chat"
+
+msgid "qa_name"
+msgstr "What is your name?"
+
+msgid "qa_name_answer"
+msgstr "My name is Joshua Algadipe."
+
+msgid "qa_age"
+msgstr "What is your age?"
+
+msgid "qa_age_answer"
+msgstr "I am {age} years old."
+
+msgid "qa_job"
+msgstr "What is your job?"
+
+msgid "qa_job_answer"
+msgstr "I am a software engineer."
+
+msgid "qa_favorite_sport"
+msgstr "What is your favorite sport?"
+
+msgid "qa_favorite_sport_answer"
+msgstr "I enjoy basketball."
+
+msgid "qa_crush"
+msgstr "Who is your crush?"
+
+msgid "qa_crush_answer"
+msgstr "Secret I can't tell! Girls are idiots!"
+
+msgid "qa_favorite_subject"
+msgstr "What is your favorite subject?"
+
+msgid "qa_favorite_subject_answer"
+msgstr "My favorite subject is Math."
+
+msgid "qa_live"
+msgstr "Where do you live?"
+
+msgid "qa_live_answer"
+msgstr "I live in Cabulihan, Vallehermoso, Negros Oriental."
+
+msgid "qa_dream_job"
+msgstr "What is your dream job?"
+
+msgid "qa_dream_job_answer"
+msgstr "Primarily my dream job is Electrical Engineering, but my current job now is Software Engineer."
+
+msgid "qa_type_of_person"
+msgstr "What type of person are you?"
+
+msgid "qa_type_of_person_answer"
+msgstr "I'm a bit enigmatic and won't laugh if someone doesn't match my vibe, but once I'm comfortable with someone, I'm the one who laughs the most."
+
+msgid "profile_name"
+msgstr "My Profile"
+
+msgid "profile_intro"
+msgstr "My name is Joshua Algadipe,"
+
+msgid "profile_age"
+msgstr "I am {age} years old from Vallehermoso, Negros Oriental."
+
+msgid "profile_introvert"
+msgstr "I'm an introvert and not great at starting conversations, so feel free to message me first—let's chat!"
+
+msgid "profile_job"
+msgstr "I'm currently working as a software engineer,"
+
+msgid "profile_goals"
+msgstr "and I have big goals for the future, aiming to build wealth and achieve success."

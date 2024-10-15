@@ -1,41 +1,40 @@
 {% extends 'base.html' %}
 
-{% block title %}My Portfolio{% endblock %}
+{% block title %}{{ _('Portfolio') }}{% endblock %}
 {% block head %}{% endblock %}
 
 {% block content %}
 <section id="portfolio" class="project-intro">
     <div class="project-image">
         <img src="{{ profile_image }}" alt="Profile Image"
-            onclick="openModal('{{ profile_image }}', 'My Profile', 'My name is Joshua Algadipe, ' + calculateAge() + ' years old from Vallehermoso, Negros Oriental. <br>I\'m an introvert and not great at starting conversations, <br>so feel free to message me first—let\'s chat! I\'m currently working as a software engineer,<br> and I have big goals for the future, aiming to build wealth and achieve success.')" />
+            onclick="openModal('{{ profile_image }}', '{{ profile_name }}', '{{ profile_desc }}'.replace('{age}', calculateAge()))" />
     </div>
     <div class="project-details">
-        <h3>Summary:</h3>
-        <p>I have developed extensive software expertise through diverse roles in different environments.</p>
-        <p>I am highly adaptable to a variety of technologies, quickly understanding and applying them to meet the needs
-            of growing businesses.</p>
-        <p>I'm eager to share my experience and skills to help further drive success and innovation.</p>
-        <h3>Key Projects:</h3>
+        <h3>{{ _('Summary') }}:</h3>
+        <p>{{ _('Software_Expertise_Description') }}</p>
+        <p>{{ _('Technology_Adaptability_Description') }}</p>
+        <p>{{ _('Experience_Share_Description') }}</p>
+        <h3>{{ _('Key_Projects') }}:</h3>
         <ul>
             <li>
-                <b>Project A:</b>
+                <b>{{ _('Project_A') }}:</b>
                 <ul>
-                    <li>Description: Developed a web application using React and Node.js.</li>
-                    <li>Key Technologies: React, Node.js, MongoDB.</li>
+                    <li>{{ _('Project_A_Description') }}</li>
+                    <li>{{ _('Project_A_Technologies') }}</li>
                 </ul>
             </li>
             <li>
-                <b>Project B:</b>
+                <b>{{ _('Project_B') }}:</b>
                 <ul>
-                    <li>Description: Built a mobile application that helps users track their fitness goals.</li>
-                    <li>Key Technologies: Flutter, Firebase.</li>
+                    <li>{{ _('Project_B_Description') }}</li>
+                    <li>{{ _('Project_B_Technologies') }}</li>
                 </ul>
             </li>
             <li>
-                <b>Project C:</b>
+                <b>{{ _('Project_C') }}:</b>
                 <ul>
-                    <li>Description: Created an e-commerce platform with a responsive design.</li>
-                    <li>Key Technologies: HTML, CSS, JavaScript, PHP, MySQL.</li>
+                    <li>{{ _('Project_C_Description') }}</li>
+                    <li>{{ _('Project_C_Technologies') }}</li>
                 </ul>
             </li>
         </ul>
@@ -43,95 +42,96 @@
 </section>
 
 <section id="about">
-    <h2>About Me</h2>
-    <p>Here are some highlights about me and my skills:</p>
+    <h2>{{ _('About_Me') }}</h2>
+    <p>{{ _('Highlights_Description') }}</p>
     <ul>
         <li>
-            <b>Passionate Software Developer:</b>
+            <b>{{ _('Passionate_Software_Developer') }}:</b>
             <ul>
-                <li>I have a strong foundation in programming and problem-solving.</li>
-                <li>I enjoy creating solutions that make people's lives easier.</li>
+                <li>{{ _('Programming_Foundation_Description') }}</li>
+                <li>{{ _('Solution_Creation_Description') }}</li>
             </ul>
         </li>
         <li>
-            <b>Front-end & Back-end Development:</b>
+            <b>{{ _('Development_Experience') }}:</b>
             <ul>
-                <li>I have experience in both front-end and back-end development.</li>
-                <li>Creating user-friendly applications is my forte.</li>
+                <li>{{ _('Development_Experience_Description') }}</li>
+                <li>{{ _('User_Friendly_Applications_Description') }}</li>
             </ul>
         </li>
         <li>
-            <b>Goal-oriented:</b>
+            <b>{{ _('Goal_Oriented') }}:</b>
             <ul>
-                <li>My aim is to leverage technology to build meaningful experiences.</li>
-                <li>I’m always eager to learn new technologies and adapt to evolving environments.</li>
+                <li>{{ _('Leverage_Technology_Description') }}</li>
+                <li>{{ _('Eager_to_Learn_Description') }}</li>
             </ul>
         </li>
     </ul>
 </section>
 
 <section id="resume">
-    <h2>Resume</h2>
-    <p>Here are some highlights from my professional experience:</p>
+    <h2>{{ _('Resume') }}</h2>
+    <p>{{ _('Professional_Highlights_Description') }}</p>
     <ul>
         <li>
-            Electrical & Electronic Repair Service, Cabulihan, Vallehermoso, Negros Oriental (2019 - 2020)
+            {{ _('Repair_Service_Experience') }}
             <ul>
-                <li>Fixed broken electronics and appliances.</li>
+                <li>{{ _('Repair_Service_Description') }}</li>
             </ul>
         </li>
         <li>
-            Business Intern, Vallehermoso, Negros Oriental (2019 - 2020)
+            {{ _('Business_Intern_Experience') }}
             <ul>
-                <li>Made good stuff, talked formally to fix problems, and answered questions.</li>
+                <li>{{ _('Business_Intern_Description') }}</li>
             </ul>
         </li>
         <li>
-            Software Development Intern at TrustArc, Bohol Ave, Cebu City (2023)
+            {{ _('TrustArc_Internship') }}
             <ul>
-                <li>Helped make safe and secure API requests.</li>
-                <li>Worked on backend with Spring Boot and frontend with Angular.</li>
+                <li>{{ _('API_Security_Description') }}</li>
+                <li>{{ _('Backend_Frontend_Description') }}</li>
             </ul>
         </li>
         <li>
-            Backend Development Intern at Chronostep, 6th Floor, Gagfa Building, Cebu City (2023)
+            {{ _('Chronostep_Internship') }}
             <ul>
-                <li>Developed internal projects for company use.</li>
-                <li>Used Laravel and Vue as primary technologies.</li>
+                <li>{{ _('Internal_Projects_Description') }}</li>
+                <li>{{ _('Primary_Technologies_Description') }}</li>
             </ul>
         </li>
     </ul>
     <p>
-        <a>For a detailed view, you can view and download my resume</a>
-        <a href="{{ resume_pdf }}" target="_blank" class="cta-button">here</a>
+        <a>{{ _('Detailed_Resume_Description') }}</a>
+        <a href="{{ resume_pdf }}" target="_blank" class="cta-button">{{ _('Here_Link') }}</a>
     </p>
 </section>
+
 <section id="contact">
-    <h2>Contact Me</h2>
-    <p>If you would like to get in touch, please reach out via the methods below:</p>
+    <h2>{{ _('Contact_Me') }}</h2>
+    <p>{{ _('Contact_Description') }}</p> <!-- Updated paragraph -->
     <ul>
         <li>
-            <b>Phone Number:</b>
+            <b>{{ _('Phone_Number') }}:</b>
             <ul>
                 <li><a href="tel:+639319127640">0931 912 7640</a></li>
             </ul>
         </li>
         <li>
-            <b>Email:</b>
+            <b>{{ _('Email') }}:</b>
             <ul>
                 <li><a href="mailto:algadipej962@gmail.com">algadipej962@gmail.com</a></li>
             </ul>
         </li>
-        <li></li>
-        <b>Facebook:</b>
-        <ul>
-            <li><a
-                    href="https://www.facebook.com/profile.php?id=100017724583212">facebook.com/profile.php?id=100017724583212</a>
-            </li>
-        </ul>
+        <li>
+            <b>{{ _('Facebook') }}:</b>
+            <ul>
+                <li><a
+                        href="https://www.facebook.com/profile.php?id=100017724583212">facebook.com/profile.php?id=100017724583212</a>
+                </li>
+            </ul>
         </li>
         <li>
-            <b>LinkedIn:</b>
+            <b>{{ _('LinkedIn') }}:</b>
             <ul>
                 <li>
                     <a href="https://www.linkedin.com/in/joshua-algadipe-53933924b/" target="_blank">
@@ -141,7 +141,7 @@
             </ul>
         </li>
         <li>
-            <b>GitHub:</b>
+            <b>{{ _('GitHub') }}:</b>
             <ul>
                 <li><a href="https://github.com/JPA-Elite" target="_blank">github.com/JPA-Elite</a></li>
             </ul>

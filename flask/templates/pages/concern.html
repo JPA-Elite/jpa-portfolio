@@ -5,12 +5,12 @@
 
 {% block content %}
 <section id="concern">
-    <h2>Concern</h2>
-    <p>If you have any feedback or thoughts to share about me, feel free to click this button—don’t be shy!</p>
+    <h2>{{ _('concern_header') }}</h2>
+    <p>{{ _('concern_feedback_message') }}</p>
 
     <div class="concern-button">
         <a href="https://forms.gle/QV5kHc3STEFDFUYf9" target="_blank">
-            <button class="concern-btn">Take the survey</button>
+            <button class="concern-btn">{{ _('concern_button') }}</button>
         </a>
     </div>
 </section>

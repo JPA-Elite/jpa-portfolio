@@ -7,9 +7,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{% block title %}My Portfolio{% endblock %}</title>
     <!-- Link to the general CSS file -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/pages/styles.css') }}" />
     <!-- Link to the profile-specific CSS file -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/profile.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/pages/profile.css') }}" />
     <script src="{{ url_for('static', filename='js/utils.js') }}"></script>
 
 </head>
@@ -42,7 +42,7 @@
     <!-- Include the chatbox component -->
     {% include 'components/chatbox.html' %}
     <script>
-        window.addEventListener('load', function() {
+        window.addEventListener('load', function () {
             startTypingAnimation("animated-heading", "{{ title }}", 200, false, 10000);
         });
     </script>

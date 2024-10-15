@@ -1,4 +1,4 @@
 Flask==2.2.5
 Werkzeug==2.2.2
 MarkupSafe==2.1.1
-Flask-Babel==2.0.0
+Flask-Babel==3.0.0

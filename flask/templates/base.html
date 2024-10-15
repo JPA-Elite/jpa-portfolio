@@ -36,6 +36,9 @@
                             {% elif get_locale() == ceb_locale %}
                             <img src="{{ url_for('static', filename='images/ph_flag.png') }}" alt="Cebuano"
                                 class="flag-icon">
+                            {% elif get_locale() == tl_locale %}
+                            <img src="{{ url_for('static', filename='images/ph_flag.png') }}" alt="Tagalog"
+                                class="flag-icon">
                             {% else %}
                             <img src="{{ url_for('static', filename='images/en_flag.png') }}" alt="Default"
                                 class="flag-icon">
@@ -52,6 +55,11 @@
                                 <img src="{{ url_for('static', filename='images/ph_flag.png') }}" alt="Cebuano"
                                     class="flag-icon"> {{ _('Cebuano') }}
                             </a>
+                            <a href="{{ url_for('change_language', lang_code=tl_locale) }}"
+                            class="{% if get_locale()==tl_locale %}active{% endif %}">
+                            <img src="{{ url_for('static', filename='images/ph_flag.png') }}" alt="Tagalog"
+                                class="flag-icon"> {{ _('Tagalog') }}
+                        </a>
                         </div>
                     </div>
                 </div>

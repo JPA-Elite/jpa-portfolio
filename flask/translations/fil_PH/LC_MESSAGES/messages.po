@@ -1,0 +1,261 @@
+# Filipino (Philippines) translations for PROJECT.
+# Copyright (C) 2024 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2024.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2024-10-15 11:53+0800\n"
+"PO-Revision-Date: 2024-10-15 22:00+0800\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fil_PH\n"
+"Language-Team: fil_PH <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.16.0\n"
+
+msgid "Contact_Me"
+msgstr "Makipag-ugnay"
+
+msgid "Contact_Description"
+msgstr "Kung nais mong makipag-ugnay, mangyaring makipag-ugnay sa pamamagitan ng mga pamamaraan sa ibaba:"
+
+msgid "Portfolio"
+msgstr "Portfolio"
+
+msgid "Gallery"
+msgstr "Gallery"
+
+msgid "Vlog"
+msgstr "Vlog"
+
+msgid "Concern"
+msgstr "Concern"
+
+msgid "Summary"
+msgstr "Buod"
+
+msgid "Software_Expertise_Description"
+msgstr "Nakabuo ako ng malawak na kaalaman sa software sa pamamagitan ng iba't ibang mga tungkulin sa iba't ibang kapaligiran."
+
+msgid "Technology_Adaptability_Description"
+msgstr "Madali akong nakakaangkop sa iba't ibang teknolohiya, mabilis na nauunawaan at naipapahayag ang mga ito upang matugunan ang mga pangangailangan ng lumalaking negosyo."
+
+msgid "Experience_Share_Description"
+msgstr "Masaya akong ibahagi ang aking karanasan at kasanayan upang higit pang mapalago ang tagumpay at inobasyon."
+
+msgid "Key_Projects"
+msgstr "Pangunahing Proyekto"
+
+msgid "Project_A"
+msgstr "Proyekto A"
+
+msgid "Project_A_Description"
+msgstr "Deskripsyon: Nag-develop ng web application gamit ang React at Node.js."
+
+msgid "Project_A_Technologies"
+msgstr "Pangunahing Teknolohiya: React, Node.js, MongoDB."
+
+msgid "Project_B"
+msgstr "Proyekto B"
+
+msgid "Project_B_Description"
+msgstr "Deskripsyon: Nagtayo ng mobile application na tumutulong sa mga user na subaybayan ang kanilang mga fitness goals."
+
+msgid "Project_B_Technologies"
+msgstr "Pangunahing Teknolohiya: Flutter, Firebase."
+
+msgid "Project_C"
+msgstr "Proyekto C"
+
+msgid "Project_C_Description"
+msgstr "Deskripsyon: Lumikha ng isang e-commerce platform na may responsive na disenyo."
+
+msgid "Project_C_Technologies"
+msgstr "Pangunahing Teknolohiya: HTML, CSS, JavaScript, PHP, MySQL."
+
+msgid "About_Me"
+msgstr "Tungkol sa Akin"
+
+msgid "Highlights_Description"
+msgstr "Narito ang ilang mga tampok tungkol sa akin at sa aking mga kasanayan:"
+
+msgid "Passionate_Software_Developer"
+msgstr "Mahilig sa Pagde-develop ng Software"
+
+msgid "Programming_Foundation_Description"
+msgstr "Malakas ang aking pundasyon sa programming at paglutas ng problema."
+
+msgid "Solution_Creation_Description"
+msgstr "Gusto kong lumikha ng mga solusyon na nagpapadali ng buhay ng mga tao."
+
+msgid "Development_Experience"
+msgstr "Pag-develop ng Front-end at Back-end"
+
+msgid "Development_Experience_Description"
+msgstr "Mayroon akong karanasan sa parehong front-end at back-end development."
+
+msgid "User_Friendly_Applications_Description"
+msgstr "Ang paggawa ng user-friendly na mga application ang aking husay."
+
+msgid "Goal_Oriented"
+msgstr "Nakatuon sa Layunin"
+
+msgid "Leverage_Technology_Description"
+msgstr "Ang aking layunin ay gamitin ang teknolohiya upang bumuo ng makabuluhang karanasan."
+
+msgid "Eager_to_Learn_Description"
+msgstr "Lagi akong masigasig na matuto ng mga bagong teknolohiya at mag-adapt sa mga nagbabagong kapaligiran."
+
+msgid "Resume"
+msgstr "Resume"
+
+msgid "Professional_Highlights_Description"
+msgstr "Narito ang ilang mga tampok mula sa aking karanasang propesyonal:"
+
+msgid "Repair_Service_Experience"
+msgstr "Electrical & Electronic Repair Service, Cabulihan, Vallehermoso, Negros Oriental (2019 - 2020)"
+
+msgid "Repair_Service_Description"
+msgstr "Nag-ayos ng mga sirang electronics at appliances."
+
+msgid "Business_Intern_Experience"
+msgstr "Business Intern, Vallehermoso, Negros Oriental (2019 - 2020)"
+
+msgid "Business_Intern_Description"
+msgstr "Gumawa ng mga magandang bagay, nakipag-usap nang pormal upang ayusin ang mga problema, at sumagot ng mga tanong."
+
+msgid "TrustArc_Internship"
+msgstr "Software Development Intern sa TrustArc, Bohol Ave, Cebu City (2023)"
+
+msgid "API_Security_Description"
+msgstr "Tumulong na gawing ligtas at maaasahan ang mga API requests."
+
+msgid "Backend_Frontend_Description"
+msgstr "Nagtrabaho sa backend gamit ang Spring Boot at frontend gamit ang Angular."
+
+msgid "Chronostep_Internship"
+msgstr "Backend Development Intern sa Chronostep, 6th Floor, Gagfa Building, Cebu City (2023)"
+
+msgid "Internal_Projects_Description"
+msgstr "Nag-develop ng mga internal projects para sa paggamit ng kumpanya."
+
+msgid "Primary_Technologies_Description"
+msgstr "Gumamit ng Laravel at Vue bilang pangunahing teknolohiya."
+
+msgid "Detailed_Resume_Description"
+msgstr "Para sa mas detalyadong view, maaari mong tingnan at i-download ang aking resume"
+
+msgid "Here_Link"
+msgstr "dito"
+
+msgid "concern_title"
+msgstr "Aking Concern"
+
+msgid "concern_header"
+msgstr "Concern"
+
+msgid "concern_feedback_message"
+msgstr "Kung mayroon kang feedback o mga ideya na nais mong ibahagi tungkol sa akin, huwag mag-atubiling i-click ang button na ito—huwag mahiya!"
+
+msgid "concern_button"
+msgstr "Kunin ang survey"
+
+msgid "pagination_previous"
+msgstr "Nakaraan"
+
+msgid "pagination_page"
+msgstr "Pahina"
+
+msgid "pagination_of"
+msgstr "ng"
+
+msgid "pagination_next"
+msgstr "Susunod"
+
+msgid "chat_icon_alt"
+msgstr "Chat"
+
+msgid "chat_title"
+msgstr "Makipag-chat sa Akin?"
+
+msgid "chat_help_message"
+msgstr "Paano kita matutulungan?"
+
+msgid "chat_clear_button"
+msgstr "I-clear ang Chat"
+
+msgid "qa_name"
+msgstr "Ano ang pangalan mo?"
+
+msgid "qa_name_answer"
+msgstr "Joshua Algadipe ang pangalan ko."
+
+msgid "qa_age"
+msgstr "Ilang taon ka na?"
+
+msgid "qa_age_answer"
+msgstr "Ako ay {age} taong gulang."
+
+msgid "qa_job"
+msgstr "Ano ang trabaho mo?"
+
+msgid "qa_job_answer"
+msgstr "Ako ay isang software engineer."
+
+msgid "qa_favorite_sport"
+msgstr "Ano ang paborito mong sport?"
+
+msgid "qa_favorite_sport_answer"
+msgstr "Gusto ko ang basketball."
+
+msgid "qa_crush"
+msgstr "Sino ang crush mo?"
+
+msgid "qa_crush_answer"
+msgstr "Secret! Di ko sasabihin! Haha."
+
+msgid "qa_favorite_subject"
+msgstr "Ano ang paborito mong subject?"
+
+msgstr "Paborito kong subject ay Math."
+
+msgid "qa_live"
+msgstr "Saan ka nakatira?"
+
+msgid "qa_live_answer"
+msgstr "Nakatira ako sa Cabulihan, Vallehermoso, Negros Oriental."
+
+msgid "qa_dream_job"
+msgstr "Ano ang pangarap mong trabaho?"
+
+msgid "qa_dream_job_answer"
+msgstr "Ang pangunahing pangarap ko ay maging Electrical Engineer, ngunit ang kasalukuyan kong trabaho ay Software Engineer."
+
+msgid "qa_type_of_person"
+msgstr "Anong uri ng tao ka?"
+
+msgid "qa_type_of_person_answer"
+msgstr "Ako ay medyo mahiwaga at hindi tatawa kung hindi ko kapareho ng vibes ang isang tao, pero kapag komportable na ako, ako ang pinaka-maingay at palatawa."
+
+msgid "profile_name"
+msgstr "Aking Profile"
+
+msgid "profile_intro"
+msgstr "Ang pangalan ko ay Joshua Algadipe,"
+
+msgid "profile_age"
+msgstr "Ako ay {age} taong gulang mula sa Vallehermoso, Negros Oriental."
+
+msgid "profile_introvert"
+msgstr "Ako ay isang introvert at hindi mahusay sa pagsisimula ng mga pag-uusap, kaya huwag mag-atubiling i-message ako muna—mag-chat tayo!"
+
+msgid "profile_job"
+msgstr "Kasalukuyan akong nagtatrabaho bilang isang software engineer,"
+
+msgid "profile_goals"
+msgstr "at may malalaking layunin ako para sa hinaharap, nais kong bumuo ng kayamanan at makamit ang tagumpay."

@@ -27,6 +27,7 @@ LANGUAGES = {
     'en': 'English',
     'ceb': 'Cebuano',
     'fr': 'French',
+    'fil_PH': 'Tagalog',
 }
 
 # Set the default locale
@@ -34,3 +35,4 @@ BABEL_DEFAULT_LOCALE = 'en'
 EN_LOCALE = 'en'
 CEB_LOCALE = 'ceb'
 FR_LOCALE = 'fr'
+TL_LOCALE = 'fil_PH'

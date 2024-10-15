@@ -14,7 +14,8 @@ from config import (
     LANGUAGES,
     BABEL_DEFAULT_LOCALE,
     EN_LOCALE,
-    CEB_LOCALE
+    CEB_LOCALE,
+    TL_LOCALE
 )
 from utils import paginate_data
 from flask_babel import Babel, gettext  # type: ignore
@@ -51,6 +52,10 @@ def en_locale():
 @app.context_processor
 def ceb_locale():
     return dict(ceb_locale=CEB_LOCALE)
+
+@app.context_processor
+def tl_locale():
+    return dict(tl_locale=TL_LOCALE)
 
 @app.route("/")
 def index():

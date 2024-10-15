@@ -3,117 +3,135 @@
         "title": {
             "en": "Christmas Celebration",
             "ceb": "Pagselebrar sa Pasko",
-            "fr": "Célébration de Noël"
+            "fr": "Célébration de Noël",
+            "fil_PH": "Pagdiriwang ng Pasko"
         },
         "image_name": "FB1.jpg",
         "description": {
             "en": "Capturing a moment outside during the Christmas Eve Mass.",
             "ceb": "Pagkuha og usa ka higayon sa gawas sa panahon sa Misa sa Vigilia sa Pasko.",
-            "fr": "Capturer un moment à l'extérieur pendant la messe de la veille de Noël."
+            "fr": "Capturer un moment à l'extérieur pendant la messe de la veille de Noël.",
+            "fil_PH": "Kinunan ang isang sandali sa labas habang nasa Misa ng Bisperas ng Pasko."
         }
     },
     {
         "title": {
             "en": "PN Contract Signing Ceremony",
             "ceb": "Seremonya sa Pagpirma sa Kontrata sa PN",
-            "fr": "Cérémonie de Signature du Contrat PN"
+            "fr": "Cérémonie de Signature du Contrat PN",
+            "fil_PH": "Seremonya ng Pagpirma ng Kontrata ng PN"
         },
         "image_name": "FB2.jpg",
         "description": {
             "en": "Attended the contract signing event in Canlaon.",
             "ceb": "Niadto sa seremonya sa pagpirma sa kontrata sa Canlaon.",
-            "fr": "Participation à l'événement de signature de contrat à Canlaon."
+            "fr": "Participation à l'événement de signature de contrat à Canlaon.",
+            "fil_PH": "Dumalo sa seremonya ng pagpirma ng kontrata sa Canlaon."
         }
     },
     {
         "title": {
             "en": "Birthday Celebration Invitation",
             "ceb": "Dapit sa Pagselebrar sa Adlaw nga Natawhan",
-            "fr": "Invitation à la Célébration d'Anniversaire"
+            "fr": "Invitation à la Célébration d'Anniversaire",
+            "fil_PH": "Imbitasyon sa Pagdiriwang ng Kaarawan"
         },
         "image_name": "FB3.jpg",
         "description": {
             "en": "I received an invitation to a birthday celebration with my classmates.",
             "ceb": "Nakadawat ko og imbitasyon sa usa ka pagselebrar sa akong adlaw nga natawhan uban sa akong mga kauban sa klase.",
-            "fr": "J'ai reçu une invitation à une célébration d'anniversaire avec mes camarades de classe."
+            "fr": "J'ai reçu une invitation à une célébration d'anniversaire avec mes camarades de classe.",
+            "fil_PH": "Nakatanggap ako ng imbitasyon sa isang pagdiriwang ng kaarawan kasama ang aking mga kaklase."
         }
     },
     {
         "title": {
             "en": "Evening Photo",
             "ceb": "Larawan sa Gabii",
-            "fr": "Photo du Soir"
+            "fr": "Photo du Soir",
+            "fil_PH": "Larawan sa Gabi"
         },
         "image_name": "FB4.jpg",
         "description": {
             "en": "Taken at home during a chilly night.",
             "ceb": "Gikuha sa balay sa panahon sa bugnaw nga gabii.",
-            "fr": "Prise à la maison pendant une nuit fraîche."
+            "fr": "Prise à la maison pendant une nuit fraîche.",
+            "fil_PH": "Kinunan sa bahay noong malamig na gabi."
         }
     },
     {
         "title": {
             "en": "Hiking to the Mountain",
             "ceb": "Pagpanglakaw sa Bukid",
-            "fr": "Randonnée vers la Montagne"
+            "fr": "Randonnée vers la Montagne",
+            "fil_PH": "Pag-akyat sa Bundok"
         },
         "image_name": "FB5.jpg",
         "description": {
             "en": "Captured at the peak with a stunning mountain view.",
             "ceb": "Gikuha sa tumoy uban ang talagsaon nga panan-aw sa bukid.",
-            "fr": "Capturé au sommet avec une vue imprenable sur la montagne."
+            "fr": "Capturé au sommet avec une vue imprenable sur la montagne.",
+            "fil_PH": "Kinunan sa tuktok kasama ang nakamamanghang tanawin ng bundok."
         }
     },
     {
         "title": {
             "en": "DJ Jamming Session",
             "ceb": "DJ Jamming nga Sesyon",
-            "fr": "Session de Jam avec DJ"
+            "fr": "Session de Jam avec DJ",
+            "fil_PH": "DJ Jamming Session"
         },
         "image_name": "FB6.jpg",
         "description": {
             "en": "Practicing music mixing during a party at our place.",
             "ceb": "Nagpraktis og pag-mix sa musika sa usa ka party sa among lugar.",
-            "fr": "Pratique de mixage de musique pendant une fête chez nous."
+            "fr": "Pratique de mixage de musique pendant une fête chez nous.",
+            "fil_PH": "Nagsasanay ng music mixing sa isang party sa aming lugar."
         }
     },
     {
         "title": {
             "en": "Forced Smile",
             "ceb": "Pinugos nga Ngisi",
-            "fr": "Sourire Forcé"
+            "fr": "Sourire Forcé",
+            "fil_PH": "Pinilit na Ngiti"
         },
         "image_name": "FB7.jpg",
         "description": {
             "en": "Trying to smile while getting a picture taken.",
             "ceb": "Nagaantos sa pagngisi samtang kuhaan og litrato.",
-            "fr": "Essayer de sourire pendant qu'une photo est prise."
+            "fr": "Essayer de sourire pendant qu'une photo est prise.",
+            "fil_PH": "Nagsusumikap ngumiti habang kinukunan ng litrato."
         }
     },
     {
         "title": {
             "en": "Posing by the Tower",
             "ceb": "Nagpose sa Dapit sa Torre",
-            "fr": "Pose près de la Tour"
+            "fr": "Pose près de la Tour",
+            "fil_PH": "Nag-pose sa Tabing Tore"
         },
         "image_name": "FB8.jpg",
         "description": {
             "en": "I admire the height of the tower and its amazing view.",
             "ceb": "Gihangaan nako ang kataas sa torre ug ang iyang katingalahan nga panan-aw.",
-            "fr": "J'admire la hauteur de la tour et sa vue incroyable."
+            "fr": "J'admire la hauteur de la tour et sa vue incroyable.",
+            "fil_PH": "Humahanga ako sa taas ng tore at ang kamangha-manghang tanawin nito."
         }
     },
     {
         "title": {
             "en": "Selfie Attempt with a Good Camera",
             "ceb": "Pagsulay og Selfie gamit ang Maayong Kamera",
-            "fr": "Essai de Selfie avec un Bon Appareil"
+            "fr": "Essai de Selfie avec un Bon Appareil",
+            "fil_PH": "Pagsubok ng Selfie gamit ang Magandang Kamera"
         },
         "image_name": "FB9.jpg",
         "description": {
             "en": "We were on vacation in Carcar during this photo.",
             "ceb": "Nakapahuway kami sa Carcar sa panahon niining litrato.",
-            "fr": "Nous étions en vacances à Carcar lors de cette photo."
+            "fr": "Nous étions en vacances à Carcar lors de cette photo.",
+            "fil_PH": "Kami ay nasa bakasyon sa Carcar nang kinunan ang larawang ito."
         }
     }
 ]

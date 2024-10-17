@@ -4,7 +4,7 @@ services:
   flask:
     restart: unless-stopped
     build:
-      context: ./flask
+      context: ./flask  # Correct path to where the Dockerfile is located
       dockerfile: Dockerfile
     deploy:
       resources:

@@ -76,6 +76,10 @@
     margin: 5px 0;
 }
 
+.chat-options {
+    justify-content: center;
+}
+
 .chat-options.grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr); /* Create 3 equal columns */
@@ -106,7 +110,7 @@ input[type="text"] {
 
 /* Clear Chat Button Styles */
 #clearChat {
-    background-color: #ff4d4d; /* Red background */
+    background-color: #4d4d4d; /* Red background */
     color: white;              /* White text */
     border: none;              /* No border */
     padding: 10px 15px;       /* Top/bottom and left/right padding */
@@ -119,7 +123,7 @@ input[type="text"] {
 
 /* Hover effect */
 #clearChat:hover {
-    background-color: #ff1a1aa8; /* Darker red on hover */
+    background-color: #4d4d4ddf; /* Darker red on hover */
 }
 
 @media only screen and (max-width: 480px) {

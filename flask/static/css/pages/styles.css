@@ -270,21 +270,23 @@ section p {
         position: relative;
     }
 
+    nav ul li, .language-selector .dropdown-content a {
+        font-size: 14px;
+    }
+
     nav ul li:hover::after {
         width: 0%;
     }
 
     nav ul li:hover {
-        background-color: #ccc;
+        background-color: #f1f1f1;
     }
 
     .nav-toggle {
         display: block;
         cursor: pointer;
         font-size: 30px;
-        /* Adjust size as needed */
-        margin-bottom: 10px;
-        /* Space below the toggle */
+        margin-bottom: 3px;
     }
 
     nav #navList {
@@ -373,6 +375,10 @@ section p {
         display: flex;
         align-items: center;
         gap: 20px;
+    }
+
+    .dropdown {
+        margin-top: 2px;
     }
 }
 

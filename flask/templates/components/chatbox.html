@@ -23,7 +23,7 @@
 </div>
 
 <script>
-    const cacheMessage = 'chatMessages';
+    const cacheMessage = 'chatMessagesCache';
     const cacheChatboxVisible = 'chatboxVisible';
 
     // Array of questions and answers
@@ -46,17 +46,21 @@
             const button = document.createElement("button");
             button.textContent = item.question;
             button.onclick = () => sendPredefinedMessage(item.question);
-            chatOptions.appendChild(button);
+            chatOptions?.appendChild(button);
         });
     }
 
     // Toggle chatbox modal visibility
     function toggleChatbox() {
         const modal = document.getElementById("chatboxModal");
-        const isVisible = modal.style.display === "block";
-        modal.style.display = isVisible ? "none" : "block";
-        // Cache the visibility state
-        localStorage.setItem(cacheChatboxVisible, !isVisible);
+
+        if (modal) {
+            const isVisible = modal.style.display === "block";
+            modal.style.display = isVisible ? "none" : "block";
+
+            // Cache the visibility state
+            localStorage.setItem(cacheChatboxVisible, !isVisible);
+        }
     }
 
     // Send a message from the input field
@@ -130,7 +134,9 @@
 
         const chatboxVisible = localStorage.getItem(cacheChatboxVisible) === 'true';
         const modal = document.getElementById("chatboxModal");
-        modal.style.display = chatboxVisible ? "block" : "none";
+        if (modal) {
+            modal.style.display = chatboxVisible ? "block" : "none";
+        }
 
         updateClearChatButtonVisibility(); // Check if clear button should be displayed
     }
@@ -149,7 +155,9 @@
     function updateClearChatButtonVisibility() {
         const cachedMessages = JSON.parse(localStorage.getItem(cacheMessage)) || [];
         const clearChatButton = document.getElementById("clearChat");
-        clearChatButton.style.display = cachedMessages.length > 0 ? "block" : "none";
+        if (clearChatButton) {
+            clearChatButton.style.display = cachedMessages.length > 0 ? "block" : "none";
+        }
     }
 
     // Initialize chat options and load cached chat when the page loads

@@ -268,6 +268,32 @@ nav #navList {
 
 /* Mobile Styles */
 @media (max-width: 768px) {
+
+    /* Disable tap highlight color on mobile */
+    button,
+    a,
+    input,
+    textarea {
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    /* Remove focus outline */
+    button,
+    a,
+    input,
+    textarea {
+        outline: none;
+    }
+
+    /* Optionally, you can set a custom focus style for accessibility */
+    button:focus,
+    a:focus,
+    input:focus,
+    textarea:focus {
+        outline: none;
+        box-shadow: none;
+    }
+
     header {
         height: auto;
     }
@@ -278,7 +304,8 @@ nav #navList {
         position: relative;
     }
 
-    nav ul li, .language-selector .dropdown-content a {
+    nav ul li,
+    .language-selector .dropdown-content a {
         font-size: 14px;
     }
 
@@ -298,12 +325,18 @@ nav #navList {
     }
 
     nav #navList {
-        display: none; /* Hide the navigation by default */
-        flex-direction: column; /* Change to row direction */
-        flex-wrap: wrap; /* Allow items to wrap */
-        width: auto; /* Full width */
-        padding: 0; /* Remove padding */
-        margin: 0; /* Remove margin */
+        display: none;
+        /* Hide the navigation by default */
+        flex-direction: column;
+        /* Change to row direction */
+        flex-wrap: wrap;
+        /* Allow items to wrap */
+        width: auto;
+        /* Full width */
+        padding: 0;
+        /* Remove padding */
+        margin: 0;
+        /* Remove margin */
         position: absolute;
         top: 50px;
         background-color: white;
@@ -360,7 +393,8 @@ nav #navList {
     }
 
     .dropdown-content {
-        overflow-y: hidden; /* Disable vertical scrolling */
+        overflow-y: hidden;
+        /* Disable vertical scrolling */
     }
 
     .dropdown-content a {
@@ -374,19 +408,29 @@ nav #navList {
     }
 
     .mobile-concern-btn {
-        display: block; /* Show on mobile */
-        padding: 10px; /* Adjust padding for the button */
-        background-color: #007bffd2; /* Change the background color as needed */
-        color: white; /* Text color */
-        border: none; /* Remove border */
-        border-radius: 5px; /* Rounded corners */
-        cursor: pointer; /* Pointer cursor on hover */
-        font-size: 14px; /* Font size */
-        transition: background-color 0.3s; /* Transition effect */
+        display: block;
+        /* Show on mobile */
+        padding: 10px;
+        /* Adjust padding for the button */
+        background-color: #007bffd2;
+        /* Change the background color as needed */
+        color: white;
+        /* Text color */
+        border: none;
+        /* Remove border */
+        border-radius: 5px;
+        /* Rounded corners */
+        cursor: pointer;
+        /* Pointer cursor on hover */
+        font-size: 14px;
+        /* Font size */
+        transition: background-color 0.3s;
+        /* Transition effect */
     }
 
     .mobile-concern-btn:hover {
-        background-color: #0056b3; /* Darken background on hover */
+        background-color: #0056b3;
+        /* Darken background on hover */
     }
 
     .language-selector {

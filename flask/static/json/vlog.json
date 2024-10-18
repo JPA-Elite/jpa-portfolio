@@ -88,5 +88,20 @@
             "fil_PH": "Nakikipag-chat ako sa aking kapwa scholar gamit ang mga hokage moves para sa kasiyahan."
         },
         "file": "videos/prank6.mp4"
-    }
+    },
+    {
+        "title": {
+            "en": "Fiesta in Our Hometown",
+            "ceb": "Fiesta Sa Among Lugar",
+            "fr": "Fiesta Dans Notre Ville",
+            "fil_PH": "Pista Sa Aming Lugar"
+        },
+        "description": {
+            "en": "We celebrated the fiesta in my hometown in Negros Oriental, for which I took a vacation leave from work.",
+            "ceb": "Nagselebrar mi sa fiesta sa akong probinsya sa Negros Oriental, diin ako nag-file og vacation leave gikan sa trabaho.",
+            "fr": "Nous avons célébré la fiesta dans ma ville natale de Negros Oriental, pour laquelle j'ai pris un congé de travail.",
+            "fil_PH": "Ipinagdiwang namin ang pista sa aking bayan sa Negros Oriental, kung saan nag-file ako ng bakasyon mula sa trabaho."
+        },
+        "file": "videos/disco.mp4"
+    }    
 ]

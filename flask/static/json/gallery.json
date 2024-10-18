@@ -133,5 +133,35 @@
             "fr": "Nous étions en vacances à Carcar lors de cette photo.",
             "fil_PH": "Kami ay nasa bakasyon sa Carcar nang kinunan ang larawang ito."
         }
-    }
+    },
+    {
+        "title": {
+            "en": "Just a Bored Selfie",
+            "ceb": "Selfie Tungod Kay Na-bored Ko",
+            "fr": "Selfie Pour Passer Le Temps",
+            "fil_PH": "Selfie Dahil Wala Akong Magawa"
+        },
+        "image_name": "FB10.jpg",
+        "description": {
+            "en": "I took a selfie because I was feeling bored at work. So, I experimented with different poses and angles for fun.",
+            "ceb": "Nag-selfie ko kay gikapoy ko sa opisina. Nagsulay ko og lain-laing mga posisyon ug anggulo alang sa lingaw-lingaw.",
+            "fr": "J'ai pris un selfie car je m'ennuyais au bureau. J'ai donc essayé différentes poses et angles pour m'amuser.",
+            "fil_PH": "Nag-selfie ako dahil naiinip ako sa opisina. Sinubukan ko ang iba't ibang posisyon at anggulo para malibang."
+        }
+    },
+    {
+        "title": {
+            "en": "Selfie at the Graduation Ceremony",
+            "ceb": "Selfie Sa Graduation Ceremony",
+            "fr": "Selfie Lors De La Cérémonie De Remise Des Diplômes",
+            "fil_PH": "Selfie Sa Seremonya Ng Pagtatapos"
+        },
+        "image_name": "FB11.jpg",
+        "description": {
+            "en": "We were getting ready for the graduation ceremony at USC-Talamban with my fellow scholars.",
+            "ceb": "Nag-andam mi alang sa graduation ceremony sa USC-Talamban uban sa akong mga kauban nga scholars.",
+            "fr": "Nous nous préparions pour la cérémonie de remise des diplômes à l'USC-Talamban avec mes camarades boursiers.",
+            "fil_PH": "Naghahanda kami para sa seremonya ng pagtatapos sa USC-Talamban kasama ang aking mga kapwa iskolar."
+        }
+    }    
 ]

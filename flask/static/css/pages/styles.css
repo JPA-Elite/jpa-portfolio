@@ -352,7 +352,17 @@ section p {
     }
 
     .dropdown-content {
-        overflow-y: hidden;
+        overflow-y: hidden; /* Disable vertical scrolling */
+    }
+
+    .dropdown-content a {
+        padding: 10px;
+        width: auto;
+    }
+
+    .dropdown-content a img {
+        width: 30px;
+        height: 30px;
     }
 
     .mobile-concern-btn {

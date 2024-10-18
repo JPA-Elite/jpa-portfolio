@@ -194,13 +194,26 @@
     #portfolio .project-image {
         width: 100%;
     }
+
+    .cta-button {
+        background-color: transparent;
+        color: #333;
+        text-decoration: underline;
+        padding: 0;
+
+    }
 }
 
 @media only screen and (max-width: 480px) {
 
     /* For mobile screens */
     #portfolio .project-image img {
-        width: 100%;
+        width: 90%;
+        height: 250px;
+    }
+
+    #portfolio ul li{
+        text-align: left;
     }
 
     #portfolio .project-details p,

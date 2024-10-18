@@ -6,13 +6,20 @@
 {% block content %}
 <!-- Link to the external CSS file for the vlog -->
 <link rel="stylesheet" href="{{ url_for('static', filename='css/pages/vlog.css') }}" />
+<link rel="stylesheet" href="{{ url_for('static', filename='css/plyr/plyr.css') }}" />
+<script src="{{ url_for('static', filename='js/plyr/plyr.js') }}"></script>
 <section id="vlog">
     <div class="video-container">
         {% for vlog in vlogs %}
         <div class="video-item">
-            <video controls class="vlog-video">
+            <!-- <video controls class="vlog-video">
                 <source src="{{ url_for('static', filename=vlog.file) }}" type="video/mp4">
                 Your browser does not support the video tag.
+            </video> -->
+            <!-- Video Player HTML -->
+            <video class="player" playsinline controls>
+                <source src="{{ url_for('static', filename=vlog.file) }}" type="video/mp4" size="720">
+                <source src="{{ url_for('static', filename=vlog.file) }}" type="video/mp4" size="480">
             </video>
             <h3>{{ vlog.title[get_locale()] }}</h3>
             <p>{{ vlog.description[get_locale()] }}</p>
@@ -24,18 +31,19 @@
     {% set base_url = url_for('vlog') %}
 </section>
 
+<!-- Initialize Plyr player for each video and pause others when one plays -->
 <script>
-    // Select all video elements
-    const videos = document.querySelectorAll('.vlog-video');
+    document.addEventListener("DOMContentLoaded", function () {
+        const players = Array.from(document.querySelectorAll('.player')).map((player) => new Plyr(player));
 
-    // Add event listeners to each video
-    videos.forEach(video => {
-        video.addEventListener('play', () => {
-            // Pause all other videos when one plays
-            videos.forEach(otherVideo => {
-                if (otherVideo !== video) {
-                    otherVideo.pause(); // Pause the other video
-                }
+        // Add event listener to pause other videos when one starts playing
+        players.forEach((player, index, playerList) => {
+            player.on('play', () => {
+                playerList.forEach((otherPlayer, otherIndex) => {
+                    if (otherIndex !== index && !otherPlayer.paused) {
+                        otherPlayer.pause();
+                    }
+                });
             });
         });
     });

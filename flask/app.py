@@ -15,11 +15,11 @@ from config import (
     BABEL_DEFAULT_LOCALE,
     EN_LOCALE,
     CEB_LOCALE,
-    TL_LOCALE
+    TL_LOCALE,
 )
-from utils import paginate_data
+from utils import filter_data, paginate_data
 from flask_babel import Babel, gettext  # type: ignore
-from markupsafe import escape # type: ignore
+from markupsafe import escape  # type: ignore
 
 app = Flask(__name__)
 
@@ -44,18 +44,22 @@ babel.init_app(app, locale_selector=get_locale)
 def inject_locale():
     return dict(get_locale=get_locale)
 
+
 # locale constants
 @app.context_processor
 def en_locale():
     return dict(en_locale=EN_LOCALE)
 
+
 @app.context_processor
 def ceb_locale():
     return dict(ceb_locale=CEB_LOCALE)
 
+
 @app.context_processor
 def tl_locale():
     return dict(tl_locale=TL_LOCALE)
+
 
 @app.route("/")
 def index():
@@ -64,8 +68,13 @@ def index():
 
 @app.route("/change_language/<lang_code>")
 def change_language(lang_code):
-    referrer = request.referrer or url_for("index")
-    response = redirect(referrer)
+    # Parse the referrer URL to remove any existing search query
+    referrer_url = request.referrer if request.referrer else url_for("index")
+
+    # Redirect to the referrer URL while clearing the search query
+    response = redirect(
+        f"{referrer_url.split('?')[0]}?search="
+    )  # Set search query to empty
     response.set_cookie("lang", lang_code)
     return response
 
@@ -97,11 +106,16 @@ def gallery():
     with open(GALLERY_JSON_PATH) as f:
         gallery_data = json.load(f)
 
+    # Get the search query from the request arguments
+    search_query = request.args.get("search", "")
+    # Filter the gallery data using the generalized function
+    filtered_gallery_data = filter_data(gallery_data, get_locale(), search_query)
+
+    # Paginate the filtered data
     page = request.args.get("page", 1, type=int)
     items_per_page = 6
-
     paginated_gallery_data, total_pages = paginate_data(
-        gallery_data, page, items_per_page
+        filtered_gallery_data, page, items_per_page
     )
 
     return render_template(
@@ -111,6 +125,7 @@ def gallery():
         current_page=page,
         total_pages=total_pages,
         title="My Gallery",
+        search_query=search_query,
     )
 
 
@@ -119,10 +134,17 @@ def vlog():
     with open(VLOG_JSON_PATH) as f:
         vlog_data = json.load(f)
 
+    # Get the search query from the request arguments
+    search_query = request.args.get("search", "")
+    # Filter the vlog data using the generalized function
+    filtered_vlog_data = filter_data(vlog_data, get_locale(), search_query)
+
+    # Paginate the filtered data
     page = request.args.get("page", 1, type=int)
     items_per_page = 3
-
-    paginated_vlog_data, total_pages = paginate_data(vlog_data, page, items_per_page)
+    paginated_vlog_data, total_pages = paginate_data(
+        filtered_vlog_data, page, items_per_page
+    )
 
     return render_template(
         VLOG_PAGE,
@@ -130,6 +152,7 @@ def vlog():
         current_page=page,
         total_pages=total_pages,
         title="My Vlogs",
+        search_query=search_query,  # Pass the search query back to the template
     )
 
 

@@ -6,21 +6,23 @@
 {% block content %}
 <!-- Link to the external CSS file for the gallery -->
 <link rel="stylesheet" href="{{ url_for('static', filename='css/pages/gallery.css') }}" />
-<section id="gallery">
-    <h2>Gallery</h2>
-    <div class="gallery-container">
-        {% for item in gallery_data %}
-        <div class="gallery-item">
-            <img src="{{ image_path }}{{ item.image_name }}" alt="{{ item.title[get_locale()] }}" class="gallery-image"
-                onclick="openModal('{{ image_path }}{{ item.image_name }}', '{{ item.title[get_locale()] }}', '{{ item.description[get_locale()] }}')" />
-            <h3>{{ item.title[get_locale()] }}</h3>
-            <p class="description">{{ item.description[get_locale()] }}</p>
+<div>
+    {% include 'components/searchbar.html' %}
+    <section id="gallery">
+        <h2>Gallery</h2> 
+        <div class="gallery-container">
+            {% for item in gallery_data %}
+            <div class="gallery-item">
+                <img src="{{ image_path }}{{ item.image_name }}" alt="{{ item.title[get_locale()] }}" class="gallery-image"
+                    onclick="openModal('{{ image_path }}{{ item.image_name }}', '{{ item.title[get_locale()] }}', '{{ item.description[get_locale()] }}')" />
+                <h3>{{ item.title[get_locale()] }}</h3>
+                <p class="description">{{ item.description[get_locale()] }}</p>
+            </div>
+            {% endfor %}
         </div>
-        {% endfor %}
-    </div>
-
-    <!-- Include the pagination component and pass the base URL -->
-    {% include 'components/pagination.html' %}
-    {% set base_url = url_for('gallery') %}
-</section>
+        {% set base_url = url_for('gallery') %}
+        <!-- Include the pagination component and pass the base URL -->
+        {% include 'components/pagination.html' %}
+    </section>
+</div>
 {% endblock %}

@@ -8,6 +8,7 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='css/pages/vlog.css') }}" />
 <link rel="stylesheet" href="{{ url_for('static', filename='css/plyr/plyr.css') }}" />
 <script src="{{ url_for('static', filename='js/plyr/plyr.js') }}"></script>
+{% include 'components/searchbar.html' %}
 <section id="vlog">
     <div class="video-container">
         {% for vlog in vlogs %}
@@ -26,9 +27,9 @@
         </div>
         {% endfor %}
     </div>
+    {% set base_url = url_for('vlog') %}
     <!-- Include the pagination component and pass the base URL -->
     {% include 'components/pagination.html' %}
-    {% set base_url = url_for('vlog') %}
 </section>
 
 <!-- Initialize Plyr player for each video and pause others when one plays -->

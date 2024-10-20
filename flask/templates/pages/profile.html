@@ -8,6 +8,7 @@
     <div class="project-image">
         <img src="{{ profile_image }}" alt="Profile Image"
             onclick="openModal('{{ profile_image }}', '{{ profile_name }}', '{{ profile_desc }}'.replace('{age}', calculateAge()))" />
+        <h1>{{ _('Software Engineer') }}</h1>
     </div>
     <div class="project-details">
         <h3>{{ _('Summary') }}:</h3>
@@ -99,9 +100,15 @@
                 <li>{{ _('Primary_Technologies_Description') }}</li>
             </ul>
         </li>
+        <li>
+            {{ _('Chronostep_Employee') }}
+            <ul>
+                <li>{{ _('Job_Projects_Description') }}</li>
+            </ul>
+        </li>
     </ul>
     <p>
-        <a>{{ _('Detailed_Resume_Description') }}</a>
+        <a>{{ _('Detailed_Resume_Description') }}:</a>
         <a href="{{ resume_pdf }}" target="_blank" class="cta-button">{{ _('Here_Link') }}</a>
     </p>
 </section>
@@ -111,7 +118,7 @@
     <p>{{ _('Contact_Description') }}</p> <!-- Updated paragraph -->
     <ul>
         <li>
-            <b>{{ _('Phone_Number') }}:</b>
+            <b>{{ _('Phone Number') }}:</b>
             <ul>
                 <li><a href="tel:+639319127640">0931 912 7640</a></li>
             </ul>

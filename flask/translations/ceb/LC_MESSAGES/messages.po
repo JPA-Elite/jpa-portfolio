@@ -147,6 +147,12 @@ msgstr "Nakahimo og mga internal nga proyekto alang sa paggamit sa kompanya."
 msgid "Primary_Technologies_Description"
 msgstr "Gamit ang Laravel ug Vue ingon panguna nga mga teknolohiya."
 
+msgid "Chronostep_Employee"
+msgstr "Nahimong Software Engineer sa Chronostep (2024)"
+
+msgid "Job_Projects_Description"
+msgstr "Naghimo og lain-laing mga proyekto gamit ang nagkalain-laing teknolohiya depende sa hangyo sa kliyente."
+
 msgid "Detailed_Resume_Description"
 msgstr "Alang sa detalyado nga pagtan-aw, mahimo nimo tan-awon ug i-download ang akong resume"
 
@@ -175,7 +181,7 @@ msgid "pagination_of"
 msgstr "of"
 
 msgid "pagination_next"
-msgstr "Next"
+msgstr "Sunod"
 
 msgid "chat_icon_alt"
 msgstr "Chat"
@@ -260,3 +266,6 @@ msgstr "Karon nagtrabaho ko isip usa ka software engineer,"
 
 msgid "profile_goals"
 msgstr "ug aduna koy dagkong tumong sa umaabot, nagtinguha nga magtukod og bahandi ug makab-ot ang kalampusan."
+
+msgid "search_placeholder"
+msgstr "Basin naay eh search..."

@@ -1,0 +1,64 @@
+/* Style for the search container */
+.search-container {
+    display: flex;
+    align-items: center;
+    background-color: white;
+    border-radius: 25px;
+    padding: 8px 15px;
+    max-width: 400px;
+    margin: auto;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Input styling */
+.search-input {
+    border: none !important;
+    outline: none;
+    background: none;
+    font-size: 16px;
+    color: #8e9093;
+    width: 100%;
+    margin-left: 10px;
+}
+
+/* Search icon styling */
+.search-icon {
+    color: #8e9093;
+    font-size: 18px;
+}
+
+/* Placeholder text styling */
+.search-input::placeholder {
+    color: #c1c2c5;
+    font-style: italic;
+}
+
+/* Optional: Adding a hover effect on the search box */
+.search-container:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.search-next {
+    cursor: pointer;
+    padding: 0;
+    background: none;
+    border: 0;
+    font-size: 16px;
+    display:flex;
+}
+
+.search-next span {
+    position: relative;
+    bottom: 1px;
+}
+
+.search-next:hover {
+    opacity: 0.8;
+}
+
+/* Mobile Styles */
+@media (max-width: 768px) {
+    .search-container {
+        margin-top: 10px;
+    }
+}

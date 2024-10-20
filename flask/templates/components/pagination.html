@@ -2,12 +2,21 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='css/components/pagination.css') }}" />
 <div class="pagination">
     {% if current_page > 1 %}
-        <a class="pagination-next-btn" href="{{ base_url }}?page={{ current_page - 1 }}">{{ _('pagination_previous') }}</a>
+    <a class="pagination-next-btn"
+        href="{{ base_url }}?page={{ current_page - 1 }}{% if search_query %}&search={{ search_query }}{% endif %}">{{
+        _('pagination_previous') }}</a>
     {% endif %}
 
-    <span class="pagination-count">{{ _('pagination_page') }} {{ current_page }} {{ _('pagination_of') }} {{ total_pages }}</span>
-
-    {% if current_page < total_pages %}
-        <a class="pagination-prev-btn" href="{{ base_url }}?page={{ current_page + 1 }}">{{ _('pagination_next') }}</a>
+    {% if total_pages > 0 %}
+    <span class="pagination-count">{{ _('pagination_page') }} {{ current_page }} {{ _('pagination_of') }} {{ total_pages
+        }}</span>
+    {% else %}
+    <span class="pagination-count">{{ _('pagination_page') }} 0</span>
     {% endif %}
+
+
+    {% if current_page < total_pages %} <a class="pagination-prev-btn"
+        href="{{ base_url }}?page={{ current_page + 1 }}{% if search_query %}&search={{ search_query }}{% endif %}">{{
+        _('pagination_next') }}</a>
+        {% endif %}
 </div>

@@ -147,6 +147,12 @@ msgstr "Nag-develop ng mga internal projects para sa paggamit ng kumpanya."
 msgid "Primary_Technologies_Description"
 msgstr "Gumamit ng Laravel at Vue bilang pangunahing teknolohiya."
 
+msgid "Chronostep_Employee"
+msgstr "Naging Software Engineer sa Chronostep (2024)"
+
+msgid "Job_Projects_Description"
+msgstr "Nakagawa ng iba't ibang mga proyekto gamit ang iba't ibang teknolohiya na iniayon upang matugunan ang mga partikular na pangangailangan ng kliyente."
+
 msgid "Detailed_Resume_Description"
 msgstr "Para sa mas detalyadong view, maaari mong tingnan at i-download ang aking resume"
 
@@ -259,3 +265,6 @@ msgstr "Kasalukuyan akong nagtatrabaho bilang isang software engineer,"
 
 msgid "profile_goals"
 msgstr "at may malalaking layunin ako para sa hinaharap, nais kong bumuo ng kayamanan at makamit ang tagumpay."
+
+msgid "search_placeholder"
+msgstr "Mag search if meron..."

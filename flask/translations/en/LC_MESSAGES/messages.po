@@ -147,6 +147,12 @@ msgstr "Developed internal projects for company use."
 msgid "Primary_Technologies_Description"
 msgstr "Used Laravel and Vue as primary technologies."
 
+msgid "Chronostep_Employee"
+msgstr "Become A Software Engineer at Chronostep (2024)"
+
+msgid "Job_Projects_Description"
+msgstr "Created a wide range of projects utilizing diverse technologies tailored to meet client-specific requirements."
+
 msgid "Detailed_Resume_Description"
 msgstr "For a detailed view, you can view and download my resume"
 
@@ -260,3 +266,6 @@ msgstr "I'm currently working as a software engineer,"
 
 msgid "profile_goals"
 msgstr "and I have big goals for the future, aiming to build wealth and achieve success."
+
+msgid "search_placeholder"
+msgstr "Search for something..."

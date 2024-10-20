@@ -4,12 +4,23 @@
     margin-top: 50px;
 }
 
+.project-image {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-right: 20px;
+}
+
 .project-image img {
-    max-width: 400px;
-    height: auto;
+    width: 300px;
+    height: 300px;
     border-radius: 10px;
-    margin-right: 30px;
     cursor: pointer;
+}
+
+.project-image h1 {
+    text-align: center;
 }
 
 .project-details {
@@ -130,13 +141,6 @@
     margin-top: 50px;
 }
 
-#portfolio .project-image img {
-    max-width: 400px;
-    height: auto;
-    border-radius: 10px;
-    margin-right: 30px;
-}
-
 #portfolio .project-details {
     max-width: 600px;
 }
@@ -193,6 +197,7 @@
 
     #portfolio .project-image {
         width: 100%;
+        margin: 0;
     }
 
     .cta-button {
@@ -212,7 +217,7 @@
         height: 250px;
     }
 
-    #portfolio ul li{
+    #portfolio ul li {
         text-align: left;
     }
 

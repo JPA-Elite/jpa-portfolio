@@ -1,0 +1,8 @@
+<link rel="stylesheet" href="{{ url_for('static', filename='css/components/searchbar.css') }}" />
+<form action="{{ base_url }}" method="GET">
+    <div class="search-container">
+        <input type="text" name="search" placeholder="{{ _('search_placeholder') }}" class="search-input"
+            value="{{ search_query }}">
+        <button type="submit" class="search-next">{{ _('pagination_next') }}<span>&rarr;</span></button>
+    </div>
+</form>

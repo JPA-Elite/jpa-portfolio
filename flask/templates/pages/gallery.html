@@ -20,7 +20,7 @@
             </div>
             {% endfor %}
         </div>
-        {% set base_url = url_for('gallery') %}
+        {% set base_url = url_for('pages.gallery') %}
         <!-- Include the pagination component and pass the base URL -->
         {% include 'components/pagination.html' %}
     </section>

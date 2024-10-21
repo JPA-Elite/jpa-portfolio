@@ -29,7 +29,7 @@ Tags: flask, python
 
 Languages: python
 
-## COMMANDS
+## LANGUAGE TRANSLATION COMMANDS
 1. pybabel extract -F babel.cfg -o messages.pot .
 2. pybabel init -i messages.pot -d translations -l ceb
 3. pybabel init -i messages.pot -d translations -l en

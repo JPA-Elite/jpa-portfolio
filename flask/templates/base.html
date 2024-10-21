@@ -21,13 +21,13 @@
             <nav>
                 <div class="nav-toggle" id="toggleButton" onclick="toggleNav()">&#9776;</div> <!-- Hamburger Icon -->
                 <ul id="navList">
-                    <li><a href="{{ url_for('profile') }}">Portfolio</a></li>
-                    <li><a href="{{ url_for('gallery') }}">Gallery</a></li>
-                    <li><a href="{{ url_for('vlog') }}">Vlog</a></li>
-                    <li><a href="{{ url_for('concern') }}">Concern</a></li>
+                    <li><a href="{{ url_for('pages.profile') }}">Portfolio</a></li>
+                    <li><a href="{{ url_for('pages.gallery') }}">Gallery</a></li>
+                    <li><a href="{{ url_for('pages.vlog') }}">Vlog</a></li>
+                    <li><a href="{{ url_for('pages.concern') }}">Concern</a></li>
                 </ul>
                 <div class="language-selector">
-                    <a class="mobile-concern-btn" href="{{ url_for('concern') }}">Concern</a>
+                    <a class="mobile-concern-btn" href="{{ url_for('pages.concern') }}">Concern</a>
                     <div class="dropdown">
                         <button class="dropbtn">
                             {% if get_locale() == en_locale %}
@@ -45,19 +45,19 @@
                             {% endif %}
                         </button>
                         <div class="dropdown-content">
-                            <a href="{{ url_for('change_language', lang_code=en_locale) }}"
+                            <a href="{{ url_for('pages.change_language', lang_code=en_locale) }}"
                                 class="{% if get_locale()==en_locale %}active{% endif %}"
                                 onclick="changeLanguage('/change_language/{{en_locale}}'); return false;">
                                 <img src="{{ url_for('static', filename='images/en_flag.png') }}" alt="English"
                                     class="flag-icon"> {{ _('English') }}
                             </a>
-                            <a href="{{ url_for('change_language', lang_code=ceb_locale) }}"
+                            <a href="{{ url_for('pages.change_language', lang_code=ceb_locale) }}"
                                 class="{% if get_locale()==ceb_locale %}active{% endif %}"
                                 onclick="changeLanguage('/change_language/{{ceb_locale}}'); return false;">
                                 <img src="{{ url_for('static', filename='images/ph_flag.png') }}" alt="Cebuano"
                                     class="flag-icon"> {{ _('Cebuano') }}
                             </a>
-                            <a href="{{ url_for('change_language', lang_code=tl_locale) }}"
+                            <a href="{{ url_for('pages.change_language', lang_code=tl_locale) }}"
                                 class="{% if get_locale()==tl_locale %}active{% endif %}"
                                 onclick="changeLanguage('/change_language/{{tl_locale}}'); return false;">
                                 <img src="{{ url_for('static', filename='images/ph_flag.png') }}" alt="Tagalog"

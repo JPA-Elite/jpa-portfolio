@@ -1,6 +1,9 @@
 # config.py
 
 import os
+from flask import request
+
+# ************************** CONSTANTS ********************************
 
 # Define the base paths for images and documents
 IMAGE_PATH = "/static/images/"
@@ -20,19 +23,31 @@ PROFILE_PAGE = "pages/profile.html"
 GALLERY_PAGE = "pages/gallery.html"
 VLOG_PAGE = "pages/vlog.html"
 CONCERN_PAGE = "pages/concern.html"
+ADD_PORTFOLIO_PAGE = "pages/add_portfolio.html"
+
+# error pages
 ERROR_404_PAGE = "error/404.html"
 
 # Configure available languages
 LANGUAGES = {
-    'en': 'English',
-    'ceb': 'Cebuano',
-    'fr': 'French',
-    'fil_PH': 'Tagalog',
+    "en": "English",
+    "ceb": "Cebuano",
+    "fr": "French",
+    "fil_PH": "Tagalog",
 }
 
 # Set the default locale
-BABEL_DEFAULT_LOCALE = 'en'
-EN_LOCALE = 'en'
-CEB_LOCALE = 'ceb'
-FR_LOCALE = 'fr'
-TL_LOCALE = 'fil_PH'
+BABEL_DEFAULT_LOCALE = "en"
+EN_LOCALE = "en"
+CEB_LOCALE = "ceb"
+FR_LOCALE = "fr"
+TL_LOCALE = "fil_PH"
+
+# ************************** FUNCTIONS ********************************
+
+
+def get_locale():
+    lang = request.cookies.get("lang") or request.accept_languages.best_match(
+        LANGUAGES.keys()
+    )
+    return lang

@@ -18,26 +18,18 @@ class PortfolioService:
         """Capture and store system information in the database."""
         try:
             # Get user agent from the request headers
-            user_agent = request.headers.get('User-Agent')
-            user_agent_info = parse(user_agent)
-
-            # Identify the system type
-            if user_agent_info.is_mobile:
-                system_type = 'Mobile'
-                model = user_agent_info.model  # Get mobile model (e.g., 'Vivo', 'Tecno')
-            else:
-                system_type = platform.system()  # e.g., 'Windows', 'Linux', 'Darwin'
-                model = 'N/A'  # No model for desktop devices
+            user_agent_string = request.headers.get('User-Agent')
+            user_agent = parse(user_agent_string)
                 
             # Get system information
             system_info = SystemInfo(
-                system=system_type,
+                system=platform.system(),
                 node=platform.node(),
                 release=platform.release(),
                 version=platform.version(),
                 platform=platform.platform(),
                 architecture=platform.architecture(),
-                model=model,
+                model=getattr(user_agent, 'model', 'Unknown Model'),
                 page=url_for(request.endpoint),
             )
 

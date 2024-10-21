@@ -136,14 +136,12 @@ def add_portfolio_form():
 
 @pages_bp.route("/add_portfolio", methods=["POST"])
 def add_portfolio():
-    # Get data from the form submission
     data = {
         "name": request.form.get("name"),
         "email": request.form.get("email"),
     }
 
     try:
-        # Use the service to add the portfolio
         portfolio_service.add_portfolio(data["name"], data["email"])
         return jsonify({"message": "Data inserted successfully!"}), 201
 

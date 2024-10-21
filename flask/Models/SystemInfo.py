@@ -1,11 +1,14 @@
 class SystemInfo:
-    def __init__(self, system, node, release, version, platform, architecture, page):
+    def __init__(
+        self, system, node, release, version, platform, architecture, model, page
+    ):
         self.system = system
         self.node = node
         self.release = release
         self.version = version
         self.platform = platform
         self.architecture = architecture
+        self.model = model
         self.page = page
 
     def to_dict(self):
@@ -17,5 +20,6 @@ class SystemInfo:
             "version": self.version,
             "platform": self.platform,
             "architecture": self.architecture,
-            "page": self.page
+            "model": self.model,
+            "page": self.page,
         }

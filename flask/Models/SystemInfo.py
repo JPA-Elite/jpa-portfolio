@@ -7,6 +7,7 @@ class SystemInfo:
         version,
         platform,
         architecture,
+        user_agent,
         device,
         brand,
         model,
@@ -22,7 +23,8 @@ class SystemInfo:
         self.release = release
         self.version = version
         self.platform = platform
-        self.architecture = architecture
+        self.architecture = architecture,
+        self.user_agent = user_agent,
         self.device = device
         self.brand = brand
         self.model = model
@@ -41,6 +43,7 @@ class SystemInfo:
             "version": self.version,
             "platform": self.platform,
             "architecture": self.architecture,
+            "user_agent": self.user_agent,
             "device": self.device,
             "brand": self.brand,
             "model": self.model,

@@ -3,9 +3,9 @@
 __pycache__/
 
 # Virtual Environment
-venv/
-env/
-.env
+# venv/
+# env/
+# .env
 
 # Flask instance folder
 instance/

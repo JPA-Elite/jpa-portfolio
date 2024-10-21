@@ -2,7 +2,7 @@ from Repositories.PortfolioRepository import PortfolioRepository
 from Models.Portfolio import Portfolio
 from Models.SystemInfo import SystemInfo
 from flask import request, url_for
-from user_agents import parse # type: ignore
+from user_agents import parse  # type: ignore
 import platform
 
 
@@ -18,9 +18,9 @@ class PortfolioService:
         """Capture and store system information in the database."""
         try:
             # Get user agent from the request headers
-            user_agent_string = request.headers.get('User-Agent')
+            user_agent_string = request.headers.get("User-Agent")
             user_agent = parse(user_agent_string)
-                
+
             # Get system information
             system_info = SystemInfo(
                 system=platform.system(),
@@ -29,7 +29,15 @@ class PortfolioService:
                 version=platform.version(),
                 platform=platform.platform(),
                 architecture=platform.architecture(),
-                model=getattr(user_agent, 'model', 'Unknown Model'),
+                device=user_agent.device.family,  # e.g., 'iPhone', 'Android'
+                brand=user_agent.device.brand,  # e.g., 'Apple', 'Samsung'
+                model=getattr(
+                    user_agent.device, "model", "Unknown Model"
+                ),  # Safe access to model
+                browser=user_agent.browser.family,  # e.g., 'Mobile Safari'
+                browser_version=user_agent.browser.version_string,  # e.g., '5.1'
+                os=user_agent.os.family,  # e.g., 'iOS'
+                os_version=user_agent.os.version_string,  # e.g., '5.1'
                 page=url_for(request.endpoint),
             )
 

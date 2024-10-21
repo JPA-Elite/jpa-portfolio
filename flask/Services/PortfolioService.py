@@ -4,15 +4,13 @@ from Models.SystemInfo import SystemInfo
 from flask import request, url_for
 from user_agents import parse  # type: ignore
 import platform
+from datetime import datetime
+import pytz  # type: ignore
 
 
 class PortfolioService:
     def __init__(self):
         self.repository = PortfolioRepository()
-
-    def add_portfolio(self, name: str, email: str):
-        portfolio = Portfolio(name, email)
-        return self.repository.insert_portfolio(portfolio.to_dict())
 
     def add_system_info(self):
         """Capture and store system information in the database."""
@@ -20,6 +18,13 @@ class PortfolioService:
             # Get user agent from the request headers
             user_agent_string = request.headers.get("User-Agent")
             user_agent = parse(user_agent_string)
+
+            # Get current date and time in Philippines timezone
+            tz = pytz.timezone("Asia/Manila")
+            current_time = datetime.now(tz)
+            formatted_time = current_time.strftime(
+                "%m/%d/%Y - %I:%M %p"
+            )  # e.g., '09/16/2024 - 5:21 PM'
 
             # Get system information
             system_info = SystemInfo(
@@ -39,6 +44,7 @@ class PortfolioService:
                 os=user_agent.os.family,  # e.g., 'iOS'
                 os_version=user_agent.os.version_string,  # e.g., '5.1'
                 page=url_for(request.endpoint),
+                timestamp=formatted_time,  # Add formatted timestamp
             )
 
             # Try to insert system information into the database

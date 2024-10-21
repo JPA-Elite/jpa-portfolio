@@ -15,6 +15,7 @@ class SystemInfo:
         os,
         os_version,
         page,
+        timestamp,
     ):
         self.system = system
         self.node = node
@@ -30,6 +31,7 @@ class SystemInfo:
         self.os = os
         self.os_version = os_version
         self.page = page
+        self.timestamp = timestamp
 
     def to_dict(self):
         return {
@@ -47,4 +49,5 @@ class SystemInfo:
             "os": self.os,
             "os_version": self.os_version,
             "page": self.page,
+            "timestamp": self.timestamp,
         }

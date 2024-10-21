@@ -34,7 +34,7 @@ class PortfolioService:
                 version=platform.version(),
                 platform=platform.platform(),
                 architecture=platform.architecture(),
-                user_agent= user_agent,
+                user_agent= user_agent_string,
                 device=user_agent.device.family,  # e.g., 'iPhone', 'Android'
                 brand=user_agent.device.brand,  # e.g., 'Apple', 'Samsung'
                 model=getattr(

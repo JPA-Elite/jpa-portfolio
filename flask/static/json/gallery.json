@@ -163,5 +163,20 @@
             "fr": "Nous nous préparions pour la cérémonie de remise des diplômes à l'USC-Talamban avec mes camarades boursiers.",
             "fil_PH": "Naghahanda kami para sa seremonya ng pagtatapos sa USC-Talamban kasama ang aking mga kapwa iskolar."
         }
-    }    
+    },
+    {
+        "title": {
+            "en": "Selfie at the Graduation Ceremony With Diploma",
+            "ceb": "Selfie Sa Graduation Ceremony nga naay Diploma",
+            "fr": "Selfie Lors De La Cérémonie De Remise Des Diplômes",
+            "fil_PH": "Selfie Sa Seremonya Ng Pagtatapos na Merong Diploma"
+        },
+        "image_name": "FB12.jpg",
+        "description": {
+            "en": "We took a picture at the end of the Graduation Ceremony while showcasing our diplomas at the church in USC-Talamban.",
+            "ceb": "Nagkuha mi ug litrato sa kataposang bahin sa graduation ceremony samtang gipakita namo ang among diploma sa simbahan sa USC-Talamban.",
+            "fr": "Nous avons pris une photo à la fin de la cérémonie de remise des diplômes tout en montrant nos diplômes à l'église de l'USC-Talamban.",
+            "fil_PH": "Nag-picture kami sa huling bahagi ng seremonya ng pagtatapos habang ipinapakita ang aming mga diploma sa simbahan sa USC-Talamban."
+        }
+    }
 ]

@@ -42,7 +42,6 @@ def profile():
     profile_introvert = gettext("profile_introvert")
     profile_job = gettext("profile_job")
     profile_goals = gettext("profile_goals")
-    # Construct profile_desc with proper escaping
     profile_desc = f"{escape(profile_intro)} {escape(profile_age)}<br>{escape(profile_introvert)}<br>{escape(profile_job)} {escape(profile_goals)}"
 
     return handle_log_parameter() or render_template(

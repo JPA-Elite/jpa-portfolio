@@ -103,5 +103,35 @@
             "fil_PH": "Ipinagdiwang namin ang pista sa aking bayan sa Negros Oriental, kung saan nag-file ako ng bakasyon mula sa trabaho."
         },
         "file": "videos/disco.mp4"
-    }    
+    },
+    {
+        "title": {
+            "en": "Meet up at North Bus Terminal Cebu for Company Outing",
+            "ceb": "Panagtagbo Sa North Bus Terminal Cebu Para Sa Company Outing",
+            "fr": "Rendez-vous au terminal de bus nord de Cebu pour une sortie d'entreprise",
+            "fil_PH": "Pagtitipon Sa North Bus Terminal Cebu Para Sa Company Outing"
+        },
+        "description": {
+        "en": "We gathered at the North Bus Terminal of Cebu with my coworkers at around 5 AM to prepare for the outing.",
+        "ceb": "Nagkita mi sa North Bus Terminal sa Cebu kauban ang akong mga kauban sa trabaho mga alas 5 sa buntag aron mag-andam para sa outing.",
+        "fr": "Nous nous sommes retrouvés au terminal de bus nord de Cebu avec mes collègues vers 5 heures du matin pour nous préparer à la sortie.",
+        "fil_PH": "Nagtipon kami sa North Bus Terminal ng Cebu kasama ang aking mga katrabaho bandang alas 5 ng umaga para maghanda para sa outing."
+        },
+        "file": "videos/vlog1.mp4"
+    },
+    {
+        "title": {
+            "en": "At the Venue for Our Company Outing",
+            "ceb": "Sa Lugar Para Sa Among Company Outing",
+            "fr": "Au Lieu de Notre Sortie d'Entreprise",
+            "fil_PH": "Sa Lugar ng Aming Company Outing"
+        },
+        "description": {
+        "en": "We have arrived at our destination for the company outing, took a short rest, and then started preparing our things.",
+        "ceb": "Nakaabot na kami sa among destinasyon para sa company outing, nagpahulay gamay, ug dayon nag-andam sa among mga gamit.",
+        "fr": "Nous sommes arrivés à notre destination pour la sortie d'entreprise, avons pris un court repos, puis avons commencé à préparer nos affaires.",
+        "fil_PH": "Nakakarating na kami sa aming destinasyon para sa company outing, nagpahinga ng kaunti, at pagkatapos ay naghanda ng aming mga gamit."
+        },
+        "file": "videos/vlog2.mp4"
+    }
 ]

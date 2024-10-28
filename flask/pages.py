@@ -1,6 +1,8 @@
 # pages.py
 from flask import Blueprint, redirect, url_for, render_template, request, jsonify
 from Services.PortfolioService import PortfolioService
+from Services.VisitService import VisitService
+
 from utils import filter_data, paginate_data
 from config import (
     ADD_PORTFOLIO_PAGE,
@@ -13,6 +15,7 @@ from config import (
     RESUME_PDF,
     VLOG_JSON_PATH,
     VLOG_PAGE,
+    DEVICE_INFO_VISIT_PAGE,
     get_locale,
 )
 from flask_babel import gettext  # type: ignore
@@ -22,8 +25,9 @@ import json
 # Create a Blueprint for pages
 pages_bp = Blueprint("pages", __name__)
 
-# Initialize the PortfolioService
+# Initialize Services
 portfolio_service = PortfolioService()
+visit_service = VisitService()
 
 # ************************** PAGES ********************************
 
@@ -146,6 +150,22 @@ def add_portfolio():
 
     except Exception as e:
         return jsonify({"error": str(e)}), 400
+
+
+@pages_bp.route("/device-info/visits")
+def device_info():
+    page = int(request.args.get("page", 1))
+    per_page = 10
+    documents, total_docs = visit_service.get_paginated_system_info(page, per_page)
+    total_pages = (total_docs + per_page - 1) // per_page  # Calculate total pages
+
+    return handle_log_parameter() or render_template(
+        DEVICE_INFO_VISIT_PAGE,
+        documents=[doc.to_dict() for doc in documents],
+        current_page=page,
+        total_pages=total_pages,
+        title="User Visits",
+    )
 
 
 # ************************** PRIVATE FUNCTIONS ********************************

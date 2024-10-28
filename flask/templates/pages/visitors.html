@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block title %}Device-Info Visits{% endblock %}
+{% block head %}{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/pages/visitors.css') }}" />
+
+<section>
+    <div class="table-container">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>{{ _('System') }}</th>
+                    <th>{{ _('Device') }}</th>
+                    <th>{{ _('Brand') }}</th>
+                    <th>{{ _('Browser') }}</th>
+                    <th>{{ _('OS') }}</th>
+                    <th>{{ _('Page') }}</th>
+                    <th>{{ _('Timestamp') }}</th>
+                </tr>
+            </thead>
+            <tbody id="table-body">
+                {% for document in documents %}
+                <tr>
+                    <td>{{ document.system }}</td>
+                    <td>{{ document.device }}</td>
+                    <td>{{ document.brand }}</td>
+                    <td>{{ document.browser }}</td>
+                    <td>{{ document.os }}</td>
+                    <td>{{ document.page }}</td>
+                    <td>{{ document.timestamp }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    {% set base_url = url_for('pages.device_info') %}
+    <!-- Include the pagination component and pass the base URL -->
+    {% include 'components/pagination.html' %}
+</section>
+{% endblock %}

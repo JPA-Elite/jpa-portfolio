@@ -17,14 +17,16 @@ class SystemInfo:
         os_version,
         page,
         timestamp,
+        _id=None,  # Make _id optional by setting a default value
     ):
+        self._id = _id  # Store the _id if present
         self.system = system
         self.node = node
         self.release = release
         self.version = version
         self.platform = platform
-        self.architecture = architecture,
-        self.user_agent = user_agent,
+        self.architecture = architecture
+        self.user_agent = user_agent
         self.device = device
         self.brand = brand
         self.model = model
@@ -36,7 +38,8 @@ class SystemInfo:
         self.timestamp = timestamp
 
     def to_dict(self):
-        return {
+        # Include _id in the dictionary if it exists
+        data = {
             "system": self.system,
             "node": self.node,
             "release": self.release,
@@ -54,3 +57,6 @@ class SystemInfo:
             "page": self.page,
             "timestamp": self.timestamp,
         }
+        if self._id is not None:
+            data["_id"] = self._id
+        return data

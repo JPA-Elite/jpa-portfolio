@@ -2,7 +2,6 @@
 from flask import Blueprint, redirect, url_for, render_template, request, jsonify
 from Services.PortfolioService import PortfolioService
 from Services.VisitService import VisitService
-
 from utils import filter_data, paginate_data
 from config import (
     ADD_PORTFOLIO_PAGE,
@@ -20,7 +19,7 @@ from config import (
 )
 from flask_babel import gettext  # type: ignore
 from markupsafe import escape  # type: ignore
-import json
+import requests
 
 # Create a Blueprint for pages
 pages_bp = Blueprint("pages", __name__)
@@ -60,8 +59,12 @@ def profile():
 
 @pages_bp.route("/gallery")
 def gallery():
-    with open(GALLERY_JSON_PATH) as f:
-        gallery_data = json.load(f)
+    # Generate the dynamic URL for the gallery JSON
+    gallery_url = url_for("static", filename="json/gallery.json", _external=True)
+
+    # Fetch JSON data from the URL
+    response = requests.get(gallery_url)
+    gallery_data = response.json()
 
     # Get the search query from the request arguments
     search_query = request.args.get("search", "")
@@ -88,8 +91,12 @@ def gallery():
 
 @pages_bp.route("/vlog")
 def vlog():
-    with open(VLOG_JSON_PATH) as f:
-        vlog_data = json.load(f)
+    # Generate the dynamic URL for the vlog JSON
+    vlog_url = url_for("static", filename="json/vlog.json", _external=True)
+
+    # Fetch JSON data from the URL
+    response = requests.get(vlog_url)
+    vlog_data = response.json()
 
     # Get the search query from the request arguments
     search_query = request.args.get("search", "")

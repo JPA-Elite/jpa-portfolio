@@ -6,31 +6,163 @@
     <span class="close" onclick="closeModal()">&times;</span>
     <img class="modal-content" id="modalImage">
     <div id="caption"></div>
+    <div class="box-modal-container" style="display: none;">
+        <div id="customCarousel" class="carousel">
+            <div class="carousel-indicators">
+                <span data-slide-to="0" class="indicator active"></span>
+                <span data-slide-to="1" class="indicator"></span>
+                <span data-slide-to="2" class="indicator"></span>
+            </div>
+
+            <div class="carousel-inner">
+                <div class="carousel-item active" data-project-id="1">
+                    <img src='{{ url_for("static", filename="images/jaom_home.png") }}' alt="First slide">
+                </div>
+                <div class="carousel-item" data-project-id="1">
+                    <img src='{{ url_for("static", filename="images/jaom_about_us.png") }}' alt="Second slide">
+                </div>
+                <div class="carousel-item" data-project-id="1">
+                    <img src="https://via.placeholder.com/600x300" alt="Third slide">
+                </div>
+            </div>
+
+            <button class="carousel-control prev" onclick="moveSlide(-1)">‹</button>
+            <button class="carousel-control next" onclick="moveSlide(1)">›</button>
+        </div>
+
+        <!-- Description Section -->
+        <div id="carouselDescription" class="carousel-description">
+            <h3 id="descriptionTitle">First Slide Title</h3>
+            <p id="descriptionText">This is the description for the first slide.</p>
+        </div>
+
+
+    </div>
 </div>
 
 <script>
-    // Function to open the modal and show the image
-    function openModal(imageSrc, title = '', description = '') {
-        document.getElementById("imageModal").style.display = "block";
-        document.getElementById("modalImage").src = imageSrc;
+    const ModalType = {
+        IMAGE: 'imageModal',
+        BOX: 'boxModal'
+    };
 
-        // Create a caption element
-        const captionElement = document.getElementById("caption");
+    let currentSlide = 0;
+    const currentLocale = "{{ get_locale() }}";
+    const slides = document.querySelectorAll(".carousel-item");
+    const indicators = document.querySelectorAll(".indicator");
 
-        // Set title if available
-        captionElement.innerHTML = ""; // Clear previous content
-        if (title && title.trim() !== "") {
-            captionElement.innerHTML += "<h3>" + title + "</h3>";
+    const slideTitles = [
+        {
+            "en": "Home Page",
+            "ceb": "Home Page",
+            "fr": "Page d'accueil",
+            "fil_PH": "Home Page",
+        },
+        {
+            "en": "About Us",
+            "ceb": "Mahitungod Kanato",
+            "fr": "À propos de nous",
+            "fil_PH": "Tungkol sa Amin",
         }
+    ];
 
-        // Set description if available
-        if (description && description.trim() !== "") {
-            captionElement.innerHTML += "<p>" + description + "</p>";
+    const slideDescriptions = [
+        {
+            "en": "Welcome to the homepage of the Jaom Connect website, where you'll find an in-depth introduction to the JAOM community. This page offers insights into who we are, what we represent, and the vision and mission that drive our community's initiatives. Here, you can learn about our organization’s location, its core values, and the unique opportunities we provide for members to connect, grow, and collaborate. Whether you're interested in joining us, exploring our activities, or simply learning more about what makes JAOM special, this homepage serves as your gateway to understanding the spirit and purpose of our community.",
+            "ceb": "Welcome sa pahina sa balay sa Jaom Connect website, diin makit-an nimo ang usa ka halapad nga pagpasabot sa komunidad sa JAOM. Ang pahinang kini naghatag ug kasayuran mahitungod kanato, unsa ang among gipakita, ug ang panan-aw ug misyon nga nagpalihok sa mga inisyatibo sa among komunidad. Dinhi, makakat-on ka mahitungod sa lokasyon sa among organisasyon, ang mga punoan nga bili, ug ang talagsaong mga oportunidad nga among gihatag alang sa mga myembro aron makig-uban, motubo, ug makig-collaborate. Kung interesado ka nga mag-uban kanamo, susihon ang among mga kalihokan, o simple ra nga magkat-on pa mahitungod sa unsa ang nagpamaka-uban sa JAOM, ang pahinang ini nagsilbing imong gateway sa pagsabot sa espiritu ug katuyuan sa among komunidad.",
+            "fr": "Bienvenue sur la page d'accueil du site Web de Jaom Connect, où vous trouverez une introduction approfondie à la communauté JAOM. Cette page offre un aperçu de qui nous sommes, de ce que nous représentons et de la vision et de la mission qui animent les initiatives de notre communauté. Ici, vous pouvez apprendre où se trouve notre organisation, ses valeurs fondamentales et les opportunités uniques que nous offrons aux membres pour se connecter, grandir et collaborer. Que vous soyez intéressé à nous rejoindre, à explorer nos activités ou simplement à en savoir plus sur ce qui rend JAOM spécial, cette page d'accueil sert de passerelle pour comprendre l'esprit et le but de notre communauté.",
+            "fil_PH": "Maligayang pagdating sa homepage ng Jaom Connect website, kung saan makikita mo ang isang malalim na pagpapakilala sa komunidad ng JAOM. Ang pahinang ito ay nag-aalok ng mga pananaw tungkol sa kung sino kami, kung ano ang aming kinakatawan, at ang pananaw at misyon na nagtutulak sa mga inisyatibo ng aming komunidad. Dito, maaari mong malaman ang tungkol sa lokasyon ng aming organisasyon, ang mga pangunahing halaga nito, at ang mga natatanging pagkakataon na ibinibigay namin para sa mga miyembro na kumonekta, lumago, at makipagtulungan. Kung interesado kang sumali sa amin, tuklasin ang aming mga aktibidad, o simpleng malaman ang higit pa tungkol sa kung ano ang ginagawang espesyal ang JAOM, ang homepage na ito ay nagsisilbing iyong gateway sa pag-unawa sa espiritu at layunin ng aming komunidad."
+        },
+        {
+            "en": "Learn more about the history and goals of Jaom Connect. This section delves into the foundations of our community, highlighting key milestones, important achievements, and the mission that guides us forward. Discover the people behind the organization, the values we hold dear, and the vision that inspires our actions. Our journey is one of connection, growth, and collaboration, and we're excited to share it with you.",
+            "ceb": "Makakat-on pa mahitungod sa kasaysayan ug mga tumong sa Jaom Connect. Kini nga seksyon naghisgot sa mga pundasyon sa among komunidad, nagpatigbabaw sa mga mayor nga milestone, importante nga mga kalampusan, ug ang misyon nga naggiya kanamo paadto. Pagdiskobre sa mga tawo nga nagpaluyo sa organisasyon, ang mga bili nga among gipangga, ug ang panan-aw nga naghatag kanamo og inspirasyon. Ang among panaw mao ang pag-uban, pagtubo, ug pag-collaborate, ug nalipay kami nga ipaambit kini kanimo.",
+            "fr": "En savoir plus sur l'histoire et les objectifs de Jaom Connect. Cette section explore les fondements de notre communauté, mettant en lumière les étapes clés, les réalisations importantes et la mission qui nous guide. Découvrez les personnes derrière l'organisation, les valeurs que nous chérissons et la vision qui inspire nos actions. Notre parcours est celui de la connexion, de la croissance et de la collaboration, et nous sommes ravis de le partager avec vous.",
+            "fil_PH": "Alamin pa ang tungkol sa kasaysayan at mga layunin ng Jaom Connect. Ang seksyong ito ay sumisid sa mga pundasyon ng aming komunidad, na nagha-highlight ng mga mahalagang milestone, mga mahahalagang tagumpay, at ang misyon na gumagabay sa amin patungo sa hinaharap. Tuklasin ang mga tao sa likod ng organisasyon, ang mga halagang pinahahalagahan namin, at ang pananaw na nagbibigay inspirasyon sa aming mga aksyon. Ang aming paglalakbay ay isa ng koneksyon, paglago, at pagtutulungan, at nasasabik kaming ibahagi ito sa iyo."
+        }
+    ];
+
+
+    function updateCarousel() {
+        // Update the active class on slides
+        slides.forEach((slide, index) => {
+            slide.classList.toggle("active", index === currentSlide);
+        });
+
+        // Update the active class on indicators
+        indicators.forEach((indicator, index) => {
+            indicator.classList.toggle("active", index === currentSlide);
+        });
+
+        // Move carousel
+        const offset = -currentSlide * 100;
+        document.querySelector(".carousel-inner").style.transform = `translateX(${offset}%)`;
+
+        // Update title and description with multilingual support
+        const currentSlideTitle = slideTitles[currentSlide];
+        const currentSlideDescription = slideDescriptions[currentSlide];
+        const titleText = currentSlideTitle[currentLocale] || currentSlideTitle["en"];
+        const descriptionText = currentSlideDescription[currentLocale] || currentSlideDescription["en"];
+
+        document.getElementById("descriptionTitle").textContent = titleText;
+        document.getElementById("descriptionText").textContent = descriptionText;
+
+        // Display the modal container
+        document.querySelector(".box-modal-container").style.display = "block";
+    }
+
+    function moveSlide(direction) {
+        currentSlide = (currentSlide + direction + slides.length) % slides.length;
+        updateCarousel();
+    }
+
+    // Indicator click functionality
+    indicators.forEach((indicator, index) => {
+        indicator.addEventListener("click", () => {
+            currentSlide = index;
+            updateCarousel();
+        });
+    });
+
+    // Initial carousel update
+    updateCarousel();
+
+    // Function to open the modal and show the image
+    function openModal(imageSrc, title = '', description = '', type = ModalType.IMAGE) {
+        var boxModalContainer = document.querySelector(".box-modal-container");
+        var modalImage = document.getElementById("modalImage");
+        var caption = document.getElementById("caption");
+        var imageModal = document.getElementById("imageModal");
+        imageModal.style.display = "block";
+
+        if (type == ModalType.BOX) {
+            boxModalContainer.style.display = "block";
+            modalImage.style.display = "none";
+            caption.style.display = "none";
+        } else {
+            boxModalContainer.style.display = "none";
+            modalImage.style.display = "block";
+            caption.style.display = "block";
+            document.getElementById("modalImage").src = imageSrc;
+
+            // Create a caption element
+            const captionElement = document.getElementById("caption");
+
+            // Set title if available
+            captionElement.innerHTML = ""; // Clear previous content
+            if (title && title.trim() !== "") {
+                captionElement.innerHTML += "<h3>" + title + "</h3>";
+            }
+
+            // Set description if available
+            if (description && description.trim() !== "") {
+                captionElement.innerHTML += "<p>" + description + "</p>";
+            }
         }
     }
 
     // Function to close the modal
     function closeModal() {
         document.getElementById("imageModal").style.display = "none";
+        document.querySelector(".box-modal-container").style.display = "none";
     }
 </script>

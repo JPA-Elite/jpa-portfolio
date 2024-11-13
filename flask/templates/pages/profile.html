@@ -15,7 +15,7 @@
         <p>{{ _('Software_Expertise_Description') }}</p>
         <p>{{ _('Technology_Adaptability_Description') }}</p>
         <p>{{ _('Experience_Share_Description') }}</p>
-        <h3>{{ _('Key_Projects') }}:</h3>
+        <!-- <h3>{{ _('Key_Projects') }}:</h3>
         <ul>
             <li>
                 <b>{{ _('Project_A') }}:</b>
@@ -38,10 +38,58 @@
                     <li>{{ _('Project_C_Technologies') }}</li>
                 </ul>
             </li>
-        </ul>
+        </ul> -->
     </div>
 </section>
+<div class="carousel-main">
+    <h3>{{ _('Key_Projects') }}</h3>
+    <div class="project-carousel">
+        <button id="carousel-prev" class="carousel-button">← Prev</button>
+        <div class="carousel-track-wrapper">
+            <div class="carousel-track">
+                <div class="carousel-card" onclick="openModal('', '', '', 'boxModal')">
+                    <div>
+                        <p>JAOM-CONNECT</p>
+                        <img src="{{ project_jaom }}">
+                    </div>
+                </div>
+                <div class="carousel-card" onclick="openModal('', '', '', 'boxModal')">
+                    <div>
+                        <p>JAOM-CONNECT</p>
+                        <img src="{{ project_jaom }}">
+                    </div>
+                </div>
+                <div class="carousel-card" onclick="openModal('', '', '', 'boxModal')">
+                    <div>
+                        <p>JAOM-CONNECT</p>
+                        <img src="{{ project_jaom }}">
+                    </div>
+                </div>
+                <div class="carousel-card" onclick="openModal('', '', '', 'boxModal')">
+                    <div>
+                        <p>JAOM-CONNECT</p>
+                        <img src="{{ project_jaom }}">
+                    </div>
+                </div>
+                <div class="carousel-card" onclick="openModal('', '', '', 'boxModal')">
+                    <div>
+                        <p>JAOM-CONNECT</p>
+                        <img src="{{ project_jaom }}">
+                    </div>
+                </div>
+                <div class="carousel-card" onclick="openModal('', '', '', 'boxModal')">
+                    <div>
+                        <p>JAOM-CONNECT</p>
+                        <img src="{{ project_jaom }}">
+                    </div>
+                </div>
+                <!-- Add more cards as needed -->
+            </div>
+        </div>
+        <button id="carousel-next" class="carousel-button">Next →</button>
+    </div>
 
+</div>
 <section id="about">
     <h2>{{ _('About_Me') }}</h2>
     <p>{{ _('Highlights_Description') }}</p>
@@ -74,12 +122,12 @@
     <h2>{{ _('Resume') }}</h2>
     <p>{{ _('Professional_Highlights_Description') }}</p>
     <ul>
-        <li>
+        <!-- <li>
             {{ _('Repair_Service_Experience') }}
             <ul>
                 <li>{{ _('Repair_Service_Description') }}</li>
             </ul>
-        </li>
+        </li> -->
         <li>
             {{ _('Business_Intern_Experience') }}
             <ul>
@@ -155,5 +203,47 @@
         </li>
     </ul>
 </section>
+<script>
+    const carouselWrapper = document.querySelector('.carousel-track-wrapper');
+    const carouselCards = document.querySelectorAll('.carousel-card');
+    const nextButton = document.getElementById('carousel-next');
+    const prevButton = document.getElementById('carousel-prev');
+
+    const cardWidth = carouselCards[0].offsetWidth + 10; // Card width plus margin
+    let scrollPosition = 0;
+
+    function updateCarouselButtons() {
+        // Check if at the beginning or end of the scrollable area
+        prevButton.disabled = scrollPosition <= 0;
+        nextButton.disabled = scrollPosition >= carouselWrapper.scrollWidth - carouselWrapper.clientWidth;
+    }
+
+    // Scroll to the next card
+    nextButton.addEventListener('click', () => {
+        if (scrollPosition < carouselWrapper.scrollWidth - carouselWrapper.clientWidth) {
+            scrollPosition += cardWidth;
+            carouselWrapper.scrollTo({
+                left: scrollPosition,
+                behavior: 'smooth'
+            });
+            updateCarouselButtons();
+        }
+    });
+
+    // Scroll to the previous card
+    prevButton.addEventListener('click', () => {
+        if (scrollPosition > 0) {
+            scrollPosition -= cardWidth;
+            carouselWrapper.scrollTo({
+                left: scrollPosition,
+                behavior: 'smooth'
+            });
+            updateCarouselButtons();
+        }
+    });
+
+    // Initial button state
+    updateCarouselButtons();
+</script>
 
 {% endblock %}

@@ -76,21 +76,17 @@
         </main>
 
         <footer>
-            <p>&copy; 2024 Joshua Algadipe. All Rights Reserved.</p>
+            <p id="copyright"></p>
         </footer>
     </div>
     <!-- Include the modal component -->
     {% include 'components/modal.html' %}
     <!-- Include the chatbox component -->
     {% include 'components/chatbox.html' %}
-
-    <!-- disable for a meantime -->
-    <!-- <script>
-        window.addEventListener('load', function () {
-            startTypingAnimation("animated-heading", "{{ title }}", 200, false, 10000);
-        });
-    </script> -->
     <script>
+        const currentYear = new Date().getFullYear();
+        document.getElementById("copyright").innerHTML = `&copy; ${currentYear} Joshua Algadipe. All Rights Reserved.`;
+
         function changeLanguage(url) {
             if (typeof window !== 'undefined') {
                 localStorage.removeItem('chatMessagesCache');

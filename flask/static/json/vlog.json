@@ -112,10 +112,10 @@
             "fil_PH": "Pagtitipon Sa North Bus Terminal Cebu Para Sa Company Outing"
         },
         "description": {
-        "en": "We gathered at the North Bus Terminal of Cebu with my coworkers at around 5 AM to prepare for the outing.",
-        "ceb": "Nagkita mi sa North Bus Terminal sa Cebu kauban ang akong mga kauban sa trabaho mga alas 5 sa buntag aron mag-andam para sa outing.",
-        "fr": "Nous nous sommes retrouvés au terminal de bus nord de Cebu avec mes collègues vers 5 heures du matin pour nous préparer à la sortie.",
-        "fil_PH": "Nagtipon kami sa North Bus Terminal ng Cebu kasama ang aking mga katrabaho bandang alas 5 ng umaga para maghanda para sa outing."
+            "en": "We gathered at the North Bus Terminal of Cebu with my coworkers at around 5 AM to prepare for the outing.",
+            "ceb": "Nagkita mi sa North Bus Terminal sa Cebu kauban ang akong mga kauban sa trabaho mga alas 5 sa buntag aron mag-andam para sa outing.",
+            "fr": "Nous nous sommes retrouvés au terminal de bus nord de Cebu avec mes collègues vers 5 heures du matin pour nous préparer à la sortie.",
+            "fil_PH": "Nagtipon kami sa North Bus Terminal ng Cebu kasama ang aking mga katrabaho bandang alas 5 ng umaga para maghanda para sa outing."
         },
         "file": "videos/vlog1.mp4"
     },
@@ -127,11 +127,26 @@
             "fil_PH": "Sa Lugar ng Aming Company Outing"
         },
         "description": {
-        "en": "We have arrived at our destination for the company outing, took a short rest, and then started preparing our things.",
-        "ceb": "Nakaabot na kami sa among destinasyon para sa company outing, nagpahulay gamay, ug dayon nag-andam sa among mga gamit.",
-        "fr": "Nous sommes arrivés à notre destination pour la sortie d'entreprise, avons pris un court repos, puis avons commencé à préparer nos affaires.",
-        "fil_PH": "Nakakarating na kami sa aming destinasyon para sa company outing, nagpahinga ng kaunti, at pagkatapos ay naghanda ng aming mga gamit."
+            "en": "We have arrived at our destination for the company outing, took a short rest, and then started preparing our things.",
+            "ceb": "Nakaabot na kami sa among destinasyon para sa company outing, nagpahulay gamay, ug dayon nag-andam sa among mga gamit.",
+            "fr": "Nous sommes arrivés à notre destination pour la sortie d'entreprise, avons pris un court repos, puis avons commencé à préparer nos affaires.",
+            "fil_PH": "Nakakarating na kami sa aming destinasyon para sa company outing, nagpahinga ng kaunti, at pagkatapos ay naghanda ng aming mga gamit."
         },
         "file": "videos/vlog2.mp4"
+    },
+    {
+        "title": {
+            "en": "Battle of Airbands Parody",
+            "ceb": "Lumba sa Airbands Parody",
+            "fr": "Bataille des Parodies Airbands",
+            "fil_PH": "Laban ng Airbands Parody"
+        },
+        "description": {
+            "en": "This is one of the performances featured in our company event developmental activities.",
+            "ceb": "Usa kini sa mga pasundayag nga gipakita sa among mga kalihokan sa pag-uswag bahin sa mga kalihokan sa kompanya.",
+            "fr": "Ceci est l'une des performances présentées dans nos activités de développement pour les événements d'entreprise.",
+            "fil_PH": "Isa ito sa mga pagtatanghal na tampok sa aming mga aktibidad sa pag-unlad tungkol sa mga kaganapan ng kumpanya."
+        },
+        "file": "videos/vlog3.mp4"
     }
 ]

@@ -284,21 +284,27 @@
         width: 100%;
         padding: 0;
     }
-/* 
-    .carousel-button {
-        background-color: #333;
-        color: #fff;
-        border: none;
-        padding: 10px 20px;
-        cursor: pointer;
-        font-size: 16px;
-        border-radius: 5px;
-    } */
 
     .carousel-button {
         font-size: 14px;
         padding:5px 10px;
         margin: 5px;
+    }
+
+    .carousel-inner {
+        margin-top: 20px;
+    }
+
+    .box-modal-container {
+        overflow-y: auto;
+    }
+
+    .carousel-description #descriptionTitle {
+        font-size: 16px;
+    }
+
+    .carousel-description #descriptionText {
+        font-size: 15px;
     }
 }
 

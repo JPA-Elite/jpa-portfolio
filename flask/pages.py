@@ -47,6 +47,10 @@ def profile():
     profile_goals = gettext("profile_goals")
     profile_desc = f"{escape(profile_intro)} {escape(profile_age)}<br>{escape(profile_introvert)}<br>{escape(profile_job)} {escape(profile_goals)}"
 
+    # project details images
+    project_jaom = url_for("static", filename="images/jaom.png", _external=True)
+    no_project = url_for("static", filename="images/no-project.png", _external=True)
+
     return handle_log_parameter() or render_template(
         PROFILE_PAGE,
         profile_image=PROFILE_IMAGE,
@@ -54,6 +58,8 @@ def profile():
         title="My Portfolio",
         profile_name=profile_name,
         profile_desc=profile_desc,
+        project_jaom=project_jaom,
+        no_project=no_project,
     )
 
 

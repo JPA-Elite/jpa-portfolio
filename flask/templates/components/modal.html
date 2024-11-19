@@ -6,31 +6,159 @@
     <span class="close" onclick="closeModal()">&times;</span>
     <img class="modal-content" id="modalImage">
     <div id="caption"></div>
+    <div class="box-modal-container" style="display: none;">
+        <div id="customCarousel" class="carousel">
+            <div class="carousel-indicators" id="carouselIndicators"></div>
+            <div class="carousel-inner" id="carouselInner"></div>
+            <button class="carousel-control prev" onclick="moveSlide(-1)">‹</button>
+            <button class="carousel-control next" onclick="moveSlide(1)">›</button>
+        </div>
+        <!-- Description Section -->
+        <div id="carouselDescription" class="carousel-description">
+            <h3 id="descriptionTitle"></h3>
+            <p id="descriptionText"></p>
+        </div>
+    </div>
 </div>
 
 <script>
-    // Function to open the modal and show the image
-    function openModal(imageSrc, title = '', description = '') {
-        document.getElementById("imageModal").style.display = "block";
-        document.getElementById("modalImage").src = imageSrc;
+    const ModalType = {
+        IMAGE: 'imageModal',
+        BOX: 'boxModal'
+    };
 
-        // Create a caption element
-        const captionElement = document.getElementById("caption");
+    let currentSlide = 0;
+    const currentLocale = "{{ get_locale() }}";
+    let slideData = [];
 
-        // Set title if available
-        captionElement.innerHTML = ""; // Clear previous content
-        if (title && title.trim() !== "") {
-            captionElement.innerHTML += "<h3>" + title + "</h3>";
+    // Fetch slide data from the JSON file
+    fetch("/static/json/project.json")
+        .then(response => response.json())
+        .then(data => {
+            slideData = data;
+            // Initialize carousel after data is fetched
+            updateCarousel();
+        })
+        .catch(error => {
+            console.error('Error fetching slide data:', error);
+        });
+
+    const carouselIndicators = document.getElementById('carouselIndicators');
+    const carouselInner = document.getElementById('carouselInner');
+
+    // Create carousel indicators and items dynamically
+    function updateCarousel() {
+        carouselIndicators.innerHTML = ''; // Clear existing indicators
+        carouselInner.innerHTML = ''; // Clear existing slides
+
+        slideData.forEach((slide, index) => {
+            // Create indicator
+            const indicator = document.createElement('span');
+            indicator.classList.add('indicator');
+            indicator.dataset.slideTo = index;
+            if (index === 0) indicator.classList.add('active');
+            carouselIndicators.appendChild(indicator);
+
+            // Create carousel item
+            const carouselItem = document.createElement('div');
+            carouselItem.classList.add('carousel-item');
+            if (index === 0) carouselItem.classList.add('active');
+
+            const img = document.createElement('img');
+            img.classList.add('d-block', 'w-100');
+            img.src = slide.src;
+            carouselItem.appendChild(img);
+
+            carouselInner.appendChild(carouselItem);
+        });
+
+        // Call updateCarousel function to set the first slide
+        const indicators = document.querySelectorAll('.indicator');
+        const slides = document.querySelectorAll('.carousel-item');
+
+        function setActiveSlide() {
+            // Update the active class on slides
+            slides.forEach((slide, index) => {
+                slide.classList.toggle("active", index === currentSlide);
+            });
+
+            // Update the active class on indicators
+            indicators.forEach((indicator, index) => {
+                indicator.classList.toggle("active", index === currentSlide);
+            });
+
+            // Move carousel
+            const offset = -currentSlide * 100;
+            document.querySelector(".carousel-inner").style.transform = `translateX(${offset}%)`;
+
+            // Update title and description with multilingual support
+            const currentSlideTitle = slideData[currentSlide].titles;
+            const currentSlideDescription = slideData[currentSlide].descriptions;
+
+            const titleText = currentSlideTitle[currentLocale] || currentSlideTitle["en"];
+            const descriptionText = currentSlideDescription[currentLocale] || currentSlideDescription["en"];
+
+            document.getElementById("descriptionTitle").textContent = titleText;
+            document.getElementById("descriptionText").textContent = descriptionText;
+
+            // Display the modal container
+            document.querySelector(".box-modal-container").style.display = "block";
         }
 
-        // Set description if available
-        if (description && description.trim() !== "") {
-            captionElement.innerHTML += "<p>" + description + "</p>";
+        // Set up click event for indicators
+        indicators.forEach((indicator, index) => {
+            indicator.addEventListener("click", () => {
+                currentSlide = index;
+                setActiveSlide();
+            });
+        });
+
+        // Initial update when the data is ready
+        setActiveSlide();
+    }
+
+    function moveSlide(direction) {
+        currentSlide = (currentSlide + direction + slideData.length) % slideData.length;
+        updateCarousel();
+    }
+
+    // Function to open the modal and show the image
+    function openModal(imageSrc, title = '', description = '', type = ModalType.IMAGE) {
+        var boxModalContainer = document.querySelector(".box-modal-container");
+        var modalImage = document.getElementById("modalImage");
+        var caption = document.getElementById("caption");
+        var imageModal = document.getElementById("imageModal");
+        imageModal.style.display = "block";
+
+        if (type == ModalType.BOX) {
+            boxModalContainer.style.display = "block";
+            modalImage.style.display = "none";
+            caption.style.display = "none";
+        } else {
+            boxModalContainer.style.display = "none";
+            modalImage.style.display = "block";
+            caption.style.display = "block";
+            document.getElementById("modalImage").src = imageSrc;
+
+            // Create a caption element
+            const captionElement = document.getElementById("caption");
+
+            // Set title if available
+            captionElement.innerHTML = ""; // Clear previous content
+            if (title && title.trim() !== "") {
+                captionElement.innerHTML += "<h3>" + title + "</h3>";
+            }
+
+            // Set description if available
+            if (description && description.trim() !== "") {
+                captionElement.innerHTML += "<p>" + description + "</p>";
+            }
         }
     }
 
     // Function to close the modal
     function closeModal() {
         document.getElementById("imageModal").style.display = "none";
+        document.querySelector(".box-modal-container").style.display = "none";
     }
 </script>

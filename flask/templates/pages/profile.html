@@ -15,33 +15,56 @@
         <p>{{ _('Software_Expertise_Description') }}</p>
         <p>{{ _('Technology_Adaptability_Description') }}</p>
         <p>{{ _('Experience_Share_Description') }}</p>
-        <h3>{{ _('Key_Projects') }}:</h3>
-        <ul>
-            <li>
-                <b>{{ _('Project_A') }}:</b>
-                <ul>
-                    <li>{{ _('Project_A_Description') }}</li>
-                    <li>{{ _('Project_A_Technologies') }}</li>
-                </ul>
-            </li>
-            <li>
-                <b>{{ _('Project_B') }}:</b>
-                <ul>
-                    <li>{{ _('Project_B_Description') }}</li>
-                    <li>{{ _('Project_B_Technologies') }}</li>
-                </ul>
-            </li>
-            <li>
-                <b>{{ _('Project_C') }}:</b>
-                <ul>
-                    <li>{{ _('Project_C_Description') }}</li>
-                    <li>{{ _('Project_C_Technologies') }}</li>
-                </ul>
-            </li>
-        </ul>
     </div>
 </section>
+<div class="carousel-main">
+    <h3>{{ _('Key_Projects') }}</h3>
+    <div class="project-carousel">
+        <button id="carousel-prev" class="carousel-button">← {{ _('Prev') }}</button>
+        <div class="carousel-track-wrapper">
+            <div class="carousel-track">
+                <div class="carousel-card" onclick="openModal('', '', '', 'boxModal')">
+                    <div>
+                        <p>JAOM-CONNECT (Angular & Laravel)</p>
+                        <img src="{{ project_jaom }}">
+                    </div>
+                </div>
+                <div class="carousel-card" onclick="javascript:void(0)" style="opacity: 0.5;">
+                    <div>
+                        <p>AI Voice Recognition (Python)</p>
+                        <img src="{{ no_project }}">
+                    </div>
+                </div>
+                <div class="carousel-card" onclick="javascript:void(0)" style="opacity: 0.5;">
+                    <div>
+                        <p>BillingSolution-G-Pay (Laravel)</p>
+                        <img src="{{ no_project }}">
+                    </div>
+                </div>
+                <div class="carousel-card" onclick="javascript:void(0)" style="opacity: 0.5;">
+                    <div>
+                        <p>TouristSpot Booking System (Laravel)</p>
+                        <img src="{{ no_project }}">
+                    </div>
+                </div>
+                <div class="carousel-card" onclick="javascript:void(0)" style="opacity: 0.5;">
+                    <div>
+                        <p>Technician Booking System (Angular & Laravel)</p>
+                        <img src="{{ no_project }}">
+                    </div>
+                </div>
+                <div class="carousel-card" onclick="javascript:void(0)" style="opacity: 0.5;">
+                    <div>
+                        <p>Socio-Fanline (HTML & CSS)</p>
+                        <img src="{{ no_project }}">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button id="carousel-next" class="carousel-button">{{ _('Next') }} →</button>
+    </div>
 
+</div>
 <section id="about">
     <h2>{{ _('About_Me') }}</h2>
     <p>{{ _('Highlights_Description') }}</p>
@@ -74,12 +97,6 @@
     <h2>{{ _('Resume') }}</h2>
     <p>{{ _('Professional_Highlights_Description') }}</p>
     <ul>
-        <li>
-            {{ _('Repair_Service_Experience') }}
-            <ul>
-                <li>{{ _('Repair_Service_Description') }}</li>
-            </ul>
-        </li>
         <li>
             {{ _('Business_Intern_Experience') }}
             <ul>
@@ -115,7 +132,7 @@
 
 <section id="contact">
     <h2>{{ _('Contact_Me') }}</h2>
-    <p>{{ _('Contact_Description') }}</p> <!-- Updated paragraph -->
+    <p>{{ _('Contact_Description') }}</p>
     <ul>
         <li>
             <b>{{ _('Phone Number') }}:</b>
@@ -155,5 +172,47 @@
         </li>
     </ul>
 </section>
+<script>
+    const carouselWrapper = document.querySelector('.carousel-track-wrapper');
+    const carouselCards = document.querySelectorAll('.carousel-card');
+    const nextButton = document.getElementById('carousel-next');
+    const prevButton = document.getElementById('carousel-prev');
+
+    const cardWidth = carouselCards[0].offsetWidth + 10;
+    let scrollPosition = 0;
+
+    function updateCarouselButtons() {
+        // Check if at the beginning or end of the scrollable area
+        prevButton.disabled = scrollPosition <= 0;
+        nextButton.disabled = scrollPosition >= carouselWrapper.scrollWidth - carouselWrapper.clientWidth;
+    }
+
+    // Scroll to the next card
+    nextButton.addEventListener('click', () => {
+        if (scrollPosition < carouselWrapper.scrollWidth - carouselWrapper.clientWidth) {
+            scrollPosition += cardWidth;
+            carouselWrapper.scrollTo({
+                left: scrollPosition,
+                behavior: 'smooth'
+            });
+            updateCarouselButtons();
+        }
+    });
+
+    // Scroll to the previous card
+    prevButton.addEventListener('click', () => {
+        if (scrollPosition > 0) {
+            scrollPosition -= cardWidth;
+            carouselWrapper.scrollTo({
+                left: scrollPosition,
+                behavior: 'smooth'
+            });
+            updateCarouselButtons();
+        }
+    });
+
+    // Initial button state
+    updateCarouselButtons();
+</script>
 
 {% endblock %}

@@ -139,6 +139,7 @@
     align-items: flex-start;
     /* Aligns items at the top */
     margin-top: 50px;
+    gap: 20px;
 }
 
 #portfolio .project-details {
@@ -187,6 +188,71 @@
     color: #555;
 }
 
+.carousel-main h3 {
+    text-align: center;
+    font-size: 1.8rem;
+}
+
+.project-carousel {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    position: relative;
+}
+
+.carousel-track-wrapper {
+    overflow-x: auto;
+    /* Allows horizontal scrolling */
+    scroll-behavior: smooth;
+    /* Smooth scrolling */
+    width: 80%;
+    padding: 10px;
+    margin: 0 2px;
+}
+
+.carousel-track {
+    display: flex;
+}
+
+.carousel-card {
+    flex: 0 0 25%;
+    /* Display 4 cards at a time, each 25% of the container */
+    width: 250px;
+    height: 250px;
+    padding: 20px;
+    background-color: #f3f3f3;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    text-align: center;
+    box-sizing: border-box;
+    margin-right: 10px;
+    cursor: pointer;
+    overflow-y: hidden;
+}
+
+.carousel-card>div {
+    display: grid;
+}
+
+.carousel-card>div img {
+    width: 100%;
+}
+
+.carousel-button {
+    background-color: #333;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 16px;
+    border-radius: 5px;
+}
+
+.carousel-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
 /* Mobile responsiveness */
 @media only screen and (max-width: 768px) {
 
@@ -205,7 +271,34 @@
         color: #333;
         text-decoration: underline;
         padding: 0;
+    }
 
+    .carousel-card {
+        flex: 0 0 100%;
+        /* Display 1 card at a time (100% of the container width) */
+        width: 100%;
+        margin-right: 0;
+    }
+
+    .carousel-track-wrapper {
+        width: 100%;
+        padding: 0;
+    }
+/* 
+    .carousel-button {
+        background-color: #333;
+        color: #fff;
+        border: none;
+        padding: 10px 20px;
+        cursor: pointer;
+        font-size: 16px;
+        border-radius: 5px;
+    } */
+
+    .carousel-button {
+        font-size: 14px;
+        padding:5px 10px;
+        margin: 5px;
     }
 }
 

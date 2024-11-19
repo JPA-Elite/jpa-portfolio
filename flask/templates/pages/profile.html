@@ -15,78 +15,53 @@
         <p>{{ _('Software_Expertise_Description') }}</p>
         <p>{{ _('Technology_Adaptability_Description') }}</p>
         <p>{{ _('Experience_Share_Description') }}</p>
-        <!-- <h3>{{ _('Key_Projects') }}:</h3>
-        <ul>
-            <li>
-                <b>{{ _('Project_A') }}:</b>
-                <ul>
-                    <li>{{ _('Project_A_Description') }}</li>
-                    <li>{{ _('Project_A_Technologies') }}</li>
-                </ul>
-            </li>
-            <li>
-                <b>{{ _('Project_B') }}:</b>
-                <ul>
-                    <li>{{ _('Project_B_Description') }}</li>
-                    <li>{{ _('Project_B_Technologies') }}</li>
-                </ul>
-            </li>
-            <li>
-                <b>{{ _('Project_C') }}:</b>
-                <ul>
-                    <li>{{ _('Project_C_Description') }}</li>
-                    <li>{{ _('Project_C_Technologies') }}</li>
-                </ul>
-            </li>
-        </ul> -->
     </div>
 </section>
 <div class="carousel-main">
     <h3>{{ _('Key_Projects') }}</h3>
     <div class="project-carousel">
-        <button id="carousel-prev" class="carousel-button">← Prev</button>
+        <button id="carousel-prev" class="carousel-button">← {{ _('Prev') }}</button>
         <div class="carousel-track-wrapper">
             <div class="carousel-track">
                 <div class="carousel-card" onclick="openModal('', '', '', 'boxModal')">
                     <div>
-                        <p>JAOM-CONNECT</p>
+                        <p>JAOM-CONNECT (Angular & Laravel)</p>
                         <img src="{{ project_jaom }}">
                     </div>
                 </div>
-                <div class="carousel-card" onclick="openModal('', '', '', 'boxModal')">
+                <div class="carousel-card" onclick="javascript:void(0)" style="opacity: 0.5;">
                     <div>
-                        <p>JAOM-CONNECT</p>
-                        <img src="{{ project_jaom }}">
+                        <p>AI Voice Recognition (Python)</p>
+                        <img src="{{ no_project }}">
                     </div>
                 </div>
-                <div class="carousel-card" onclick="openModal('', '', '', 'boxModal')">
+                <div class="carousel-card" onclick="javascript:void(0)" style="opacity: 0.5;">
                     <div>
-                        <p>JAOM-CONNECT</p>
-                        <img src="{{ project_jaom }}">
+                        <p>BillingSolution-G-Pay (Laravel)</p>
+                        <img src="{{ no_project }}">
                     </div>
                 </div>
-                <div class="carousel-card" onclick="openModal('', '', '', 'boxModal')">
+                <div class="carousel-card" onclick="javascript:void(0)" style="opacity: 0.5;">
                     <div>
-                        <p>JAOM-CONNECT</p>
-                        <img src="{{ project_jaom }}">
+                        <p>TouristSpot Booking System (Laravel)</p>
+                        <img src="{{ no_project }}">
                     </div>
                 </div>
-                <div class="carousel-card" onclick="openModal('', '', '', 'boxModal')">
+                <div class="carousel-card" onclick="javascript:void(0)" style="opacity: 0.5;">
                     <div>
-                        <p>JAOM-CONNECT</p>
-                        <img src="{{ project_jaom }}">
+                        <p>Technician Booking System (Angular & Laravel)</p>
+                        <img src="{{ no_project }}">
                     </div>
                 </div>
-                <div class="carousel-card" onclick="openModal('', '', '', 'boxModal')">
+                <div class="carousel-card" onclick="javascript:void(0)" style="opacity: 0.5;">
                     <div>
-                        <p>JAOM-CONNECT</p>
-                        <img src="{{ project_jaom }}">
+                        <p>Socio-Fanline (HTML & CSS)</p>
+                        <img src="{{ no_project }}">
                     </div>
                 </div>
-                <!-- Add more cards as needed -->
             </div>
         </div>
-        <button id="carousel-next" class="carousel-button">Next →</button>
+        <button id="carousel-next" class="carousel-button">{{ _('Next') }} →</button>
     </div>
 
 </div>
@@ -122,12 +97,6 @@
     <h2>{{ _('Resume') }}</h2>
     <p>{{ _('Professional_Highlights_Description') }}</p>
     <ul>
-        <!-- <li>
-            {{ _('Repair_Service_Experience') }}
-            <ul>
-                <li>{{ _('Repair_Service_Description') }}</li>
-            </ul>
-        </li> -->
         <li>
             {{ _('Business_Intern_Experience') }}
             <ul>
@@ -163,7 +132,7 @@
 
 <section id="contact">
     <h2>{{ _('Contact_Me') }}</h2>
-    <p>{{ _('Contact_Description') }}</p> <!-- Updated paragraph -->
+    <p>{{ _('Contact_Description') }}</p>
     <ul>
         <li>
             <b>{{ _('Phone Number') }}:</b>
@@ -209,7 +178,7 @@
     const nextButton = document.getElementById('carousel-next');
     const prevButton = document.getElementById('carousel-prev');
 
-    const cardWidth = carouselCards[0].offsetWidth + 10; // Card width plus margin
+    const cardWidth = carouselCards[0].offsetWidth + 10;
     let scrollPosition = 0;
 
     function updateCarouselButtons() {

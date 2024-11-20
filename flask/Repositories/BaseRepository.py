@@ -4,7 +4,6 @@ import os
 
 load_dotenv()
 
-
 class BaseRepository:
     def __init__(self):
         self.client, self.collection = self.get_mongo_client()

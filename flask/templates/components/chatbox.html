@@ -5,8 +5,6 @@
     <div class="chatbox-icon" onclick="toggleChatbox()">
         <img src="{{ url_for('static', filename='images/chat.png') }}" alt="{{ _('chat_icon_alt') }}" />
     </div>
-
-    <!-- Chatbox modal (hidden by default) -->
     <div id="chatboxModal" class="chatbox-modal">
         <div class="chatbox-header">
             <span class="chatbox-title">{{ _('chat_title') }}</span>
@@ -17,7 +15,6 @@
             <div id="chatMessages" class="chat-messages"></div>
             <div class="chat-options grid" id="chatOptions"></div>
         </div>
-        <!-- Clear button to clear chat messages -->
         <button id="clearChat" onclick="clearChat()" style="display: none;">{{ _('chat_clear_button') }}</button>
     </div>
 </div>
@@ -26,7 +23,6 @@
     const cacheMessage = 'chatMessagesCache';
     const cacheChatboxVisible = 'chatboxVisible';
 
-    // Array of questions and answers
     const qaArray = [
         { question: "{{ _('qa_name') }}", answer: "{{ _('qa_name_answer') }}" },
         { question: "{{ _('qa_age') }}", answer: "{{ _('qa_age_answer') }}" },
@@ -39,7 +35,6 @@
         { question: "{{ _('qa_type_of_person') }}", answer: "{{ _('qa_type_of_person_answer') }}" }
     ];
 
-    // Initialize chat options dynamically
     function initializeChatOptions() {
         const chatOptions = document.getElementById("chatOptions");
         qaArray.forEach(item => {
@@ -50,48 +45,40 @@
         });
     }
 
-    // Toggle chatbox modal visibility
     function toggleChatbox() {
         const modal = document.getElementById("chatboxModal");
 
         if (modal) {
             const isVisible = modal.style.display === "block";
             modal.style.display = isVisible ? "none" : "block";
-
-            // Cache the visibility state
             localStorage.setItem(cacheChatboxVisible, !isVisible);
         }
     }
 
-    // Send a message from the input field
     function sendMessage() {
         const input = document.getElementById("chatInput");
         const message = input.value.trim();
         if (message) {
             displayMessage(message);
-            input.value = ""; // Clear input field
-            cacheMessages(message); // Cache the message
-            updateClearChatButtonVisibility(); // Update visibility of the clear button
+            input.value = "";
+            cacheMessages(message);
+            updateClearChatButtonVisibility();
         }
     }
 
-    // Send a predefined message with automatic answers
     function sendPredefinedMessage(question) {
         displayMessage(question, "transparent", "");
         const answer = getAutomaticAnswer(question);
         displayMessage(answer);
-        cacheMessages(question); // Cache the predefined question
-        cacheMessages(answer); // Cache the answer
-        updateClearChatButtonVisibility(); // Update visibility of the clear button
+        cacheMessages(question);
+        cacheMessages(answer);
+        updateClearChatButtonVisibility();
     }
 
-    // Function to get automatic answers based on the question
     function getAutomaticAnswer(question) {
         const qa = qaArray.find(item => item.question === question);
         if (qa) {
             let answer = qa.answer;
-
-            // Check if the answer contains the placeholder for age
             if (answer.includes("{age}")) {
                 answer = answer.replace("{age}", calculateAge());
             }
@@ -101,33 +88,29 @@
         return null;
     }
 
-    // Function to display messages in the chat
     function displayMessage(message, backgroundColor = '', color = '') {
         const chatMessages = document.getElementById("chatMessages");
         const messageElement = document.createElement("div");
         messageElement.classList.add("chat-message");
         messageElement.textContent = message;
 
-        // Apply background color if provided
         if (backgroundColor) {
-            messageElement.style.backgroundColor = backgroundColor; // Set the background color
+            messageElement.style.backgroundColor = backgroundColor;
         }
 
         if (color) {
-            messageElement.style.color = color; // Set the text color
+            messageElement.style.color = color;
         }
 
         chatMessages.appendChild(messageElement);
     }
 
-    // Cache messages to localStorage
     function cacheMessages(message) {
         let cachedMessages = JSON.parse(localStorage.getItem(cacheMessage)) || [];
         cachedMessages.push(message);
         localStorage.setItem(cacheMessage, JSON.stringify(cachedMessages));
     }
 
-    // Load cached messages and visibility state
     function loadCachedChat() {
         const cachedMessages = JSON.parse(localStorage.getItem(cacheMessage)) || [];
         cachedMessages.forEach(message => displayMessage(message, qaArray.find(item => item.question == message) ? 'transparent' : ''));
@@ -138,20 +121,16 @@
             modal.style.display = chatboxVisible ? "block" : "none";
         }
 
-        updateClearChatButtonVisibility(); // Check if clear button should be displayed
+        updateClearChatButtonVisibility();
     }
 
-    // Clear chat messages
     function clearChat() {
-        // Clear messages from localStorage
         localStorage.removeItem(cacheMessage);
-        // Clear the displayed messages
         const chatMessages = document.getElementById("chatMessages");
-        chatMessages.innerHTML = ''; // Remove all child elements
-        updateClearChatButtonVisibility(); // Hide the clear button
+        chatMessages.innerHTML = ''; 
+        updateClearChatButtonVisibility();
     }
 
-    // Update visibility of the Clear Chat button
     function updateClearChatButtonVisibility() {
         const cachedMessages = JSON.parse(localStorage.getItem(cacheMessage)) || [];
         const clearChatButton = document.getElementById("clearChat");
@@ -160,7 +139,6 @@
         }
     }
 
-    // Initialize chat options and load cached chat when the page loads
     window.onload = () => {
         initializeChatOptions();
         loadCachedChat();

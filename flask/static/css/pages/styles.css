@@ -4,7 +4,6 @@ body {
     font-family: "Open Sans", serif;
     margin: 0;
     padding: 0;
-    /* background-color: rgba(0, 0, 0, 0.712); */
 }
 
 .container {
@@ -18,7 +17,6 @@ header {
     justify-content: space-between;
     align-items: center;
     padding: 10px 20px;
-    /* background-color: #f9f9f9; */
     height: 50px;
 }
 
@@ -28,33 +26,20 @@ header h1 {
 
 nav {
     display: flex;
-    /* Use flexbox for nav */
     justify-content: space-between;
-    /* Space out the items */
     align-items: center;
-    /* Center vertically */
     width: 100%;
-    /* Ensure it uses full width */
 }
 
 nav ul {
     list-style: none;
     display: flex;
     gap: 20px;
-    /* Space between the navigation links */
     margin: 0;
-    /* Reset margin */
 }
-
-/* nav ul {
-    list-style: none;
-    display: flex;
-    gap: 20px;
-} */
 
 nav ul li {
     position: relative;
-    /* Make the li the relative container */
 }
 
 nav a {
@@ -63,7 +48,6 @@ nav a {
     font-weight: bold;
 }
 
-/* Add the underline animation to each li */
 nav ul li::after {
     content: '';
     position: absolute;
@@ -72,11 +56,9 @@ nav ul li::after {
     width: 0;
     height: 2px;
     background-color: #000;
-    /* Underline color */
     transition: width 0.3s ease;
 }
 
-/* Expand the underline on li hover */
 nav ul li:hover::after {
     width: 100%;
 }
@@ -102,7 +84,6 @@ footer {
     color: #666;
 }
 
-/* New Section Styles */
 section {
     margin: 50px 0;
     padding: 20px;
@@ -123,45 +104,31 @@ section p {
 
 .disabled {
     opacity: 0.5;
-    /* Makes the element appear faded */
     pointer-events: none;
-    /* Prevents any mouse interactions */
     cursor: not-allowed;
-    /* Changes the cursor to indicate the element is disabled */
 }
 
 #animated-heading {
     font-size: 2.5rem;
-    /* Adjust font size as needed */
     font-weight: bold;
-    /* Make the text bold */
     position: relative;
-    /* To position the cursor */
     display: inline-block;
-    /* To allow width to shrink */
 }
 
 #animated-heading::after {
     content: "";
     width: 2px;
-    /* Width of the cursor */
     height: 100%;
-    /* Height of the cursor */
     background: black;
-    /* Color of the cursor */
     display: inline-block;
     position: absolute;
     right: 0;
-    /* Position at the end of the text */
     animation: blink 0.7s step-end infinite;
-    /* Blinking effect */
 }
 
 .language-selector {
     margin-left: auto;
-    /* Pushes language selector to the right */
     display: flex;
-    /* Use flex to align the dropdown properly */
 }
 
 .dropdown {
@@ -170,40 +137,26 @@ section p {
 
 .dropbtn {
     background-color: transparent;
-    /* Make the button background transparent */
     border: none;
-    /* No border */
     cursor: pointer;
-    /* Change cursor to pointer */
     padding: 0;
-    /* Remove padding */
 }
 
 .flag-icon {
     width: 40px;
-    /* Set width for flag icons */
     height: 40px;
-    /* Set height for flag icons */
     border-radius: 50%;
-    /* Make flags circular */
     transition: transform 0.3s;
-    /* Smooth transition for scaling */
 }
 
 .dropdown-content {
     display: none;
-    /* Initially hidden */
     position: absolute;
     background-color: white;
-    /* Background for dropdown */
     min-width: 160px;
-    /* Minimum width */
     box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
-    /* Shadow effect */
     z-index: 1;
-    /* Position above other content */
     border-radius: 8px;
-    /* Rounded corners */
 }
 
 .dropdown-content .flag-icon {
@@ -212,29 +165,20 @@ section p {
 
 .dropdown-content a {
     color: black;
-    /* Text color */
     padding: 8px;
-    /* Padding for links */
     text-decoration: none;
-    /* No underline */
     display: flex;
-    /* Flexbox for flag and text */
     align-items: center;
-    /* Center items vertically */
 }
 
 .dropdown-content a:hover {
     background-color: #f1f1f1;
-    /* Background on hover */
 }
 
-/* Show the dropdown when the button is clicked */
 .dropdown:hover .dropdown-content {
     display: block;
-    /* Show dropdown on hover */
 }
 
-/* Optional: Add transition for dropdown */
 .dropdown-content {
     transition: visibility 0.3s, opacity 0.3s;
 }
@@ -246,7 +190,6 @@ section p {
 @keyframes blink {
     50% {
         opacity: 0;
-        /* Blink effect */
     }
 }
 
@@ -271,7 +214,6 @@ nav #navList {
 /* Mobile Styles */
 @media (max-width: 768px) {
 
-    /* Disable tap highlight color on mobile */
     button,
     a,
     input,
@@ -279,7 +221,6 @@ nav #navList {
         -webkit-tap-highlight-color: transparent;
     }
 
-    /* Remove focus outline */
     button,
     a,
     input,
@@ -287,7 +228,6 @@ nav #navList {
         outline: none;
     }
 
-    /* Optionally, you can set a custom focus style for accessibility */
     button:focus,
     a:focus,
     input:focus,
@@ -359,21 +299,14 @@ nav #navList {
 
     nav a {
         padding: 10px 20px;
-        /* Adjust padding */
         text-align: left;
-        /* Align text to the left */
-        /* border-bottom: 1px solid #ccc; */
-        /* Optional border for separation */
         width: 100%;
-        /* Full width */
     }
 
     .project-intro {
         flex-direction: column;
-        /* Stack the image and text vertically */
         align-items: center;
         text-align: center;
-        /* Center text on mobile */
     }
 
     .project-image img {

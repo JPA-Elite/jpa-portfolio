@@ -38,7 +38,6 @@ class SystemInfo:
         self.timestamp = timestamp
 
     def to_dict(self):
-        # Include _id in the dictionary if it exists
         data = {
             "system": self.system,
             "node": self.node,

@@ -13,7 +13,6 @@
             <button class="carousel-control prev" onclick="moveSlide(-1)">‹</button>
             <button class="carousel-control next" onclick="moveSlide(1)">›</button>
         </div>
-        <!-- Description Section -->
         <div id="carouselDescription" class="carousel-description">
             <h3 id="descriptionTitle"></h3>
             <p id="descriptionText"></p>
@@ -31,12 +30,10 @@
     const currentLocale = "{{ get_locale() }}";
     let slideData = [];
 
-    // Fetch slide data from the JSON file
     fetch("/static/json/project.json")
         .then(response => response.json())
         .then(data => {
             slideData = data;
-            // Initialize carousel after data is fetched
             updateCarousel();
         })
         .catch(error => {
@@ -46,10 +43,9 @@
     const carouselIndicators = document.getElementById('carouselIndicators');
     const carouselInner = document.getElementById('carouselInner');
 
-    // Create carousel indicators and items dynamically
     function updateCarousel() {
-        carouselIndicators.innerHTML = ''; // Clear existing indicators
-        carouselInner.innerHTML = ''; // Clear existing slides
+        carouselIndicators.innerHTML = '';
+        carouselInner.innerHTML = '';
 
         slideData.forEach((slide, index) => {
             // Create indicator

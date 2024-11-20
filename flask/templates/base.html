@@ -6,9 +6,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{% block title %}My Portfolio{% endblock %}</title>
-    <!-- Link to the general CSS file -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/pages/styles.css') }}" />
-    <!-- Link to the profile-specific CSS file -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/pages/profile.css') }}" />
     <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='images/favicon.ico') }}">
     <script src="{{ url_for('static', filename='js/utils.js') }}"></script>
@@ -19,7 +17,7 @@
         <header>
             <h1 id="animated-heading">{% block head %}My Portfolio{% endblock %}</h1>
             <nav>
-                <div class="nav-toggle" id="toggleButton" onclick="toggleNav()">&#9776;</div> <!-- Hamburger Icon -->
+                <div class="nav-toggle" id="toggleButton" onclick="toggleNav()">&#9776;</div>
                 <ul id="navList">
                     <li><a href="{{ url_for('pages.profile') }}">Portfolio</a></li>
                     <li><a href="{{ url_for('pages.gallery') }}">Gallery</a></li>
@@ -92,7 +90,6 @@
                 localStorage.removeItem('chatMessagesCache');
             }
 
-            // Redirect to the new language URL
             window.location.href = url;
         }
 
@@ -101,18 +98,15 @@
             navList.classList.toggle('show');
         }
 
-        // Function to hide the navList if clicked outside of the toggleButton
         function handleClickOutside(event) {
             const navList = document.getElementById('navList');
             const toggleButton = document.getElementById('toggleButton');
 
-            // Check if the clicked element is NOT the toggleButton or its children and is NOT the navList
             if (navList.classList.contains('show') && !toggleButton.contains(event.target) && !navList.contains(event.target)) {
-                navList.classList.remove('show'); // Hide the navList
+                navList.classList.remove('show');
             }
         }
 
-        // Attach the event listener to the body to detect clicks outside
         document.body.addEventListener('click', function (event) {
             handleClickOutside(event);
         });

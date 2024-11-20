@@ -205,14 +205,33 @@ nav #navList {
     margin-right: 15px;
 }
 
+.nav-toggle {
+    display: none;
+}
+
+.chatbox-icon,
+.nav-toggle,
+#navList {
+    user-select: none;
+}
+
+.nav-toggle:focus,
+.nav-toggle:active,
+.chatbox-icon:focus,
+.chatbox-icon:active,
+#navList:focus,
+#navList:active {
+    outline: none;
+    background-color: transparent;
+    /* Ensure no background is applied */
+    -webkit-tap-highlight-color: transparent;
+    /* Mobile-specific */
+}
+
 @media (max-width: 1400px) {
     .dropdown-content {
         right: 0;
     }
-}
-
-.nav-toggle {
-    display: none;
 }
 
 /* Mobile Styles */
@@ -241,6 +260,7 @@ nav #navList {
 
     header {
         height: auto;
+        padding: 10px 0px;
     }
 
     nav {

@@ -25,6 +25,7 @@ GALLERY_PAGE = "pages/gallery.html"
 VLOG_PAGE = "pages/vlog.html"
 CONCERN_PAGE = "pages/concern.html"
 ADD_PORTFOLIO_PAGE = "pages/add_portfolio.html"
+DONATION_PAGE = "pages/donation.html"
 DEVICE_INFO_VISIT_PAGE = "pages/visitors.html"
 
 # error pages

@@ -269,3 +269,9 @@ msgstr "and I have big goals for the future, aiming to build wealth and achieve 
 
 msgid "search_placeholder"
 msgstr "Search for something..."
+
+msgid "donation_header"
+msgstr "Donation"
+
+msgid "donation_message"
+msgstr "Could you kindly consider sending me a heartfelt gift? Your gesture, no matter how small, would mean the world to me. You can conveniently send your support by scanning the GCash QR code provided. Any amount you choose to give will be deeply appreciated and cherished as a token of your kindness and generosity. Thank you so much for considering this thoughtful act—it truly warms my heart."

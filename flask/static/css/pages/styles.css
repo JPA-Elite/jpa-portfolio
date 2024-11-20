@@ -201,6 +201,10 @@ nav #navList {
     font-size: 15px;
 }
 
+.donation-btn {
+    margin-right: 15px;
+}
+
 @media (max-width: 1400px) {
     .dropdown-content {
         right: 0;
@@ -213,7 +217,6 @@ nav #navList {
 
 /* Mobile Styles */
 @media (max-width: 768px) {
-
     button,
     a,
     input,
@@ -344,38 +347,37 @@ nav #navList {
 
     .mobile-concern-btn {
         display: block;
-        /* Show on mobile */
         padding: 10px;
-        /* Adjust padding for the button */
         background-color: #007bffd2;
-        /* Change the background color as needed */
         color: white;
-        /* Text color */
         border: none;
-        /* Remove border */
         border-radius: 5px;
-        /* Rounded corners */
         cursor: pointer;
-        /* Pointer cursor on hover */
-        font-size: 14px;
-        /* Font size */
+        font-size: 12px;
         transition: background-color 0.3s;
-        /* Transition effect */
     }
 
     .mobile-concern-btn:hover {
         background-color: #0056b3;
-        /* Darken background on hover */
     }
 
     .language-selector {
         display: flex;
         align-items: center;
-        gap: 20px;
+        gap: 0;
     }
 
     .dropdown {
         margin-top: 2px;
+    }
+
+    .donation-btn {
+        margin-right: 0;
+    }
+
+    .donation-btn img {
+        width: 40px;
+        height: 40px;
     }
 }
 

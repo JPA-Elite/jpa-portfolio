@@ -260,3 +260,9 @@ msgstr "Je travaille actuellement en tant qu'ingénieur logiciel,"
 
 msgid "profile_goals"
 msgstr "et j'ai de grands objectifs pour l'avenir, visant à construire de la richesse et à atteindre le succès."
+
+msgid "donation_header"
+msgstr "Don"
+
+msgid "donation_message"
+msgstr "Pourriez-vous envisager d'offrir un cadeau qui vient du cœur ? Votre geste, aussi petit soit-il, aurait une immense valeur pour moi. Vous pouvez facilement apporter votre soutien en scannant le code QR GCash fourni. Quel que soit le montant que vous choisissez de donner, il sera profondément apprécié et considéré comme un symbole de votre gentillesse et de votre générosité. Je vous remercie sincèrement d'avoir envisagé cet acte attentionné—cela réchauffe vraiment mon cœur."

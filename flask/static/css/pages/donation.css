@@ -1,0 +1,36 @@
+/* Style for the donation section */
+#donation {
+    max-width: 800px;
+    margin: 50px auto;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+/* Heading style */
+#donation h2 {
+    font-size: 28px;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+/* Description text */
+#donation p {
+    font-size: 16px;
+    margin-bottom: 30px;
+    color: #666;
+}
+
+.donation-qr img {
+    width: 50%;
+    height: auto;
+    border-radius: 20px;
+}
+
+/* Mobile Styles */
+@media (max-width: 768px) {
+    .donation-qr img {
+        width: 90%;
+    }
+}

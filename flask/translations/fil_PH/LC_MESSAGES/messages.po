@@ -268,3 +268,9 @@ msgstr "at may malalaking layunin ako para sa hinaharap, nais kong bumuo ng kaya
 
 msgid "search_placeholder"
 msgstr "Mag search if meron..."
+
+msgid "donation_header"
+msgstr "Donasyon"
+
+msgid "donation_message"
+msgstr "Maaari mo bang pag-isipan ang pagbibigay ng isang regalo na mula sa iyong puso? Ang iyong mabuting gawa, gaano man kaliit, ay napakalaking halaga para sa akin. Maaari mong ipadala ang iyong suporta sa pamamagitan ng pag-scan sa GCash QR code na ibinigay. Anumang halaga na iyong maibigay ay taos-pusong pasasalamatan at ituturing na simbolo ng iyong kabutihan at pagkabukas-palad. Maraming salamat sa pagsasaalang-alang sa makataong gawaing ito—tunay itong nagbibigay-init sa aking puso."

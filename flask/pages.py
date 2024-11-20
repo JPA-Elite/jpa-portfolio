@@ -6,15 +6,14 @@ from utils import filter_data, paginate_data
 from config import (
     ADD_PORTFOLIO_PAGE,
     CONCERN_PAGE,
-    GALLERY_JSON_PATH,
     GALLERY_PAGE,
     IMAGE_PATH,
     PROFILE_IMAGE,
     PROFILE_PAGE,
     RESUME_PDF,
-    VLOG_JSON_PATH,
     VLOG_PAGE,
     DEVICE_INFO_VISIT_PAGE,
+    DONATION_PAGE,
     get_locale,
 )
 from flask_babel import gettext  # type: ignore
@@ -38,7 +37,6 @@ def index():
 
 @pages_bp.route("/profile")
 def profile():
-    # Retrieve translations
     profile_name = gettext("profile_name")
     profile_intro = gettext("profile_intro")
     profile_age = gettext("profile_age")
@@ -47,7 +45,6 @@ def profile():
     profile_goals = gettext("profile_goals")
     profile_desc = f"{escape(profile_intro)} {escape(profile_age)}<br>{escape(profile_introvert)}<br>{escape(profile_job)} {escape(profile_goals)}"
 
-    # project details images
     project_jaom = url_for("static", filename="images/jaom.png", _external=True)
     no_project = url_for("static", filename="images/no-project.png", _external=True)
 
@@ -65,19 +62,14 @@ def profile():
 
 @pages_bp.route("/gallery")
 def gallery():
-    # Generate the dynamic URL for the gallery JSON
     gallery_url = url_for("static", filename="json/gallery.json", _external=True)
 
-    # Fetch JSON data from the URL
     response = requests.get(gallery_url)
     gallery_data = response.json()
 
-    # Get the search query from the request arguments
     search_query = request.args.get("search", "")
-    # Filter the gallery data using the generalized function
     filtered_gallery_data = filter_data(gallery_data, get_locale(), search_query)
 
-    # Paginate the filtered data
     page = request.args.get("page", 1, type=int)
     items_per_page = 6
     paginated_gallery_data, total_pages = paginate_data(
@@ -97,19 +89,13 @@ def gallery():
 
 @pages_bp.route("/vlog")
 def vlog():
-    # Generate the dynamic URL for the vlog JSON
     vlog_url = url_for("static", filename="json/vlog.json", _external=True)
-
-    # Fetch JSON data from the URL
     response = requests.get(vlog_url)
     vlog_data = response.json()
 
-    # Get the search query from the request arguments
     search_query = request.args.get("search", "")
-    # Filter the vlog data using the generalized function
     filtered_vlog_data = filter_data(vlog_data, get_locale(), search_query)
 
-    # Paginate the filtered data
     page = request.args.get("page", 1, type=int)
     items_per_page = 3
     paginated_vlog_data, total_pages = paginate_data(
@@ -133,18 +119,15 @@ def concern():
 
 @pages_bp.route("/change_language/<lang_code>")
 def change_language(lang_code):
-    # Parse the referrer URL to remove any existing search query
     referrer_url = request.referrer if request.referrer else url_for("index")
 
-    # Redirect to the referrer URL while clearing the search query
     response = redirect(
         f"{referrer_url.split('?')[0]}?search="
-    )  # Set search query to empty
+    )
     response.set_cookie("lang", lang_code)
     return response
 
 
-# Route to render the form
 @pages_bp.route("/add_portfolio_form")
 def add_portfolio_form():
     return handle_log_parameter() or render_template(ADD_PORTFOLIO_PAGE)
@@ -160,17 +143,19 @@ def add_portfolio():
     try:
         portfolio_service.add_portfolio(data["name"], data["email"])
         return jsonify({"message": "Data inserted successfully!"}), 201
-
     except Exception as e:
         return jsonify({"error": str(e)}), 400
 
+@pages_bp.route("/donation")
+def donation():
+    return handle_log_parameter() or render_template(DONATION_PAGE)
 
 @pages_bp.route("/device-info/visits")
 def device_info():
     page = int(request.args.get("page", 1))
     per_page = 10
     documents, total_docs = visit_service.get_paginated_system_info(page, per_page)
-    total_pages = (total_docs + per_page - 1) // per_page  # Calculate total pages
+    total_pages = (total_docs + per_page - 1) // per_page
 
     return handle_log_parameter() or render_template(
         DEVICE_INFO_VISIT_PAGE,

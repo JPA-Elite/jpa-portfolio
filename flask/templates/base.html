@@ -26,6 +26,9 @@
                 </ul>
                 <div class="language-selector">
                     <a class="mobile-concern-btn" href="{{ url_for('pages.concern') }}">Concern</a>
+                    <a class="donation-btn" href="{{ url_for('pages.donation') }}">
+                        <img src="{{ url_for('static', filename='images/peso.png') }}" alt="donation" class="flag-icon">
+                    </a>
                     <div class="dropdown">
                         <button class="dropbtn">
                             {% if get_locale() == en_locale %}

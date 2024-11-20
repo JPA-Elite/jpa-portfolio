@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block title %}My Donation{% endblock %}
+{% block head %}{% endblock %}
+
+{% block content %}
+<!-- Link to the external CSS file for the donation -->
+<link rel="stylesheet" href="{{ url_for('static', filename='css/pages/donation.css') }}" />
+<section id="donation">
+    <h2>{{ _('donation_header') }}</h2>
+    <p>{{ _('donation_message') }}</p>
+
+    <div class="donation-qr">
+        <img src="{{ url_for('static', filename='images/gcash_qr.jpg') }}" alt="Qr Code">
+    </div>
+</section>
+{% endblock %}

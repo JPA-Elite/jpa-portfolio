@@ -269,3 +269,9 @@ msgstr "ug aduna koy dagkong tumong sa umaabot, nagtinguha nga magtukod og bahan
 
 msgid "search_placeholder"
 msgstr "Basin naay eh search..."
+
+msgid "donation_header"
+msgstr "Donasyon"
+
+msgid "donation_message"
+msgstr "Mahimo ba nimo nga hunahunaon ang paghatag og usa ka halad nga gikan sa kasingkasing? Ang imong buhat, bisan unsa ka gamay, dako kaayo kini ug bili alang kanako. Mahimo nimo mapadala ang imong suporta pinaagi sa pag-scan sa GCash QR code nga gihatag. Bisan unsang kantidad nga imong mahatag pagadawaton ug pagapasalamatan gayud isip simbolo sa imong kaayo ug pagkamanggihatagon. Daghang salamat kaayo sa pagtagad sa kini nga buhat nga puno sa kalooy—kini gayud magapainit sa akong kasingkasing."

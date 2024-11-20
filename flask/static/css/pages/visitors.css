@@ -1,7 +1,7 @@
 .table-container {
     max-width: 800px;
     margin: auto;
-    overflow: hidden;
+    overflow: auto;
     border-radius: 8px;
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
     background-color: #ffffff;
@@ -59,4 +59,16 @@
 .pagination button:disabled {
     background-color: #cccccc;
     cursor: not-allowed;
+}
+
+
+/* Mobile Styles */
+@media (max-width: 768px) {
+    .data-table #table-body td {
+        font-size: 14px;
+    }
+
+    section {
+        padding: 0 0 5px 0;
+    }
 }

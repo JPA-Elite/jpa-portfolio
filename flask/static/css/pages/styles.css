@@ -211,7 +211,9 @@ nav #navList {
 
 .chatbox-icon,
 .nav-toggle,
-#navList {
+#navList,
+.carousel-card,
+.gallery-item {
     user-select: none;
 }
 
@@ -220,7 +222,11 @@ nav #navList {
 .chatbox-icon:focus,
 .chatbox-icon:active,
 #navList:focus,
-#navList:active {
+#navList:active,
+.carousel-card:focus,
+.carousel-card:active,
+.gallery-item:focus,
+.gallery-item:active {
     outline: none;
     background-color: transparent;
     /* Ensure no background is applied */
@@ -236,6 +242,7 @@ nav #navList {
 
 /* Mobile Styles */
 @media (max-width: 768px) {
+
     button,
     a,
     input,

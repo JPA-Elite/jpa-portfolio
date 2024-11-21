@@ -63,7 +63,47 @@
         </div>
         <button id="carousel-next" class="carousel-button">{{ _('Next') }} →</button>
     </div>
+    <section class="enable-animation">
+        <div class="marquee">
+            <ul class="marquee__content">
+                <li><img src="{{ url_for('static', filename='images/javascript.png') }}" alt="javascript-logo"></li>
+                <li><img src="{{ url_for('static', filename='images/python.png') }}" alt="python-logo"></li>
+                <li><img style="position: relative;top: -10px;"
+                        src="{{ url_for('static', filename='images/java.png') }}" alt="java-logo"></li>
+                <li><img src="{{ url_for('static', filename='images/php.png') }}" alt="php-logo"></li>
+                <li><img src="{{ url_for('static', filename='images/c++.png') }}" alt="c++-logo"></li>
+                <li><img src="{{ url_for('static', filename='images/c#.png') }}" alt="c#-logo"></li>
+            </ul>
+            <ul aria-hidden="true" class="marquee__content">
+                <li><img src="{{ url_for('static', filename='images/javascript.png') }}" alt="javascript-logo"></li>
+                <li><img src="{{ url_for('static', filename='images/python.png') }}" alt="python-logo"></li>
+                <li><img style="position: relative;top: -10px;"
+                        src="{{ url_for('static', filename='images/java.png') }}" alt="java-logo"></li>
+                <li><img src="{{ url_for('static', filename='images/php.png') }}" alt="php-logo"></li>
+                <li><img src="{{ url_for('static', filename='images/c++.png') }}" alt="c++-logo"></li>
+                <li><img src="{{ url_for('static', filename='images/c#.png') }}" alt="c#-logo"></li>
+            </ul>
+        </div>
+        <div class="marquee marquee--reverse">
+            <ul class="marquee__content">
+                <li><img src="{{ url_for('static', filename='images/laravel.png') }}" alt="laravel-logo"></li>
+                <li><img src="{{ url_for('static', filename='images/angular.png') }}" alt="angular-logo"></li>
+                <li><img src="{{ url_for('static', filename='images/react.png') }}" alt="react-logo"></li>
+                <li><img src="{{ url_for('static', filename='images/next-js.png') }}" alt="next-js-logo"></li>
+                <li><img src="{{ url_for('static', filename='images/flask.png') }}" alt="flask-logo"></li>
+                <li><img src="{{ url_for('static', filename='images/vue.png') }}" alt="vue-logo"></li>
+            </ul>
 
+            <ul aria-hidden="true" class="marquee__content">
+                <li><img src="{{ url_for('static', filename='images/laravel.png') }}" alt="laravel-logo"></li>
+                <li><img src="{{ url_for('static', filename='images/angular.png') }}" alt="angular-logo"></li>
+                <li><img src="{{ url_for('static', filename='images/react.png') }}" alt="react-logo"></li>
+                <li><img src="{{ url_for('static', filename='images/next-js.png') }}" alt="next-js-logo"></li>
+                <li><img src="{{ url_for('static', filename='images/flask.png') }}" alt="flask-logo"></li>
+                <li><img src="{{ url_for('static', filename='images/vue.png') }}" alt="vue-logo"></li>
+            </ul>
+        </div>
+    </section>
 </div>
 <section id="about">
     <h2>{{ _('About_Me') }}</h2>

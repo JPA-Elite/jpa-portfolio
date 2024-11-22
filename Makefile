@@ -12,8 +12,8 @@ build:
 run:
 	docker run -d -p $(PORT):5000 --name $(APP_NAME) $(DOCKER_IMAGE)
 
-# run-local:
-# 	cd flask && python app.py
+run-local:
+	cd flask && python app.py
 
 # Stop the Docker container
 stop:

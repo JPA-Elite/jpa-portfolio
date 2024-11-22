@@ -1,5 +1,5 @@
 .table-container {
-    max-width: 800px;
+    max-width: 100%;
     margin: auto;
     overflow: auto;
     border-radius: 8px;
@@ -20,6 +20,7 @@
 .data-table thead th {
     padding: 12px;
     font-weight: bold;
+    text-align: left;
 }
 
 .data-table tbody tr:nth-child(even) {

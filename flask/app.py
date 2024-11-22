@@ -13,15 +13,11 @@ from pages import pages_bp
 
 app = Flask(__name__)
 
-# Configure Flask-Babel
 app.config["LANGUAGES"] = LANGUAGES
 app.config["BABEL_DEFAULT_LOCALE"] = BABEL_DEFAULT_LOCALE
-
-# Register the blueprint
 app.register_blueprint(pages_bp)
 
 
-# Initialize Flask-Babel
 babel = Babel(app)
 babel.init_app(app, locale_selector=get_locale)
 
@@ -48,12 +44,10 @@ def tl_locale():
     return dict(tl_locale=TL_LOCALE)
 
 
-# Custom error handler for 404 Not Found
 @app.errorhandler(404)
 def not_found(error):
     return render_template(ERROR_404_PAGE, title="Not Found", error=error), 404
 
 
-# Run the Flask app
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0")

@@ -12,7 +12,6 @@ function calculateAge() {
     let age = today.getFullYear() - birthDate.getFullYear();
     const monthDiff = today.getMonth() - birthDate.getMonth();
 
-    // Adjust age if the birthday hasn't occurred yet this year
     if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
         age--;
     }
@@ -20,21 +19,21 @@ function calculateAge() {
 }
 
 function startTypingAnimation(elementId, text, typingSpeed = 200, deletingSpeed = 100, pauseDuration = 1000) {
-    let index = 0;                // Current index in the text
-    let direction = 1;            // 1 for typing, -1 for deleting
+    let index = 0;
+    let direction = 1;
     const headingElement = document.getElementById(elementId);
 
     function animateText() {
-        if (direction === 1) { // Typing mode
+        if (direction === 1) {
             if (index < text.length) {
                 headingElement.textContent = text.substring(0, index + 1);
                 index++;
                 setTimeout(animateText, typingSpeed);
             } else {
-                direction = -1;  // Switch to deleting mode
-                setTimeout(animateText, pauseDuration); // Pause before deleting
+                direction = -1;
+                setTimeout(animateText, pauseDuration);
             }
-        } else { // Deleting mode
+        } else {
             if (index > 0) {
                 if (deletingSpeed != false) {
                     headingElement.textContent = text.substring(0, index - 1);
@@ -42,12 +41,11 @@ function startTypingAnimation(elementId, text, typingSpeed = 200, deletingSpeed 
                     setTimeout(animateText, deletingSpeed);
                 }
             } else {
-                direction = 1;  // Switch back to typing mode
-                setTimeout(animateText, pauseDuration); // Pause before typing
+                direction = 1;
+                setTimeout(animateText, pauseDuration);
             }
         }
     }
 
-    // Start the animation
     animateText();
 }

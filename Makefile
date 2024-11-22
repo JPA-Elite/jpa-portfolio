@@ -1,6 +1,6 @@
 # Define variables
-APP_NAME := flask_app  # You can replace 'flask_app' with your desired container name
-DOCKER_IMAGE := flask_image  # You can replace 'flask_image' with your desired image name
+APP_NAME := flask_app
+DOCKER_IMAGE := flask_image
 DOCKERFILE_DIR := ./flask  # Path to the folder containing Dockerfile
 PORT := 5000
 

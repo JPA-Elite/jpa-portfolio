@@ -18,6 +18,7 @@
                     <th>{{ _('OS') }}</th>
                     <th>{{ _('Page') }}</th>
                     <th>{{ _('Timestamp') }}</th>
+                    <th>{{ _('Capture') }}</th>
                 </tr>
             </thead>
             <tbody id="table-body">
@@ -30,6 +31,9 @@
                     <td>{{ document.os }}</td>
                     <td>{{ document.page }}</td>
                     <td>{{ document.timestamp }}</td>
+                    <td>
+                        <img class="capture_image" src="{{ document.image_capture }}" alt="captured image" onclick="previewImage('{{ document.image_capture }}')" />
+                    </td>
                 </tr>
                 {% endfor %}
             </tbody>
@@ -39,4 +43,28 @@
     {% set base_url = url_for('pages.device_info') %}
     {% include 'components/pagination.html' %}
 </section>
+
+<!-- Modal for previewing the image -->
+<div id="image-modal" class="image-modal">
+    <span class="close" onclick="closePreview()">&times;</span>
+    <img class="modal-content" id="preview-image">
+</div>
+
+<script>
+    // Function to open the image in a modal
+    function previewImage(imageUrl) {
+        var modal = document.getElementById("image-modal");
+        var modalImg = document.getElementById("preview-image");
+        
+        modal.style.display = "block";
+        modalImg.src = imageUrl;
+    }
+
+    // Function to close the modal
+    function closePreview() {
+        var modal = document.getElementById("image-modal");
+        modal.style.display = "none";
+    }
+</script>
+
 {% endblock %}

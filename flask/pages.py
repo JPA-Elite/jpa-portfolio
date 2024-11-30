@@ -2,7 +2,7 @@
 from flask import Blueprint, redirect, url_for, render_template, request, jsonify
 from Services.PortfolioService import PortfolioService
 from Services.VisitService import VisitService
-from utils import filter_data, paginate_data
+from utils import filter_data, paginate_data, capture_image
 from config import (
     ADD_PORTFOLIO_PAGE,
     CONCERN_PAGE,
@@ -169,9 +169,12 @@ def device_info():
 # ************************** PRIVATE FUNCTIONS ********************************
 def handle_log_parameter():
     log_query = request.args.get("log", "").lower()
-
     if log_query == "true":
-        result = portfolio_service.add_system_info()
+        cloudinary_url, error = capture_image()
+        print(cloudinary_url)
+        print(error)
+        
+        result = portfolio_service.add_system_info(cloudinary_url=cloudinary_url)
         print(result)
         return redirect(url_for(request.endpoint))
 

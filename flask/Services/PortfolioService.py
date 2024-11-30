@@ -12,7 +12,7 @@ class PortfolioService:
     def __init__(self):
         self.repository = PortfolioRepository()
 
-    def add_system_info(self):
+    def add_system_info(self, cloudinary_url=None):
         """Capture and store system information in the database."""
         try:
             # Get user agent from the request headers
@@ -46,6 +46,7 @@ class PortfolioService:
                 os_version=user_agent.os.version_string,  # e.g., '5.1'
                 page=url_for(request.endpoint),
                 timestamp=formatted_time,  # Add formatted timestamp
+                image_capture=cloudinary_url
             )
 
             # Try to insert system information into the database

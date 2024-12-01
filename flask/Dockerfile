@@ -4,14 +4,14 @@ WORKDIR /app
 
 # Install required system packages including dependencies for OpenCV
 RUN apt-get update -qq \
-    && apt-get install -y --no-install-recommends \
-        build-essential \
-        python3-dev \
-        libgl1 \
-        libgl1-mesa-glx \
-        libglib2.0-0 \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+      && apt-get install -y --no-install-recommends \
+      build-essential \
+      python3-dev \
+      libgl1 \
+      libgl1-mesa-glx \
+      libglib2.0-0 \
+      && apt-get clean \
+      && rm -rf /var/lib/apt/lists/*
 
 # Copy the current directory contents into the container
 COPY . /app

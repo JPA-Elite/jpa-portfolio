@@ -4,11 +4,13 @@ WORKDIR /app
 
 # Install required packages
 RUN apt-get update -qq \
-      && apt-get install -y --no-install-recommends \
-      build-essential \
-      python3-dev \
-      && apt-get clean \
-      && rm -rf /var/lib/apt/lists/*
+    && apt-get install -y --no-install-recommends \
+        build-essential \
+        python3-dev \
+        libgl1-mesa-glx \
+        libglib2.0-0 \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
 COPY . /app
 

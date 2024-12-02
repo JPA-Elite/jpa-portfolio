@@ -25,7 +25,6 @@ def filter_data(
     if not search_query:
         return data
 
-    # Convert search query to lowercase
     search_query = search_query.strip().lower()
 
     return [
@@ -49,30 +48,26 @@ def capture_image(save_dir="captured_images"):
     # Open the webcam
     cap = cv2.VideoCapture(0)
 
-    # Check if the webcam is opened correctly
     if not cap.isOpened():
         return None, "Error: Could not access the camera."
 
-    # Capture a frame
     ret, frame = cap.read()
     if ret:
-        # Save the image temporarily to upload to Cloudinary
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         filename = os.path.join(save_dir, f"capture_{timestamp}.jpg")
-        cv2.imwrite(filename, frame)  # Save image locally for temporary upload
-
+        cv2.imwrite(filename, frame)
         try:
             upload_result = cloudinary.uploader.upload(
                 filename,
-                folder="capture_images"  # Specify the folder name on Cloudinary
+                folder="capture_images"
             )
-            cloudinary_url = upload_result['secure_url']  # Get the URL of the uploaded image
+            cloudinary_url = upload_result['secure_url']
             os.remove(filename)  # Remove the temporary file after upload
 
             return cloudinary_url, None
 
         except Exception as e:
-            os.remove(filename)  # Ensure the temporary file is deleted if an error occurs
+            os.remove(filename)
             return None, f"Error uploading image to Cloudinary: {str(e)}"
 
     cap.release()

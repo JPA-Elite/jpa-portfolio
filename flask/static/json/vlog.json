@@ -148,5 +148,20 @@
             "fil_PH": "Isa ito sa mga pagtatanghal na tampok sa aming mga aktibidad sa pag-unlad tungkol sa mga kaganapan ng kumpanya."
         },
         "file": "videos/vlog3.mp4"
+    },
+    {
+        "title": {
+            "en": "Tricks With Magic",
+            "ceb": "Mga Trick Sa Magic",
+            "fr": "Tours De Magie",
+            "fil_PH": "Mga Trick Sa Mahika"
+        },
+        "description": {
+            "en": "I attempt to perform magic and demonstrate to them that it is genuinely realistic.",
+            "ceb": "Nagpaningkamot ko nga ipakita ang magic ug ipakita kanila nga kini tinuod nga realistiko.",
+            "fr": "J'essaie de faire de la magie et de leur montrer que c'est vraiment réaliste.",
+            "fil_PH": "Sinusubukan kong magpakita ng magic at ipakita sa kanila na ito ay tunay na makatotohanan."
+        },
+        "file": "videos/vlog4.mp4"
     }
 ]

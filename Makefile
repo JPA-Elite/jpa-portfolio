@@ -15,6 +15,9 @@ run:
 run-local:
 	cd flask && python app.py
 
+start-local:
+	cd flask && python app.py
+
 # Stop the Docker container
 stop:
 	docker stop $(APP_NAME)

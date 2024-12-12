@@ -6,6 +6,12 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{% block title %}My Portfolio{% endblock %}</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="{% block meta_description %}Welcome to my portfolio. Explore my projects and more.{% endblock %}">
+    <meta name="keywords" content="{% block meta_keywords %}portfolio, projects, gallery, vlog{% endblock %}">
+    <meta name="author" content="{% block meta_author %}Joshua Algadipe{% endblock %}">
+
     <link rel="stylesheet" href="{{ url_for('static', filename='css/pages/styles.css') }}" />
     <link rel="stylesheet" href="{{ url_for('static', filename='css/pages/profile.css') }}" />
     <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='images/favicon.ico') }}">

@@ -178,5 +178,20 @@
             "fr": "Nous avons pris une photo à la fin de la cérémonie de remise des diplômes tout en montrant nos diplômes à l'église de l'USC-Talamban.",
             "fil_PH": "Nag-picture kami sa huling bahagi ng seremonya ng pagtatapos habang ipinapakita ang aming mga diploma sa simbahan sa USC-Talamban."
         }
+    },
+    {
+        "title": {
+            "en": "Christmas Party 2024 Celebration",
+            "ceb": "Pagselebrar sa Christmas Party 2024",
+            "fr": "Célébration de la Fête de Noël 2024",
+            "fil_PH": "Pagdiriwang ng Christmas Party 2024"
+        },
+        "image_name": "FB13.jpg",
+        "description": {
+            "en": "This is the Chronostep Christmas Party celebration, starting with a delightful dinner followed by the distribution of gifts and prizes.",
+            "ceb": "Kini ang Chronostep Christmas Party nga selebrasyon, magsugod sa usa ka lami nga panihapon ug gisundan sa pag-apod-apod sa mga regalo ug mga premyo.",
+            "fr": "Ceci est la célébration de la fête de Noël de Chronostep, commençant par un délicieux dîner suivi de la distribution de cadeaux et de prix.",
+            "fil_PH": "Ito ang selebrasyon ng Chronostep Christmas Party, nagsisimula sa isang masarap na hapunan na sinusundan ng pamamahagi ng mga regalo at gantimpala."
+          }          
     }
 ]

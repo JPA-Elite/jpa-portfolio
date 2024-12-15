@@ -1,0 +1,46 @@
+/* Footer styling */
+.footer {
+    background-color: #333333df; /* Dark background color */
+    padding: 20px 0;
+    text-align: center;
+}
+
+/* Social icons container */
+.social-icon {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    gap: 15px; /* Space between icons */
+    cursor: pointer;
+}
+
+/* Individual social icon item */
+.social-icon__item {
+    display: inline-block;
+}
+
+/* Social icon links */
+.social-icon__link {
+    color: #fff; /* Icon color */
+    text-decoration: none;
+    font-size: 24px; /* Icon size */
+    transition: color 0.3s ease, transform 0.3s ease; /* Smooth hover effect */
+}
+
+/* Hover effect for icons */
+.social-icon__link:hover {
+    color: #1da1f2; /* Light blue color on hover */
+    transform: scale(1.2); /* Slightly enlarge icon on hover */
+}
+
+/* Responsive scaling for smaller screens */
+@media (max-width: 600px) {
+    .social-icon {
+        gap: 10px; /* Adjust spacing for smaller screens */
+    }
+    .social-icon__link {
+        font-size: 20px; /* Reduce icon size for smaller screens */
+    }
+}

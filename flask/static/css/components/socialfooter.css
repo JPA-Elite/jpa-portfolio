@@ -1,7 +1,6 @@
 /* Footer styling */
 .footer {
-    background-color: #333333df; /* Dark background color */
-    padding: 20px 0;
+    padding: 0;
     text-align: center;
 }
 
@@ -23,7 +22,7 @@
 
 /* Social icon links */
 .social-icon__link {
-    color: #fff; /* Icon color */
+    color: #666; /* Icon color */
     text-decoration: none;
     font-size: 24px; /* Icon size */
     transition: color 0.3s ease, transform 0.3s ease; /* Smooth hover effect */

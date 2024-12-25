@@ -10,6 +10,7 @@ from config import (
 )
 from flask_babel import Babel  # type: ignore
 from pages import pages_bp 
+from datetime import datetime
 
 app = Flask(__name__)
 
@@ -43,11 +44,13 @@ def ceb_locale():
 def tl_locale():
     return dict(tl_locale=TL_LOCALE)
 
+@app.context_processor
+def inject_now():
+    return dict(now=datetime.now())
 
 @app.errorhandler(404)
 def not_found(error):
     return render_template(ERROR_404_PAGE, title="Not Found", error=error), 404
-
 
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0")

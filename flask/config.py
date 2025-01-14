@@ -1,5 +1,5 @@
-import os
 from flask import request
+from enum import Enum
 
 # ************************** CONSTANTS ********************************
 
@@ -44,3 +44,10 @@ def get_locale():
         LANGUAGES.keys()
     )
     return lang
+
+
+# ************************** ENUMS ********************************
+
+class SortOrder(Enum):
+    ASC = 1
+    DESC = -1

@@ -21,7 +21,13 @@
     object-fit: cover;
     border-radius: 8px;
     cursor: pointer;
+    transition: filter 0.3s ease;
 }
+
+.gallery-item .gallery-image:hover {
+    filter: grayscale(100%);
+}
+
 
 .gallery-item .description {
     color: #555;

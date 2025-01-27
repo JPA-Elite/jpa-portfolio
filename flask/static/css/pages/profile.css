@@ -17,6 +17,11 @@
     height: 300px;
     border-radius: 10px;
     cursor: pointer;
+    transition: filter 0.3s ease;
+}
+
+.project-image img:hover {
+    filter: grayscale(100%);
 }
 
 .project-image h1 {

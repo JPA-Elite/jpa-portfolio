@@ -1,4 +1,3 @@
 User-agent: *
 Disallow:
-
-Sitemap: https://jpa-portfolio.onrender.com/sitemap.xml
+Allow: /sitemap.xml

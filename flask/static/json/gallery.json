@@ -193,5 +193,20 @@
             "fr": "Ceci est la célébration de la fête de Noël de Chronostep, commençant par un délicieux dîner suivi de la distribution de cadeaux et de prix.",
             "fil_PH": "Ito ang selebrasyon ng Chronostep Christmas Party, nagsisimula sa isang masarap na hapunan na sinusundan ng pamamahagi ng mga regalo at gantimpala."
         }        
+    },
+    {
+        "title": {
+            "en": "Potluck Celebration During Valentines Day",
+            "ceb": "Pagselebrar sa Potluck Sa Panahon sa Valentines Day",
+            "fr": "Célébration de Potluck Pendant la Saint-Valentin",
+            "fil_PH": "Pagdiriwang ng Potluck Sa Panahon ng Araw ng mga Puso"
+        },
+        "image_name": "FB14.jpg",
+        "description": {
+            "en": " We celebrated Valentines Day with a potluck lunch at the companys office.",
+            "ceb": "Nagselebrar kami sa Valentine's Day uban sa usa ka potluck nga paniudto sa opisina sa kompanya.",
+            "fr": "Nous avons célébré la Saint-Valentin avec un déjeuner potluck au bureau de l'entreprise.",
+            "fil_PH": "Nagdiriwang kami ng Araw ng mga Puso sa pamamagitan ng potluck lunch sa opisina ng kumpanya."
+        }        
     }
 ]

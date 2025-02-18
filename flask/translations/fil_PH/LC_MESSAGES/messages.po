@@ -199,7 +199,7 @@ msgid "qa_name"
 msgstr "Ano ang pangalan mo?"
 
 msgid "qa_name_answer"
-msgstr "Joshua Algadipe ang pangalan ko."
+msgstr "Joshua P. Algadipe ang pangalan ko."
 
 msgid "qa_age"
 msgstr "Ilang taon ka na?"
@@ -207,11 +207,29 @@ msgstr "Ilang taon ka na?"
 msgid "qa_age_answer"
 msgstr "Ako ay {age} taong gulang."
 
+msgid "qa_nickname"
+msgstr "Ano ang tawag mo sa sarili mo?"
+
+msgid "qa_nickname_answer"
+msgstr "Pwede mo akong tawaging JJ, Josh, o Wang."
+
+msgid "qa_behaviour"
+msgstr "Paano mo ilalarawan ang ugali mo?"  
+
+msgid "qa_behaviour_answer"
+msgstr "Medyo introvert ako at mas gusto kong manatili sa loob ng bahay kaysa lumabas."
+
+msgid "qa_song"
+msgstr "Anong klaseng kanta ang gusto mo?"  
+
+msgid "qa_song_answer"
+msgstr "Gusto ko ng modernong kanta tulad ng rap."
+
 msgid "qa_job"
 msgstr "Ano ang trabaho mo?"
 
 msgid "qa_job_answer"
-msgstr "Ako ay isang software engineer."
+msgstr "Ako ay isang Software Engineer."
 
 msgid "qa_favorite_sport"
 msgstr "Ano ang paborito mong sport?"
@@ -252,7 +270,7 @@ msgid "profile_name"
 msgstr "Aking Profile"
 
 msgid "profile_intro"
-msgstr "Ang pangalan ko ay Joshua Algadipe,"
+msgstr "Ang pangalan ko ay Joshua P. Algadipe,"
 
 msgid "profile_age"
 msgstr "Ako ay {age} taong gulang mula sa Vallehermoso, Negros Oriental."
@@ -261,7 +279,7 @@ msgid "profile_introvert"
 msgstr "Ako ay isang introvert at hindi mahusay sa pagsisimula ng mga pag-uusap, kaya huwag mag-atubiling i-message ako muna—mag-chat tayo!"
 
 msgid "profile_job"
-msgstr "Kasalukuyan akong nagtatrabaho bilang isang software engineer,"
+msgstr "Kasalukuyan akong nagtatrabaho bilang isang Software Engineer,"
 
 msgid "profile_goals"
 msgstr "at may malalaking layunin ako para sa hinaharap, nais kong bumuo ng kayamanan at makamit ang tagumpay."

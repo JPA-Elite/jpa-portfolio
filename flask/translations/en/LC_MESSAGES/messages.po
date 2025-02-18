@@ -199,7 +199,7 @@ msgid "qa_name"
 msgstr "What is your name?"
 
 msgid "qa_name_answer"
-msgstr "My name is Joshua Algadipe."
+msgstr "My name is Joshua P. Algadipe."
 
 msgid "qa_age"
 msgstr "What is your age?"
@@ -207,11 +207,29 @@ msgstr "What is your age?"
 msgid "qa_age_answer"
 msgstr "I am {age} years old."
 
+msgid "qa_nickname"
+msgstr "What do you call yourself?"
+
+msgid "qa_nickname_answer"
+msgstr "You can call me JJ, Josh, or Wang."
+
+msgid "qa_behaviour"
+msgstr "How would you describe your behavior?"  
+
+msgid "qa_behaviour_answer"
+msgstr "I'm somewhat introverted and prefer staying indoors most of the time."
+
+msgid "qa_song"
+msgstr "What kind of songs do you like?"  
+
+msgid "qa_song_answer"
+msgstr "I like modern songs, such as rap."
+
 msgid "qa_job"
 msgstr "What is your job?"
 
 msgid "qa_job_answer"
-msgstr "I am a software engineer."
+msgstr "I am a Software Engineer."
 
 msgid "qa_favorite_sport"
 msgstr "What is your favorite sport?"
@@ -253,7 +271,7 @@ msgid "profile_name"
 msgstr "My Profile"
 
 msgid "profile_intro"
-msgstr "My name is Joshua Algadipe,"
+msgstr "My name is Joshua P. Algadipe,"
 
 msgid "profile_age"
 msgstr "I am {age} years old from Vallehermoso, Negros Oriental."
@@ -262,7 +280,7 @@ msgid "profile_introvert"
 msgstr "I'm an introvert and not great at starting conversations, so feel free to message me first—let's chat!"
 
 msgid "profile_job"
-msgstr "I'm currently working as a software engineer,"
+msgstr "I'm currently working as a Software Engineer,"
 
 msgid "profile_goals"
 msgstr "and I have big goals for the future, aiming to build wealth and achieve success."

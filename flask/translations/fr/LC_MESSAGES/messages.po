@@ -193,13 +193,31 @@ msgid "qa_name"
 msgstr "Quel est votre nom ?"
 
 msgid "qa_name_answer"
-msgstr "Mon nom est Joshua Algadipe."
+msgstr "Mon nom est Joshua P. Algadipe."
 
 msgid "qa_age"
 msgstr "Quel âge avez-vous ?"
 
 msgid "qa_age_answer"
 msgstr "J'ai {age} ans."
+
+msgid "qa_nickname"
+msgstr "Comment t’appelles-tu ?" or "Quel est ton surnom ?"  
+
+msgid "qa_nickname_answer"
+msgstr "Tu peux m’appeler JJ, Josh ou Wang."
+
+msgid "qa_behaviour"
+msgstr "Comment décrirais-tu ton comportement ?"  
+
+msgid "qa_behaviour_answer"
+msgstr "Je suis plutôt introverti et je préfère rester à l'intérieur la plupart du temps."
+
+msgid "qa_song"
+msgstr "Quel genre de musique aimes-tu ?"  
+
+msgid "qa_song_answer"
+msgstr "J'aime les chansons modernes, comme le rap."
 
 msgid "qa_job"
 msgstr "Quel est votre métier ?"
@@ -247,7 +265,7 @@ msgid "profile_name"
 msgstr "My Profile"
 
 msgid "profile_intro"
-msgstr "Je m'appelle Joshua Algadipe,"
+msgstr "Je m'appelle Joshua P. Algadipe,"
 
 msgid "profile_age"
 msgstr "J'ai {age} ans de Vallehermoso, Negros Oriental."

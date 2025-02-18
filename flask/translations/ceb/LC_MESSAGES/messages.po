@@ -199,7 +199,7 @@ msgid "qa_name"
 msgstr "Unsa imong ngalan?"
 
 msgid "qa_name_answer"
-msgstr "Ang akong ngalan kay Joshua Algadipe."
+msgstr "Ang akong ngalan kay Joshua P. Algadipe."
 
 msgid "qa_age"
 msgstr "Unsay imong edad?"
@@ -207,11 +207,29 @@ msgstr "Unsay imong edad?"
 msgid "qa_age_answer"
 msgstr "Ako kay {age} ka tuig."
 
+msgid "qa_nickname"
+msgstr "Unsa imong tawag?"
+
+msgid "qa_nickname_answer"
+msgstr "Pwede ko tawgan ko nimog JJ, Josh, Wang?"
+
+msgid "qa_behaviour"
+msgstr "Unsa ang imong batasan?"  
+
+msgid "qa_behaviour_answer"
+msgstr "Medyo introvert ko, mas ganahan ko magpabilin sa balay kay sa mogawas."
+
+msgid "qa_song"
+msgstr "Unsa'ng kanta imo ganahan?"
+
+msgid "qa_song_answer"
+msgstr "Ganahan kog modern nga kanta like rap?"
+
 msgid "qa_job"
 msgstr "Unsay imong trabaho?"
 
 msgid "qa_job_answer"
-msgstr "Ako usa ka software engineer."
+msgstr "Ako usa ka Software Engineer."
 
 msgid "qa_favorite_sport"
 msgstr "Unsay imong paboritong isport?"
@@ -253,7 +271,7 @@ msgid "profile_name"
 msgstr "Akong Profile"
 
 msgid "profile_intro"
-msgstr "Ang akong ngalan kay Joshua Algadipe,"
+msgstr "Ang akong ngalan kay Joshua P. Algadipe,"
 
 msgid "profile_age"
 msgstr "Ako {age} ka tuig ang edad gikan sa Vallehermoso, Negros Oriental."
@@ -262,7 +280,7 @@ msgid "profile_introvert"
 msgstr "Usa akong introvert ug dili maayo sa pagsugod og panag-istorya, mao nga ayaw pagpanuko sa pagtext nako—mag-istorya ta!"
 
 msgid "profile_job"
-msgstr "Karon nagtrabaho ko isip usa ka software engineer,"
+msgstr "Karon nagtrabaho ko isip usa ka Software Engineer,"
 
 msgid "profile_goals"
 msgstr "ug aduna koy dagkong tumong sa umaabot, nagtinguha nga magtukod og bahandi ug makab-ot ang kalampusan."

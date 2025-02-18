@@ -40,3 +40,7 @@ clean:
 # Run the Flask app in Docker using bash
 shell:
 	docker exec -it $(APP_NAME) /bin/bash
+
+# Compile the translations
+compile-translations:
+	cd flask && pybabel compile -d translations

@@ -32,7 +32,10 @@
         { question: "{{ _('qa_favorite_subject') }}", answer: "{{ _('qa_favorite_subject_answer') }}" },
         { question: "{{ _('qa_live') }}", answer: "{{ _('qa_live_answer') }}" },
         { question: "{{ _('qa_dream_job') }}", answer: "{{ _('qa_dream_job_answer') }}" },
-        { question: "{{ _('qa_type_of_person') }}", answer: "{{ _('qa_type_of_person_answer') }}" }
+        { question: "{{ _('qa_type_of_person') }}", answer: "{{ _('qa_type_of_person_answer') }}" },
+        { question: "{{ _('qa_nickname') }}", answer: "{{ _('qa_nickname_answer') }}" },
+        { question: "{{ _('qa_behaviour') }}", answer: "{{ _('qa_behaviour_answer') }}" },
+        { question: "{{ _('qa_song') }}", answer: "{{ _('qa_song_answer') }}" }
     ];
 
     function initializeChatOptions() {
@@ -92,7 +95,8 @@
         const chatMessages = document.getElementById("chatMessages");
         const messageElement = document.createElement("div");
         messageElement.classList.add("chat-message");
-        messageElement.textContent = message;
+
+        messageElement.textContent = (backgroundColor == 'transparent' ? 'Q: ' : '') + message;
 
         if (backgroundColor) {
             messageElement.style.backgroundColor = backgroundColor;

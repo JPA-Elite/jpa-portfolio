@@ -11,7 +11,9 @@
 <section id="portfolio" class="project-intro">
     <div class="project-image">
         <img src="{{ profile_image }}" alt="Profile Image"
-            onclick="openModal('{{ profile_image }}', '{{ profile_name }}', '{{ profile_desc }}'.replace('{age}', calculateAge()))" />
+            onclick="openModal(`{{ profile_image }}`, 
+                    `{{ profile_name | e }}`, 
+                    `{{ profile_desc | e }}`.replace('{age}', calculateAge()))" />
         <h1>{{ _('Software Engineer') }}</h1>
     </div>
     <div class="project-details">

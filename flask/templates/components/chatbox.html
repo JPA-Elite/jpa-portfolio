@@ -96,7 +96,15 @@
         const messageElement = document.createElement("div");
         messageElement.classList.add("chat-message");
 
-        messageElement.textContent = (backgroundColor == 'transparent' ? 'Q: ' : '') + message;
+        if (backgroundColor !== 'transparent') {
+            // If background is not transparent, apply typing effect
+            chatMessages.appendChild(messageElement);
+            addTypingEffect(messageElement, message);
+        } else {
+            // Otherwise, display message instantly
+            messageElement.textContent = 'Q: ' + message;
+            chatMessages.appendChild(messageElement);
+        }
 
         if (backgroundColor) {
             messageElement.style.backgroundColor = backgroundColor;
@@ -105,8 +113,20 @@
         if (color) {
             messageElement.style.color = color;
         }
+    }
 
-        chatMessages.appendChild(messageElement);
+    function addTypingEffect(element, text) {
+        let index = 0;
+
+        function typeNextCharacter() {
+            if (index < text.length) {
+                element.textContent += text.charAt(index);
+                index++;
+                setTimeout(typeNextCharacter, 50); // Adjust speed as needed
+            }
+        }
+
+        typeNextCharacter();
     }
 
     function cacheMessages(message) {
@@ -131,7 +151,7 @@
     function clearChat() {
         localStorage.removeItem(cacheMessage);
         const chatMessages = document.getElementById("chatMessages");
-        chatMessages.innerHTML = ''; 
+        chatMessages.innerHTML = '';
         updateClearChatButtonVisibility();
     }
 

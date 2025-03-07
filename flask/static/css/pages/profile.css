@@ -17,11 +17,16 @@
     height: 300px;
     border-radius: 10px;
     cursor: pointer;
-    transition: filter 0.3s ease;
+    transition: all 0.3s ease;
+    clip-path: polygon(
+        30% 0%, 70% 0%, 100% 30%, 100% 70%, 
+        70% 100%, 30% 100%, 0% 70%, 0% 30%
+    );
 }
 
 .project-image img:hover {
-    filter: grayscale(100%);
+    filter: grayscale(10%);
+    scale: 1.05;
 }
 
 .project-image h1 {

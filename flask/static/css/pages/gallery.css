@@ -21,11 +21,16 @@
     object-fit: cover;
     border-radius: 8px;
     cursor: pointer;
-    transition: filter 0.3s ease;
+    transition: all 0.3s ease;
+    clip-path: polygon(
+        30% 0%, 70% 0%, 100% 30%, 100% 70%, 
+        70% 100%, 30% 100%, 0% 70%, 0% 30%
+    );
 }
 
 .gallery-item .gallery-image:hover {
-    filter: grayscale(100%);
+    filter: grayscale(40%);
+    scale: 1.05;
 }
 
 

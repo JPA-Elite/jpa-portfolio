@@ -171,6 +171,9 @@ msgstr "Précédent"
 msgid "pagination_page"
 msgstr "Page"
 
+msgid "not_found_page"
+msgstr "Aucun résultat trouvé !"
+
 msgid "pagination_of"
 msgstr "de"
 

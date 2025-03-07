@@ -177,6 +177,9 @@ msgstr "Nakaraan"
 msgid "pagination_page"
 msgstr "Pahina"
 
+msgid "not_found_page"
+msgstr "Walang natagpuang resulta!"
+
 msgid "pagination_of"
 msgstr "ng"
 

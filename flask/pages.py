@@ -47,6 +47,7 @@ def profile():
 
     project_jaom = url_for("static", filename="images/jaom.png", _external=True)
     no_project = url_for("static", filename="images/no-project.png", _external=True)
+    voice_icon = url_for("static", filename="images/voice.png", _external=True)
 
     return handle_log_parameter() or render_template(
         PROFILE_PAGE,
@@ -57,6 +58,7 @@ def profile():
         profile_desc=profile_desc,
         project_jaom=project_jaom,
         no_project=no_project,
+        voice_icon=voice_icon,
     )
 
 
@@ -76,6 +78,8 @@ def gallery():
         filtered_gallery_data, page, items_per_page
     )
 
+    voice_icon = url_for("static", filename="images/voice.png", _external=True)
+
     return handle_log_parameter() or render_template(
         GALLERY_PAGE,
         image_path=IMAGE_PATH,
@@ -84,6 +88,7 @@ def gallery():
         total_pages=total_pages,
         title="My Gallery",
         search_query=search_query,
+        voice_icon=voice_icon,
     )
 
 

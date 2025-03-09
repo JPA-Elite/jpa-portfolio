@@ -2,7 +2,7 @@
 
 {% block title %}{{ _('Portfolio') }}{% endblock %}
 {% block head %}{% endblock %}
- <!-- SEO Meta Tags -->
+<!-- SEO Meta Tags -->
 {% block meta_description %}Discover the profile of Joshua Algadipe, including his skills, experience, and projects.{% endblock %}
 {% block meta_keywords %}Joshua Algadipe, profile, portfolio, developer{% endblock %}
 {% block meta_author %}Joshua Algadipe{% endblock %}
@@ -10,18 +10,24 @@
 {% block content %}
 <section id="portfolio" class="project-intro">
     <div class="project-image">
-        <img src="{{ profile_image }}" alt="Profile Image"
-            onclick="openModal(`{{ profile_image }}`, 
+        <img src="{{ profile_image }}" alt="Profile Image" onclick="openModal(`{{ profile_image }}`, 
                     `{{ profile_name | e }}`, 
                     `{{ profile_desc | e }}`.replace('{age}', calculateAge()))" />
         <h1>{{ _('Software Engineer') }}</h1>
     </div>
-    <div class="project-details">
+    <div class="project-details" id="project-details">
         <h3>{{ _('Summary') }}:</h3>
         <p>{{ _('Software_Expertise_Description') }}</p>
         <p>{{ _('Technology_Adaptability_Description') }}</p>
         <p>{{ _('Experience_Share_Description') }}</p>
     </div>
+    {% if get_locale() == en_locale %}
+    <img src="{{ voice_icon }}" alt="Voice Image" class="voice-icon" onclick="speak(
+        document.querySelector('#project-details').textContent,
+        getVoiceLocale('{{ get_locale() }}'),
+        this
+    )" />
+    {% endif %}
 </section>
 <div class="carousel-main">
     <h3>{{ _('Key_Projects') }}</h3>
@@ -137,6 +143,14 @@
             </ul>
         </li>
     </ul>
+    {% if get_locale() == en_locale %}
+    <img src="{{ voice_icon }}" alt="Voice Image" class="voice-icon" onclick="speak(
+        document.querySelector('#about').textContent,
+        getVoiceLocale('{{ get_locale() }}'),
+        this
+    )" />
+    {% endif %}
+
 </section>
 
 <section id="resume">
@@ -174,6 +188,13 @@
         <a>{{ _('Detailed_Resume_Description') }}:</a>
         <a href="{{ resume_pdf }}" target="_blank" class="cta-button">{{ _('Here_Link') }}</a>
     </p>
+    {% if get_locale() == en_locale %}
+    <img src="{{ voice_icon }}" alt="Voice Image" class="voice-icon" onclick="speak(
+        document.querySelector('#resume').textContent,
+        getVoiceLocale('{{ get_locale() }}'),
+        this
+    )" />
+    {% endif %}
 </section>
 
 <section id="contact">
@@ -217,6 +238,13 @@
             </ul>
         </li>
     </ul>
+    {% if get_locale() == en_locale %}
+    <img src="{{ voice_icon }}" alt="Voice Image" class="voice-icon" onclick="speak(
+        document.querySelector('#contact').textContent,
+        getVoiceLocale('{{ get_locale() }}'),
+        this
+    )" />
+    {% endif %}
 </section>
 <script>
     const carouselWrapper = document.querySelector('.carousel-track-wrapper');

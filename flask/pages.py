@@ -9,6 +9,7 @@ from config import (
     GALLERY_PAGE,
     IMAGE_PATH,
     PROFILE_IMAGE,
+    PROFILE_IMAGE_GIF,
     PROFILE_PAGE,
     RESUME_PDF,
     VLOG_PAGE,
@@ -52,6 +53,7 @@ def profile():
     return handle_log_parameter() or render_template(
         PROFILE_PAGE,
         profile_image=PROFILE_IMAGE,
+        profile_image_gif=PROFILE_IMAGE_GIF,
         resume_pdf=RESUME_PDF,
         title="My Portfolio",
         profile_name=profile_name,

@@ -3,7 +3,8 @@
 {% block title %}{{ _('Portfolio') }}{% endblock %}
 {% block head %}{% endblock %}
 <!-- SEO Meta Tags -->
-{% block meta_description %}Discover the profile of Joshua Algadipe, including his skills, experience, and projects.{% endblock %}
+{% block meta_description %}Discover the profile of Joshua Algadipe, including his skills, experience, and projects.{%
+endblock %}
 {% block meta_keywords %}Joshua Algadipe, profile, portfolio, developer{% endblock %}
 {% block meta_author %}Joshua Algadipe{% endblock %}
 
@@ -12,7 +13,8 @@
     <div class="project-image">
         <img src="{{ profile_image }}" alt="Profile Image" onclick="openModal(`{{ profile_image }}`, 
                     `{{ profile_name | e }}`, 
-                    `{{ profile_desc | e }}`.replace('{age}', calculateAge()))" />
+                    `{{ profile_desc | e }}`.replace('{age}', calculateAge()))" data-original="{{ profile_image }}"
+            data-gif="{{ profile_image_gif }}" />
         <h1>{{ _('Software Engineer') }}</h1>
     </div>
     <div class="project-details" id="project-details">
@@ -287,6 +289,16 @@
 
     // Initial button state
     updateCarouselButtons();
+
+    const image = document.querySelector(".project-image img");
+
+    image.addEventListener("mouseenter", function () {
+        this.src = this.getAttribute("data-gif"); // Change to GIF on hover
+    });
+
+    image.addEventListener("mouseleave", function () {
+        this.src = this.getAttribute("data-original"); // Revert back to the original image
+    });
 </script>
 
 {% endblock %}

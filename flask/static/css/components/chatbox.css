@@ -133,3 +133,60 @@ input[type="text"] {
         height: 50px;
     }
 }
+
+@media only screen and (max-height: 580px) {
+    /* For mobile screens */
+    .chatbox-modal {
+        height: 450px;
+    }
+}
+
+@media only screen and (max-height: 520px) {
+    /* For mobile screens */
+    .chatbox-modal {
+        height: 400px;
+        bottom: 10px;
+    }
+}
+
+@media only screen and (max-height: 410px) {
+    /* For mobile screens */
+    .chatbox-modal {
+        height: 350px;
+    }
+}
+
+@media only screen and (max-height: 360px) {
+    /* For mobile screens */
+    .chatbox-modal {
+        height: 300px;
+    }
+}
+
+@media only screen and (max-height: 310px) {
+    /* For mobile screens */
+    .chatbox-modal {
+        height: 250px;
+    }
+}
+
+@media only screen and (max-height: 260px) {
+    /* For mobile screens */
+    .chatbox-modal {
+        height: 200px;
+    }
+}
+
+@media only screen and (max-height: 200px) {
+    /* For mobile screens */
+    .chatbox-modal {
+        height: 150px;
+    }
+}
+
+@media only screen and (max-height: 145px) {
+    /* For mobile screens */
+    .chatbox-modal {
+        height: 100px;
+    }
+}

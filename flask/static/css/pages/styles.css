@@ -9,6 +9,9 @@ body {
 .container {
     max-width: 1200px;
     margin: auto;
+}
+
+header, main, footer {
     padding: 20px;
 }
 
@@ -18,7 +21,19 @@ header {
     align-items: center;
     padding: 10px 20px;
     height: 50px;
+    background-color: transparent;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
+
+.header-scrolled {
+    background-color: rgb(255, 255, 255);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 0 0 50px 50px;
+}
+
 
 header h1 {
     font-size: 2rem;
@@ -61,6 +76,17 @@ nav ul li::after {
 
 nav ul li:hover::after {
     width: 100%;
+}
+
+nav ul li.active::after {
+    width: 100%;
+    background-color: #6c757d;
+}
+
+nav ul li.active a {
+    color: #6c757d;
+    pointer-events: none;
+    font-style: italic;
 }
 
 .cta-button {
@@ -228,7 +254,7 @@ nav #navList {
 .gallery-item:focus,
 .gallery-item:active {
     outline: none;
-    background-color: transparent;
+    /* background-color: white; */
     /* Ensure no background is applied */
     -webkit-tap-highlight-color: transparent;
     /* Mobile-specific */
@@ -309,11 +335,6 @@ nav #navList {
     textarea:focus {
         outline: none;
         box-shadow: none;
-    }
-
-    header {
-        height: auto;
-        padding: 10px 0px;
     }
 
     nav {
@@ -457,6 +478,11 @@ nav #navList {
         top: 0;
         right: 0;
     }
+
+    .header-scrolled {
+        padding: 5px 18px;
+    }
+
 }
 
 /* Additional Responsive Styles */

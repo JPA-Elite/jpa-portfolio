@@ -15,6 +15,7 @@ GALLERY_JSON_PATH = f"{JSON_PATH}gallery.json"
 VLOG_JSON_PATH =  f"{JSON_PATH}vlog.json"
 
 # pages
+INTRO_PAGE = "pages/intro.html"
 PROFILE_PAGE = "pages/profile.html"
 GALLERY_PAGE = "pages/gallery.html"
 VLOG_PAGE = "pages/vlog.html"

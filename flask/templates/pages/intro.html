@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System Loading...</title>
+    <style>
+        body {
+            margin: 0;
+            background: black;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-family: "Courier New", monospace;
+            color: limegreen;
+            animation: backgroundGlitch 0.2s infinite alternate;
+            transition: background 2s ease-in-out;
+            text-align: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 80vw;
+            max-width: 600px;
+            position: relative;
+            z-index: 1;
+            bottom: 50px;
+            position: absolute;
+            top: 40%;
+            left: 50%;
+            transform: translate(-50%, -50%); /* Centers perfectly */
+        }
+
+        .welcome-text {
+            font-size: 6vw;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.5vw;
+            display: inline-block;
+            opacity: 0;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            white-space: normal;
+            line-height: 1.2;
+            animation: fadeIn 2s ease-in forwards, textGrow 3s ease-in-out 2s forwards, textGlitch 0.2s infinite;
+        }
+
+        @keyframes fadeIn { 0% { opacity: 0; } 100% { opacity: 1; } }
+        @keyframes textGrow { 0% { font-size: 4vw; } 100% { font-size: 6vw; } }
+        @keyframes textGlitch {
+            0% { transform: translateX(0); }
+            20% { transform: translateX(3px); }
+            40% { transform: translateX(-3px); }
+            60% { transform: translateX(1px); }
+            80% { transform: translateX(-1px); }
+            100% { transform: translateX(0); }
+        }
+        @keyframes backgroundGlitch {
+            0% { background-color: black; }
+            100% { background-color: rgb(0, 20, 0); }
+        }
+        @keyframes heartbeat {
+            0% { background-color: black; }
+            30% { background-color: red; }
+            60% { background-color: darkred; }
+            100% { background-color: red; }
+        }
+
+        @media (max-width: 768px) {
+            .welcome-text {
+                font-size: 10vw !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <canvas id="brainCanvas"></canvas>
+    <div class="container">
+        <div class="welcome-text" id="typewriter"></div>
+    </div>
+
+    <script>
+        // ---- CANVAS NEURAL NETWORK ANIMATION ----
+        const canvas = document.getElementById("brainCanvas");
+        const ctx = canvas.getContext("2d");
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+
+        window.addEventListener("resize", resizeCanvas);
+        resizeCanvas();
+
+        let nodes = [];
+        const numNodes = window.innerWidth < 600 ? 75 : 150;
+
+        for (let i = 0; i < numNodes; i++) {
+            nodes.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                radius: Math.random() * 3 + 1.5,
+                speedX: (Math.random() - 0.5) * 2,
+                speedY: (Math.random() - 0.5) * 2,
+                flicker: Math.random() < 0.15
+            });
+        }
+
+        function drawConnections() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = "limegreen";
+            ctx.strokeStyle = "limegreen";
+            ctx.lineWidth = 1.2;
+
+            for (let i = 0; i < nodes.length; i++) {
+                let nodeA = nodes[i];
+                ctx.beginPath();
+                ctx.arc(nodeA.x, nodeA.y, nodeA.radius, 0, Math.PI * 2);
+                ctx.fill();
+
+                for (let j = i + 1; j < nodes.length; j++) {
+                    let nodeB = nodes[j];
+                    let distance = Math.hypot(nodeA.x - nodeB.x, nodeA.y - nodeB.y);
+                    if (distance < 100) {
+                        ctx.globalAlpha = 1 - (distance / 100);
+                        ctx.beginPath();
+                        ctx.moveTo(nodeA.x, nodeA.y);
+                        ctx.lineTo(nodeB.x, nodeB.y);
+                        ctx.stroke();
+                    }
+                }
+            }
+        }
+
+        function updateNodes() {
+            for (let node of nodes) {
+                node.x += node.speedX;
+                node.y += node.speedY;
+                if (node.x < 0 || node.x > canvas.width) node.speedX *= -1;
+                if (node.y < 0 || node.y > canvas.height) node.speedY *= -1;
+                if (node.flicker && Math.random() < 0.1) {
+                    node.x += Math.random() * 6 - 3;
+                    node.y += Math.random() * 6 - 3;
+                }
+            }
+        }
+
+        function animateBrain() {
+            drawConnections();
+            updateNodes();
+            requestAnimationFrame(animateBrain);
+        }
+
+        animateBrain();
+
+        // ---- GLITCH TYPEWRITER EFFECT ----
+        const text = "WELCOME TO MY PORTFOLIO";
+        let index = 0;
+        const speed = 80;
+        const typewriterElement = document.getElementById("typewriter");
+
+        function typeWriter() {
+            typewriterElement.style.opacity = 1;
+            if (index < text.length) {
+                typewriterElement.innerHTML += text.charAt(index);
+                index++;
+                setTimeout(typeWriter, speed);
+            } else {
+                typewriterElement.style.borderRight = "none";
+                setTimeout(() => { document.body.style.animation = "heartbeat 0.5s infinite alternate"; }, 2000);
+                setTimeout(() => {
+                    document.body.style.animation = "none";
+                    document.body.style.backgroundColor = "white";
+                    document.body.style.color = "black";
+                }, 3500);
+                setTimeout(() => { window.location.href = "/profile"; }, 5000);
+            }
+        }
+
+        setTimeout(typeWriter, 2500);
+    </script>
+</body>
+</html>

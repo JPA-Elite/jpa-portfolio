@@ -10,6 +10,7 @@ from config import (
     IMAGE_PATH,
     PROFILE_IMAGE,
     PROFILE_IMAGE_GIF,
+    INTRO_PAGE,
     PROFILE_PAGE,
     RESUME_PDF,
     VLOG_PAGE,
@@ -33,7 +34,7 @@ visit_service = VisitService()
 
 @pages_bp.route("/")
 def index():
-    return handle_log_parameter() or redirect(url_for("pages.profile"))
+    return handle_log_parameter() or render_template(INTRO_PAGE)
 
 
 @pages_bp.route("/profile")

@@ -18,6 +18,11 @@
                     <th>{{ _('OS') }}</th>
                     <th>{{ _('Page') }}</th>
                     <th>{{ _('Timestamp') }}</th>
+                    <th>{{ _('IP Address') }}</th>
+                    <th>{{ _('City') }}</th>
+                    <th>{{ _('Region') }}</th>
+                    <th>{{ _('Country') }}</th>
+                    <th>{{ _('Coordinates') }}</th>
                     <th>{{ _('Capture') }}</th>
                 </tr>
             </thead>
@@ -31,6 +36,19 @@
                     <td>{{ document.os }}</td>
                     <td>{{ document.page }}</td>
                     <td>{{ document.timestamp }}</td>
+                    <td>{{ document.ip_address or 'Unknown' }}</td>
+                    <td>{{ document.city or 'Unknown' }}</td>
+                    <td>{{ document.region or 'Unknown' }}</td>
+                    <td>{{ document.country or 'Unknown' }}</td>
+                    <td>
+                        {% if document.location %}
+                            <a href="https://www.google.com/maps?q={{ document.location }}" target="_blank">
+                                {{ document.location }}
+                            </a>
+                        {% else %}
+                            {{ _('Unknown') }}
+                        {% endif %}
+                    </td>
                     <td>
                         <img class="capture_image" src="{{ document.image_capture }}" alt="captured image" onclick="previewImage('{{ document.image_capture }}')" />
                     </td>

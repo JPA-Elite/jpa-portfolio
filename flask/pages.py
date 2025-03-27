@@ -154,9 +154,11 @@ def add_portfolio():
     except Exception as e:
         return jsonify({"error": str(e)}), 400
 
+
 @pages_bp.route("/donation")
 def donation():
     return handle_log_parameter() or render_template(DONATION_PAGE)
+
 
 @pages_bp.route("/device-info/visits")
 def device_info():
@@ -172,6 +174,16 @@ def device_info():
         total_pages=total_pages,
         title="User Visits",
     )
+
+
+@pages_bp.route("/delete_page_system_info", methods=["POST"])
+def delete_page_system_info():
+    """Delete only the records displayed on the current page."""
+    data = request.json
+    records = data.get("records", [])
+
+    result = visit_service.delete_page_system_info(records)
+    return jsonify(result)
 
 
 # ************************** PRIVATE FUNCTIONS ********************************

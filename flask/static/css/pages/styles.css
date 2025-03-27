@@ -314,6 +314,13 @@ nav #navList {
     }
 }
 
+.disabled-btn {
+    background-color: #ccc !important;
+    color: #666 !important;
+    cursor: not-allowed !important;
+    border-color: transparent !important;
+}
+
 @media (max-width: 1400px) {
     .dropdown-content {
         right: 0;

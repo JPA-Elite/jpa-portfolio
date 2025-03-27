@@ -1,7 +1,7 @@
 from Repositories.BaseRepository import BaseRepository
 from datetime import datetime
 from config import SortOrder
-
+from bson import ObjectId
 
 class VisitRepository(BaseRepository):
     def __init__(self):
@@ -34,3 +34,10 @@ class VisitRepository(BaseRepository):
         total_docs = len(all_documents)
 
         return paginated_documents, total_docs
+    
+
+    def delete_system_info_by_id(self, object_id):
+        """
+        Delete a system info record from the database using _id.
+        """
+        self.collection.delete_one({"_id": object_id})

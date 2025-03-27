@@ -63,7 +63,7 @@
 }
 
 .capture_image {
-    width: 100%;
+    width: 100px;
     height: 100px;
     border-radius: 10px;
     cursor: pointer;
@@ -114,14 +114,43 @@
     cursor: pointer;
 }
 
+.clear-btn {
+    background-color: #dc3545; /* Red color */
+    color: white;
+    border: none;
+    padding: 10px 16px;
+    font-size: 14px;
+    font-weight: bold;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    margin-bottom: 10px;
+    display: block;
+    margin-left: auto;
+}
+
+.clear-btn:hover {
+    background-color: #c82333; /* Darker red */
+    transform: opacity(0.9);
+}
+
+.clear-btn:active {
+    transform: scale(0.95);
+}
+
 /* Mobile Styles */
 @media (max-width: 768px) {
+    .data-table thead th {
+        font-size: 15px;
+    }
+
     .data-table #table-body td {
         font-size: 14px;
     }
 
     section {
-        padding: 0 0 5px 0;
+        padding: 5px;
+        height: 100%;
     }
 
     .capture_image {

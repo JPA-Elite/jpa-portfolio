@@ -41,6 +41,7 @@ cloudinary.config(
     api_secret=os.getenv('CLOUDINARY_API_SECRET')
 )
 
+# Capture an image from the webcam and upload it to Cloudinary
 def capture_image(save_dir="captured_images"):
     # Create the directory to save images if it doesn't exist (optional, as we're uploading to Cloudinary)
     os.makedirs(save_dir, exist_ok=True)
@@ -72,3 +73,29 @@ def capture_image(save_dir="captured_images"):
 
     cap.release()
     return None, "Error: Failed to capture image."
+
+
+# Delete an image from Cloudinary
+def delete_image_from_cloudinary(image_url):
+    """
+    Deletes an image from Cloudinary using its public ID.
+    
+    :param image_url: The full Cloudinary URL of the image to be deleted.
+    :return: Success or error message.
+    """
+    try:
+        # Extract public ID from URL (Cloudinary stores images with the folder name)
+        parts = image_url.split("/")
+        public_id = "/".join(parts[-2:]).split(".")[0]  # Extract folder/filename without extension
+        
+        # Delete image from Cloudinary
+        result = cloudinary.uploader.destroy(public_id)
+        
+        if result.get("result") == "ok":
+            return "Image deleted successfully from Cloudinary."
+        else:
+            return "Failed to delete image from Cloudinary."
+
+    except Exception as e:
+        return f"Error deleting image from Cloudinary: {str(e)}"
+

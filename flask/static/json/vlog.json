@@ -163,5 +163,20 @@
             "fil_PH": "Sinusubukan kong magpakita ng magic at ipakita sa kanila na ito ay tunay na makatotohanan."
         },
         "file": "videos/vlog4.mp4"
+    },
+    {
+        "title": {
+            "en": "Falls in Siquijor",
+            "ceb": "Mga Falls sa Siquijor",
+            "fr": "Chutes d'Eau à Siquijor",
+            "fil_PH": "Mga Talon sa Siquijor"
+        },
+        "description": {
+            "en": "I went to Siquijor with my friends, and we visited the falls there. I forgot the name of the falls, but it was a great experience.",
+            "ceb": "Niadto ko sa Siquijor uban sa akong mga higala, ug among gibisita ang mga falls didto. Nakalimot ko sa ngalan sa falls, apan kini usa ka maayong kasinatian.",
+            "fr": "Je suis allé à Siquijor avec mes amis, et nous avons visité les chutes d'eau là-bas. J'ai oublié le nom des chutes, mais c'était une super expérience.",
+            "fil_PH": "Pumunta ako sa Siquijor kasama ang aking mga kaibigan, at binisita namin ang mga talon doon. Nakalimutan ko ang pangalan ng talon, ngunit ito ay isang mahusay na karanasan."
+        },
+        "file": "videos/swing.mov"
     }
 ]

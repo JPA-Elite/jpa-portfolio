@@ -59,5 +59,12 @@ def not_found(error):
 def robots():
     return send_from_directory(os.path.join(app.root_path, 'static'), 'robots.txt')
 
+
+@app.template_filter()
+def truncate_text(text, length=120):
+    if text and len(text) > length:
+        return text[:length] + " ..."
+    return text
+
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0")

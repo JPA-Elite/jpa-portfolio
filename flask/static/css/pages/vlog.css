@@ -22,7 +22,9 @@
 
 video {
     width: 100%;
-    /* border-radius: 8px; */
+    height: auto;
+    aspect-ratio: 16 / 9;
+    max-height: 150vh;
 }
 
 h3 {
@@ -32,4 +34,11 @@ h3 {
 
 p {
     color: #666;
+}
+
+/* Responsive styles for smaller screens */
+@media (max-width: 768px) {
+    .video-container {
+        overflow-x: auto;
+    }
 }

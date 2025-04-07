@@ -22,7 +22,7 @@ endblock %}
                     class="gallery-image"
                     onclick="openModal('{{ image_path }}{{ item.image_name }}', `{{ item.title[get_locale()] | e }}`,  `{{ item.description[get_locale()] | e }}`)" />
                 <h3>{{ item.title[get_locale()] }}</h3>
-                <p class="description">{{ item.description[get_locale()] }}</p>
+                <p class="description">{{ item.description[get_locale()] | truncate_text(120) }}</p>
             </div>
             {% endfor %}
         </div>

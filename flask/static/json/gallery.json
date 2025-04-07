@@ -222,7 +222,8 @@
             "ceb": "Nagkuha kami ug litrato sa atubangan sa daang simbahan sa Siquijor, diin among gitan-aw ang sulod niini, nga nagdayeg sa mga matahum nga artepakto, mga gamit, ug uban pang mga elemento nga kabahin sa simbahan.",
             "fr": "Nous avons pris une photo devant l'ancienne église de Siquijor, où nous avons exploré son intérieur, admirant les belles artefacts, outils et autres éléments qui font partie de l'église.",
             "fil_PH": "Kumukuha kami ng litrato sa harap ng lumang simbahan sa Siquijor, kung saan sinuri namin ang loob nito, humahanga sa magagandang artepakto, kagamitan, at iba pang mga elemento na bahagi ng simbahan."
-        }        
+        },
+        "image_url": "https://raw.githubusercontent.com/JPA-Elite/jpa-profile/a357774ded3e75f16ceb73c01bc0741ad95bdd83/flask/static/images/church-min.JPG"             
     },
     {
         "title": {
@@ -237,7 +238,8 @@
             "ceb": "Nakaangkon kami og talagsaon nga kasinatian sa pag-explore sa nagkalain-laing mga baybayon sa Siquijor, nga ang matag usa naghatag sa iyang kaugalingong talagsaon nga kahayag ug makapahimuot nga katahum. Gikan sa puti nga balas ug kristal nga limpyo nga tubig ngadto sa dramatikong mga pormasyon sa bato ug malinawon nga mga baybayon, ang matag baybayon adunay espesyal nga butang nga ikahatag. Nagpabilin kami nga nagpasalamat sa adlaw, nag-enjoy sa malinawon nga atmospera, ug nagdayeg sa mga natural nga kahibulungan nga naghimo sa matag lokasyon nga talagsaon. Ang mabulukon nga kinabuhi sa dagat ug ang mga talan-awon nga makapahimuot nagdugang sa magic, nga naghimo sa among pagbiyahe pinaagi sa mga baybayon sa Siquijor nga usa ka hinumdumanong pakig-adventure.",
             "fr": "Nous avons eu une expérience incroyable à explorer les diverses plages de Siquijor, chacune offrant son propre charme unique et sa beauté à couper le souffle. Des sables blancs immaculés et des eaux cristallines aux formations rocheuses dramatiques et aux criques sereines, chaque plage avait quelque chose de spécial à offrir. Nous avons passé du temps à profiter du soleil, à apprécier l'atmosphère tranquille et à admirer les merveilles naturelles qui rendaient chaque endroit vraiment inoubliable. La vie marine vibrante et les paysages pittoresques ont ajouté à la magie, faisant de notre voyage à travers les plages de Siquijor une aventure mémorable.",
             "fil_PH": "Nagkaroon kami ng kamangha-manghang karanasan sa paggalugad sa iba't ibang mga beach sa Siquijor, bawat isa ay nag-aalok ng natatanging alindog at nakamamanghang kagandahan. Mula sa malinis na puting buhangin at malinaw na tubig hanggang sa mga dramatikong pormasyon ng bato at tahimik na mga baybayin, bawat beach ay may espesyal na inaalok. Naglaan kami ng oras upang magpahinga sa ilalim ng araw, tamasahin ang tahimik na kapaligiran, at humanga sa mga likas na yaman na ginawang talagang hindi malilimutan ang bawat lokasyon. Ang masiglang buhay-dagat at magagandang tanawin ay nagdagdag sa mahika, na ginawang isang hindi malilimutang pakikipagsapalaran ang aming paglalakbay sa mga beach ng Siquijor."
-        }        
+        },
+        "image_url": "https://raw.githubusercontent.com/JPA-Elite/jpa-profile/a357774ded3e75f16ceb73c01bc0741ad95bdd83/flask/static/images/beach-min.JPG"      
     },
     {
         "title": {

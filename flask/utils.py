@@ -4,6 +4,7 @@ import cv2
 import os
 import cloudinary
 from datetime import datetime
+import random
 
 load_dotenv()
 
@@ -17,22 +18,58 @@ def paginate_data(data, page, items_per_page):
 
     return paginated_data, total_pages
 
-
 def filter_data(
-    data, getLocale, search_query, title_key="title", description_key="description"
+    data, getLocale, search_query, tags=None,
+    title_key="title", description_key="description", tags_key="tags", id_key="id"
 ):
-    """Filter data based on the search query."""
-    if not search_query:
-        return data
+    """Filter data based on the search query and tags."""
+    search_query = search_query.strip().lower() if search_query else ''
+    tags = set(tags.split('.')) if tags else set()
 
-    search_query = search_query.strip().lower()
+    filtered_data = []
+    seen_ids = set()
 
-    return [
-        item
-        for item in data
-        if search_query in item[title_key][getLocale].lower()
-        or search_query in item[description_key][getLocale].lower()
-    ]
+    if tags:
+        # Step 1: Collect all items that match any of the tags
+        for item in data:
+            item_tags = set(item.get(tags_key, []))
+            if item_tags & tags:  # Check if any tag matches
+                item_id = item.get(id_key)
+                if item_id not in seen_ids:
+                    filtered_data.append(item)
+                    seen_ids.add(item_id)
+
+        # Step 2: If search query exists, further filter the result
+        if search_query:
+            filtered_data = [
+                item for item in filtered_data
+                if search_query in item[title_key].get(getLocale, "").lower()
+                or search_query in item[description_key].get(getLocale, "").lower()
+            ]
+
+        return filtered_data
+
+    # If no tags were provided, just use the search query to filter the full dataset
+    if search_query:
+        return [
+            item for item in data
+            if search_query in item[title_key].get(getLocale, "").lower()
+            or search_query in item[description_key].get(getLocale, "").lower()
+        ]
+
+    return data
+
+def get_random_tags(data, tags_length = 10):
+    unique_tags = set()
+
+    for item in data:
+        if "tags" in item:
+            unique_tags.update(item["tags"])
+
+    unique_tags = list(unique_tags)
+    random.shuffle(unique_tags)
+
+    return unique_tags[:tags_length]
 
 # Configure Cloudinary
 cloudinary.config(

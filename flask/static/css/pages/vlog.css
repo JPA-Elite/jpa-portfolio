@@ -36,6 +36,27 @@ p {
     color: #666;
 }
 
+.tags {
+    margin-top: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 5px;
+}
+
+.tag {
+    background-color: #eee;
+    color: #333;
+    font-size: 0.6rem;
+    padding: 4px 8px;
+    border-radius: 12px;
+    transition: background-color 0.2s ease;
+}
+
+.tag:hover {
+    background-color: #ccc;
+}
+
 /* Responsive styles for smaller screens */
 @media (max-width: 768px) {
     .video-container {

@@ -38,12 +38,33 @@
     color: #555;
 }
 
+.tags {
+    margin-top: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 5px;
+}
+
+.tag {
+    background-color: #eee;
+    color: #333;
+    font-size: 0.6rem;
+    padding: 4px 8px;
+    border-radius: 12px;
+    transition: background-color 0.2s ease;
+}
+
+.tag:hover {
+    background-color: #ccc;
+}
+
 /* Mobile responsiveness */
 @media only screen and (max-width: 768px) {
     /* For tablets and smaller screens */
     .gallery-item {
         width: 45%;
-        margin-bottom: 15px;
+        margin-bottom: 50px;
     }
 
     .gallery-item .gallery-image {

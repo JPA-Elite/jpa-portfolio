@@ -1,5 +1,6 @@
 [
     {
+        "id": 1,
         "title": {
             "en": "Pranking Our Housemate",
             "ceb": "Pagbinuang sa Among Kauban sa Balay",
@@ -12,9 +13,13 @@
             "fr": "Étant le premier à revenir à la maison, nous avons décidé de faire une farce à notre colocataire.",
             "fil_PH": "Bilang unang bumalik sa bahay, nagpasya kaming guluhin ang aming kasama sa bahay."
         },
-        "file": "videos/prank1.mp4"
+        "file": "videos/prank1.mp4",
+        "tags": [
+            "prank", "housemate", "fun"
+        ]
     },
     {
+        "id": 2,
         "title": {
             "en": "A Heartbreaking Story",
             "ceb": "Usa ka Makapait nga Istorya",
@@ -27,9 +32,13 @@
             "fr": "Par jalousie envers une relation ridicule, j'ai fait cette vidéo pour moi-même.",
             "fil_PH": "Dahil sa selos sa isang walang kwentang relasyon, ginawa ko itong video para sa sarili ko."
         },
-        "file": "videos/prank2.mp4"
+        "file": "videos/prank2.mp4",
+        "tags": [
+            "heartbreaking", "story", "jealousy"
+        ]
     },
     {
+        "id": 3,
         "title": {
             "en": "Viral Dance by an Attractive Girl",
             "ceb": "Viral nga Sayaw sa Usa ka Guwapa nga Babaye",
@@ -42,9 +51,13 @@
             "fr": "Je ne suis pas impressionné par la danse de cette fille, et je ne suis pas le genre de gars qui apprécie les performances trop sexualisées.",
             "fil_PH": "Hindi ako nai-impress sa sayaw ng babaeng ito, at hindi ako yung tipo ng lalaking pinapahalagahan ang sobrang sekswal na mga pagtatanghal."
         },
-        "file": "videos/prank3.mp4"
+        "file": "videos/prank3.mp4",
+        "tags": [
+            "viral", "dance", "performance"
+        ]
     },
     {
+        "id": 4,
         "title": {
             "en": "Struggling with Dance Moves",
             "ceb": "Naglisod sa mga Sayaw",
@@ -57,9 +70,13 @@
             "fr": "Je ne suis pas un grand danseur, alors je me suis lancé le défi de danser avec mon frère.",
             "fil_PH": "Hindi ako mahusay sumayaw, kaya hinamon ko ang sarili kong sumayaw kasama ang aking kapatid."
         },
-        "file": "videos/prank4.mp4"
+        "file": "videos/prank4.mp4",
+        "tags": [
+            "dance", "challenge", "brother"
+        ]
     },
     {
+        "id": 5,
         "title": {
             "en": "TikTok Picture Challenge",
             "ceb": "TikTok Picture Challenge",
@@ -72,9 +89,13 @@
             "fr": "J'ai synchronisé le rythme avec ma photo, et le résultat était incroyable.",
             "fil_PH": "I-synchronize ko ang beat sa aking litrato, at napakaganda ng kinalabasan."
         },
-        "file": "videos/prank5.mp4"
+        "file": "videos/prank5.mp4",
+        "tags": [
+            "tiktok", "picture", "challenge"
+        ]
     },
     {
+        "id": 6,
         "title": {
             "en": "Hokage Chat Skills",
             "ceb": "Hokage Chat Skills",
@@ -87,9 +108,13 @@
             "fr": "Discuter avec mon camarade érudit en utilisant des mouvements de hokage pour le plaisir.",
             "fil_PH": "Nakikipag-chat ako sa aking kapwa scholar gamit ang mga hokage moves para sa kasiyahan."
         },
-        "file": "videos/prank6.mp4"
+        "file": "videos/prank6.mp4",
+        "tags": [
+            "hokage", "chat", "fun"
+        ]
     },
     {
+        "id": 7,
         "title": {
             "en": "Fiesta in Our Hometown",
             "ceb": "Fiesta Sa Among Lugar",
@@ -102,9 +127,13 @@
             "fr": "Nous avons célébré la fiesta dans ma ville natale de Negros Oriental, pour laquelle j'ai pris un congé de travail.",
             "fil_PH": "Ipinagdiwang namin ang pista sa aking bayan sa Negros Oriental, kung saan nag-file ako ng bakasyon mula sa trabaho."
         },
-        "file": "videos/disco.mp4"
+        "file": "videos/disco.mp4",
+        "tags": [
+            "fiesta", "hometown", "celebration"
+        ]
     },
     {
+        "id": 8,
         "title": {
             "en": "Meet up at North Bus Terminal Cebu for Company Outing",
             "ceb": "Panagtagbo Sa North Bus Terminal Cebu Para Sa Company Outing",
@@ -117,9 +146,13 @@
             "fr": "Nous nous sommes retrouvés au terminal de bus nord de Cebu avec mes collègues vers 5 heures du matin pour nous préparer à la sortie.",
             "fil_PH": "Nagtipon kami sa North Bus Terminal ng Cebu kasama ang aking mga katrabaho bandang alas 5 ng umaga para maghanda para sa outing."
         },
-        "file": "videos/vlog1.mp4"
+        "file": "videos/vlog1.mp4",
+        "tags": [
+            "meetup", "bus terminal", "outing"
+        ]
     },
     {
+        "id": 9,
         "title": {
             "en": "At the Venue for Our Company Outing",
             "ceb": "Sa Lugar Para Sa Among Company Outing",
@@ -132,9 +165,13 @@
             "fr": "Nous sommes arrivés à notre destination pour la sortie d'entreprise, avons pris un court repos, puis avons commencé à préparer nos affaires.",
             "fil_PH": "Nakakarating na kami sa aming destinasyon para sa company outing, nagpahinga ng kaunti, at pagkatapos ay naghanda ng aming mga gamit."
         },
-        "file": "videos/vlog2.mp4"
+        "file": "videos/vlog2.mp4",
+        "tags": [
+            "venue", "company outing", "preparation"
+        ]
     },
     {
+        "id": 10,
         "title": {
             "en": "Battle of Airbands Parody",
             "ceb": "Lumba sa Airbands Parody",
@@ -147,9 +184,13 @@
             "fr": "Ceci est l'une des performances présentées dans nos activités de développement pour les événements d'entreprise.",
             "fil_PH": "Isa ito sa mga pagtatanghal na tampok sa aming mga aktibidad sa pag-unlad tungkol sa mga kaganapan ng kumpanya."
         },
-        "file": "videos/vlog3.mp4"
+        "file": "videos/vlog3.mp4",
+        "tags": [
+            "airbands", "parody", "performance"
+        ]
     },
     {
+        "id": 11,
         "title": {
             "en": "Tricks With Magic",
             "ceb": "Mga Trick Sa Magic",
@@ -162,9 +203,13 @@
             "fr": "J'essaie de faire de la magie et de leur montrer que c'est vraiment réaliste.",
             "fil_PH": "Sinusubukan kong magpakita ng magic at ipakita sa kanila na ito ay tunay na makatotohanan."
         },
-        "file": "videos/vlog4.mp4"
+        "file": "videos/vlog4.mp4",
+        "tags": [
+            "magic", "tricks", "realistic"
+        ]
     },
     {
+        "id": 12,
         "title": {
             "en": "Falls in Siquijor",
             "ceb": "Mga Falls sa Siquijor",
@@ -177,6 +222,9 @@
             "fr": "Je suis allé à Siquijor avec mes amis, et nous avons visité les chutes d'eau là-bas. J'ai oublié le nom des chutes, mais c'était une super expérience.",
             "fil_PH": "Pumunta ako sa Siquijor kasama ang aking mga kaibigan, at binisita namin ang mga talon doon. Nakalimutan ko ang pangalan ng talon, ngunit ito ay isang mahusay na karanasan."
         },
-        "file": "videos/swing-min.mp4"
+        "file": "videos/swing-min.mp4",
+        "tags": [
+            "falls", "siquijor", "adventure"
+        ]
     }
 ]

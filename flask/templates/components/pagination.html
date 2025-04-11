@@ -1,22 +1,24 @@
-<!-- templates/components/pagination.html -->
 <link rel="stylesheet" href="{{ url_for('static', filename='css/components/pagination.css') }}" />
 <div class="pagination">
     {% if current_page > 1 %}
     <a class="pagination-next-btn"
-        href="{{ base_url }}?page={{ current_page - 1 }}{% if search_query %}&search={{ search_query }}{% endif %}">{{
-        _('pagination_previous') }}</a>
+        href="{{ base_url }}?page={{ current_page - 1 }}{% if search_query %}&search={{ search_query }}{% endif %}{% if tags_query %}&tags={{ tags_query }}{% endif %}">
+        {{ _('pagination_previous') }}
+    </a>
     {% endif %}
 
     {% if total_pages > 0 %}
-    <span class="pagination-count">{{ _('pagination_page') }} {{ current_page }} {{ _('pagination_of') }} {{ total_pages
-        }}</span>
+    <span class="pagination-count">
+        {{ _('pagination_page') }} {{ current_page }} {{ _('pagination_of') }} {{ total_pages }}
+    </span>
     {% else %}
     <span class="pagination-count">{{ _('not_found_page') }}</span>
     {% endif %}
 
-
-    {% if current_page < total_pages %} <a class="pagination-prev-btn"
-        href="{{ base_url }}?page={{ current_page + 1 }}{% if search_query %}&search={{ search_query }}{% endif %}">{{
-        _('pagination_next') }}</a>
-        {% endif %}
+    {% if current_page < total_pages %}
+    <a class="pagination-prev-btn"
+        href="{{ base_url }}?page={{ current_page + 1 }}{% if search_query %}&search={{ search_query }}{% endif %}{% if tags_query %}&tags={{ tags_query }}{% endif %}">
+        {{ _('pagination_next') }}
+    </a>
+    {% endif %}
 </div>

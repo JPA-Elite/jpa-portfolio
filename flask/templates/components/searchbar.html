@@ -1,8 +1,148 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='css/components/searchbar.css') }}" />
 <form action="{{ base_url }}" method="GET">
     <div class="search-container">
-        <input type="text" name="search" placeholder="{{ _('search_placeholder') }}" class="search-input"
-            value="{{ search_query }}">
-        <button type="submit" class="search-next">{{ _('pagination_next') }}<span>&rarr;</span></button>
+        <!-- Section for displaying selected tags -->
+        <div id="selected-tags-container" class="selected-tags-container"></div>
+        <!-- Hidden input to hold selected tags -->
+        <input type="hidden" name="tags" id="tags-input">
+        <div>
+            <div class="search-bar">
+                <!-- Search input -->
+                <input type="text" name="search" placeholder="{{ _('search_placeholder') }}" class="search-input"
+                    id="search-input" autocomplete="off">
+                <button type="submit" class="search-next">{{ _('pagination_next') }}<span>&rarr;</span></button>
+            </div>
+
+            <!-- Modal for Tags -->
+            <div class="tags-modal" id="tags-modal">
+                <div class="tags-modal-content">
+                    {% if random_tags %}
+                        <div class="tags">
+                            {% for tag in random_tags %}
+                                <button type="button" class="tag-button">{{ tag }}</button>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="tags"></div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
     </div>
 </form>
+<script>
+    // Get elements
+    const searchInput = document.getElementById('search-input');
+    const tagsModal = document.getElementById('tags-modal');
+    const selectedTagsContainer = document.getElementById('selected-tags-container');
+    const tagsInput = document.getElementById('tags-input');
+    const randomTags = '{{ random_tags | tojson | safe }}';
+    
+    // Array to store selected tags
+    let selectedTags = [];
+
+    // Check if randomTags is not empty or undefined
+    if (randomTags && randomTags.length > 0) {
+        // Show the modal when the input is focused
+        searchInput.addEventListener('focus', () => {
+            tagsModal.style.display = 'flex';
+        });
+    }
+
+    document.addEventListener('click', (e) => {
+        const isClickInsideInput = searchInput.contains(e.target);
+        const isClickInsideModal = tagsModal.contains(e.target);
+
+        if (!isClickInsideInput && !isClickInsideModal) {
+            tagsModal.style.display = 'none';
+        }
+    });
+
+    // Handle tag selection from the modal
+    const tagButtons = document.querySelectorAll('.tag-button');
+    tagButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const tag = button.textContent;
+
+            // Toggle the 'active' class on the button
+            button.classList.toggle('active');
+
+            // Add the tag if it was selected, remove if it was deselected
+            if (button.classList.contains('active')) {
+                if (!selectedTags.includes(tag)) {
+                    selectedTags.push(tag);
+                    updateSelectedTags();
+                }
+            } else {
+                selectedTags = selectedTags.filter(t => t !== tag);
+                updateSelectedTags();
+            }
+        });
+    });
+
+    function updateSelectedTags() {
+        selectedTagsContainer.innerHTML = ''; // Clear previous tags
+
+        const maxVisible = 4;
+        const visibleTags = selectedTags.slice(0, maxVisible);
+        const hiddenCount = selectedTags.length - maxVisible;
+
+        // Show the first 4 tags
+        visibleTags.forEach(tag => {
+            const tagElement = document.createElement('div');
+            tagElement.classList.add('selected-tag');
+            tagElement.innerHTML = `#${tag} <span>&times;</span>`;
+
+            // Handle tag removal
+            tagElement.querySelector('span').addEventListener('click', () => {
+                selectedTags = selectedTags.filter(t => t !== tag);
+                updateSelectedTags();
+                const activeButton = [...tagButtons].find(button => button.textContent === tag);
+                if (activeButton) {
+                    activeButton.classList.remove('active');
+                }
+            });
+
+            selectedTagsContainer.appendChild(tagElement);
+        });
+
+        // If more tags exist, show a "+X more" label
+        if (hiddenCount > 0) {
+            const moreTag = document.createElement('div');
+            moreTag.classList.add('selected-tag', 'more-tag');
+            moreTag.textContent = `+${hiddenCount} more`;
+
+            selectedTagsContainer.appendChild(moreTag);
+        }
+
+        updateSearchInput();
+    }
+
+    function showAllTags() {
+        selectedTagsContainer.innerHTML = '';
+        selectedTags.forEach(tag => {
+            const tagElement = document.createElement('div');
+            tagElement.classList.add('selected-tag');
+            tagElement.innerHTML = `#${tag} <span>&times;</span>`;
+
+            tagElement.querySelector('span').addEventListener('click', () => {
+                selectedTags = selectedTags.filter(t => t !== tag);
+                updateSelectedTags();
+                const activeButton = [...tagButtons].find(button => button.textContent === tag);
+                if (activeButton) {
+                    activeButton.classList.remove('active');
+                }
+            });
+
+            selectedTagsContainer.appendChild(tagElement);
+        });
+    }
+
+    // Function to update the search input
+    function updateSearchInput() {
+        searchInput.value = '';
+
+        searchInput.setAttribute('data-selected-tags', selectedTags.join(', '));
+        tagsInput.value = selectedTags.join('.');
+    }
+</script>

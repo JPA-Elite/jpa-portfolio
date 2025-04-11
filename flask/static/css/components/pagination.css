@@ -27,6 +27,10 @@
     font-weight: bold;
 }
 
+.pagination-count {
+    white-space: nowrap;
+}
+
 /* Mobile Styles */
 @media (max-width: 768px) {
     .pagination-count {

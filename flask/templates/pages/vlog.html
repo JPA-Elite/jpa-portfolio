@@ -24,6 +24,13 @@
             </video>
             <h3>{{ vlog.title[get_locale()] }}</h3>
             <p>{{ vlog.description[get_locale()] }}</p>
+            {% if vlog.tags is defined and vlog.tags %}
+            <div class="tags">
+                {% for tag in vlog.tags %}
+                <span class="tag">#{{ tag }}</span>
+                {% endfor %}
+            </div>
+            {% endif %}
         </div>
         {% endfor %}
     </div>

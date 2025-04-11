@@ -2,7 +2,7 @@
 from flask import Blueprint, redirect, url_for, render_template, request, jsonify
 from Services.PortfolioService import PortfolioService
 from Services.VisitService import VisitService
-from utils import filter_data, paginate_data, capture_image
+from utils import filter_data, paginate_data, capture_image, get_random_tags
 from config import (
     ADD_PORTFOLIO_PAGE,
     CONCERN_PAGE,
@@ -73,7 +73,8 @@ def gallery():
     gallery_data = response.json()
 
     search_query = request.args.get("search", "")
-    filtered_gallery_data = filter_data(gallery_data, get_locale(), search_query)
+    tags_query = request.args.get("tags", "")
+    filtered_gallery_data = filter_data(gallery_data, get_locale(), search_query, tags_query)
 
     page = request.args.get("page", 1, type=int)
     items_per_page = 6
@@ -82,6 +83,7 @@ def gallery():
     )
 
     voice_icon = url_for("static", filename="images/voice.png", _external=True)
+    random_tags = get_random_tags(gallery_data, 12)
 
     return handle_log_parameter() or render_template(
         GALLERY_PAGE,
@@ -91,7 +93,9 @@ def gallery():
         total_pages=total_pages,
         title="My Gallery",
         search_query=search_query,
+        tags_query=tags_query,
         voice_icon=voice_icon,
+        random_tags=random_tags,
     )
 
 
@@ -102,13 +106,16 @@ def vlog():
     vlog_data = response.json()
 
     search_query = request.args.get("search", "")
-    filtered_vlog_data = filter_data(vlog_data, get_locale(), search_query)
+    tags_query = request.args.get("tags", "")
+    filtered_vlog_data = filter_data(vlog_data, get_locale(), search_query, tags_query)
 
     page = request.args.get("page", 1, type=int)
     items_per_page = 3
     paginated_vlog_data, total_pages = paginate_data(
         filtered_vlog_data, page, items_per_page
     )
+    random_tags = get_random_tags(vlog_data, 12)
+
 
     return handle_log_parameter() or render_template(
         VLOG_PAGE,
@@ -117,6 +124,8 @@ def vlog():
         total_pages=total_pages,
         title="My Vlogs",
         search_query=search_query,
+        tags_query=tags_query,
+        random_tags=random_tags,
     )
 
 

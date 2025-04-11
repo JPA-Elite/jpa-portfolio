@@ -1,5 +1,6 @@
 [
     {
+        "id": 1,
         "title": {
             "en": "Christmas Celebration",
             "ceb": "Pagselebrar sa Pasko",
@@ -12,9 +13,15 @@
             "ceb": "Pagkuha og usa ka higayon sa gawas sa panahon sa Misa sa Vigilia sa Pasko.",
             "fr": "Capturer un moment à l'extérieur pendant la messe de la veille de Noël.",
             "fil_PH": "Kinunan ang isang sandali sa labas habang nasa Misa ng Bisperas ng Pasko."
-        }
+        },
+        "tags": [
+            "christmas",
+            "family",
+            "celebration"
+        ]
     },
     {
+        "id": 2,
         "title": {
             "en": "PN Contract Signing Ceremony",
             "ceb": "Seremonya sa Pagpirma sa Kontrata sa PN",
@@ -27,9 +34,13 @@
             "ceb": "Niadto sa seremonya sa pagpirma sa kontrata sa Canlaon.",
             "fr": "Participation à l'événement de signature de contrat à Canlaon.",
             "fil_PH": "Dumalo sa seremonya ng pagpirma ng kontrata sa Canlaon."
-        }
+        },
+        "tags": [
+            "contract signing", "event", "business", "professional", "ceremony"
+        ]
     },
     {
+        "id": 3,
         "title": {
             "en": "Birthday Celebration Invitation",
             "ceb": "Dapit sa Pagselebrar sa Adlaw nga Natawhan",
@@ -42,9 +53,13 @@
             "ceb": "Nakadawat ko og imbitasyon sa usa ka pagselebrar sa akong adlaw nga natawhan uban sa akong mga kauban sa klase.",
             "fr": "J'ai reçu une invitation à une célébration d'anniversaire avec mes camarades de classe.",
             "fil_PH": "Nakatanggap ako ng imbitasyon sa isang pagdiriwang ng kaarawan kasama ang aking mga kaklase."
-        }
+        },
+        "tags": [
+            "birthday", "celebration", "invitation", "event"
+        ]
     },
     {
+        "id": 4,
         "title": {
             "en": "Evening Photo",
             "ceb": "Larawan sa Gabii",
@@ -57,9 +72,13 @@
             "ceb": "Gikuha sa balay sa panahon sa bugnaw nga gabii.",
             "fr": "Prise à la maison pendant une nuit fraîche.",
             "fil_PH": "Kinunan sa bahay noong malamig na gabi."
-        }
+        },
+        "tags": [
+            "evening", "home", "chilly night"
+        ]
     },
     {
+        "id": 5,
         "title": {
             "en": "Hiking to the Mountain",
             "ceb": "Pagpanglakaw sa Bukid",
@@ -72,9 +91,13 @@
             "ceb": "Gikuha sa tumoy uban ang talagsaon nga panan-aw sa bukid.",
             "fr": "Capturé au sommet avec une vue imprenable sur la montagne.",
             "fil_PH": "Kinunan sa tuktok kasama ang nakamamanghang tanawin ng bundok."
-        }
+        },
+        "tags": [
+            "hiking", "mountain", "adventure", "nature"
+        ]
     },
     {
+        "id": 6,
         "title": {
             "en": "DJ Jamming Session",
             "ceb": "DJ Jamming nga Sesyon",
@@ -87,9 +110,13 @@
             "ceb": "Nagpraktis og pag-mix sa musika sa usa ka party sa among lugar.",
             "fr": "Pratique de mixage de musique pendant une fête chez nous.",
             "fil_PH": "Nagsasanay ng music mixing sa isang party sa aming lugar."
-        }
+        },
+        "tags": [
+            "dj", "music", "party", "jamming"
+        ]
     },
     {
+        "id": 7,
         "title": {
             "en": "Forced Smile",
             "ceb": "Pinugos nga Ngisi",
@@ -102,9 +129,13 @@
             "ceb": "Nagaantos sa pagngisi samtang kuhaan og litrato.",
             "fr": "Essayer de sourire pendant qu'une photo est prise.",
             "fil_PH": "Nagsusumikap ngumiti habang kinukunan ng litrato."
-        }
+        },
+        "tags": [
+            "smile", "photo", "forced"
+        ]
     },
     {
+        "id": 8,
         "title": {
             "en": "Posing by the Tower",
             "ceb": "Nagpose sa Dapit sa Torre",
@@ -117,9 +148,13 @@
             "ceb": "Gihangaan nako ang kataas sa torre ug ang iyang katingalahan nga panan-aw.",
             "fr": "J'admire la hauteur de la tour et sa vue incroyable.",
             "fil_PH": "Humahanga ako sa taas ng tore at ang kamangha-manghang tanawin nito."
-        }
+        },
+        "tags": [
+            "tower", "view", "pose"
+        ]
     },
     {
+        "id": 9,
         "title": {
             "en": "Selfie Attempt with a Good Camera",
             "ceb": "Pagsulay og Selfie gamit ang Maayong Kamera",
@@ -132,9 +167,13 @@
             "ceb": "Nakapahuway kami sa Carcar sa panahon niining litrato.",
             "fr": "Nous étions en vacances à Carcar lors de cette photo.",
             "fil_PH": "Kami ay nasa bakasyon sa Carcar nang kinunan ang larawang ito."
-        }
+        },
+        "tags": [
+            "selfie", "camera", "vacation"
+        ]
     },
     {
+        "id": 10,
         "title": {
             "en": "Just a Bored Selfie",
             "ceb": "Selfie Tungod Kay Na-bored Ko",
@@ -147,9 +186,13 @@
             "ceb": "Nag-selfie ko kay gikapoy ko sa opisina. Nagsulay ko og lain-laing mga posisyon ug anggulo alang sa lingaw-lingaw.",
             "fr": "J'ai pris un selfie car je m'ennuyais au bureau. J'ai donc essayé différentes poses et angles pour m'amuser.",
             "fil_PH": "Nag-selfie ako dahil naiinip ako sa opisina. Sinubukan ko ang iba't ibang posisyon at anggulo para malibang."
-        }
+        },
+        "tags": [
+            "selfie", "bored", "experiment"
+        ]
     },
     {
+        "id": 11,
         "title": {
             "en": "Selfie at the Graduation Ceremony",
             "ceb": "Selfie Sa Graduation Ceremony",
@@ -162,9 +205,13 @@
             "ceb": "Nag-andam mi alang sa graduation ceremony sa USC-Talamban uban sa akong mga kauban nga scholars.",
             "fr": "Nous nous préparions pour la cérémonie de remise des diplômes à l'USC-Talamban avec mes camarades boursiers.",
             "fil_PH": "Naghahanda kami para sa seremonya ng pagtatapos sa USC-Talamban kasama ang aking mga kapwa iskolar."
-        }
+        },
+        "tags": [
+            "graduation", "ceremony", "scholars"
+        ]
     },
     {
+        "id": 12,
         "title": {
             "en": "Selfie at the Graduation Ceremony With Diploma",
             "ceb": "Selfie Sa Graduation Ceremony nga naay Diploma",
@@ -177,9 +224,13 @@
             "ceb": "Nagkuha mi ug litrato sa kataposang bahin sa graduation ceremony samtang gipakita namo ang among diploma sa simbahan sa USC-Talamban.",
             "fr": "Nous avons pris une photo à la fin de la cérémonie de remise des diplômes tout en montrant nos diplômes à l'église de l'USC-Talamban.",
             "fil_PH": "Nag-picture kami sa huling bahagi ng seremonya ng pagtatapos habang ipinapakita ang aming mga diploma sa simbahan sa USC-Talamban."
-        }
+        },
+        "tags": [
+            "graduation", "ceremony", "diploma", "usc-talamban"
+        ]
     },
     {
+        "id": 13,
         "title": {
             "en": "Christmas Party 2024 Celebration",
             "ceb": "Pagselebrar sa Christmas Party 2024",
@@ -192,9 +243,13 @@
             "ceb": "Kini ang Chronostep Christmas Party nga selebrasyon, magsugod sa usa ka lami nga panihapon ug gisundan sa pag-apod-apod sa mga regalo ug mga premyo.",
             "fr": "Ceci est la célébration de la fête de Noël de Chronostep, commençant par un délicieux dîner suivi de la distribution de cadeaux et de prix.",
             "fil_PH": "Ito ang selebrasyon ng Chronostep Christmas Party, nagsisimula sa isang masarap na hapunan na sinusundan ng pamamahagi ng mga regalo at gantimpala."
-        }        
+        },
+        "tags": [
+            "christmas", "party", "celebration", "gifts"
+        ]   
     },
     {
+        "id": 14,
         "title": {
             "en": "Potluck Celebration During Valentines Day",
             "ceb": "Pagselebrar sa Potluck Sa Panahon sa Valentines Day",
@@ -207,9 +262,13 @@
             "ceb": "Nagselebrar kami sa Valentine's Day uban sa usa ka potluck nga paniudto sa opisina sa kompanya.",
             "fr": "Nous avons célébré la Saint-Valentin avec un déjeuner potluck au bureau de l'entreprise.",
             "fil_PH": "Nagdiriwang kami ng Araw ng mga Puso sa pamamagitan ng potluck lunch sa opisina ng kumpanya."
-        }        
+        },
+        "tags": [
+            "valentines day", "potluck", "celebration", "lunch"
+        ] 
     },
     {
+        "id": 15,
         "title": {
             "en": "Old Church in Siquijor",
             "ceb": "Daang Simbahan sa Siquijor",
@@ -223,9 +282,13 @@
             "fr": "Nous avons pris une photo devant l'ancienne église de Siquijor, où nous avons exploré son intérieur, admirant les belles artefacts, outils et autres éléments qui font partie de l'église.",
             "fil_PH": "Kumukuha kami ng litrato sa harap ng lumang simbahan sa Siquijor, kung saan sinuri namin ang loob nito, humahanga sa magagandang artepakto, kagamitan, at iba pang mga elemento na bahagi ng simbahan."
         },
-        "image_url": "https://raw.githubusercontent.com/JPA-Elite/jpa-profile/a357774ded3e75f16ceb73c01bc0741ad95bdd83/flask/static/images/church-min.JPG"             
+        "image_url": "https://raw.githubusercontent.com/JPA-Elite/jpa-profile/a357774ded3e75f16ceb73c01bc0741ad95bdd83/flask/static/images/church-min.JPG",
+        "tags": [
+            "siquijor", "church", "old", "history"
+        ]            
     },
     {
+        "id": 16,
         "title": {
             "en": "Discovering Various Beaches in Siquijor",
             "ceb": "Pagdiskobre sa Nagkalain-laing Baybayon sa Siquijor",
@@ -239,9 +302,13 @@
             "fr": "Nous avons eu une expérience incroyable à explorer les diverses plages de Siquijor, chacune offrant son propre charme unique et sa beauté à couper le souffle. Des sables blancs immaculés et des eaux cristallines aux formations rocheuses dramatiques et aux criques sereines, chaque plage avait quelque chose de spécial à offrir. Nous avons passé du temps à profiter du soleil, à apprécier l'atmosphère tranquille et à admirer les merveilles naturelles qui rendaient chaque endroit vraiment inoubliable. La vie marine vibrante et les paysages pittoresques ont ajouté à la magie, faisant de notre voyage à travers les plages de Siquijor une aventure mémorable.",
             "fil_PH": "Nagkaroon kami ng kamangha-manghang karanasan sa paggalugad sa iba't ibang mga beach sa Siquijor, bawat isa ay nag-aalok ng natatanging alindog at nakamamanghang kagandahan. Mula sa malinis na puting buhangin at malinaw na tubig hanggang sa mga dramatikong pormasyon ng bato at tahimik na mga baybayin, bawat beach ay may espesyal na inaalok. Naglaan kami ng oras upang magpahinga sa ilalim ng araw, tamasahin ang tahimik na kapaligiran, at humanga sa mga likas na yaman na ginawang talagang hindi malilimutan ang bawat lokasyon. Ang masiglang buhay-dagat at magagandang tanawin ay nagdagdag sa mahika, na ginawang isang hindi malilimutang pakikipagsapalaran ang aming paglalakbay sa mga beach ng Siquijor."
         },
-        "image_url": "https://raw.githubusercontent.com/JPA-Elite/jpa-profile/a357774ded3e75f16ceb73c01bc0741ad95bdd83/flask/static/images/beach-min.JPG"      
+        "image_url": "https://raw.githubusercontent.com/JPA-Elite/jpa-profile/a357774ded3e75f16ceb73c01bc0741ad95bdd83/flask/static/images/beach-min.JPG",
+        "tags": [
+            "siquijor", "beach", "adventure", "nature"
+        ]     
     },
     {
+        "id": 17,
         "title": {
             "en": "Sambulawan Cave - Underground River in Siquijor (Part 1)",
             "ceb": "Sambulawan Cave - Underground River sa Siquijor (Part 1)",
@@ -254,9 +321,13 @@
             "ceb": "Nagkuha kami og litrato sa entrada sa Sambulawan Cave sa wala pa kami mosulod aron mag-explore. Ang uban nga mga langyaw nga bisita naa usab didto, nag-enjoy sa kasinatian sa kuweba.",
             "fr": "Nous avons pris une photo à l'entrée de la grotte de Sambulawan avant d'entrer pour explorer. Certains visiteurs étrangers étaient également là, profitant de l'expérience de la grotte.",
             "fil_PH": "Kumukuha kami ng litrato sa pasukan ng Sambulawan Cave bago pumasok upang mag-explore. Nandoon din ang ilang mga banyagang bisita, na nag-eenjoy sa karanasan sa kuweba."
-        }        
+        },
+        "tags": [
+            "siquijor", "cave", "adventure", "nature"
+        ]
     },
     {
+        "id": 18,
         "title": {
             "en": "Sambulawan Cave - Underground River in Siquijor (Part 2)",
             "ceb": "Sambulawan Cave - Underground River sa Siquijor (Part 2)",
@@ -269,9 +340,13 @@
             "ceb": "Sulod sa kuweba, nagsul-ob kami og life vests ug headlamps tungod sa kangitngit. Ang tubig medyo lawom, mao nga kinahanglan namo ang life vests. Kini ang akong unang higayon nga maligo didto, ug usahay, nakabati ko og gamay nga kahadlok tungod sa lawom nga tubig. Apan, kini usa ka maayong dapit alang sa pagkuha og mga litrato sulod sa kuweba.",
             "fr": "À l'intérieur de la grotte, nous avons porté des gilets de sauvetage et des lampes frontales à cause de l'obscurité. L'eau était assez profonde, c'est pourquoi nous avions besoin des gilets de sauvetage. C'était ma première fois à nager là-bas, et parfois, je me sentais un peu paniqué à cause de l'eau profonde. Cependant, c'était un excellent endroit pour prendre des photos à l'intérieur de la grotte.",
             "fil_PH": "Sa loob ng kuweba, nagsuot kami ng mga life vest at headlamp dahil sa dilim. Medyo malalim ang tubig, kaya kailangan namin ang mga life vest. Ito ang aking unang pagkakataon na lumangoy doon, at minsan, medyo kinakabahan ako dahil sa malalim na tubig. Gayunpaman, ito ay isang mahusay na lugar para kumuha ng mga larawan sa loob ng kuweba."
-        }        
+        },
+        "tags": [
+            "siquijor", "cave", "adventure", "nature"
+        ]    
     },
     {
+        "id": 19,
         "title": {
             "en": "Dining at the Fine Food Bar in Siquijor",
             "ceb": "Ang Pag-panihapon sa Fine Food Bar sa Siquijor",
@@ -284,6 +359,9 @@
             "ceb": "Pagkahuman sa usa ka adlaw nga puno sa pagbisita sa nagkalain-laing lugar sa Siquijor, kapoy na kami gikan sa biyahe. Mao nga nagdesisyon kami nga magdinner aron makapahuway ug mag-recharge pagkatapos sa tanan nga adventures.",
             "fr": "Après une longue journée à visiter différents endroits de Siquijor, nous étions épuisés par tous les déplacements. Nous avons donc décidé de finir la journée par un bon dîner pour nous ressourcer après toutes les aventures.",
             "fil_PH": "Matapos ang isang mahabang araw ng pagbisita sa iba't ibang lugar sa Siquijor, kami ay pagod na mula sa biyahe. Kaya't nagpasya kaming magtanghalian upang magpahinga at mag-recharge pagkatapos ng mga pagsasaliksik."
-        }
+        },
+        "tags": [
+            "siquijor", "dinner", "food", "restaurant"
+        ]
     }
 ]

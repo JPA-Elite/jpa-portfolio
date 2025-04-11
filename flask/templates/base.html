@@ -77,6 +77,9 @@
                     <li class="{% if request.endpoint == 'pages.vlog' %}active{% endif %}">
                         <a href="{{ url_for('pages.vlog') }}">Vlog</a>
                     </li>
+                    <li class="{% if request.endpoint == 'pages.music' %}active{% endif %}">
+                        <a href="{{ url_for('pages.music') }}">Music</a>
+                    </li>
                     <li class="{% if request.endpoint == 'pages.concern' %}active{% endif %}">
                         <a href="{{ url_for('pages.concern') }}">Concern</a>
                     </li>

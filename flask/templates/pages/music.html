@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Favorite Music Playlist</title>
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='images/favicon.ico') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/pages/music.css') }}" />
+    <!-- Add Ionicons CDN -->
+    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="navbar-toggle" id="navbarToggle">
+            ☰
+        </div>
+        <ul id="navbarMenu">
+            <li class="{% if request.endpoint == 'pages.profile' %}active{% endif %}">
+                <a href="{{ url_for('pages.profile') }}">Portfolio</a>
+            </li>
+            <li class="{% if request.endpoint == 'pages.gallery' %}active{% endif %}">
+                <a href="{{ url_for('pages.gallery') }}">Gallery</a>
+            </li>
+            <li class="{% if request.endpoint == 'pages.vlog' %}active{% endif %}">
+                <a href="{{ url_for('pages.vlog') }}">Vlog</a>
+            </li>
+            <li class="{% if request.endpoint == 'pages.music' %}active{% endif %}">
+                <a href="{{ url_for('pages.music') }}">Music</a>
+            </li>
+            <li class="{% if request.endpoint == 'pages.concern' %}active{% endif %}">
+                <a href="{{ url_for('pages.concern') }}">Concern</a>
+            </li>
+            <li class="{% if request.endpoint == 'pages.donation' %}active{% endif %}">
+                <a href="{{ url_for('pages.donation') }}">Donation</a>
+            </li>
+        </ul>
+        <ul class="social-icon">
+            <li class="social-icon__item">
+                <a class="social-icon__link" href="https://www.facebook.com/profile.php?id=100017724583212" target="_blank">
+                    <ion-icon name="logo-facebook"></ion-icon>
+                </a>
+            </li>
+            <li class="social-icon__item">
+                <a class="social-icon__link" href="https://www.linkedin.com/in/joshua-algadipe-53933924b/" target="_blank">
+                    <ion-icon name="logo-linkedin"></ion-icon>
+                </a>
+            </li>
+            <li class="social-icon__item">
+                <a class="social-icon__link" href="https://github.com/JPA-Elite" target="_blank">
+                    <ion-icon name="logo-github"></ion-icon>
+                </a>
+            </li>
+            <li class="social-icon__item">
+                <a class="social-icon__link" href="mailto:algadipej962@gmail.com" target="_blank">
+                    <ion-icon name="mail-outline"></ion-icon>
+                </a>
+            </li>
+            <li class="social-icon__item">
+                <a class="social-icon__link" href="tel:+639319127640" target="_blank">
+                    <ion-icon name="call-outline"></ion-icon>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <main>
+        <div class="music-list">
+            <h2>My Favorite Music</h2>
+            <div class="music-list-items" id="musicList"></div>
+            <div class="pagination-controls">
+                <button class="page-btn" onclick="prevPage()">← Previous</button>
+                <span class="page-info" id="pageInfo">Page 1 of 2</span>
+                <button class="page-btn" onclick="nextPage()">Next →</button>
+            </div>
+        </div>
+
+        <div class="album-section" id="albumSection"
+            style="background-image: url('https://res.cloudinary.com/dviqx0o48/image/upload/v1744089628/o388ezfg1maax9dcrgpj_zd1zyc.jpg');">
+            <div class="cover-container">
+                <img id="coverImg" class="cover-img"
+                    src="https://res.cloudinary.com/dviqx0o48/image/upload/v1744089628/o388ezfg1maax9dcrgpj_zd1zyc.jpg"
+                    alt="Cover Art" />
+            </div>
+            <div class="now-playing" id="nowPlaying">Select a song</div>
+        </div>
+    </main>
+    <footer class="player" id="player">
+        <div class="left">
+            <img id="playerCoverImg" class="cover-img"
+                src="https://res.cloudinary.com/dviqx0o48/image/upload/v1744089628/o388ezfg1maax9dcrgpj_zd1zyc.jpg"
+                alt="Cover Art" />
+            <div class="now-playing" id="playerNowPlaying">Select a song</div>
+        </div>
+        <div class="center">
+            <div class="progress-container">
+                <span class="time" id="currentTime">0:00</span>
+                <div class="progress-bar" id="progressBar">
+                    <div class="progress" id="progress"></div>
+                </div>
+                <span class="time" id="totalDuration">0:00</span>
+            </div>
+        </div>
+        <div class="right">
+            <div class="controls">
+                <button onclick="prevSong()">Prev</button>
+                <button onclick="togglePlay()" id="playPauseBtn">Play</button>
+                <button onclick="nextSong()">Next</button>
+                <div class="volume-container">
+                    <input type="range" class="volume-slider" min="0" max="100" value="100" id="volumeSlider">
+                    <span class="volume-percentage" id="volumePercentage">100%</span>
+                </div>
+                <button onclick="toggleFullscreen()" id="fullscreenBtn">⛶</button>
+            </div>
+        </div>
+        <audio id="audioPlayer"></audio>
+    </footer>
+    <script>
+        // Declare global variables
+        let audioPlayer, playPauseBtn, currentSongIndex = 0;
+        let currentPage = 1;
+        const itemsPerPage = 10;
+        let musicList;
+        let musicData = [];
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                const response = await fetch("{{ url_for('static', filename='json/music.json') }}");
+                musicData = await response.json();
+
+                // Automatically select the first song without playing it
+                if (musicData.length > 0) {
+                    selectFirstSong(); // Select the first song in the list
+                }
+
+                renderList(); // Render the music list
+            } catch (err) {
+                console.error("Failed to load music data:", err);
+            }
+        });
+
+        function selectFirstSong() {
+            currentSongIndex = Math.floor(Math.random() * musicData.length); // Randomly select an index
+            const song = musicData[currentSongIndex];
+            audioPlayer.src = song.url; // Set the audio source for the selected song
+            document.getElementById('nowPlaying').textContent = `Selected: ${song.title}`;
+            document.getElementById('coverImg').src = song.image;
+            document.getElementById('playerNowPlaying').innerHTML = `
+                <div class="title-artist">
+                    <span class="title">${song.title}</span>
+                    <span class="artist">${song.artist}</span>
+                </div>
+            `;
+            document.getElementById('playerCoverImg').src = song.image;
+
+            const albumSection = document.getElementById('albumSection');
+            albumSection.style.backgroundImage = `url('${song.image}')`;
+        }
+
+        // Move renderList outside DOMContentLoaded and make it global
+        async function renderList(activeSongId = null) {
+            if (!musicList) musicList = document.getElementById('musicList');
+            musicList.innerHTML = '';
+            const start = (currentPage - 1) * itemsPerPage;
+            const end = start + itemsPerPage;
+            const pageItems = musicData.slice(start, end);
+
+            for (const track of pageItems) {
+                const div = document.createElement('div');
+                div.className = 'music-item' + (track.id === activeSongId ? ' active' : '');
+
+                if (!track.duration) {
+                    track.duration = await getDuration(track.url);
+                }
+
+                div.innerHTML = `
+                    <div class="left-content">
+                        <img src="${track.image}" alt="${track.title}" />
+                        <div class="title-artist">
+                            <span>${track.title}</span>
+                            <span class="artist">${track.artist}</span>
+                        </div>
+                    </div>
+                    <span class="duration">${formatTime(track.duration)}</span>
+                `;
+                div.addEventListener('click', () => playSong(musicData.indexOf(track)));
+                musicList.appendChild(div);
+            }
+
+            updatePagination();
+        }
+
+        // Global functions
+        function playSong(index) {
+            currentSongIndex = index;
+            const song = musicData[index];
+            audioPlayer.src = song.url;
+            document.getElementById('nowPlaying').textContent = `Now Playing: ${song.title}`;
+            document.getElementById('coverImg').src = song.image;
+            document.getElementById('playerNowPlaying').innerHTML = `
+                <div class="title-artist">
+                    <span class="title">${song.title}</span>
+                    <span class="artist">${song.artist}</span>
+                </div>
+            `;
+            document.getElementById('playerCoverImg').src = song.image;
+
+            const albumSection = document.getElementById('albumSection');
+            albumSection.style.backgroundImage = `url('${song.image}')`;
+
+            audioPlayer.play();
+            playPauseBtn.textContent = 'Pause';
+            renderList(song.id); // Pass the active song id
+        }
+
+        function togglePlay() {
+            if (audioPlayer.src) {
+                if (audioPlayer.paused) {
+                    audioPlayer.play();
+                    playPauseBtn.textContent = 'Pause';
+                } else {
+                    audioPlayer.pause();
+                    playPauseBtn.textContent = 'Play';
+                }
+            }
+        }
+
+        function prevSong() {
+            currentSongIndex = (currentSongIndex - 1 + musicData.length) % musicData.length;
+            playSong(currentSongIndex);
+        }
+
+        function nextSong() {
+            currentSongIndex = (currentSongIndex + 1) % musicData.length;
+            playSong(currentSongIndex);
+        }
+
+        async function getDuration(url) {
+            return new Promise((resolve) => {
+                const audio = new Audio(url);
+                audio.addEventListener('loadedmetadata', () => {
+                    resolve(audio.duration);
+                });
+            });
+        }
+
+        function updateVolume(value) {
+            audioPlayer.volume = value / 100;
+            document.getElementById('volumePercentage').textContent = `${value}%`;
+        }
+
+        function toggleFullscreen() {
+            const albumSection = document.getElementById('albumSection');
+            if (!document.fullscreenElement) {
+                albumSection.classList.add('fullscreen');
+                document.getElementById('fullscreenBtn').textContent = '⮌';
+                if (albumSection.requestFullscreen) {
+                    albumSection.requestFullscreen();
+                }
+            } else {
+                albumSection.classList.remove('fullscreen');
+                document.getElementById('fullscreenBtn').textContent = '⛶';
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                }
+            }
+        }
+
+        function updatePagination() {
+            const totalPages = Math.ceil(musicData.length / itemsPerPage);
+            document.getElementById('pageInfo').textContent = `Page ${currentPage} of ${totalPages}`;
+        }
+
+        function prevPage() {
+            if (currentPage > 1) {
+                currentPage--;
+                renderList();
+                updatePagination();
+            }
+        }
+
+        function nextPage() {
+            const totalPages = Math.ceil(musicData.length / itemsPerPage);
+            if (currentPage < totalPages) {
+                currentPage++;
+                renderList();
+                updatePagination();
+            }
+        }
+
+        // Get DOM elements
+        musicList = document.getElementById('musicList');
+        audioPlayer = document.getElementById('audioPlayer');
+        const nowPlaying = document.getElementById('nowPlaying');
+        const coverImg = document.getElementById('coverImg');
+        const playerNowPlaying = document.getElementById('playerNowPlaying');
+        const playerCoverImg = document.getElementById('playerCoverImg');
+        const progressBar = document.getElementById('progressBar');
+        const progress = document.getElementById('progress');
+        const currentTimeEl = document.getElementById('currentTime');
+        const totalDurationEl = document.getElementById('totalDuration');
+        playPauseBtn = document.getElementById('playPauseBtn');
+
+        async function renderList(activeSongId = null) {
+            musicList.innerHTML = ''; // Clear the list before rendering
+            const start = (currentPage - 1) * itemsPerPage;
+            const end = start + itemsPerPage;
+            const pageItems = musicData.slice(start, end);
+
+            for (const track of pageItems) {
+                const div = document.createElement('div');
+                div.className = 'music-item' + (track.id === activeSongId ? ' active' : '');
+
+                // Get duration if not already cached
+                if (!track.duration) {
+                    track.duration = await getDuration(track.url);
+                }
+
+                div.innerHTML = `
+                        <div class="left-content">
+                            <img src="${track.image}" alt="${track.title}" />
+                            <div class="title-artist">
+                                <span>${track.title}</span>
+                                <span class="artist">${track.artist}</span>
+                            </div>
+                        </div>
+                        <span class="duration">${formatTime(track.duration)}</span>
+                    `;
+                div.addEventListener('click', () => playSong(musicData.indexOf(track)));
+                musicList.appendChild(div);
+            }
+
+            updatePagination();
+        }
+
+        function updateProgress() {
+            if (audioPlayer && progress) {
+                const currentTime = audioPlayer.currentTime;
+                const duration = audioPlayer.duration;
+                const progressPercent = (currentTime / duration) * 100;
+                progress.style.width = progressPercent + '%';
+                currentTimeEl.textContent = formatTime(currentTime);
+            }
+        }
+
+        function updateDuration() {
+            if (audioPlayer && totalDurationEl) {
+                totalDurationEl.textContent = formatTime(audioPlayer.duration);
+            }
+        }
+
+        function formatTime(seconds) {
+            const minutes = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60).toString().padStart(2, '0');
+            return `${minutes}:${secs}`;
+        }
+
+        function seek(event) {
+            const rect = progressBar.getBoundingClientRect();
+            const offsetX = event.clientX - rect.left;
+            const width = rect.width;
+            const seekTime = (offsetX / width) * audioPlayer.duration;
+            audioPlayer.currentTime = seekTime;
+        }
+
+        audioPlayer.addEventListener('timeupdate', updateProgress);
+        audioPlayer.addEventListener('loadedmetadata', updateDuration);
+        progressBar.addEventListener('click', seek);
+
+        // Add volume control
+        const volumeSlider = document.getElementById('volumeSlider');
+        volumeSlider.addEventListener('input', (e) => updateVolume(e.target.value));
+
+        // Add fullscreen change listener
+        document.addEventListener('fullscreenchange', () => {
+            if (!document.fullscreenElement) {
+                document.getElementById('albumSection').classList.remove('fullscreen');
+                document.getElementById('fullscreenBtn').textContent = '⛶';
+            }
+        });
+
+        // Toggle navbar menu visibility
+        document.getElementById('navbarToggle').addEventListener('click', () => {
+            const navbarMenu = document.getElementById('navbarMenu');
+            navbarMenu.classList.toggle('active');
+        });
+
+        renderList(); // Render the music list
+    </script>
+</body>
+
+</html>

@@ -14,6 +14,7 @@ from config import (
     PROFILE_PAGE,
     RESUME_PDF,
     VLOG_PAGE,
+    MUSIC_PAGE,
     DEVICE_INFO_VISIT_PAGE,
     DONATION_PAGE,
     get_locale,
@@ -127,6 +128,11 @@ def vlog():
         tags_query=tags_query,
         random_tags=random_tags,
     )
+
+
+@pages_bp.route("/music")
+def music():
+    return handle_log_parameter() or render_template(MUSIC_PAGE, title="My Fav Music")
 
 
 @pages_bp.route("/concern")

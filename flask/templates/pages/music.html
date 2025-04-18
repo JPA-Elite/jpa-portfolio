@@ -39,12 +39,14 @@
         </ul>
         <ul class="social-icon">
             <li class="social-icon__item">
-                <a class="social-icon__link" href="https://www.facebook.com/profile.php?id=100017724583212" target="_blank">
+                <a class="social-icon__link" href="https://www.facebook.com/profile.php?id=100017724583212"
+                    target="_blank">
                     <ion-icon name="logo-facebook"></ion-icon>
                 </a>
             </li>
             <li class="social-icon__item">
-                <a class="social-icon__link" href="https://www.linkedin.com/in/joshua-algadipe-53933924b/" target="_blank">
+                <a class="social-icon__link" href="https://www.linkedin.com/in/joshua-algadipe-53933924b/"
+                    target="_blank">
                     <ion-icon name="logo-linkedin"></ion-icon>
                 </a>
             </li>
@@ -111,8 +113,10 @@
                     <input type="range" class="volume-slider" min="0" max="100" value="100" id="volumeSlider">
                     <span class="volume-percentage" id="volumePercentage">100%</span>
                 </div>
+                <button onclick="toggleAutoplay()" id="autoplayBtn" title="Toggle Autoplay">▶️</button>
                 <button onclick="toggleFullscreen()" id="fullscreenBtn">⛶</button>
             </div>
+
         </div>
         <audio id="audioPlayer"></audio>
     </footer>
@@ -123,6 +127,7 @@
         const itemsPerPage = 10;
         let musicList;
         let musicData = [];
+        let autoplayEnabled = true;
 
         document.addEventListener('DOMContentLoaded', async () => {
             try {
@@ -364,10 +369,23 @@
             audioPlayer.currentTime = seekTime;
         }
 
+        function toggleAutoplay() {
+            autoplayEnabled = !autoplayEnabled;
+            const btn = document.getElementById('autoplayBtn');
+            btn.textContent = autoplayEnabled ? '▶️' : '⏹️';
+            btn.title = `Autoplay: ${autoplayEnabled ? 'On' : 'Off'}`;
+            localStorage.setItem('autoplay', autoplayEnabled);
+        }
+
         audioPlayer.addEventListener('timeupdate', updateProgress);
         audioPlayer.addEventListener('loadedmetadata', updateDuration);
         progressBar.addEventListener('click', seek);
 
+        audioPlayer.addEventListener('ended', () => {
+            if (autoplayEnabled) {
+                nextSong();
+            }
+        });
         // Add volume control
         const volumeSlider = document.getElementById('volumeSlider');
         volumeSlider.addEventListener('input', (e) => updateVolume(e.target.value));
@@ -385,6 +403,14 @@
             const navbarMenu = document.getElementById('navbarMenu');
             navbarMenu.classList.toggle('active');
         });
+
+        // Initialize autoplay from localStorage
+        autoplayEnabled = localStorage.getItem('autoplay') !== 'false';
+        const autoplayBtn = document.getElementById('autoplayBtn');
+        if (autoplayBtn) {
+            autoplayBtn.textContent = autoplayEnabled ? '▶️' : '⏹️';
+            autoplayBtn.title = `Autoplay: ${autoplayEnabled ? 'On' : 'Off'}`;
+        }
 
         renderList(); // Render the music list
     </script>

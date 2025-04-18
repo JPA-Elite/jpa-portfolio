@@ -138,5 +138,19 @@
         "artist": "J.Tajor & William Singe • Like I Do • 2023",
         "url": "https://res.cloudinary.com/duwyfmk8t/video/upload/v1744388547/portfolio_music/Like_I_Do_with_William_Singe_qm9fue.mp3",
         "image": "https://res.cloudinary.com/duwyfmk8t/image/upload/v1744388573/portfolio_music/6011690c-ded0-4da7-a442-01c854e4b884.png"
+    },
+    {
+        "id": 21,
+        "title": "Monster",
+        "artist": "eldon • Do monsters love too? • 2021",
+        "url": "https://res.cloudinary.com/duwyfmk8t/video/upload/v1744978050/portfolio_music/Monster_lbshbn.mp3",
+        "image": "https://res.cloudinary.com/duwyfmk8t/image/upload/v1744978096/portfolio_music/401c096f-6d23-4fe9-a4be-08cfef5d2ede.png"
+    },
+    {
+        "id": 22,
+        "title": "Ligaya",
+        "artist": "mrld • Ligaya •  2021",
+        "url": "https://res.cloudinary.com/duwyfmk8t/video/upload/v1744980109/portfolio_music/Ligaya_cfhz3c.mp3",
+        "image": "https://res.cloudinary.com/duwyfmk8t/image/upload/v1744980125/portfolio_music/1ed76290-5007-4e25-88e7-70a92e7f06bc.png"
     }
 ]

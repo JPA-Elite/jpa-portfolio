@@ -46,6 +46,7 @@ main {
     position: relative;
     min-height: 100vh;
     overflow-y: auto;
+    filter: grayscale(0.1) brightness(0.85) contrast(1.05);
 }
 
 .album-section::before {
@@ -138,7 +139,7 @@ main {
     justify-content: space-between;
     align-items: center;
     padding: 20px;
-    height: 100px;
+    height: 70px;
     position: sticky;
     bottom: 0;
 }
@@ -599,6 +600,16 @@ main {
     .navbar a {
         font-size: 12px;
         padding: 5px 10px;
+    }
+}
+
+@media (max-width: 360px) {
+    .player .volume-container {
+        margin-right: 0;
+    }
+    
+    .player .volume-slider {
+        width: 70px;
     }
 }
 

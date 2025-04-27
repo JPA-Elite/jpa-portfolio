@@ -226,5 +226,24 @@
         "tags": [
             "falls", "siquijor", "adventure"
         ]
+    },
+    {
+        "id": 13,
+        "title": {
+            "en": "Tiktok Trend Glow Up Challenge",
+            "ceb": "Tiktok Trend Glow Up Challenge",
+            "fr": "Défi Tendance TikTok de Transformation",
+            "fil_PH": "Tiktok Trend Glow Up Challenge"
+        },
+        "description": {
+            "en": "I tried to do the Tiktok trend glow up challenge, and I think it still the same face.",
+            "ceb": "Nagsulay ko nga buhaton ang Tiktok trend glow up challenge, pero sa panlataw nko pareho ra gihapon ang nawong.",
+            "fr": "J'ai essayé de faire le défi de transformation tendance TikTok, et je pense que c'est toujours le même visage.",
+            "fil_PH": "Sinubukan kong gawin ang Tiktok trend glow up challenge, at sa tingin ko ay pareho pa rin ang mukha."
+        },
+        "video_url": "https://res.cloudinary.com/duwyfmk8t/video/upload/v1745737189/portfolio_videos/tiktok_trend_mof3bc.mp4",
+        "tags": [
+            "tiktok", "trend", "challenge"
+        ]
     }
 ]

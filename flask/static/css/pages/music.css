@@ -23,15 +23,6 @@ main {
     overflow: hidden;
 }
 
-@media (max-width: 768px) {
-    main {
-        grid-template-columns: 1fr;
-        grid-template-rows: auto 1fr auto;
-        height: 60vh;
-        overflow-y: auto;
-    }
-}
-
 .music-list {
     display: flex;
     flex-direction: column;
@@ -488,7 +479,8 @@ main {
     main {
         grid-template-columns: 1fr;
         grid-template-rows: auto 1fr auto;
-        height: auto;
+        height: 60vh;
+        overflow-y: auto;
     }
 
     .music-list {

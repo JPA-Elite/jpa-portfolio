@@ -8,26 +8,35 @@
 body {
     background: #121212;
     color: white;
-    height: 100%;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    margin: 0;
 }
+
 main {
     display: grid;
     grid-template-columns: 1fr 2fr;
-    grid-template-rows: 1fr auto;
-    height: 100%;
+    height: calc(100vh - 120px); /* Subtract combined height of navbar and player */
+    min-height: 300px;
+    overflow: hidden;
 }
 
 @media (max-width: 768px) {
     main {
         grid-template-columns: 1fr;
         grid-template-rows: auto 1fr auto;
+        height: 60vh;
+        overflow-y: auto;
     }
 }
 
 .music-list {
     display: flex;
     flex-direction: column;
-    min-height: 100vh;
+    min-height: 0;
+    height: 100%;
     position: relative;
     background: #1e1e1e;
     padding: 20px 20px 0px 20px;
@@ -44,7 +53,8 @@ main {
     background-size: cover;
     background-position: center;
     position: relative;
-    min-height: 100vh;
+    min-height: 0;
+    height: 100%;
     overflow-y: auto;
     filter: grayscale(0.1) brightness(0.85) contrast(1.05);
 }
@@ -138,8 +148,9 @@ main {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 20px;
+    padding: 15px 20px;
     height: 70px;
+    min-height: 70px;
     position: sticky;
     bottom: 0;
 }
@@ -198,8 +209,8 @@ main {
 
 .player .time {
     color: white;
-    font-size: 12px;
-    min-width: 45px;
+    font-size: 10px;
+    min-width: 35px;
 }
 
 .player .cover-img {
@@ -227,13 +238,13 @@ main {
 }
 
 .player .controls button {
-    padding: 10px 15px;
+    padding: 6px 10px;
     border: none;
     border-radius: 20px;
     background: #2962ff;
     /* Changed from #1db954 to primary blue */
     color: white;
-    font-size: 14px;
+    font-size: 12px;
     cursor: pointer;
 }
 
@@ -272,13 +283,21 @@ main {
 }
 
 .player .title-artist .title {
-    font-size: 16px;
+    font-size: 14px;
     color: white;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 200px;
 }
 
 .player .title-artist .artist {
-    font-size: 12px;
+    font-size: 10px;
     color: #888;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 200px;
 }
 
 .player .volume-container {
@@ -308,8 +327,8 @@ main {
 
 .volume-percentage {
     color: #888;
-    font-size: 12px;
-    min-width: 40px;
+    font-size: 10px;
+    min-width: 30px;
 }
 
 .fullscreen {
@@ -355,7 +374,7 @@ main {
 
 .navbar {
     background: rgba(0, 0, 0, 0.8);
-    padding: 20px;
+    padding: 10px 20px;
     position: sticky;
     top: 0;
     z-index: 100;
@@ -364,6 +383,8 @@ main {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    height: 60px;
+    min-height: 60px;
 }
 
 .navbar ul {
@@ -493,6 +514,7 @@ main {
     .album-section {
         padding: 20px;
         text-align: center;
+        display: none;
     }
 
     .cover-img {
@@ -510,6 +532,7 @@ main {
         align-items: center;
         padding: 15px;
         height: auto;
+        min-height: auto;
     }
 
     .player .left,
@@ -528,14 +551,25 @@ main {
     }
 
     .player .controls button {
-        padding: 8px 12px;
+        padding: 4px 8px;
+        font-size: 10px;
+    }
+
+    .player .title-artist .title {
         font-size: 12px;
+        max-width: 150px;
+    }
+
+    .player .title-artist .artist {
+        font-size: 9px;
+        max-width: 150px;
     }
 
     .navbar {
         flex-direction: row;
         justify-content: space-between;
         align-items: center;
+        padding: 5px 15px;
     }
 
     .navbar #navbarMenu {
@@ -614,6 +648,10 @@ main {
 }
 
 @media (max-width: 320px) {
+    .player .left {
+        display: none;
+    }
+
     .music-item img {
         width: 30px;
         height: 30px;

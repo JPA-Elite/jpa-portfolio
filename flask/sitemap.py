@@ -33,6 +33,10 @@ def generate_sitemap():
             <loc>{base_url}/donation</loc>
             <lastmod>{lastmod}</lastmod>
         </url>
+        <url>
+            <loc>{base_url}/music</loc>
+            <lastmod>{lastmod}</lastmod>
+        </url>
     </urlset>"""
     
     return Response(sitemap_xml, mimetype="application/xml")

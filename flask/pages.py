@@ -111,7 +111,7 @@ def vlog():
     filtered_vlog_data = filter_data(vlog_data, get_locale(), search_query, tags_query)
 
     page = request.args.get("page", 1, type=int)
-    items_per_page = 6
+    items_per_page = 3
     paginated_vlog_data, total_pages = paginate_data(
         filtered_vlog_data, page, items_per_page
     )

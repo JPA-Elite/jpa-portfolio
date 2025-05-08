@@ -16,6 +16,7 @@
 
     <link rel="stylesheet" href="{{ url_for('static', filename='css/pages/styles.css') }}" />
     <link rel="stylesheet" href="{{ url_for('static', filename='css/pages/profile.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/themes.css') }}" />
     <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='images/favicon.ico') }}">
     <script src="{{ url_for('static', filename='js/utils.js') }}"></script>
     <!-- Set background image to default -->
@@ -47,16 +48,16 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-image: url("{{ url_for('static', filename=background_image) }}");
+            background-image: var(--bg-image);
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
             background-attachment: fixed;
             opacity: var(--bg-opacity, 0.2);
             z-index: -1;
-            background-color: var(--bg-color, rgba(128, 128, 128, 1));
+            background-color: var(--bg-color);
             background-blend-mode: overlay;
-            transition: opacity 0.5s ease-in-out;
+            transition: all 0.5s ease-in-out;
         }
     </style>
 </head>
@@ -288,6 +289,37 @@
 
         sections.forEach(section => {
             observer.observe(section);
+        });
+
+        // Theme switching functionality
+        const themeToggle = document.getElementById('themeToggle');
+        const root = document.documentElement;
+        
+        function updateTheme(theme) {
+            root.setAttribute('data-theme', theme);
+            
+            const originalBgImage = "{{ url_for('static', filename=background_image) }}";
+            
+            if (theme === 'dark') {
+                root.style.setProperty('--bg-opacity', '0.1');
+                root.style.setProperty('--bg-color', 'rgba(0, 0, 0, 0.95)');
+                // Let the CSS handle the brain cells animation background
+            } else {
+                root.style.setProperty('--bg-opacity', '0.2');
+                root.style.setProperty('--bg-color', 'rgba(128, 128, 128, 1)');
+                root.style.setProperty('--bg-image', `url('${originalBgImage}')`);
+            }
+        }
+        
+        // Set default theme to dark if no preference is saved
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        updateTheme(savedTheme);
+        
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = root.getAttribute('data-theme');
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            updateTheme(newTheme);
+            localStorage.setItem('theme', newTheme);
         });
     </script>
 </body>

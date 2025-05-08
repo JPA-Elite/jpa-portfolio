@@ -11,7 +11,7 @@
             <span class="chatbox-close" onclick="toggleChatbox()">&times;</span>
         </div>
         <div class="chatbox-body">
-            <p>{{ _('chat_help_message') }}</p>
+            <p class="chatbox-help">{{ _('chat_help_message') }}</p>
             <div id="chatMessages" class="chat-messages"></div>
             <div class="chat-options grid" id="chatOptions"></div>
         </div>
@@ -62,7 +62,7 @@
         const input = document.getElementById("chatInput");
         const message = input.value.trim();
         if (message) {
-            displayMessage(message);
+            displayMessage(message, "", "black");
             input.value = "";
             cacheMessages(message);
             updateClearChatButtonVisibility();
@@ -70,9 +70,9 @@
     }
 
     function sendPredefinedMessage(question) {
-        displayMessage(question, "transparent", "");
+        displayMessage(question, "transparent", "black");
         const answer = getAutomaticAnswer(question);
-        displayMessage(answer);
+        displayMessage(answer, "", "black");
         cacheMessages(question);
         cacheMessages(answer);
         updateClearChatButtonVisibility();
@@ -137,7 +137,7 @@
 
     function loadCachedChat() {
         const cachedMessages = JSON.parse(localStorage.getItem(cacheMessage)) || [];
-        cachedMessages.forEach(message => displayMessage(message, qaArray.find(item => item.question == message) ? 'transparent' : ''));
+        cachedMessages.forEach(message => displayMessage(message, qaArray.find(item => item.question == message) ? 'transparent' : '', "black"));
 
         const chatboxVisible = localStorage.getItem(cacheChatboxVisible) === 'true';
         const modal = document.getElementById("chatboxModal");

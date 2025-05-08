@@ -2,6 +2,35 @@
 .footer {
     padding: 0;
     text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    color: var(--text-primary);
+}
+
+.theme-switch {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 5px;
+}
+
+.theme-toggle {
+    border: none;
+    padding: 10px;
+    border-radius: 50%;
+    box-shadow: 0 2px 10px var(--shadow-color);
+    cursor: pointer;
+    font-size: 24px;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.3s ease;
+}
+
+.theme-toggle:hover {
+    transform: scale(1.1);
 }
 
 /* Social icons container */
@@ -22,7 +51,7 @@
 
 /* Social icon links */
 .social-icon__link {
-    color: #666; /* Icon color */
+    color: var(--text-primary);
     text-decoration: none;
     font-size: 24px; /* Icon size */
     transition: color 0.3s ease, transform 0.3s ease; /* Smooth hover effect */
@@ -30,7 +59,7 @@
 
 /* Hover effect for icons */
 .social-icon__link:hover {
-    color: #1da1f2; /* Light blue color on hover */
+    color: var(--accent-color, #1da1f2); /* Light blue color on hover */
     transform: scale(1.2); /* Slightly enlarge icon on hover */
 }
 

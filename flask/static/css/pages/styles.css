@@ -4,6 +4,8 @@ body {
     font-family: "Open Sans", serif;
     margin: 0;
     padding: 0;
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
 }
 
 .container {
@@ -21,21 +23,20 @@ header {
     align-items: center;
     padding: 10px 20px;
     height: 50px;
-    background-color: transparent;
+    background-color: var(--nav-bg);
     position: sticky;
     top: 0;
     z-index: 1;
     transition: background-color 0.3s ease, box-shadow 0.3s ease;
     border-radius: 0 0 50px 50px;
-}
-
-.header-scrolled {
-    background-color: rgb(255, 255, 255);
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    padding: 10px 80px 10px 50px;
     transition: background-color 0.3s ease, box-shadow 0.3s ease, padding 0.3s ease;
 }
 
+.header-scrolled {
+    background-color: var(--nav-bg);
+    box-shadow: 0 4px 6px var(--shadow-color);
+    padding: 10px 80px 10px 50px;
+}
 
 header h1 {
     font-size: 2rem;
@@ -61,7 +62,7 @@ nav ul li {
 
 nav a {
     text-decoration: none;
-    color: #333;
+    color: var(--text-primary);
     font-weight: bold;
 }
 
@@ -91,7 +92,12 @@ nav ul li.active a {
 }
 
 footer {
-    text-align: center;
+    position: relative;
+    display: grid;
+    grid-template-rows: auto auto;
+    gap: 10px;
+    justify-items: center;
+    align-items: center;
     padding: 20px 0;
     font-size: 0.9rem;
     color: #666;
@@ -100,9 +106,9 @@ footer {
 section {
     margin: 50px 0;
     padding: 20px;
-    background-color: white;
+    background-color: var(--card-bg);
     border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 10px var(--shadow-color);
     opacity: 0;
     transform: translateY(50px);
     transition: opacity 1s ease-out, transform 1s ease-out;
@@ -355,7 +361,7 @@ nav #navList {
     }
 
     nav ul li:hover {
-        background-color: #f1f1f1;
+        background-color: var(--nav-bg);
     }
 
     .nav-toggle {
@@ -380,7 +386,7 @@ nav #navList {
         /* Remove margin */
         position: absolute;
         top: 50px;
-        background-color: white;
+        background-color: var(--bg-primary);
         z-index: 1000;
         border-radius: 8px;
         gap: 0px;
@@ -485,6 +491,15 @@ nav #navList {
         padding: 5px 18px;
     }
 
+    .theme-switch {
+        left: 10px;
+        padding: 8px;
+    }
+    
+    .theme-toggle {
+        font-size: 20px;
+    }
+
 }
 
 /* Additional Responsive Styles */
@@ -493,4 +508,49 @@ nav #navList {
         font-size: 2rem !important;
         /* Smaller header size for small screens */
     }
+}
+
+.theme-toggle {
+    background: none;
+    border: none;
+    padding: 5px;
+    cursor: pointer;
+    font-size: 24px;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.3s ease;
+}
+
+.theme-toggle:hover {
+    transform: scale(1.1);
+}
+
+[data-theme='light'] .dark-icon {
+    display: none;
+}
+
+[data-theme='dark'] .light-icon {
+    display: none;
+}
+
+/* Add this to your existing theme-related styles */
+[data-theme='dark'] .donation-btn .flag-icon {
+    filter: invert(1) brightness(100%); /* This will make the black icon appear white */
+}
+
+footer {
+    position: relative;
+    display: grid;
+    grid-template-rows: auto auto;
+    gap: 10px;
+    justify-items: center;
+    align-items: center;
+    padding: 20px 0;
+}
+
+#copyright {
+    font-size: 0.9rem;
+    color: var(--text-primary);
 }

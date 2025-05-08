@@ -34,6 +34,7 @@
 .data-table tbody td {
     padding: 12px;
     text-align: left;
+    color: black;
 }
 
 /* Pagination */

@@ -1,0 +1,93 @@
+:root[data-theme="light"] {
+    --bg-primary: #ffffff;
+    --bg-secondary: #f3f3f3;
+    --text-primary: #333333;
+    --text-secondary: #666666;
+    --accent-color: #007bff;
+    --border-color: #dddddd;
+    --shadow-color: rgba(0, 0, 0, 0.1);
+    --nav-bg: rgba(255, 255, 255, 0.8);
+    --card-bg: #ffffff;
+    --bg-image: url('');  /* Will be set dynamically via JS */
+    --bg-opacity: 0.2;
+    --bg-color: rgba(128, 128, 128, 1);
+}
+
+:root[data-theme="dark"] {
+    --bg-primary: #121212;
+    --bg-secondary: #1e1e1e;
+    --text-primary: #ffffff;
+    --text-secondary: #bbbbbb;
+    --accent-color: #2962ff;
+    --border-color: #333333;
+    --shadow-color: rgba(0, 0, 0, 0.3);
+    --nav-bg: rgba(18, 18, 18, 0.8);
+    --card-bg: #1e1e1e;
+    --bg-image: none;  /* Will be overridden for brain cells animation */
+    --bg-opacity: 0.1;
+    --bg-color: rgba(0, 0, 0, 0.95);
+}
+
+/* Brain cells animation for dark theme */
+[data-theme="dark"] body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+        radial-gradient(circle at center, 
+            rgba(0, 255, 0, 0.2) 1px, 
+            transparent 2px
+        );
+    background-size: 30px 30px;
+    animation: neuronPulse 4s infinite ease-in-out;
+}
+
+[data-theme="dark"] body::after {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+        linear-gradient(45deg, 
+            transparent 48%, 
+            rgba(0, 255, 0, 0.15) 49%, 
+            rgba(0, 255, 0, 0.25) 50%, 
+            rgba(0, 255, 0, 0.15) 51%, 
+            transparent 52%
+        ),
+        linear-gradient(-45deg, 
+            transparent 48%, 
+            rgba(0, 255, 0, 0.15) 49%, 
+            rgba(0, 255, 0, 0.25) 50%, 
+            rgba(0, 255, 0, 0.15) 51%, 
+            transparent 52%
+        );
+    background-size: 50px 50px;
+    animation: neuralConnections 8s infinite linear;
+    z-index: -1;
+    opacity: 0.4;
+    filter: blur(0.3px);
+}
+
+@keyframes brainCells {
+    0% {
+        background-position: 0 0;
+    }
+    100% {
+        background-position: 50px 50px;
+    }
+}
+
+@keyframes neuralConnections {
+    0% {
+        background-position: 0 0;
+    }
+    100% {
+        background-position: 50px 50px;
+    }
+}

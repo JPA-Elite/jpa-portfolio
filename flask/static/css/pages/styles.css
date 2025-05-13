@@ -464,7 +464,7 @@ nav #navList {
         border: none;
         border-radius: 5px;
         cursor: pointer;
-        font-size: 12px;
+        font-size: 12px !important;
         transition: background-color 0.3s;
     }
 

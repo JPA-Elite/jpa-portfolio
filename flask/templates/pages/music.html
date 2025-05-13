@@ -15,6 +15,7 @@
 
     <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='images/favicon.ico') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/pages/music.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/themes.css') }}" />
     <!-- Add Ionicons CDN -->
     <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
@@ -22,8 +23,43 @@
 
 <body>
     <nav class="navbar">
-        <div class="navbar-toggle" id="navbarToggle">
-            ☰
+        <div class="navbar-toggle nav-toggle" id="navbarToggle">
+            <span name="menu-outline" class="navbar-toggle-icon">☰</span>
+        </div>
+         <!-- Mobile Sidebar -->
+         <div class="sidebar" id="sidebar">
+            <ul id="mobileNavList">
+                <li class="{% if request.endpoint == 'pages.profile' %}active{% endif %}">
+                    <a href="{{ url_for('pages.profile') }}">
+                        <ion-icon name="person-outline"></ion-icon>
+                        Portfolio
+                    </a>
+                </li>
+                <li class="{% if request.endpoint == 'pages.gallery' %}active{% endif %}">
+                    <a href="{{ url_for('pages.gallery') }}">
+                        <ion-icon name="images-outline"></ion-icon>
+                        Gallery
+                    </a>
+                </li>
+                <li class="{% if request.endpoint == 'pages.vlog' %}active{% endif %}">
+                    <a href="{{ url_for('pages.vlog') }}">
+                        <ion-icon name="videocam-outline"></ion-icon>
+                        Vlog
+                    </a>
+                </li>
+                <li class="{% if request.endpoint == 'pages.music' %}active{% endif %}">
+                    <a href="{{ url_for('pages.music') }}">
+                        <ion-icon name="musical-notes-outline"></ion-icon>
+                        Music
+                    </a>
+                </li>
+                <li class="{% if request.endpoint == 'pages.concern' %}active{% endif %}">
+                    <a href="{{ url_for('pages.concern') }}">
+                        <ion-icon name="chatbubbles-outline"></ion-icon>
+                        Concern
+                    </a>
+                </li>
+            </ul>
         </div>
         <ul id="navbarMenu">
             <li class="{% if request.endpoint == 'pages.profile' %}active{% endif %}">
@@ -138,6 +174,8 @@
         let autoplayEnabled = true;
 
         document.addEventListener('DOMContentLoaded', async () => {
+            const root = document.documentElement;
+            root.setAttribute('data-theme', 'dark');
             try {
                 const response = await fetch("{{ url_for('static', filename='json/music.json') }}");
                 musicData = await response.json();
@@ -157,18 +195,32 @@
             currentSongIndex = Math.floor(Math.random() * musicData.length); // Randomly select an index
             const song = musicData[currentSongIndex];
             audioPlayer.src = song.url; // Set the audio source for the selected song
-            document.getElementById('nowPlaying').textContent = `Selected: ${song.title}`;
-            document.getElementById('coverImg').src = song.image;
-            document.getElementById('playerNowPlaying').innerHTML = `
-                <div class="title-artist">
-                    <span class="title">${song.title}</span>
-                    <span class="artist">${song.artist}</span>
-                </div>
-            `;
-            document.getElementById('playerCoverImg').src = song.image;
+            let nowPlaying = document.getElementById('nowPlaying');
+            let coverImg = document.getElementById('coverImg');
+            let playerNowPlaying = document.getElementById('playerNowPlaying');
+            let playerCoverImg = document.getElementById('playerCoverImg');
+            let albumSection = document.getElementById('albumSection');
 
-            const albumSection = document.getElementById('albumSection');
-            albumSection.style.backgroundImage = `url('${song.image}')`;
+            if (nowPlaying) {
+                nowPlaying.textContent = `Selected: ${song.title}`;
+            }
+            if (coverImg) {
+                coverImg.src = song.image;
+            }
+            if (playerNowPlaying) {
+                playerNowPlaying.innerHTML = `
+                    <div class="title-artist">
+                        <span class="title">${song.title}</span>
+                        <span class="artist">${song.artist}</span>
+                    </div>
+                `;
+            }
+            if (playerCoverImg) {
+                playerCoverImg.src = song.image;
+            }
+            if (albumSection) {
+                albumSection.style.backgroundImage = `url('${song.image}')`;
+            }
         }
 
         // Move renderList outside DOMContentLoaded and make it global
@@ -408,8 +460,20 @@
 
         // Toggle navbar menu visibility
         document.getElementById('navbarToggle').addEventListener('click', () => {
-            const navbarMenu = document.getElementById('navbarMenu');
-            navbarMenu.classList.toggle('active');
+            const sidebar = document.getElementById('sidebar');
+            const toggleButton = document.getElementById('navbarToggle');
+            sidebar.classList.toggle('active');
+            toggleButton.classList.toggle('active');
+        });
+
+        // Close sidebar when clicking outside
+        document.addEventListener('click', function(e) {
+            const sidebar = document.getElementById('sidebar');
+            const toggle = document.getElementById('navbarToggle');
+            if (!sidebar.contains(e.target) && !toggle.contains(e.target) && sidebar.classList.contains('active')) {
+                sidebar.classList.remove('active');
+                toggle.classList.remove('active');
+            }
         });
 
         // Initialize autoplay from localStorage

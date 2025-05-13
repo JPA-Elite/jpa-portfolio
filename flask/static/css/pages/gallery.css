@@ -54,6 +54,16 @@
     transition: background-color 0.2s ease;
 }
 
+/* Add dark theme styles */
+[data-theme="dark"] .tag {
+    background-color: var(--accent-color);
+    color: white;
+}
+
+[data-theme="dark"] .tag:hover {
+    background-color: var(--accent-color-dark);
+}
+
 .tag:hover {
     background-color: #ccc;
 }

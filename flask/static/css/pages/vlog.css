@@ -57,6 +57,7 @@ p {
     gap: 5px;
 }
 
+/* Original tag styles */
 .tag {
     background-color: #eee;
     color: #333;
@@ -64,6 +65,17 @@ p {
     padding: 4px 8px;
     border-radius: 12px;
     transition: background-color 0.2s ease;
+    cursor: default;
+}
+
+/* Add dark theme styles */
+[data-theme="dark"] .tag {
+    background-color: var(--accent-color);
+    color: white;
+}
+
+[data-theme="dark"] .tag:hover {
+    background-color: var(--accent-color-dark);
 }
 
 .tag:hover {

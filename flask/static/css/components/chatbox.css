@@ -19,6 +19,17 @@
     /* Slightly enlarge the icon on hover */
 }
 
+.chatbox-icon {
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.chatbox-icon.hide {
+    opacity: 0;
+    visibility: hidden;
+}
+
 .chatbox-modal {
     display: none;
     /* Hidden by default */

@@ -40,13 +40,13 @@ msgid "Summary"
 msgstr "Résumé"
 
 msgid "Software_Expertise_Description"
-msgstr "J'ai développé une expertise logicielle approfondie à travers divers rôles dans différents environnements."
+msgstr "Au fil des années, j'ai développé une expertise profonde et polyvalente en développement logiciel en travaillant dans un large éventail de rôles, d'industries et d'environnements techniques. Ce parcours n'a pas seulement affiné mes compétences en codage et en résolution de problèmes, mais m'a également donné une compréhension holistique de la façon dont la technologie génère de la valeur commerciale."
 
 msgid "Technology_Adaptability_Description"
-msgstr "Je suis très adaptable à une variété de technologies, comprenant rapidement et appliquant celles-ci pour répondre aux besoins des entreprises en croissance."
+msgstr "Je m'adapte très facilement à l'apprentissage et à l'application de nouvelles technologies. Que ce soit en travaillant avec des systèmes hérités ou des frameworks modernes, je saisis rapidement les principes sous-jacents et les intègre dans des solutions qui s'alignent sur les objectifs commerciaux et améliorent l'expérience utilisateur. Ma flexibilité m'a permis de contribuer de manière significative à des projets impliquant tout, du développement frontend à l'architecture backend, en passant par l'infrastructure cloud et l'automatisation."
 
 msgid "Experience_Share_Description"
-msgstr "Je suis impatient de partager mon expérience et mes compétences pour contribuer au succès et à l'innovation."
+msgstr "Je suis passionné par la collaboration et je m'efforce continuellement d'apporter mes compétences d'une manière qui favorise l'innovation, améliore l'efficacité et accélère le succès. Je suis impatient d'apporter mon expérience, mon dévouement et mon état d'esprit proactif aux équipes qui valorisent la croissance, la créativité et les résultats impactants."
 
 msgid "Key_Projects"
 msgstr "Projets Clés"

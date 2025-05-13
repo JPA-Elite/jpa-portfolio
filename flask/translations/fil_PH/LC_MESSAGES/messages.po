@@ -40,13 +40,13 @@ msgid "Summary"
 msgstr "Buod"
 
 msgid "Software_Expertise_Description"
-msgstr "Nakabuo ako ng malawak na kaalaman sa software sa pamamagitan ng iba't ibang mga tungkulin sa iba't ibang kapaligiran."
+msgstr "Sa paglipas ng mga taon, nakapag-develop ako ng malalim at malawak na kaalaman sa software development sa pamamagitan ng pagtatrabaho sa iba't ibang posisyon, industriya, at teknikal na kapaligiran. Ang paglalakbay na ito ay hindi lamang nagpahusay sa aking coding at problem-solving skills kundi nagbigay din sa akin ng malawakang pang-unawa kung paano nakakatulong ang teknolohiya sa pagpapalago ng negosyo."
 
 msgid "Technology_Adaptability_Description"
-msgstr "Madali akong nakakaangkop sa iba't ibang teknolohiya, mabilis na nauunawaan at naipapahayag ang mga ito upang matugunan ang mga pangangailangan ng lumalaking negosyo."
+msgstr "Ako ay mabilis makaangkop pagdating sa pag-aaral at paggamit ng mga bagong teknolohiya. Maging sa paggamit ng mga lumang sistema o modernong framework, mabilis kong naiintindihan ang mga pangunahing prinsipyo at isinasama ang mga ito sa mga solusyong tumutugma sa mga layunin ng negosyo at nagpapahusay sa karanasan ng mga gumagamit. Ang aking kakayahang umangkop ay nakatulong sa akin na magkaroon ng makabuluhang ambag sa mga proyektong may kinalaman sa frontend development, backend architecture, cloud infrastructure at automation."
 
 msgid "Experience_Share_Description"
-msgstr "Masaya akong ibahagi ang aking karanasan at kasanayan upang higit pang mapalago ang tagumpay at inobasyon."
+msgstr "Ako ay masigasig sa pakikipagtulungan at patuloy na nagsisikap na mag-ambag ng aking mga kasanayan sa paraang nagtataguyod ng inobasyon, nagpapahusay ng kahusayan, at nagpapabilis ng tagumpay. Sabik akong ibahagi ang aking karanasan, dedikasyon, at aktibong pag-iisip sa mga pangkat na nagpapahalaga sa pag-unlad, pagkamalikhain, at makabuluhang resulta."
 
 msgid "Key_Projects"
 msgstr "Pangunahing Proyekto"

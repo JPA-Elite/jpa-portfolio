@@ -67,7 +67,11 @@
         <header>
             <h1 id="animated-heading">{% block head %}My Portfolio{% endblock %}</h1>
             <nav>
-                <div class="nav-toggle" id="toggleButton" onclick="toggleNav()">&#9776;</div>
+                <div class="nav-toggle" id="toggleButton" onclick="toggleNav()">
+                    <span name="menu-outline" class="navbar-toggle-icon">☰</span>
+                </div>
+                
+                <!-- Desktop Navigation -->
                 <ul id="navList">
                     <li class="{% if request.endpoint == 'pages.profile' %}active{% endif %}">
                         <a href="{{ url_for('pages.profile') }}">Portfolio</a>
@@ -85,6 +89,43 @@
                         <a href="{{ url_for('pages.concern') }}">Concern</a>
                     </li>
                 </ul>
+
+                <!-- Mobile Sidebar -->
+                <div class="sidebar" id="sidebar">
+                    <ul id="mobileNavList">
+                        <li class="{% if request.endpoint == 'pages.profile' %}active{% endif %}">
+                            <a href="{{ url_for('pages.profile') }}">
+                                <ion-icon name="person-outline"></ion-icon>
+                                Portfolio
+                            </a>
+                        </li>
+                        <li class="{% if request.endpoint == 'pages.gallery' %}active{% endif %}">
+                            <a href="{{ url_for('pages.gallery') }}">
+                                <ion-icon name="images-outline"></ion-icon>
+                                Gallery
+                            </a>
+                        </li>
+                        <li class="{% if request.endpoint == 'pages.vlog' %}active{% endif %}">
+                            <a href="{{ url_for('pages.vlog') }}">
+                                <ion-icon name="videocam-outline"></ion-icon>
+                                Vlog
+                            </a>
+                        </li>
+                        <li class="{% if request.endpoint == 'pages.music' %}active{% endif %}">
+                            <a href="{{ url_for('pages.music') }}">
+                                <ion-icon name="musical-notes-outline"></ion-icon>
+                                Music
+                            </a>
+                        </li>
+                        <li class="{% if request.endpoint == 'pages.concern' %}active{% endif %}">
+                            <a href="{{ url_for('pages.concern') }}">
+                                <ion-icon name="chatbubbles-outline"></ion-icon>
+                                Concern
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
                 <div class="language-selector">
                     <a class="mobile-concern-btn" href="{{ url_for('pages.concern') }}">Concern</a>
                     <a class="donation-btn" href="{{ url_for('pages.donation') }}">
@@ -165,9 +206,21 @@
         }
 
         function toggleNav() {
-            const navList = document.getElementById('navList');
-            navList.classList.toggle('show');
+            const sidebar = document.getElementById('sidebar');
+            const toggleButton = document.getElementById('toggleButton');
+            sidebar.classList.toggle('active');
+            toggleButton.classList.toggle('active');
         }
+
+        // Close sidebar when clicking outside
+        document.addEventListener('click', function(e) {
+            const sidebar = document.getElementById('sidebar');
+            const toggle = document.getElementById('toggleButton');
+            if (!sidebar.contains(e.target) && !toggle.contains(e.target) && sidebar.classList.contains('active')) {
+                sidebar.classList.remove('active');
+                toggle.classList.remove('active');
+            }
+        });
 
         function handleClickOutside(event) {
             const navList = document.getElementById('navList');

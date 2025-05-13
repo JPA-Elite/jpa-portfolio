@@ -40,13 +40,13 @@ msgid "Summary"
 msgstr "Sulyap"
 
 msgid "Software_Expertise_Description"
-msgstr "Nakahimo ako og daghang kaalam sa software pinaagi sa nagkalain-laing mga papel sa nagkalain-laing mga palibot."
+msgstr "Sa kadugayan sa katuigan, nakaugmad ko og lawom ug managlahi nga kahanas sa software development pinaagi sa pagtrabaho sa nagkalain-laing mga papel, industriya, ug teknikal nga palibot. Kining panaw wala lang nakapalambo sa akong coding ug problem-solving skills apan nakahatag usab kanako og kinatibuk-ang pagsabot kung giunsa ang teknolohiya nagpalihok sa negosyo."
 
 msgid "Technology_Adaptability_Description"
-msgstr "Ako usa ka maayong mag-usab sa nagkalain-laing mga teknolohiya, nga dali nga nakasabot ug nag-apply niini aron matubag ang mga panginahanglan sa nagkadako nga mga negosyo."
+msgstr "Dali ra ko makat-on ug mogamit sa bag-ong mga teknolohiya. Bisan sa paggamit sa karaang sistema o modernong framework, dali ra nako masabtan ang mga sukaranan nga prinsipyo ug isagol kini sa mga solusyon nga motukma sa mga tumong sa negosyo ug makapalambo sa kasinatian sa tiggamit. Ang akong kamasulundon nakatabang nako sa paghatag og mahinungdanon nga kontribusyon sa mga proyekto nga naglakip sa frontend development, backend architecture, cloud infrastructure ug automation."
 
 msgid "Experience_Share_Description"
-msgstr "Nanghinaut ako nga ibahin ang akong kasinatian ug abilidad aron makatabang sa pagpadayon sa kalampusan ug inobasyon."
+msgstr "Mapasigarbohon ko sa kolaborasyon ug padayon nga naningkamot sa paghatag sa akong mga kahanas sa paagi nga nagpalambo sa inobasyon, nagpalambo sa kahusayan, ug nagpadali sa kalamposan. Madasigon ko nga magdala sa akong kasinatian, dedikasyon, ug aktibong panghuna-huna ngadto sa mga tim nga naghatag og bili sa pagtubo, pagkamamugnaon, ug epektibong mga resulta."
 
 msgid "Key_Projects"
 msgstr "Mga Panguna nga Proyekto"

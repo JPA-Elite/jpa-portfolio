@@ -406,10 +406,15 @@ section>*+* {
     }
 
     .cta-button {
-        background-color: transparent;
-        color: #333;
+        background-color: transparent !important;
+        color: #333 !important;
         text-decoration: underline;
         padding: 0;
+    }
+
+    [data-theme='dark'] .cta-button {
+        background-color: transparent !important;
+        color: var(--accent-color) !important;
     }
 
     .carousel-card {
@@ -496,5 +501,127 @@ section>*+* {
     #portfolio .project-details p {
         font-size: 16px;
         color: var(--text-secondary, #555);
+    }
+}
+
+.profile-name {
+    margin: 15px 0;
+    text-align: center;
+    position: relative;
+}
+
+.profile-name h2 {
+    margin: 0;
+    line-height: 1;
+    color: var(--text-primary);
+}
+
+.first-name {
+    font-size: 2.5rem;
+    font-weight: 300;
+    letter-spacing: 3px;
+    margin-bottom: 5px !important;
+}
+
+.last-name {
+    font-size: 2.5rem; /* Reduced from 2.8rem */
+    font-weight: 700;
+    letter-spacing: 1px; /* Reduced from 2px */
+    background: linear-gradient(45deg, var(--text-primary), var(--accent-color));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    max-width: 100%; /* Ensure text doesn't overflow */
+    margin: 0 auto;
+    padding: 0.1em 0; /* Add padding to prevent clipping */
+    display: inline-block; /* Change to inline-block */
+    white-space: nowrap; /* Prevent wrapping */
+    overflow: visible; /* Allow overflow */
+    height: auto; /* Auto height */
+    line-height: 1.2; /* Adjust line height */
+}
+
+.name-underline {
+    width: 60px;
+    height: 4px;
+    background: var(--accent-color);
+    margin: 10px auto;
+    position: relative;
+}
+
+.mobile-toggle {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    color: var(--text-primary);
+    cursor: pointer;
+    width: 100%;
+    border: none;
+    background: transparent;
+    margin-top: 10px;
+}
+
+.mobile-toggle .arrow-down {
+    font-size: 24px;
+    transition: transform 0.3s ease;
+}
+
+.collapsible-content {
+    display: block;
+    max-height: 1000px;
+    opacity: 1;
+    overflow: hidden;
+    transition: max-height 1s ease-in-out, opacity 1s ease-in-out;
+}
+
+@media only screen and (max-width: 768px) {
+    .mobile-toggle {
+        display: flex;
+    }
+
+    .collapsible-content {
+        max-height: 0;
+        opacity: 0;
+    }
+
+    .collapsible-content.show {
+        max-height: 1000px;
+        opacity: 1;
+    }
+}
+
+@media only screen and (max-width: 768px) {
+    .mobile-toggle {
+        display: flex;
+    }
+
+    .collapsible-content {
+        overflow: hidden;
+    }
+}
+
+@media only screen and (max-width: 768px) {
+    .mobile-toggle {
+        display: flex;
+    }
+
+    .collapsible-content {
+        display: none;
+        transition: all 0.3s ease;
+    }
+
+    .collapsible-content.show {
+        display: block;
+    }
+}
+
+@media (max-width: 768px) {
+    .first-name {
+        font-size: 2rem;
+    }
+    
+    .last-name {
+        font-size: 2.3rem;
     }
 }

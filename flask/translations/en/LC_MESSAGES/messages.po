@@ -40,13 +40,13 @@ msgid "Summary"
 msgstr "Summary"
 
 msgid "Software_Expertise_Description"
-msgstr "I have developed extensive software expertise through diverse roles in different environments."
+msgstr "Over the years, I have cultivated a deep and versatile expertise in software development by working across a broad spectrum of roles, industries, and technical environments. This journey has not only sharpened my coding and problem-solving skills but also given me a holistic understanding of how technology drives business value."
 
 msgid "Technology_Adaptability_Description"
-msgstr "I am highly adaptable to a variety of technologies, quickly understanding and applying them to meet the needs of growing businesses."
+msgstr "I am highly adaptable when it comes to learning and applying new technologies. Whether working with legacy systems or modern frameworks, I quickly grasp the underlying principles and integrate them into solutions that align with business goals and enhance user experiences. My flexibility has allowed me to contribute meaningfully to projects involving everything from frontend development and backend architecture to cloud infrastructure and automation."
 
 msgid "Experience_Share_Description"
-msgstr "I'm eager to share my experience and skills to help further drive success and innovation."
+msgstr "I am passionate about collaboration and continuously strive to contribute my skills in a way that fosters innovation, improves efficiency, and accelerates success. I'm eager to bring my experience, dedication, and proactive mindset to teams that value growth, creativity, and impactful results."
 
 msgid "Key_Projects"
 msgstr "Key Projects"

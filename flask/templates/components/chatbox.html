@@ -20,6 +20,32 @@
 </div>
 
 <script>
+    // Add this at the beginning of your script section
+    function handleScroll() {
+        if (window.innerWidth <= 768) { // Only for mobile screens
+            const chatboxIcon = document.querySelector('.chatbox-icon');
+            const footer = document.querySelector('footer');
+            
+            if (footer) {
+                const footerRect = footer.getBoundingClientRect();
+                const isFooterVisible = footerRect.top < window.innerHeight;
+                
+                if (isFooterVisible) {
+                    chatboxIcon.classList.add('hide');
+                } else {
+                    chatboxIcon.classList.remove('hide');
+                }
+            }
+        }
+    }
+
+    // Add scroll event listener
+    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('resize', handleScroll);
+    
+    // Initial check
+    window.addEventListener('load', handleScroll);
+
     const cacheMessage = 'chatMessagesCache';
     const cacheChatboxVisible = 'chatboxVisible';
 

@@ -15,13 +15,23 @@ endblock %}
                     `{{ profile_name | e }}`, 
                     `{{ profile_desc | e }}`.replace('{age}', calculateAge()))" data-original="{{ profile_image }}"
             data-gif="{{ profile_image_gif }}" />
+        <div class="profile-name">
+            <h2 class="first-name">Joshua</h2>
+            <h2 class="last-name">Algadipe</h2>
+            <div class="name-underline"></div>
+        </div>
         <h1>{{ _('Software Engineer') }}</h1>
     </div>
     <div class="project-details" id="project-details">
         <h3>{{ _('Summary') }}:</h3>
         <p>{{ _('Software_Expertise_Description') }}</p>
-        <p>{{ _('Technology_Adaptability_Description') }}</p>
-        <p>{{ _('Experience_Share_Description') }}</p>
+        <div class="collapsible-content" id="collapsibleContent">
+            <p>{{ _('Technology_Adaptability_Description') }}</p>
+            <p>{{ _('Experience_Share_Description') }}</p>
+        </div>
+        <button class="mobile-toggle" onclick="toggleContent()">
+            <ion-icon name="chevron-down"></ion-icon>
+        </button>
     </div>
     {% if get_locale() == en_locale %}
     <img src="{{ voice_icon }}" alt="Voice Image" class="voice-icon" onclick="speak(
@@ -31,6 +41,90 @@ endblock %}
     )" />
     {% endif %}
 </section>
+
+<!-- About Me -->
+<section id="about">
+    <h2>{{ _('About_Me') }}</h2>
+    <p>{{ _('Highlights_Description') }}</p>
+    <ul>
+        <li>
+            <b>{{ _('Passionate_Software_Developer') }}:</b>
+            <ul>
+                <li>{{ _('Programming_Foundation_Description') }}</li>
+                <li>{{ _('Solution_Creation_Description') }}</li>
+            </ul>
+        </li>
+        <li>
+            <b>{{ _('Development_Experience') }}:</b>
+            <ul>
+                <li>{{ _('Development_Experience_Description') }}</li>
+                <li>{{ _('User_Friendly_Applications_Description') }}</li>
+            </ul>
+        </li>
+        <li>
+            <b>{{ _('Goal_Oriented') }}:</b>
+            <ul>
+                <li>{{ _('Leverage_Technology_Description') }}</li>
+                <li>{{ _('Eager_to_Learn_Description') }}</li>
+            </ul>
+        </li>
+    </ul>
+    {% if get_locale() == en_locale %}
+    <img src="{{ voice_icon }}" alt="Voice Image" class="voice-icon" onclick="speak(
+        document.querySelector('#about').textContent,
+        getVoiceLocale('{{ get_locale() }}'),
+        this
+    )" />
+    {% endif %}
+
+</section>
+
+<!-- Resume -->
+<section id="resume">
+    <h2>{{ _('Resume') }}</h2>
+    <p>{{ _('Professional_Highlights_Description') }}</p>
+    <ul>
+        <li>
+            {{ _('Business_Intern_Experience') }}
+            <ul>
+                <li>{{ _('Business_Intern_Description') }}</li>
+            </ul>
+        </li>
+        <li>
+            {{ _('TrustArc_Internship') }}
+            <ul>
+                <li>{{ _('API_Security_Description') }}</li>
+                <li>{{ _('Backend_Frontend_Description') }}</li>
+            </ul>
+        </li>
+        <li>
+            {{ _('Chronostep_Internship') }}
+            <ul>
+                <li>{{ _('Internal_Projects_Description') }}</li>
+                <li>{{ _('Primary_Technologies_Description') }}</li>
+            </ul>
+        </li>
+        <li>
+            {{ _('Chronostep_Employee') }}
+            <ul>
+                <li>{{ _('Job_Projects_Description') }}</li>
+            </ul>
+        </li>
+    </ul>
+    <p>
+        <a>{{ _('Detailed_Resume_Description') }}:</a>
+        <a href="{{ resume_pdf }}" target="_blank" class="cta-button">{{ _('Here_Link') }}</a>
+    </p>
+    {% if get_locale() == en_locale %}
+    <img src="{{ voice_icon }}" alt="Voice Image" class="voice-icon" onclick="speak(
+        document.querySelector('#resume').textContent,
+        getVoiceLocale('{{ get_locale() }}'),
+        this
+    )" />
+    {% endif %}
+</section>
+
+<!-- Projects Carousel -->
 <div class="carousel-main">
     <h3>{{ _('Key_Projects') }}</h3>
     <div class="project-carousel">
@@ -119,85 +213,6 @@ endblock %}
         </div>
     </section>
 </div>
-<section id="about">
-    <h2>{{ _('About_Me') }}</h2>
-    <p>{{ _('Highlights_Description') }}</p>
-    <ul>
-        <li>
-            <b>{{ _('Passionate_Software_Developer') }}:</b>
-            <ul>
-                <li>{{ _('Programming_Foundation_Description') }}</li>
-                <li>{{ _('Solution_Creation_Description') }}</li>
-            </ul>
-        </li>
-        <li>
-            <b>{{ _('Development_Experience') }}:</b>
-            <ul>
-                <li>{{ _('Development_Experience_Description') }}</li>
-                <li>{{ _('User_Friendly_Applications_Description') }}</li>
-            </ul>
-        </li>
-        <li>
-            <b>{{ _('Goal_Oriented') }}:</b>
-            <ul>
-                <li>{{ _('Leverage_Technology_Description') }}</li>
-                <li>{{ _('Eager_to_Learn_Description') }}</li>
-            </ul>
-        </li>
-    </ul>
-    {% if get_locale() == en_locale %}
-    <img src="{{ voice_icon }}" alt="Voice Image" class="voice-icon" onclick="speak(
-        document.querySelector('#about').textContent,
-        getVoiceLocale('{{ get_locale() }}'),
-        this
-    )" />
-    {% endif %}
-
-</section>
-
-<section id="resume">
-    <h2>{{ _('Resume') }}</h2>
-    <p>{{ _('Professional_Highlights_Description') }}</p>
-    <ul>
-        <li>
-            {{ _('Business_Intern_Experience') }}
-            <ul>
-                <li>{{ _('Business_Intern_Description') }}</li>
-            </ul>
-        </li>
-        <li>
-            {{ _('TrustArc_Internship') }}
-            <ul>
-                <li>{{ _('API_Security_Description') }}</li>
-                <li>{{ _('Backend_Frontend_Description') }}</li>
-            </ul>
-        </li>
-        <li>
-            {{ _('Chronostep_Internship') }}
-            <ul>
-                <li>{{ _('Internal_Projects_Description') }}</li>
-                <li>{{ _('Primary_Technologies_Description') }}</li>
-            </ul>
-        </li>
-        <li>
-            {{ _('Chronostep_Employee') }}
-            <ul>
-                <li>{{ _('Job_Projects_Description') }}</li>
-            </ul>
-        </li>
-    </ul>
-    <p>
-        <a>{{ _('Detailed_Resume_Description') }}:</a>
-        <a href="{{ resume_pdf }}" target="_blank" class="cta-button">{{ _('Here_Link') }}</a>
-    </p>
-    {% if get_locale() == en_locale %}
-    <img src="{{ voice_icon }}" alt="Voice Image" class="voice-icon" onclick="speak(
-        document.querySelector('#resume').textContent,
-        getVoiceLocale('{{ get_locale() }}'),
-        this
-    )" />
-    {% endif %}
-</section>
 
 <section id="contact">
     <h2>{{ _('Contact_Me') }}</h2>
@@ -299,6 +314,13 @@ endblock %}
     image.addEventListener("mouseleave", function () {
         this.src = this.getAttribute("data-original"); // Revert back to the original image
     });
+
+    function toggleContent() {
+        const content = document.getElementById('collapsibleContent');
+        const button = document.querySelector('.mobile-toggle ion-icon');
+        content.classList.toggle('show');
+        button.style.transform = content.classList.contains('show') ? 'rotate(180deg)' : 'rotate(0deg)';
+    }
 </script>
 
 {% endblock %}

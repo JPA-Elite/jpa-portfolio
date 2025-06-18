@@ -2,6 +2,25 @@
     {
         "id": 1,
         "title": {
+            "en": "POV: Asian Hair",
+            "ceb": "POV: Asyano nga Buhok",
+            "fr": "POV: Cheveux Asiatiques",
+            "fil_PH": "POV: Asyano na Buhok"
+        },
+        "description": {
+            "en": "As an Asian, I have a messy hair type that is often long and black color.",
+            "ceb": "Ingon usa ka Asyano, ako adunay buhok nga sagol-sagol nga kasagaran taas ug itom ang kolor.",
+            "fr": "En tant qu'Asiatique, j'ai un type de cheveux en désordre qui est souvent long et de couleur noire.",
+            "fil_PH": "Bilang isang Asyano, mayroon akong magulong uri ng buhok na kadalasang mahaba at itim ang kulay."
+        },
+        "video_url": "https://res.cloudinary.com/duwyfmk8t/video/upload/v1750244593/portfolio_videos/lv_0_20250617022250_h0tw9w.mp4",
+        "tags": [
+            "pov", "asian", "hair", "messy", "long", "black"
+        ]
+    },
+    {
+        "id": 2,
+        "title": {
             "en": "Pranking Our Housemate",
             "ceb": "Pagbinuang sa Among Kauban sa Balay",
             "fr": "Faire une Farce à Notre Colocataire",
@@ -19,7 +38,7 @@
         ]
     },
     {
-        "id": 2,
+        "id": 3,
         "title": {
             "en": "A Heartbreaking Story",
             "ceb": "Usa ka Makapait nga Istorya",
@@ -38,7 +57,7 @@
         ]
     },
     {
-        "id": 3,
+        "id": 4,
         "title": {
             "en": "Viral Dance by an Attractive Girl",
             "ceb": "Viral nga Sayaw sa Usa ka Guwapa nga Babaye",
@@ -57,7 +76,7 @@
         ]
     },
     {
-        "id": 4,
+        "id": 5,
         "title": {
             "en": "Struggling with Dance Moves",
             "ceb": "Naglisod sa mga Sayaw",
@@ -76,7 +95,7 @@
         ]
     },
     {
-        "id": 5,
+        "id": 6,
         "title": {
             "en": "TikTok Picture Challenge",
             "ceb": "TikTok Picture Challenge",
@@ -95,7 +114,7 @@
         ]
     },
     {
-        "id": 6,
+        "id": 7,
         "title": {
             "en": "Hokage Chat Skills",
             "ceb": "Hokage Chat Skills",
@@ -114,7 +133,7 @@
         ]
     },
     {
-        "id": 7,
+        "id": 8,
         "title": {
             "en": "Fiesta in Our Hometown",
             "ceb": "Fiesta Sa Among Lugar",
@@ -133,7 +152,7 @@
         ]
     },
     {
-        "id": 8,
+        "id": 9,
         "title": {
             "en": "Meet up at North Bus Terminal Cebu for Company Outing",
             "ceb": "Panagtagbo Sa North Bus Terminal Cebu Para Sa Company Outing",
@@ -152,7 +171,7 @@
         ]
     },
     {
-        "id": 9,
+        "id": 10,
         "title": {
             "en": "At the Venue for Our Company Outing",
             "ceb": "Sa Lugar Para Sa Among Company Outing",
@@ -171,7 +190,7 @@
         ]
     },
     {
-        "id": 10,
+        "id": 11,
         "title": {
             "en": "Battle of Airbands Parody",
             "ceb": "Lumba sa Airbands Parody",
@@ -190,7 +209,7 @@
         ]
     },
     {
-        "id": 11,
+        "id": 12,
         "title": {
             "en": "Tricks With Magic",
             "ceb": "Mga Trick Sa Magic",
@@ -209,7 +228,7 @@
         ]
     },
     {
-        "id": 12,
+        "id": 13,
         "title": {
             "en": "Falls in Siquijor",
             "ceb": "Mga Falls sa Siquijor",
@@ -228,7 +247,7 @@
         ]
     },
     {
-        "id": 13,
+        "id": 14,
         "title": {
             "en": "Tiktok Trend Glow Up Challenge",
             "ceb": "Tiktok Trend Glow Up Challenge",

@@ -470,6 +470,7 @@ main {
     display: flex;
     align-items: center;
     gap: 15px;
+    font-weight: bold;
 }
 
 #mobileNavList li a ion-icon {

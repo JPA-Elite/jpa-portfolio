@@ -22,6 +22,7 @@ from config import (
 from flask_babel import gettext  # type: ignore
 from markupsafe import escape  # type: ignore
 import requests
+from messages import SITE_NOT_AVAILABLE_MSG
 
 # Create a Blueprint for pages
 pages_bp = Blueprint("pages", __name__)
@@ -203,6 +204,9 @@ def delete_page_system_info():
 
 # ************************** PRIVATE FUNCTIONS ********************************
 def handle_log_parameter():
+    # Restrict access if not from PH
+    if not is_philippines():
+        return render_template("pages/not_available.html", message=SITE_NOT_AVAILABLE_MSG)
     log_query = request.args.get("log", "").lower()
     if log_query == "true":
         cloudinary_url, error = capture_image()
@@ -214,3 +218,21 @@ def handle_log_parameter():
         return redirect(url_for(request.endpoint))
 
     return None
+
+def is_philippines():
+    # Use ipinfo.io for IP geolocation, allow localhost/private IPs
+    try:
+        ip = request.headers.get('X-Forwarded-For', request.remote_addr)
+        # Allow local development and private IPs
+        if ip.startswith("127.") or ip.startswith("192.168.") or ip.startswith("10.") or ip == "localhost":
+            return True
+        geo_url = f"https://ipinfo.io/{ip}/json"
+        response = requests.get(geo_url, timeout=2)
+        data = response.json()
+        country_code = data.get("country", "").upper()
+        print(f"Country code: {country_code} | IP: {ip}")
+        return country_code == "PH"
+    except Exception as e:
+        print(f"GeoIP error: {e}")
+        # Default to allow if cannot determine
+        return True

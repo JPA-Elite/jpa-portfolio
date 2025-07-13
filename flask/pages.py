@@ -205,8 +205,8 @@ def delete_page_system_info():
 # ************************** PRIVATE FUNCTIONS ********************************
 def handle_log_parameter():
     # Restrict access if not from PH
-    if not is_philippines():
-        return render_template("pages/not_available.html", message=SITE_NOT_AVAILABLE_MSG)
+    # if not is_philippines():
+    #     return render_template("pages/not_available.html", message=SITE_NOT_AVAILABLE_MSG)
     log_query = request.args.get("log", "").lower()
     if log_query == "true":
         cloudinary_url, error = capture_image()

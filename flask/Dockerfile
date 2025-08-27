@@ -8,7 +8,7 @@ RUN apt-get update -qq \
       build-essential \
       python3-dev \
       libgl1 \
-      libgl1-mesa-glx \
+      # libgl1-mesa-glx \ #deprecated
       libglib2.0-0 \
       && apt-get clean \
       && rm -rf /var/lib/apt/lists/*

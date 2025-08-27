@@ -8,6 +8,10 @@ PORT := 5000
 build:
 	docker build -t $(DOCKER_IMAGE) $(DOCKERFILE_DIR)
 
+# Install Package
+package-install:
+	cd flask && pip install -r requirements.txt
+
 # Run the Docker container
 run:
 	docker run -d -p $(PORT):5000 --name $(APP_NAME) $(DOCKER_IMAGE)

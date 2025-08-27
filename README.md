@@ -4,6 +4,9 @@ Short Description: a project for my own portfolio
 
 Languages: python
 
+##INSTALL PACKAGE
+- cd flask && pip install -r requirements.txt
+
 ## LANGUAGE TRANSLATION COMMANDS
 1. pybabel extract -F babel.cfg -o messages.pot .
 2. pybabel init -i messages.pot -d translations -l ceb

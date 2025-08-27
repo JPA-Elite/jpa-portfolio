@@ -33,3 +33,7 @@ config.py
 *.db
 *.egg-info/
 *.egg
+
+# Inside Flask Folder
+flask/__pycache__/
+flask/.env

@@ -1,12 +1,12 @@
-from Repositories.VisitRepository import VisitRepository
+from Repositories.Interfaces.IVisitRepository import IVisitRepository
 from Models.SystemInfo import SystemInfo
 from config import SortOrder
 from bson import ObjectId
 from utils import delete_image_from_cloudinary
 
 class VisitService:
-    def __init__(self):
-        self.repository = VisitRepository()
+    def __init__(self, repository: IVisitRepository):
+        self.repository = repository
 
 
     def get_paginated_system_info(self, page, per_page, order: SortOrder = SortOrder.DESC):

@@ -1,6 +1,7 @@
 from Repositories.BaseRepository import BaseRepository
+from Repositories.Interfaces.IPortfolioRepository import IPortfolioRepository
 
-class PortfolioRepository(BaseRepository):
+class PortfolioRepository(IPortfolioRepository, BaseRepository):
     def __init__(self):
         super().__init__()  # Call the constructor of the base class
 

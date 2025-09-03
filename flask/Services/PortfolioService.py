@@ -1,15 +1,15 @@
-from Repositories.PortfolioRepository import PortfolioRepository
+from Repositories.Interfaces.IPortfolioRepository import IPortfolioRepository
 from Models.SystemInfo import SystemInfo
 from flask import request, url_for
 from user_agents import parse  # type: ignore
 import platform
 from datetime import datetime
 import pytz  # type: ignore
-import requests  # For making API calls
+import requests
 
 class PortfolioService:
-    def __init__(self):
-        self.repository = PortfolioRepository()
+    def __init__(self, repository: IPortfolioRepository):
+        self.repository = repository
 
     def get_client_ip(self):
         """Get the real client IP address (handling proxies)"""

@@ -1,6 +1,8 @@
 from flask import redirect, url_for, render_template, request, jsonify
 from Services.PortfolioService import PortfolioService
 from Services.VisitService import VisitService
+from Repositories.PortfolioRepository import PortfolioRepository
+from Repositories.VisitRepository import VisitRepository
 from utils import filter_data, paginate_data, capture_image, get_random_tags
 from config import (
     ADD_PORTFOLIO_PAGE,
@@ -23,8 +25,8 @@ from markupsafe import escape  # type: ignore
 import requests
 
 # Initialize Services
-portfolio_service = PortfolioService()
-visit_service = VisitService()
+portfolio_service = PortfolioService(repository=PortfolioRepository())
+visit_service = VisitService(repository=VisitRepository())
 
 # ************************** PAGES ********************************
 

@@ -54,3 +54,10 @@ def get_locale():
 class SortOrder(Enum):
     ASC = 1
     DESC = -1
+
+class HTTPMethod(str, Enum):
+    GET = 'GET'
+    POST = 'POST'
+    PUT = 'PUT'
+    DELETE = 'DELETE'
+    PATCH = 'PATCH'

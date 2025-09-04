@@ -1,0 +1,134 @@
+body {
+    margin: 0;
+    background: black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    font-family: "Courier New", monospace;
+    color: limegreen;
+    animation: backgroundGlitch 0.2s infinite alternate;
+    transition: background 2s ease-in-out;
+    text-align: center;
+    overflow: hidden;
+    position: relative;
+}
+
+canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 80vw;
+    max-width: 600px;
+    position: relative;
+    z-index: 1;
+    bottom: 50px;
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    /* Centers perfectly */
+}
+
+.welcome-text {
+    font-size: 6vw;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.5vw;
+    display: inline-block;
+    opacity: 0;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    white-space: normal;
+    line-height: 1.2;
+    animation: fadeIn 2s ease-in forwards, textGrow 3s ease-in-out 2s forwards, textGlitch 0.2s infinite;
+}
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+@keyframes textGrow {
+    0% {
+        font-size: 4vw;
+    }
+
+    100% {
+        font-size: 6vw;
+    }
+}
+
+@keyframes textGlitch {
+    0% {
+        transform: translateX(0);
+    }
+
+    20% {
+        transform: translateX(3px);
+    }
+
+    40% {
+        transform: translateX(-3px);
+    }
+
+    60% {
+        transform: translateX(1px);
+    }
+
+    80% {
+        transform: translateX(-1px);
+    }
+
+    100% {
+        transform: translateX(0);
+    }
+}
+
+@keyframes backgroundGlitch {
+    0% {
+        background-color: black;
+    }
+
+    100% {
+        background-color: rgb(0, 20, 0);
+    }
+}
+
+@keyframes heartbeat {
+    0% {
+        background-color: black;
+    }
+
+    30% {
+        background-color: red;
+    }
+
+    60% {
+        background-color: darkred;
+    }
+
+    100% {
+        background-color: red;
+    }
+}
+
+@media (max-width: 768px) {
+    .welcome-text {
+        font-size: 10vw !important;
+    }
+}

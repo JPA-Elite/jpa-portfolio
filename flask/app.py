@@ -9,7 +9,8 @@ from config import (
     get_locale,
 )
 from flask_babel import Babel  # type: ignore
-from pages import pages_bp 
+from pages import pages_bp
+from api import api_bp
 from datetime import datetime
 from sitemap import sitemap_bp  # Import the sitemap blueprint
 import os
@@ -21,6 +22,7 @@ app.config["BABEL_DEFAULT_LOCALE"] = BABEL_DEFAULT_LOCALE
 app.register_blueprint(pages_bp)
 # Register the sitemap blueprint
 app.register_blueprint(sitemap_bp)
+app.register_blueprint(api_bp)
 
 babel = Babel(app)
 babel.init_app(app, locale_selector=get_locale)

@@ -4,18 +4,4 @@
     <div class="loading-spinner"></div>
 </div>
 
-<script>
-    function showLoading() {
-        let overlay = document.getElementById("loading-overlay");
-        if (overlay) {
-            overlay.style.display = "flex";
-        }
-    }
-
-    function hideLoading() {
-        let overlay = document.getElementById("loading-overlay");
-        if (overlay) {
-            overlay.style.display = "none";
-        }
-    }
-</script>
+<script src="{{ url_for('static', filename='js/spinners/loading_spinner.js') }}"></script>

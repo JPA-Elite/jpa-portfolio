@@ -1,4 +1,4 @@
-from flask import redirect, url_for, render_template, request, jsonify
+from flask import redirect, url_for, render_template, request
 from Services.PortfolioService import PortfolioService
 from Services.VisitService import VisitService
 from Repositories.PortfolioRepository import PortfolioRepository
@@ -126,29 +126,8 @@ def music_route():
 def concern_route():
     return handle_log_parameter() or render_template(CONCERN_PAGE, title="My Concern")
 
-def change_language_route(lang_code = ""):
-    referrer_url = request.referrer if request.referrer else url_for("index")
-
-    response = redirect(
-        f"{referrer_url.split('?')[0]}?search="
-    )
-    response.set_cookie("lang", lang_code)
-    return response
-
 def add_portfolio_form_route():
     return handle_log_parameter() or render_template(ADD_PORTFOLIO_PAGE)
-
-def add_portfolio_route():
-    data = {
-        "name": request.form.get("name"),
-        "email": request.form.get("email"),
-    }
-
-    try:
-        portfolio_service.add_portfolio(data["name"], data["email"])
-        return jsonify({"message": "Data inserted successfully!"}), 201
-    except Exception as e:
-        return jsonify({"error": str(e)}), 400
 
 def donation_route():
     return handle_log_parameter() or render_template(DONATION_PAGE)
@@ -166,15 +145,6 @@ def device_info_route():
         total_pages=total_pages,
         title="User Visits",
     )
-
-def delete_page_system_info_route():
-    """Delete only the records displayed on the current page."""
-    data = request.json
-    records = data.get("records", [])
-
-    result = visit_service.delete_page_system_info(records)
-    return jsonify(result)
-
 
 # ************************** PRIVATE FUNCTIONS ********************************
 def handle_log_parameter():

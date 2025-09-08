@@ -4,7 +4,7 @@ Short Description: a project for my own portfolio
 
 Languages: python
 
-##INSTALL PACKAGE
+## INSTALL PACKAGE
 - `cd flask && pip install -r requirements.txt` or run `make package-install`
 
 ## LANGUAGE TRANSLATION COMMANDS

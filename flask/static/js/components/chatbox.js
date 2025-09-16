@@ -1,18 +1,35 @@
-let qaArray = [];
-
 async function initChat() {
+    const cacheKey = 'qaDataCache';
+    const cacheExpiry = 3600000; // 1 hour in milliseconds
+
+    // Try to load from cache first
+    const cached = localStorage.getItem(cacheKey);
+    if (cached) {
+        const { data, timestamp } = JSON.parse(cached);
+        if (Date.now() - timestamp < cacheExpiry) {
+            return data;
+        }
+    }
+
     try {
         const response = await fetch("/api/profile-config");
-        const data = await response.json();
-        qaArray = data?.qaData ?? [];
+        const apiData = await response.json();
+        const qaArray = apiData?.qaData ?? [];
+        // Cache the fetched data with timestamp
+        localStorage.setItem(cacheKey, JSON.stringify({
+            data: qaArray,
+            timestamp: Date.now()
+        }));
+        return qaArray;
     } catch (error) {
         console.error('Failed to load QA data:', error);
-        // Fallback with empty array
-        qaArray = [];
+        // Fallback to expired cache if available
+        if (cached) {
+            return JSON.parse(cached).data;
+        }
+        return [];
     }
 }
-
-window.addEventListener('DOMContentLoaded', initChat);
 
 // Add this at the beginning of your script section
 function handleScroll() {
@@ -43,12 +60,12 @@ window.addEventListener('load', handleScroll);
 const cacheMessage = 'chatMessagesCache';
 const cacheChatboxVisible = 'chatboxVisible';
 
-function initializeChatOptions() {
+function initializeChatOptions(qaArray = []) {
     const chatOptions = document.getElementById("chatOptions");
     qaArray.forEach(item => {
         const button = document.createElement("button");
         button.textContent = item.question;
-        button.onclick = () => sendPredefinedMessage(item.question);
+        button.onclick = () => sendPredefinedMessage(item.question, qaArray);
         chatOptions?.appendChild(button);
     });
 }
@@ -74,16 +91,16 @@ function sendMessage() {
     }
 }
 
-function sendPredefinedMessage(question) {
+function sendPredefinedMessage(question, data = []) {
     displayMessage(question, "transparent", "black");
-    const answer = getAutomaticAnswer(question);
+    const answer = getAutomaticAnswer(question, data);
     displayMessage(answer, "", "black");
     cacheMessages(question);
     cacheMessages(answer);
     updateClearChatButtonVisibility();
 }
 
-function getAutomaticAnswer(question) {
+function getAutomaticAnswer(question, qaArray = []) {
     const qa = qaArray.find(item => item.question === question);
     if (qa) {
         let answer = qa.answer;
@@ -140,7 +157,7 @@ function cacheMessages(message) {
     localStorage.setItem(cacheMessage, JSON.stringify(cachedMessages));
 }
 
-function loadCachedChat() {
+function loadCachedChat(qaArray = []) {
     const cachedMessages = JSON.parse(localStorage.getItem(cacheMessage)) || [];
     cachedMessages.forEach(message => displayMessage(message, qaArray.find(item => item.question == message) ? 'transparent' : '', "black"));
 
@@ -168,7 +185,8 @@ function updateClearChatButtonVisibility() {
     }
 }
 
-window.onload = () => {
-    initializeChatOptions();
-    loadCachedChat();
+window.onload = async () => {
+    const chatData = await initChat();
+    initializeChatOptions(chatData);
+    loadCachedChat(chatData);
 };

@@ -1,32 +1,11 @@
 async function initChat() {
-    const cacheKey = 'qaDataCache';
-    const cacheExpiry = 3600000; // 1 hour in milliseconds
-
-    // Try to load from cache first
-    const cached = localStorage.getItem(cacheKey);
-    if (cached) {
-        const { data, timestamp } = JSON.parse(cached);
-        if (Date.now() - timestamp < cacheExpiry) {
-            return data;
-        }
-    }
-
     try {
         const response = await fetch("/api/profile-config");
         const apiData = await response.json();
         const qaArray = apiData?.qaData ?? [];
-        // Cache the fetched data with timestamp
-        localStorage.setItem(cacheKey, JSON.stringify({
-            data: qaArray,
-            timestamp: Date.now()
-        }));
         return qaArray;
     } catch (error) {
         console.error('Failed to load QA data:', error);
-        // Fallback to expired cache if available
-        if (cached) {
-            return JSON.parse(cached).data;
-        }
         return [];
     }
 }
@@ -113,7 +92,7 @@ function getAutomaticAnswer(question, qaArray = []) {
     return null;
 }
 
-function displayMessage(message, backgroundColor = '', color = '') {
+function displayMessage(message, backgroundColor = '', color = '', typeEffect = true) {
     const chatMessages = document.getElementById("chatMessages");
     const messageElement = document.createElement("div");
     messageElement.classList.add("chat-message");
@@ -121,7 +100,7 @@ function displayMessage(message, backgroundColor = '', color = '') {
     if (backgroundColor !== 'transparent') {
         // If background is not transparent, apply typing effect
         chatMessages.appendChild(messageElement);
-        addTypingEffect(messageElement, message);
+        addTypingEffect(messageElement, message, typeEffect);
     } else {
         // Otherwise, display message instantly
         messageElement.textContent = 'Q: ' + message;
@@ -137,7 +116,7 @@ function displayMessage(message, backgroundColor = '', color = '') {
     }
 }
 
-function addTypingEffect(element, text) {
+function addTypingEffect(element, text, typeEffect = true) {
     let index = 0;
 
     function typeNextCharacter() {
@@ -148,7 +127,11 @@ function addTypingEffect(element, text) {
         }
     }
 
-    typeNextCharacter();
+    if (!typeEffect) {
+        element.textContent = text;
+    } else {
+        typeNextCharacter();
+    }
 }
 
 function cacheMessages(message) {
@@ -159,7 +142,7 @@ function cacheMessages(message) {
 
 function loadCachedChat(qaArray = []) {
     const cachedMessages = JSON.parse(localStorage.getItem(cacheMessage)) || [];
-    cachedMessages.forEach(message => displayMessage(message, qaArray.find(item => item.question == message) ? 'transparent' : '', "black"));
+    cachedMessages.forEach(message => displayMessage(message, qaArray.find(item => item.question == message) ? 'transparent' : '', "black", false));
 
     const chatboxVisible = localStorage.getItem(cacheChatboxVisible) === 'true';
     const modal = document.getElementById("chatboxModal");

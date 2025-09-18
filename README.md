@@ -15,5 +15,5 @@ Languages: python
 
 ## START UP
 1. cd fask
-2. run command: `cd flask && python app.py`
+2. run command: `cd flask && python app.py`,
    run command: `make start-local` or `make run-local`

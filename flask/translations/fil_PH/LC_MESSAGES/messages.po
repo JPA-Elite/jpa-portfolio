@@ -249,6 +249,7 @@ msgstr "Secret! Di ko sasabihin! Haha."
 msgid "qa_favorite_subject"
 msgstr "Ano ang paborito mong subject?"
 
+msgid "qa_favorite_subject_answer"
 msgstr "Paborito kong subject ay Math."
 
 msgid "qa_live"

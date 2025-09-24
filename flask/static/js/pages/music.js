@@ -134,6 +134,36 @@ function nextSong() {
     playSong(currentSongIndex);
 }
 
+function downloadSong() {
+    const audio = document.getElementById('audioPlayer');
+    const src = audio.getAttribute('src');
+    if (!src) {
+        alert('No song is currently loaded.');
+        return;
+    }
+    window.open(`/api/download_song?url=${encodeURIComponent(src)}`, '_blank');
+}
+
+function copyLink() {
+    const audio = document.getElementById('audioPlayer');
+    const src = audio.getAttribute('src');
+    if (!src) {
+        alert('No song is currently loaded.');
+        return;
+    }
+    navigator.clipboard.writeText(src).then(() => {
+        showCopyPopup();
+    });
+}
+
+function showCopyPopup() {
+    const popup = document.getElementById('copyPopup');
+    popup.style.display = 'block';
+    setTimeout(() => {
+        popup.style.display = 'none';
+    }, 1500);
+}
+
 async function getDuration(url) {
     return new Promise((resolve) => {
         const audio = new Audio(url);

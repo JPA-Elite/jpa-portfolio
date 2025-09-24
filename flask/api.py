@@ -1,7 +1,7 @@
 # pages.py
 from config import HTTPMethod
 from flask import Blueprint
-from Controllers.ApiController import add_portfolio_route, change_language_route, delete_page_system_info_route, profile_config_route
+from Controllers.ApiController import add_portfolio_route, change_language_route, delete_page_system_info_route, download_song_route, profile_config_route
 
 # Create a Blueprint for api
 api_bp = Blueprint("api", __name__)
@@ -23,3 +23,7 @@ def delete_page_system_info():
 @api_bp.route("/api/profile-config", methods=[HTTPMethod.GET])
 def profile_config():
     return profile_config_route()
+
+@api_bp.route('/api/download_song')
+def download_song():
+    return download_song_route()

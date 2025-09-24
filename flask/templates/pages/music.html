@@ -134,10 +134,20 @@
     </main>
     <footer class="player" id="player">
         <div class="left">
-            <img id="playerCoverImg" class="cover-img"
-                src="https://res.cloudinary.com/dviqx0o48/image/upload/v1744089628/o388ezfg1maax9dcrgpj_zd1zyc.jpg"
-                alt="Cover Art" />
-            <div class="now-playing" id="playerNowPlaying">Select a song</div>
+            <div class="cover-section">
+                <img id="playerCoverImg" class="cover-img"
+                    src="https://res.cloudinary.com/dviqx0o48/image/upload/v1744089628/o388ezfg1maax9dcrgpj_zd1zyc.jpg"
+                    alt="Cover Art" />
+                <div class="now-playing" id="playerNowPlaying">Select a song</div>
+            </div>
+            <div class="share-section">
+                <button id="downloadBtn" onclick="downloadSong()" title="Download Song">
+                    <ion-icon name="download-outline"></ion-icon>
+                </button>
+                <button id="copyLinkBtn" onclick="copyLink()" title="Copy Link">
+                    <ion-icon name="copy-outline"></ion-icon>
+                </button>
+            </div>
         </div>
         <div class="center">
             <div class="progress-container">
@@ -160,10 +170,10 @@
                 <button onclick="toggleAutoplay()" id="autoplayBtn" title="Toggle Autoplay">▶️</button>
                 <button onclick="toggleFullscreen()" id="fullscreenBtn">⛶</button>
             </div>
-
         </div>
         <audio id="audioPlayer"></audio>
     </footer>
+    <div id="copyPopup">Copied to clipboard!</div>
     <script src="{{ url_for('static', filename='js/pages/music.js') }}"></script>
 </body>
 

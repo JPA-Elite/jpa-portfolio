@@ -1,4 +1,5 @@
-from flask import redirect, url_for, request, jsonify
+from flask import redirect, url_for, request, jsonify, Response
+import requests
 from Services.PortfolioService import PortfolioService
 from Services.VisitService import VisitService
 from Repositories.PortfolioRepository import PortfolioRepository
@@ -57,8 +58,19 @@ def profile_config_route():
         # { "question": gettext("qa_behaviour"), "answer": gettext("qa_behaviour_answer") },
         # { "question": gettext("qa_song"), "answer": gettext("qa_song_answer") }
     ]
-    
+
     return jsonify({
         'qaData': qa_data
     })
 
+def download_song_route():
+    url = request.args.get('url')
+    filename = url.split('/')[-1]
+    r = requests.get(url, stream=True)
+    return Response(
+        r.iter_content(chunk_size=8192),
+        headers={
+            "Content-Disposition": f"attachment; filename={filename}",
+            "Content-Type": r.headers.get("Content-Type", "audio/mpeg")
+        }
+    )

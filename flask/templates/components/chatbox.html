@@ -6,6 +6,7 @@
         <img src="{{ url_for('static', filename='images/chat.png') }}" alt="{{ _('chat_icon_alt') }}" />
     </div>
     <div id="chatboxModal" class="chatbox-modal">
+        {% include 'spinners/triple_loading.html' %}
         <div class="chatbox-header">
             <span class="chatbox-title">{{ _('chat_title') }}</span>
             <span class="chatbox-close" onclick="toggleChatbox()">&times;</span>

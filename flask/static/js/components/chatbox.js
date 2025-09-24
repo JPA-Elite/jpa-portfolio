@@ -169,7 +169,15 @@ function updateClearChatButtonVisibility() {
 }
 
 window.onload = async () => {
+    const chatBoxHeader = document.querySelector('.chatbox-header');
+    const chatBoxBody = document.querySelector('.chatbox-body');
+    chatBoxHeader.style.display = 'none';
+    chatBoxBody.style.display = 'none'
+    showLoading();
     const chatData = await initChat();
     initializeChatOptions(chatData);
     loadCachedChat(chatData);
+    hideLoading();
+    chatBoxHeader.style.display = 'flex';
+    chatBoxBody.style.display = 'flex'
 };

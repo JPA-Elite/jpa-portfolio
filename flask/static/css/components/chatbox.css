@@ -52,7 +52,7 @@
     padding: 10px;
     border-top-left-radius: 8px;
     border-top-right-radius: 8px;
-    display: flex;
+    display: none; /* Hidden by default, shown after loading */
     justify-content: space-between;
     align-items: center;
     position: sticky;
@@ -76,7 +76,7 @@
     padding: 20px;
     font-size: 14px;
     flex: 1;
-    display: flex;
+    display: none; /* Hidden by default, shown after loading */
     flex-direction: column;
 }
 

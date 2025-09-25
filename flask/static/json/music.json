@@ -1,5 +1,19 @@
 [
     {
+        "id": 30,
+        "title": "Playaz in dis MF",
+        "artist": "Downtown Q', Hev Abi, LK",
+        "url": "https://res.cloudinary.com/duwyfmk8t/video/upload/v1758775005/portfolio_music/Playaz_in_dis_MF_-_Downtown_Q_j4izk2.mp3",
+        "image": "https://res.cloudinary.com/duwyfmk8t/image/upload/v1758774958/portfolio_music/ab67616d0000b2737bddde8aa9fe78d5c4a28656_ongnpj.jpg"
+    },
+    {
+        "id": 29,
+        "title": "SA'YO LANG",
+        "artist": "Juan Caoile, Kyleswish, Jawz",
+        "url": "https://res.cloudinary.com/duwyfmk8t/video/upload/v1758773811/portfolio_music/sayo_lang_zmxg9z.mp3",
+        "image": "https://res.cloudinary.com/duwyfmk8t/image/upload/v1758773741/portfolio_music/ab67616d0000b27323df52954c373328f7bb76d9_tcimbi.jpg"
+    },
+    {
         "id": 28,
         "title": "SUR LUV",
         "artist": "Sica",
@@ -159,20 +173,6 @@
         "artist": "Paul Partohap •  P.S. I LOVE YOU • 2022",
         "url": "https://res.cloudinary.com/duwyfmk8t/video/upload/v1744384255/portfolio_music/P.S._I_LOVE_YOU_adopko.mp3",
         "image": "https://res.cloudinary.com/duwyfmk8t/image/upload/v1744384340/portfolio_music/55683c8b-0139-46d3-9fbf-f56ec622375d.png"
-    },
-    {
-        "id": 5,
-        "title": "Paris in the Rain",
-        "artist": "Lauv • Paris in the Rain • 2018",
-        "url": "https://res.cloudinary.com/duwyfmk8t/video/upload/v1744383995/portfolio_music/Paris_in_the_Rain_yujmgb.mp3",
-        "image": "https://res.cloudinary.com/duwyfmk8t/image/upload/v1744384091/portfolio_music/1d967b70-7e4e-499a-b1ef-4a95697c9b25.png"
-    },
-    {
-        "id": 4,
-        "title": "Can You Love Me Tonight?",
-        "artist": "KAIRO • Can You Love Me Tonight? • 2022",
-        "url": "https://res.cloudinary.com/duwyfmk8t/video/upload/v1744383661/portfolio_music/Can_You_Love_Me_Tonight__xdb7w8.mp3",
-        "image": "https://res.cloudinary.com/duwyfmk8t/image/upload/v1744383756/portfolio_music/f5ca9df3-a9ee-442d-b1fc-b5f04d51f845.png"
     },
     {
         "id": 3,

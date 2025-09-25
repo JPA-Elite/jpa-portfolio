@@ -14034,8 +14034,8 @@ body:not(.app-loaded) .app-footer {
 }
 .navbar-nav > .user-menu .user-image {
   float: left;
-  width: 2rem;
-  height: 2rem;
+  width: 2.5rem;
+  height: 2.5rem;
   margin-top: -2px;
   border-radius: 50%;
 }

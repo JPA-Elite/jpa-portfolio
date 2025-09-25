@@ -27,7 +27,7 @@ DEVICE_INFO_VISIT_PAGE = "pages/visitors.html"
 ERROR_404_PAGE = "error/404.html"
 
 # admin pages
-ADMIN_DASHBOARD_PAGE = "AdminLTE/dist/index.html"
+ADMIN_DASHBOARD_PAGE = "admin/dist/index.html"
 
 LANGUAGES = {
     "en": "English",

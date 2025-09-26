@@ -24,10 +24,7 @@ def create_app():
     # Load configs (from .env)
     app.config["MONGO_URI"] = os.getenv("MONGO_URI")
     app.config["MONGO_DB"] = os.getenv("MONGO_DB")
-
-    # ----------------------------
-    # One unified migrate command
-    # ----------------------------
+    
     @app.cli.command("migrate")
     @click.argument("name", required=False)  # e.g., music.json / all
     @click.option("--reset", is_flag=True, help="Clear collection before inserting")

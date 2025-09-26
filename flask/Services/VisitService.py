@@ -13,7 +13,7 @@ class VisitService:
         documents, total_docs = self.repository.get_paginated_documents(page, per_page, order)
         system_info_list = [SystemInfo(**doc) for doc in documents]
         return system_info_list, total_docs
-    
+
 
     def delete_page_system_info(self, records):
         """

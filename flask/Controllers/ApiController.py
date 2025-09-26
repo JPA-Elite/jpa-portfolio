@@ -2,13 +2,18 @@ from flask import redirect, url_for, request, jsonify, Response
 import requests
 from Services.PortfolioService import PortfolioService
 from Services.VisitService import VisitService
+from Services.MusicService import MusicService
 from Repositories.PortfolioRepository import PortfolioRepository
 from Repositories.VisitRepository import VisitRepository
+from Repositories.MusicRepository import MusicRepository
 from flask_babel import gettext
+from config import SortOrder, SortOrderStr
+
 
 # Initialize Services
 portfolio_service = PortfolioService(repository=PortfolioRepository())
 visit_service = VisitService(repository=VisitRepository())
+music_service = MusicService(repository=MusicRepository())
 
 # ************************** API Controller ********************************
 
@@ -20,20 +25,6 @@ def change_language_route(lang_code = ""):
     )
     response.set_cookie("lang", lang_code)
     return response
-
-
-def add_portfolio_route():
-    data = {
-        "name": request.form.get("name"),
-        "email": request.form.get("email"),
-    }
-
-    try:
-        portfolio_service.add_portfolio(data["name"], data["email"])
-        return jsonify({"message": "Data inserted successfully!"}), 201
-    except Exception as e:
-        return jsonify({"error": str(e)}), 400
-
 
 def delete_page_system_info_route():
     """Delete only the records displayed on the current page."""
@@ -74,3 +65,16 @@ def download_song_route():
             "Content-Type": r.headers.get("Content-Type", "audio/mpeg")
         }
     )
+
+# Administroller Controller
+def music_list_route():
+    page = int(request.args.get("page", 1))
+    per_page = int(request.args.get("per_page", 10))
+    order = SortOrder.DESC if request.args.get("order", "desc").upper() == SortOrderStr.DESC else SortOrder.ASC
+    music_list, total_music = music_service.get_paginated_music_list(page, per_page, order)
+
+    return jsonify({
+        "music": [music.to_dict() for music in music_list],
+        "total_music": total_music,
+        "total_pages": (total_music + per_page - 1) // per_page,
+    })

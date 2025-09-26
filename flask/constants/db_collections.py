@@ -1,0 +1,9 @@
+class MongoCollections:
+    PORTFOLIO = "portfolio"
+    MUSIC = "music"
+    VIDEO = "video"
+    CHAT = "chat"
+    PROJECT = "project"
+    CONCERN = "concern"
+    DEVICE_INFO = "device_info"
+    DONATION = "donation"

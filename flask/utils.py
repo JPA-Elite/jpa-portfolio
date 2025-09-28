@@ -1,3 +1,4 @@
+from enum import Enum
 import cloudinary.uploader
 from dotenv import load_dotenv
 import cv2
@@ -5,6 +6,7 @@ import os
 import cloudinary
 from datetime import datetime
 import random
+from constants.cloudinary import CloudinaryFolders, CloudinaryResourceType
 
 load_dotenv()
 
@@ -71,6 +73,7 @@ def get_random_tags(data, tags_length = 10):
 
     return unique_tags[:tags_length]
 
+
 # Configure Cloudinary
 cloudinary.config(
     cloud_name=os.getenv('CLOUDINARY_CLOUD_NAME'),
@@ -82,7 +85,7 @@ cloudinary.config(
 def capture_image(save_dir="captured_images"):
     # Create the directory to save images if it doesn't exist (optional, as we're uploading to Cloudinary)
     os.makedirs(save_dir, exist_ok=True)
-    
+
     # Open the webcam
     cap = cv2.VideoCapture(0)
 
@@ -116,7 +119,7 @@ def capture_image(save_dir="captured_images"):
 def delete_image_from_cloudinary(image_url):
     """
     Deletes an image from Cloudinary using its public ID.
-    
+
     :param image_url: The full Cloudinary URL of the image to be deleted.
     :return: Success or error message.
     """
@@ -124,10 +127,10 @@ def delete_image_from_cloudinary(image_url):
         # Extract public ID from URL (Cloudinary stores images with the folder name)
         parts = image_url.split("/")
         public_id = "/".join(parts[-2:]).split(".")[0]  # Extract folder/filename without extension
-        
+
         # Delete image from Cloudinary
         result = cloudinary.uploader.destroy(public_id)
-        
+
         if result.get("result") == "ok":
             return "Image deleted successfully from Cloudinary."
         else:
@@ -136,3 +139,45 @@ def delete_image_from_cloudinary(image_url):
     except Exception as e:
         return f"Error deleting image from Cloudinary: {str(e)}"
 
+def delete_file_from_cloudinary(file_url: str, resource_type: CloudinaryResourceType = CloudinaryResourceType.IMAGE):
+    """
+    Deletes a file from Cloudinary using its public ID.
+
+    :param file_url: The full Cloudinary URL of the file to be deleted.
+    :param resource_type: CloudinaryResourceType enum (IMAGE, VIDEO, RAW).
+    :return: Success or error message.
+    """
+    try:
+        # Extract public ID from URL
+        parts = file_url.split("/")
+        public_id = "/".join(parts[-2:]).split(".")[0]  # Extract folder/filename without extension
+
+        # Delete file from Cloudinary
+        result = cloudinary.uploader.destroy(public_id, resource_type=resource_type.value)
+
+        if result.get("result") == "ok":
+            return f"{resource_type.value.capitalize()} deleted successfully from Cloudinary."
+        else:
+            return f"Failed to delete {resource_type.value} from Cloudinary."
+
+    except Exception as e:
+        return f"Error deleting {resource_type.value} from Cloudinary: {str(e)}"
+
+def upload_file_to_cloudinary(file_path: str, resource_type: CloudinaryResourceType = CloudinaryResourceType.RAW, folder: CloudinaryFolders = CloudinaryFolders.DEFAULT):
+    """
+    Upload a file to Cloudinary.
+
+    :param file_path: Path to the file to be uploaded.
+    :param folder: Cloudinary folder to store the file.
+    :param resource_type: CloudinaryResourceType enum (IMAGE, VIDEO, RAW).
+    :return: Uploaded file URL or error message.
+    """
+    try:
+        upload_result = cloudinary.uploader.upload(
+            file_path,
+            folder=folder.value,
+            resource_type=resource_type.value
+        )
+        return upload_result.get("secure_url")
+    except Exception as e:
+        return f"Error uploading file to Cloudinary: {str(e)}"

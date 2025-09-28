@@ -41,7 +41,7 @@ class MusicRepository(IMusicRepository, BaseRepository):
             {"_id": ObjectId(music_id)},
             {"$set": music.to_dict()}
         )
-        return result.modified_count > 0  # True if updated
+        return result.matched_count > 0  # True if updated
 
     def delete_music(self, music_id: str):
         """Delete a music document by _id."""

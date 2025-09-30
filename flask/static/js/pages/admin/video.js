@@ -15,6 +15,56 @@ function setButtonLoading(button, isLoading) {
     }
 }
 
+function playVideoPreview(url) {
+    const modalId = "videoPreviewModal";
+
+    // If modal doesn’t exist yet, create it
+    if (!document.getElementById(modalId)) {
+        const modalHtml = `
+        <div class="modal fade" id="${modalId}" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-xl modal-fullscreen-sm-down">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Video Preview</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body text-center">
+                        <video id="previewPlayer" class="w-100" controls preload="auto" style="max-height:70vh;">
+                            <source id="previewSource" src="" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                </div>
+            </div>
+        </div>`;
+        document.body.insertAdjacentHTML("beforeend", modalHtml);
+
+        // 🔹 Stop video when modal closes
+        document.getElementById(modalId).addEventListener("hidden.bs.modal", () => {
+            const player = document.getElementById("previewPlayer");
+            player.pause();
+            player.currentTime = 0; // reset
+        });
+
+        // 🔹 Autoplay video when modal opens
+        document.getElementById(modalId).addEventListener("shown.bs.modal", () => {
+            const player = document.getElementById("previewPlayer");
+            player.play().catch(err => {
+                console.warn("Autoplay blocked by browser:", err);
+            });
+        });
+    }
+
+    // Set source dynamically
+    document.getElementById("previewSource").src = url;
+    const player = document.getElementById("previewPlayer");
+    player.load();
+
+    // Show modal
+    const modal = new bootstrap.Modal(document.getElementById(modalId));
+    modal.show();
+}
+
 async function loadVideo(page = 1) {
     const tbody = document.getElementById("videoTableBody");
     const modalContainer = document.getElementById("videoModals");
@@ -66,12 +116,12 @@ async function loadVideo(page = 1) {
                 </div>
             </td>
             <td>
-                <div style="max-width: 200px;
-                    white-space: nowrap;
-                    overflow: hidden;
-                    text-overflow: ellipsis;"
-                    title="${video.file || video.video_url}">
-                    ${video.file || video.video_url}
+                <div style="max-width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                    <button class="btn btn-sm btn-outline-secondary"
+                        onclick="playVideoPreview('${video.video_url || video.file
+                }')">
+                        ▶ Preview
+                    </button>
                 </div>
             </td>
             <td>

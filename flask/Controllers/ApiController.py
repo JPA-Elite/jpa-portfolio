@@ -3,16 +3,20 @@ import requests
 from Services.PortfolioService import PortfolioService
 from Services.VisitService import VisitService
 from Services.MusicService import MusicService
+from Services.VideoService import VideoService
 from Repositories.PortfolioRepository import PortfolioRepository
 from Repositories.VisitRepository import VisitRepository
 from Repositories.MusicRepository import MusicRepository
+from Repositories.VideoRepository import VideoRepository
 from flask_babel import gettext
 from config import SortOrder, SortOrderStr
+import json
 
 # Initialize Services
 portfolio_service = PortfolioService(repository=PortfolioRepository())
 visit_service = VisitService(repository=VisitRepository())
 music_service = MusicService(repository=MusicRepository())
+video_service = VideoService(repository=VideoRepository())
 
 # ************************** API Controller ********************************
 
@@ -65,7 +69,8 @@ def download_song_route():
         }
     )
 
-# Administroller Controller
+# -------------------Administrator Controller------------------------
+# Music Controller
 def music_list_route():
     page = int(request.args.get("page", 1))
     per_page = int(request.args.get("per_page", 10))
@@ -120,3 +125,57 @@ def delete_music_route(music_id):
         return jsonify({"message": "Music deleted successfully"}), 200
     else:
         return jsonify({"message": "Music not found"}), 404
+
+# Video Controller
+def video_list_route():
+    page = int(request.args.get("page", 1))
+    per_page = int(request.args.get("per_page", 10))
+    order = SortOrder.DESC if request.args.get("order", "desc").upper() == SortOrderStr.DESC else SortOrder.ASC
+    video_list, total_video = video_service.get_paginated_video_list(page, per_page, order)
+    return jsonify({
+        "video": [video.to_dict() for video in video_list],
+        "total_video": total_video,
+        "total_pages": (total_video + per_page - 1) // per_page,
+    })
+
+def add_video_route():
+    title = request.form.get("title")
+    description = request.form.get("description")
+    video_file = request.files.get("video_file")
+    tags = request.form.get("tags")
+    # Pass raw request data + files to service
+    data = {
+        "title": json.loads(title) if title else {},
+        "description": json.loads(description) if description else {},
+        "video_file": video_file,
+        "tags": json.loads(tags) if tags else [],
+    }
+
+    video_id = video_service.add_video(data)
+    return jsonify({"message": "Video added successfully", "video_id": video_id}), 201
+
+def update_video_route(video_id):
+    title = request.form.get("title")
+    description = request.form.get("description")
+    video_file = request.files.get("video_file")
+    tags = request.form.get("tags")
+
+    update_data = {
+        "title": json.loads(title) if title else {},
+        "description": json.loads(description) if description else {},
+        "video_file": video_file,
+        "tags": json.loads(tags) if tags else [],
+    }
+
+    success = video_service.update_video(video_id, update_data)
+    if success:
+        return jsonify({"message": "Video updated successfully"}), 200
+    else:
+        return jsonify({"message": "Failed to update video"}), 400
+
+def delete_video_route(video_id):
+    success = video_service.delete_video(video_id)
+    if success:
+        return jsonify({"message": "Video deleted successfully"}), 200
+    else:
+        return jsonify({"message": "Video not found"}), 404

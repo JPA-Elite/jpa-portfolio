@@ -4,24 +4,11 @@ from Models.Music import Music
 from config import SortOrder
 import tempfile, os
 from constants.cloudinary import CloudinaryFolders, CloudinaryResourceType
-from utils import delete_file_from_cloudinary, upload_file_to_cloudinary
+from utils import cleanup_uploaded_files, upload_file_to_cloudinary
 
 class MusicService:
     def __init__(self, repository: IMusicRepository):
         self.repository = repository
-
-    # Private helper to clean up Cloudinary files if needed
-    def _cleanup_uploaded_files(self, music_url=None, image_url=None, raw_url=None):
-        resource_map = {
-            music_url: CloudinaryResourceType.AUDIO,
-            image_url: CloudinaryResourceType.IMAGE,
-            raw_url: CloudinaryResourceType.RAW,
-        }
-
-        for url, resource_type in resource_map.items():
-            if url:
-                delete_file_from_cloudinary(url, resource_type=resource_type)
-
 
     # -------------------------- Music Service Methods -------------------------
 
@@ -30,7 +17,7 @@ class MusicService:
 
     def get_paginated_music_list(self, page, per_page, order: SortOrder = SortOrder.DESC):
         data, total_data = self.repository.get_paginated_music_list(page, per_page, order)
-        system_info_list = [Music(**music) for music in data]
+        system_info_list = [Music.from_dict(music) for music in data]
         return system_info_list, total_data
 
     def add_music(self, data: dict):
@@ -73,7 +60,7 @@ class MusicService:
             return self.repository.add_music(music)
 
         except Exception as e:
-            self._cleanup_uploaded_files(music_url, image_url)
+            cleanup_uploaded_files(music_url, image_url)
             raise e
 
     def update_music(self, music_id: str, data: dict):
@@ -92,7 +79,7 @@ class MusicService:
             music_file = data.pop("music_file", None)
             if music_file:
                 if existing_music.get("url"):
-                    self._cleanup_uploaded_files(existing_music["url"], None)
+                    cleanup_uploaded_files(existing_music["url"], None)
 
                 fd, path = tempfile.mkstemp()
                 os.close(fd)
@@ -112,7 +99,7 @@ class MusicService:
             image_file = data.pop("image_file", None)
             if image_file:
                 if existing_music.get("image"):
-                    self._cleanup_uploaded_files(None, existing_music["image"])
+                    cleanup_uploaded_files(None, existing_music["image"])
 
                 fd, path = tempfile.mkstemp()
                 os.close(fd)
@@ -135,7 +122,7 @@ class MusicService:
             return self.repository.update_music(music_id, music)
 
         except Exception as e:
-            self._cleanup_uploaded_files(new_music_url, new_image_url)
+            cleanup_uploaded_files(new_music_url, new_image_url)
             raise e
 
     def delete_music(self, music_id: str):
@@ -143,6 +130,6 @@ class MusicService:
         if not existing_music:
             return False
 
-        self._cleanup_uploaded_files(existing_music.get("url"), existing_music.get("image"))
+        cleanup_uploaded_files(existing_music.get("url"), existing_music.get("image"))
         return self.repository.delete_music(music_id)
 

@@ -1,7 +1,7 @@
 # pages.py
 from config import HTTPMethod as http
 from flask import Blueprint
-from Controllers.ApiController import add_music_route, change_language_route, delete_music_route, delete_page_system_info_route, download_song_route, music_list_route, profile_config_route, update_music_route
+from Controllers.ApiController import add_music_route, add_video_route, change_language_route, delete_music_route, delete_page_system_info_route, delete_video_route, download_song_route, music_list_route, profile_config_route, update_music_route, update_video_route, video_list_route
 
 # Create a Blueprint for api
 api_bp = Blueprint("api", __name__)
@@ -39,3 +39,17 @@ def update_music(music_id):
 @api_bp.route("/admin/api/delete-music/<music_id>", methods=[http.DELETE])
 def delete_music(music_id):
     return delete_music_route(music_id)
+
+# Video API
+@api_bp.route("/admin/api/video-list", methods=[http.GET])
+def video_list():
+    return video_list_route()
+@api_bp.route("/admin/api/add-video", methods=[http.POST])
+def add_video():
+    return add_video_route()
+@api_bp.route("/admin/api/update-video/<video_id>", methods=[http.PUT])
+def update_video(video_id):
+    return update_video_route(video_id)
+@api_bp.route("/admin/api/delete-video/<video_id>", methods=[http.DELETE])
+def delete_video(video_id):
+    return delete_video_route(video_id)

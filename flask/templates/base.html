@@ -70,7 +70,7 @@
                 <div class="nav-toggle" id="toggleButton" onclick="toggleNav()">
                     <span name="menu-outline" class="navbar-toggle-icon">☰</span>
                 </div>
-                
+
                 <!-- Desktop Navigation -->
                 <ul id="navList">
                     <li class="{% if request.endpoint == 'pages.profile' %}active{% endif %}">
@@ -191,7 +191,7 @@
     {% include 'components/chatbox.html' %}
     <script>
         // Pass background image URL to JavaScript
-        window.backgroundImageUrl = "{{ url_for('static', filename=background_image) }}"; 
+        window.backgroundImageUrl = "{{ url_for('static', filename=background_image) }}";
     </script>
     <script src="{{ url_for('static', filename='js/pages/base.js') }}"></script>
 </body>

@@ -21,127 +21,109 @@
 </div>
 <div class="app-content">
   <div class="container-fluid">
-    <div class="row mt-4">
+    <div class="row">
       <div class="col-12">
         <div class="card">
-          <div class="card-header">
-            <h3 class="card-title">Project List</h3>
-          </div>
           <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center pb-2">
+              <div>
+                <label for="perPageSelect" class="form-label me-2">Show</label>
+                <select id="perPageSelect" class="form-select form-select-sm d-inline-block" style="width: auto;">
+                  <option value="5">5</option>
+                  <option value="10" selected>10</option>
+                  <option value="20">20</option>
+                  <option value="50">50</option>
+                </select>
+                <span>entries</span>
+              </div>
+              <div>
+                <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addProjectModal">
+                  <i class="bi bi-plus-circle"></i> Add Project
+                </button>
+              </div>
+              <div class="modal fade" id="addProjectModal" tabindex="-1" aria-labelledby="addProjectModalLabel"
+                aria-hidden="true">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title">Add New Project</h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                      <form id="addProjectForm">
+                        <div class="mb-3">
+                          <label class="form-label">Title <span class="text-danger">*</span></label>
+                          <input type="text" class="form-control" id="addTitle" required>
+                        </div>
+                        <div class="mb-3">
+                          <label class="form-label">Artist <span class="text-danger">*</span></label>
+                          <input type="text" class="form-control" id="addArtist" required>
+                        </div>
+                        <div class="mb-3">
+                          <label class="form-label">Project File <span class="text-danger">*</span></label>
+                          <input type="file" class="form-control" id="addProjectFile" accept="audio/*" required>
+                        </div>
+                        <!-- Desktop (Drag & Drop) -->
+                        <div class="mb-3 d-none d-md-block">
+                          <label class="form-label">Image File <span class="text-danger">*</span></label>
+                          <div id="addDropZone" class="dropzone">
+                            <p>Drag & Drop image here, or click to select</p>
+                            <input type="file" id="addImageFile" accept="image/*" hidden required>
+                          </div>
+                        </div>
+
+                        <!-- Mobile (Normal Input) -->
+                        <div class="mb-3 d-md-none">
+                          <label class="form-label">Image File <span class="text-danger">*</span></label>
+                          <input type="file" class="form-control" id="addImageFileMobile" accept="image/*" required>
+                        </div>
+
+                      </form>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                      <button type="button" class="btn btn-success" id="addProjectBtn"
+                        data-loading-text='<span class="spinner-border spinner-border-sm me-2"></span> Saving...'
+                        onclick="addProject()">
+                        Save
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
             <table class="table table-bordered table-hover">
               <thead class="table-light">
                 <tr>
                   <th>#</th>
-                  <th>Name</th>
-                  <th>Email</th>
-                  <th>Status</th>
+                  <th>Title</th>
+                  <th>Artist</th>
+                  <th>Preview</th>
+                  <th>Image</th>
                   <th>Actions</th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody id="projectTableBody">
+                <!-- Default loading row -->
                 <tr>
-                  <td>1</td>
-                  <td>John Doe</td>
-                  <td>john@example.com</td>
-                  <td><span class="badge bg-success">Active</span></td>
-                  <td>
-                    <button class="btn btn-sm btn-primary me-1" data-bs-toggle="modal" data-bs-target="#editModal1">
-                      <i class="bi bi-pencil"></i> Edit
-                    </button>
-                    <button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal1">
-                      <i class="bi bi-trash"></i> Delete
-                    </button>
-                  </td>
-                </tr>
-                <tr>
-                  <td>2</td>
-                  <td>Jane Smith</td>
-                  <td>jane@example.com</td>
-                  <td><span class="badge bg-danger">Inactive</span></td>
-                  <td>
-                    <button class="btn btn-sm btn-primary me-1" data-bs-toggle="modal" data-bs-target="#editModal2">
-                      <i class="bi bi-pencil"></i> Edit
-                    </button>
-                    <button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal2">
-                      <i class="bi bi-trash"></i> Delete
-                    </button>
-                  </td>
-                </tr>
-                <tr>
-                  <td>3</td>
-                  <td>Bob Johnson</td>
-                  <td>bob@example.com</td>
-                  <td><span class="badge bg-warning text-dark">Pending</span></td>
-                  <td>
-                    <button class="btn btn-sm btn-primary me-1" data-bs-toggle="modal" data-bs-target="#editModal3">
-                      <i class="bi bi-pencil"></i> Edit
-                    </button>
-                    <button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal3">
-                      <i class="bi bi-trash"></i> Delete
-                    </button>
-                  </td>
+                  <td colspan="6" class="text-center">Loading...</td>
                 </tr>
               </tbody>
             </table>
-          </div>
-        </div>
-      </div>
-    </div>
 
-    <!-- Edit Modal Example (repeat for each row as needed) -->
-    <div class="modal fade" id="editModal1" tabindex="-1" aria-labelledby="editModalLabel1" aria-hidden="true">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="editModalLabel1">Edit User</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-            <form>
-              <div class="mb-3">
-                <label for="editName1" class="form-label">Name</label>
-                <input type="text" class="form-control" id="editName1" value="John Doe">
-              </div>
-              <div class="mb-3">
-                <label for="editEmail1" class="form-label">Email</label>
-                <input type="email" class="form-control" id="editEmail1" value="john@example.com">
-              </div>
-              <div class="mb-3">
-                <label for="editStatus1" class="form-label">Status</label>
-                <select class="form-select" id="editStatus1">
-                  <option selected>Active</option>
-                  <option>Inactive</option>
-                  <option>Pending</option>
-                </select>
-              </div>
-            </form>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-            <button type="button" class="btn btn-primary">Save changes</button>
+            <!-- ✅ Pagination Controls -->
+            <div class="d-flex justify-content-between align-items-center mt-3">
+              <button id="prevPage" class="btn btn-outline-secondary btn-sm">Prev</button>
+              <span id="pageInfo"></span>
+              <button id="nextPage" class="btn btn-outline-secondary btn-sm">Next</button>
+            </div>
+
+            <div id="projectModals"></div>
           </div>
         </div>
       </div>
     </div>
-    <!-- Delete Modal Example (repeat for each row as needed) -->
-    <div class="modal fade" id="deleteModal1" tabindex="-1" aria-labelledby="deleteModalLabel1" aria-hidden="true">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="deleteModalLabel1">Delete User</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-            Are you sure you want to delete <strong>John Doe</strong>?
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-            <button type="button" class="btn btn-danger">Delete</button>
-          </div>
-        </div>
-      </div>
-    </div>
-    <!-- Repeat modals for Jane Smith and Bob Johnson as needed -->
   </div>
 </div>
+<script src="{{ url_for('static', filename='js/pages/admin/project.js') }}"></script>
 {% endblock %}

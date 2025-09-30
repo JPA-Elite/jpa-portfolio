@@ -181,3 +181,14 @@ def upload_file_to_cloudinary(file_path: str, resource_type: CloudinaryResourceT
         return upload_result.get("secure_url")
     except Exception as e:
         return f"Error uploading file to Cloudinary: {str(e)}"
+
+def cleanup_uploaded_files(video_url=None, image_url=None, raw_url=None):
+    resource_map = {
+        video_url: CloudinaryResourceType.AUDIO,
+        image_url: CloudinaryResourceType.IMAGE,
+        raw_url: CloudinaryResourceType.RAW,
+    }
+
+    for url, resource_type in resource_map.items():
+        if url:
+            delete_file_from_cloudinary(url, resource_type=resource_type)

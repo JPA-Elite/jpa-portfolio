@@ -11,7 +11,6 @@ load_dotenv()
 # flask --app manage.py migrate music.json --reset
 # flask --app manage.py migrate all --reset
 
-# Centralize migrations here
 MIGRATIONS = {
     "music.json": mc.MUSIC,
     "vlog.json": mc.VIDEO,
@@ -24,7 +23,6 @@ def create_app():
     # Load configs (from .env)
     app.config["MONGO_URI"] = os.getenv("MONGO_URI")
     app.config["MONGO_DB"] = os.getenv("MONGO_DB")
-    
     @app.cli.command("migrate")
     @click.argument("name", required=False)  # e.g., music.json / all
     @click.option("--reset", is_flag=True, help="Clear collection before inserting")

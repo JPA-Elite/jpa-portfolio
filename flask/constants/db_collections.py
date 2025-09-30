@@ -7,3 +7,4 @@ class MongoCollections:
     CONCERN = "concern"
     DEVICE_INFO = "device_info"
     DONATION = "donation"
+    VISITORS = "visitors"

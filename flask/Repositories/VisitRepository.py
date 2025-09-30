@@ -2,10 +2,11 @@ from Repositories.Interfaces.IVisitRepository import IVisitRepository
 from Repositories.BaseRepository import BaseRepository
 from datetime import datetime
 from config import SortOrder
+from constants.db_collections import MongoCollections as mc
 
 class VisitRepository(IVisitRepository, BaseRepository):
     def __init__(self):
-        super().__init__()  # Call the constructor of the base class
+        super().__init__(mc.VISITORS)  # Call the constructor of the base class
 
     def get_paginated_documents(self, page, per_page, order: SortOrder):
         # Fetch all documents and convert the timestamp to datetime
@@ -17,7 +18,7 @@ class VisitRepository(IVisitRepository, BaseRepository):
                     doc["timestamp"] = datetime.strptime(doc["timestamp"], "%m/%d/%Y - %I:%M %p")
                 except ValueError:
                     doc["timestamp"] = None  # Handle invalid timestamp formats
-        
+
         # Sort documents by the datetime timestamp
         sorted_documents = sorted(
             [doc for doc in all_documents if doc["timestamp"] is not None],
@@ -33,7 +34,7 @@ class VisitRepository(IVisitRepository, BaseRepository):
         # Total document count
         total_docs = len(all_documents)
 
-        return paginated_documents, total_docs  
+        return paginated_documents, total_docs
 
     def delete_system_info_by_id(self, object_id):
         """

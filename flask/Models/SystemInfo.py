@@ -19,7 +19,7 @@ class SystemInfo:
         timestamp,
         ip_address=None,
         city=None,
-        region=None, 
+        region=None,
         country=None,
         location=None,
         _id=None,
@@ -81,5 +81,5 @@ class SystemInfo:
         # Include _id if present
         if self._id is not None:
             data["_id"] = self._id
-        
+
         return data

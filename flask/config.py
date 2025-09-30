@@ -27,6 +27,7 @@ DEVICE_INFO_VISIT_PAGE = "pages/visitors.html"
 ERROR_404_PAGE = "error/404.html"
 
 # admin pages
+ADMIN_LOGIN_PAGE = "admin/login.html"
 ADMIN_DASHBOARD_PAGE = "admin/dist/dashboard.html"
 ADMIN_CHAT_PAGE = "admin/dist/chat.html"
 ADMIN_MUSIC_PAGE = "admin/dist/music.html"
@@ -62,6 +63,10 @@ def get_locale():
 class SortOrder(Enum):
     ASC = 1
     DESC = -1
+
+class SortOrderStr(str, Enum):
+    ASC = "ASC"
+    DESC = "DESC"
 
 class HTTPMethod(str, Enum):
     GET = 'GET'

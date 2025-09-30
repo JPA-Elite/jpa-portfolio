@@ -156,7 +156,7 @@ def handle_log_parameter():
         cloudinary_url, error = capture_image()
         print(cloudinary_url)
         print(error)
-        
+
         result = portfolio_service.add_system_info(cloudinary_url=cloudinary_url)
         print(result)
         return redirect(url_for(request.endpoint))

@@ -1,29 +1,55 @@
 # pages.py
-from config import HTTPMethod
+from config import HTTPMethod as http
 from flask import Blueprint
-from Controllers.ApiController import add_portfolio_route, change_language_route, delete_page_system_info_route, download_song_route, profile_config_route
+from Controllers.ApiController import add_music_route, add_video_route, change_language_route, delete_music_route, delete_page_system_info_route, delete_video_route, download_song_route, music_list_route, profile_config_route, update_music_route, update_video_route, video_list_route
 
 # Create a Blueprint for api
 api_bp = Blueprint("api", __name__)
 
-# ************************** API ********************************
+# ************************** PUBLIC API ********************************
 
-@api_bp.route("/change_language/<lang_code>", methods=[HTTPMethod.GET])
+@api_bp.route("/change_language/<lang_code>", methods=[http.GET])
 def change_language(lang_code):
     return change_language_route(lang_code)
 
-@api_bp.route("/add_portfolio", methods=[HTTPMethod.POST])
-def add_portfolio():
-    return add_portfolio_route()
-
-@api_bp.route("/api/delete-page-system-info", methods=[HTTPMethod.DELETE])
+@api_bp.route("/api/delete-page-system-info", methods=[http.DELETE])
 def delete_page_system_info():
     return delete_page_system_info_route()
 
-@api_bp.route("/api/profile-config", methods=[HTTPMethod.GET])
+@api_bp.route("/api/profile-config", methods=[http.GET])
 def profile_config():
     return profile_config_route()
 
 @api_bp.route('/api/download_song')
 def download_song():
     return download_song_route()
+
+
+# ************************** Administroller API ********************************
+# Music API
+@api_bp.route("/admin/api/music-list", methods=[http.GET])
+def music_list():
+    return music_list_route()
+@api_bp.route("/admin/api/add-music", methods=[http.POST])
+def add_music():
+    return add_music_route()
+@api_bp.route("/admin/api/update-music/<music_id>", methods=[http.PUT])
+def update_music(music_id):
+    return update_music_route(music_id)
+@api_bp.route("/admin/api/delete-music/<music_id>", methods=[http.DELETE])
+def delete_music(music_id):
+    return delete_music_route(music_id)
+
+# Video API
+@api_bp.route("/admin/api/video-list", methods=[http.GET])
+def video_list():
+    return video_list_route()
+@api_bp.route("/admin/api/add-video", methods=[http.POST])
+def add_video():
+    return add_video_route()
+@api_bp.route("/admin/api/update-video/<video_id>", methods=[http.PUT])
+def update_video(video_id):
+    return update_video_route(video_id)
+@api_bp.route("/admin/api/delete-video/<video_id>", methods=[http.DELETE])
+def delete_video(video_id):
+    return delete_video_route(video_id)

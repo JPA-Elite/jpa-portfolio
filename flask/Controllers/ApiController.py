@@ -2,13 +2,21 @@ from flask import redirect, url_for, request, jsonify, Response
 import requests
 from Services.PortfolioService import PortfolioService
 from Services.VisitService import VisitService
+from Services.MusicService import MusicService
+from Services.VideoService import VideoService
 from Repositories.PortfolioRepository import PortfolioRepository
 from Repositories.VisitRepository import VisitRepository
+from Repositories.MusicRepository import MusicRepository
+from Repositories.VideoRepository import VideoRepository
 from flask_babel import gettext
+from config import SortOrder, SortOrderStr
+import json
 
 # Initialize Services
 portfolio_service = PortfolioService(repository=PortfolioRepository())
 visit_service = VisitService(repository=VisitRepository())
+music_service = MusicService(repository=MusicRepository())
+video_service = VideoService(repository=VideoRepository())
 
 # ************************** API Controller ********************************
 
@@ -20,20 +28,6 @@ def change_language_route(lang_code = ""):
     )
     response.set_cookie("lang", lang_code)
     return response
-
-
-def add_portfolio_route():
-    data = {
-        "name": request.form.get("name"),
-        "email": request.form.get("email"),
-    }
-
-    try:
-        portfolio_service.add_portfolio(data["name"], data["email"])
-        return jsonify({"message": "Data inserted successfully!"}), 201
-    except Exception as e:
-        return jsonify({"error": str(e)}), 400
-
 
 def delete_page_system_info_route():
     """Delete only the records displayed on the current page."""
@@ -74,3 +68,114 @@ def download_song_route():
             "Content-Type": r.headers.get("Content-Type", "audio/mpeg")
         }
     )
+
+# -------------------Administrator Controller------------------------
+# Music Controller
+def music_list_route():
+    page = int(request.args.get("page", 1))
+    per_page = int(request.args.get("per_page", 10))
+    order = SortOrder.DESC if request.args.get("order", "desc").upper() == SortOrderStr.DESC else SortOrder.ASC
+    music_list, total_music = music_service.get_paginated_music_list(page, per_page, order)
+
+    return jsonify({
+        "music": [music.to_dict() for music in music_list],
+        "total_music": total_music,
+        "total_pages": (total_music + per_page - 1) // per_page,
+    })
+
+def add_music_route():
+    title = request.form.get("title")
+    artist = request.form.get("artist")
+    music_file = request.files.get("music_file")
+    image_file = request.files.get("image_file")
+
+    # Pass raw request data + files to service
+    data = {
+        "title": title,
+        "artist": artist,
+        "music_file": music_file,
+        "image_file": image_file,
+    }
+
+    music_id = music_service.add_music(data)
+    return jsonify({"message": "Music added successfully", "music_id": music_id}), 201
+
+def update_music_route(music_id):
+    title = request.form.get("title")
+    artist = request.form.get("artist")
+    music_file = request.files.get("music_file")
+    image_file = request.files.get("image_file")
+
+    update_data = {
+        "title": title,
+        "artist": artist,
+        "music_file": music_file,
+        "image_file": image_file,
+    }
+
+    success = music_service.update_music(music_id, update_data)
+    if success:
+        return jsonify({"message": "Music updated successfully"}), 200
+    else:
+        return jsonify({"message": "Failed to update music"}), 400
+
+def delete_music_route(music_id):
+    success = music_service.delete_music(music_id)
+    if success:
+        return jsonify({"message": "Music deleted successfully"}), 200
+    else:
+        return jsonify({"message": "Music not found"}), 404
+
+# Video Controller
+def video_list_route():
+    page = int(request.args.get("page", 1))
+    per_page = int(request.args.get("per_page", 10))
+    order = SortOrder.DESC if request.args.get("order", "desc").upper() == SortOrderStr.DESC else SortOrder.ASC
+    video_list, total_video = video_service.get_paginated_video_list(page, per_page, order)
+    return jsonify({
+        "video": [video.to_dict() for video in video_list],
+        "total_video": total_video,
+        "total_pages": (total_video + per_page - 1) // per_page,
+    })
+
+def add_video_route():
+    title = request.form.get("title")
+    description = request.form.get("description")
+    video_file = request.files.get("video_file")
+    tags = request.form.get("tags")
+    # Pass raw request data + files to service
+    data = {
+        "title": json.loads(title) if title else {},
+        "description": json.loads(description) if description else {},
+        "video_file": video_file,
+        "tags": json.loads(tags) if tags else [],
+    }
+
+    video_id = video_service.add_video(data)
+    return jsonify({"message": "Video added successfully", "video_id": video_id}), 201
+
+def update_video_route(video_id):
+    title = request.form.get("title")
+    description = request.form.get("description")
+    video_file = request.files.get("video_file")
+    tags = request.form.get("tags")
+
+    update_data = {
+        "title": json.loads(title) if title else {},
+        "description": json.loads(description) if description else {},
+        "video_file": video_file,
+        "tags": json.loads(tags) if tags else [],
+    }
+
+    success = video_service.update_video(video_id, update_data)
+    if success:
+        return jsonify({"message": "Video updated successfully"}), 200
+    else:
+        return jsonify({"message": "Failed to update video"}), 400
+
+def delete_video_route(video_id):
+    success = video_service.delete_video(video_id)
+    if success:
+        return jsonify({"message": "Video deleted successfully"}), 200
+    else:
+        return jsonify({"message": "Video not found"}), 404

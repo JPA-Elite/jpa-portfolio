@@ -11,14 +11,16 @@ from config import (
 from flask_babel import Babel  # type: ignore
 from pages import pages_bp
 from api import api_bp
-from datetime import datetime
+from datetime import datetime, timedelta
 from sitemap import sitemap_bp  # Import the sitemap blueprint
 import os
 
 app = Flask(__name__)
 
+app.config["SECRET_KEY"] = os.urandom(24)
 app.config["LANGUAGES"] = LANGUAGES
 app.config["BABEL_DEFAULT_LOCALE"] = BABEL_DEFAULT_LOCALE
+app.config["PERMANENT_SESSION_LIFETIME"] = timedelta(days=30)
 app.register_blueprint(pages_bp)
 # Register the sitemap blueprint
 app.register_blueprint(sitemap_bp)

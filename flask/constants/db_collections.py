@@ -8,3 +8,4 @@ class MongoCollections:
     DEVICE_INFO = "device_info"
     DONATION = "donation"
     VISITORS = "visitors"
+    USERS = "users"

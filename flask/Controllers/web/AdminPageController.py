@@ -1,16 +1,19 @@
 from datetime import timedelta
 from flask import current_app, flash, redirect, render_template, request, session, url_for
 from config import (
-    ADMIN_CHAT_PAGE,
     ADMIN_DASHBOARD_PAGE,
     ADMIN_LOGIN_PAGE,
     ADMIN_MUSIC_PAGE,
-    ADMIN_PROJECT_PAGE,
     ADMIN_SETTINGS_PAGE,
     ADMIN_VIDEO_PAGE,
 )
 from config import HTTPMethod as http
 from constants.login_roles import ROLE_ADMIN
+from Services.AuthService import AuthService
+from Repositories.AuthRepository import AuthRepository
+
+# Initialize Services
+auth_service = AuthService(repository=AuthRepository())
 
 # ************************** PAGES ********************************
 def admin_login_route():
@@ -23,10 +26,10 @@ def admin_login_route():
         password = request.form.get("password")
         remember = request.form.get("remember")
 
-        # Dummy admin (replace with DB later)
-        if username == "admin" and password == "1234":
-            session["user_id"] = username
-            session["role"] = ROLE_ADMIN
+        user = auth_service.authenticate_admin(username, password)
+        if user:
+            session["user_id"] = str(user["_id"])
+            session["role"] = user["role"]
 
             # ✅ Set session lifetime if "remember me" is checked
             if remember:
@@ -51,17 +54,11 @@ def admin_logout_route():
 def admin_dashboard_route():
     return render_template(ADMIN_DASHBOARD_PAGE, title="Admin Dashboard")
 
-def admin_chat_route():
-    return render_template(ADMIN_CHAT_PAGE, title="Admin Chat")
-
 def admin_video_route():
     return render_template(ADMIN_VIDEO_PAGE, title="Admin Video")
 
 def admin_music_route():
     return render_template(ADMIN_MUSIC_PAGE, title="Admin Music")
-
-def admin_project_route():
-    return render_template(ADMIN_PROJECT_PAGE, title="Admin Project")
 
 def admin_settings_route():
     return render_template(ADMIN_SETTINGS_PAGE, title="Admin Settings")

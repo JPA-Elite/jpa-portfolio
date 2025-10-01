@@ -29,10 +29,8 @@ ERROR_404_PAGE = "error/404.html"
 # admin pages
 ADMIN_LOGIN_PAGE = "admin/login.html"
 ADMIN_DASHBOARD_PAGE = "admin/dist/dashboard.html"
-ADMIN_CHAT_PAGE = "admin/dist/chat.html"
 ADMIN_MUSIC_PAGE = "admin/dist/music.html"
 ADMIN_VIDEO_PAGE = "admin/dist/video.html"
-ADMIN_PROJECT_PAGE = "admin/dist/project.html"
 ADMIN_SETTINGS_PAGE = "admin/dist/settings.html"
 
 LANGUAGES = {

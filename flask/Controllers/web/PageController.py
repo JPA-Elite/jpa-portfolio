@@ -3,6 +3,8 @@ from Services.PortfolioService import PortfolioService
 from Services.VisitService import VisitService
 from Repositories.PortfolioRepository import PortfolioRepository
 from Repositories.VisitRepository import VisitRepository
+from Services.VideoService import VideoService
+from Repositories.VideoRepository import VideoRepository
 from utils import filter_data, paginate_data, capture_image, get_random_tags
 from config import (
     ADD_PORTFOLIO_PAGE,
@@ -18,6 +20,7 @@ from config import (
     MUSIC_PAGE,
     DEVICE_INFO_VISIT_PAGE,
     DONATION_PAGE,
+    SortOrder,
     get_locale,
 )
 from flask_babel import gettext  # type: ignore
@@ -27,6 +30,7 @@ import requests
 # Initialize Services
 portfolio_service = PortfolioService(repository=PortfolioRepository())
 visit_service = VisitService(repository=VisitRepository())
+video_service = VideoService(repository=VideoRepository())
 
 # ************************** PAGES ********************************
 
@@ -93,21 +97,23 @@ def gallery_route():
     )
 
 def vlog_route():
-    vlog_url = url_for("static", filename="json/vlog.json", _external=True)
-    response = requests.get(vlog_url)
-    vlog_data = response.json()
-
     search_query = request.args.get("search", "")
     tags_query = request.args.get("tags", "")
-    filtered_vlog_data = filter_data(vlog_data, get_locale(), search_query, tags_query)
-
     page = request.args.get("page", 1, type=int)
-    items_per_page = 3
+    items_per_page = 3  # UI pagination size
+
+    video_list, total_video = video_service.get_paginated_video_list(
+        page=1,
+        per_page=999999,  # basically "return everything"
+        order=SortOrder.DESC,
+    )
+
+    vlog_data = [video.to_dict() for video in video_list]
+    filtered_vlog_data = filter_data(vlog_data, get_locale(), search_query, tags_query)
     paginated_vlog_data, total_pages = paginate_data(
         filtered_vlog_data, page, items_per_page
     )
     random_tags = get_random_tags(vlog_data, 12)
-
 
     return handle_log_parameter() or render_template(
         VLOG_PAGE,

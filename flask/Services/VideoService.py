@@ -99,3 +99,12 @@ class VideoService:
         cleanup_uploaded_files(existing_video.get("video_url"))
         return self.repository.delete_video(video_id)
 
+    def search_video_paginated(self, search_query, tags, locale, page, per_page, order):
+        results, total = self.repository.search_video_paginated(search_query, tags, locale, page, per_page, order)
+        gallery = [Video.from_dict(result) for result in results]
+
+        return gallery, total
+
+    def get_all_tags(self, limit: int = 50):
+        return self.repository.get_all_tags(limit)
+

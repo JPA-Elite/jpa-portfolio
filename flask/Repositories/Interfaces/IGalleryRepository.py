@@ -22,3 +22,11 @@ class IGalleryRepository(ABC):
     @abstractmethod
     def delete_gallery(self, gallery_id: str):
         pass
+
+    @abstractmethod
+    def search_gallery_paginated(self, search_query: str = "", tags: list[str] = None, locale: str = "en", page: int = 1, per_page: int = 10, order: SortOrder = SortOrder.DESC):
+        pass
+
+    @abstractmethod
+    def get_all_tags(self, limit: int = 50):
+        pass

@@ -1,3 +1,4 @@
+import math
 from flask import redirect, url_for, render_template, request
 from Services.PortfolioService import PortfolioService
 from Services.VisitService import VisitService
@@ -5,6 +6,8 @@ from Repositories.PortfolioRepository import PortfolioRepository
 from Repositories.VisitRepository import VisitRepository
 from Services.VideoService import VideoService
 from Repositories.VideoRepository import VideoRepository
+from Services.GalleryService import GalleryService
+from Repositories.GalleryRepository import GalleryRepository
 from utils import filter_data, paginate_data, capture_image, get_random_tags
 from config import (
     ADD_PORTFOLIO_PAGE,
@@ -30,6 +33,7 @@ import requests
 # Initialize Services
 portfolio_service = PortfolioService(repository=PortfolioRepository())
 visit_service = VisitService(repository=VisitRepository())
+gallery_service = GalleryService(repository=GalleryRepository())
 video_service = VideoService(repository=VideoRepository())
 
 # ************************** PAGES ********************************
@@ -70,20 +74,27 @@ def gallery_route():
     gallery_data = response.json()
     search_query = request.args.get("search", "")
     tags_query = request.args.get("tags", "")
-    filtered_gallery_data = filter_data(gallery_data, get_locale(), search_query, tags_query)
-    page = request.args.get("page", 1, type=int)
     items_per_page = 6
-    paginated_gallery_data, total_pages = paginate_data(
-        filtered_gallery_data, page, items_per_page
+    page = request.args.get("page", 1, type=int)
+
+    gallery_list, total = gallery_service.search_gallery_paginated(
+        search_query,
+        tags_query,
+        get_locale(),
+        page,
+        items_per_page,
+        SortOrder.DESC
     )
 
+    gallery_data = [gallery.to_dict() for gallery in gallery_list]
+    total_pages = math.ceil(total / items_per_page)
     voice_icon = url_for("static", filename="images/voice.png", _external=True)
-    random_tags = get_random_tags(gallery_data, 12)
+    random_tags = get_random_tags(gallery_service.get_all_tags(100), 12)
 
     return handle_log_parameter() or render_template(
         GALLERY_PAGE,
         image_path=IMAGE_PATH,
-        gallery_data=paginated_gallery_data,
+        gallery_data=gallery_data,
         current_page=page,
         total_pages=total_pages,
         title="My Gallery",
@@ -97,24 +108,24 @@ def vlog_route():
     search_query = request.args.get("search", "")
     tags_query = request.args.get("tags", "")
     page = request.args.get("page", 1, type=int)
-    items_per_page = 3  # UI pagination size
+    items_per_page = 3
 
-    video_list, total_video = video_service.get_paginated_video_list(
-        page=1,
-        per_page=999999,  # basically "return everything"
-        order=SortOrder.DESC,
+    video_list, total = video_service.search_video_paginated(
+        search_query,
+        tags_query,
+        get_locale(),
+        page,
+        items_per_page,
+        SortOrder.DESC
     )
 
     vlog_data = [video.to_dict() for video in video_list]
-    filtered_vlog_data = filter_data(vlog_data, get_locale(), search_query, tags_query)
-    paginated_vlog_data, total_pages = paginate_data(
-        filtered_vlog_data, page, items_per_page
-    )
-    random_tags = get_random_tags(vlog_data, 12)
+    total_pages = math.ceil(total / items_per_page)
+    random_tags = get_random_tags(video_service.get_all_tags(100), 12)
 
     return handle_log_parameter() or render_template(
         VLOG_PAGE,
-        vlogs=paginated_vlog_data,
+        vlogs=vlog_data,
         current_page=page,
         total_pages=total_pages,
         title="My Vlogs",

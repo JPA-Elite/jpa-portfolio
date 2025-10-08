@@ -99,3 +99,11 @@ class GalleryService:
         cleanup_uploaded_files(None, existing_gallery.get("image_url"))
         return self.repository.delete_gallery(gallery_id)
 
+    def search_gallery_paginated(self, search_query, tags, locale, page, per_page, order):
+        results, total = self.repository.search_gallery_paginated(search_query, tags, locale, page, per_page, order)
+        gallery = [Gallery.from_dict(result) for result in results]
+
+        return gallery, total
+
+    def get_all_tags(self, limit: int = 50):
+        return self.repository.get_all_tags(limit)

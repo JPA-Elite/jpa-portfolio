@@ -61,16 +61,26 @@ def filter_data(
 
     return data
 
-def get_random_tags(data, tags_length = 10):
+def get_random_tags(data, tags_length=10):
     unique_tags = set()
 
-    for item in data:
-        if "tags" in item:
-            unique_tags.update(item["tags"])
+    if not data:
+        return []
 
+    # Case 1: data contains dicts with 'tags'
+    if isinstance(data[0], dict):
+        for item in data:
+            if "tags" in item and isinstance(item["tags"], list):
+                unique_tags.update(item["tags"])
+    # Case 2: data is already a list of tag strings
+    elif isinstance(data[0], str):
+        unique_tags.update(data)
+
+    # Convert to list and shuffle randomly
     unique_tags = list(unique_tags)
     random.shuffle(unique_tags)
 
+    # Return limited number of random tags
     return unique_tags[:tags_length]
 
 

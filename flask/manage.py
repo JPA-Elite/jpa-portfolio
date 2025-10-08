@@ -14,6 +14,7 @@ load_dotenv()
 # flask --app manage.py migrate users --reset
 
 MIGRATIONS = {
+    "gallery.json": mc.GALLERY,
     "music.json": mc.MUSIC,
     "vlog.json": mc.VIDEO,
     "project.json": mc.PROJECT,

@@ -9,3 +9,4 @@ class MongoCollections:
     DONATION = "donation"
     VISITORS = "visitors"
     USERS = "users"
+    GALLERY = "gallery"

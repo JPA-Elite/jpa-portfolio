@@ -66,14 +66,11 @@ def profile_route():
 
 def gallery_route():
     gallery_url = url_for("static", filename="json/gallery.json", _external=True)
-
     response = requests.get(gallery_url)
     gallery_data = response.json()
-
     search_query = request.args.get("search", "")
     tags_query = request.args.get("tags", "")
     filtered_gallery_data = filter_data(gallery_data, get_locale(), search_query, tags_query)
-
     page = request.args.get("page", 1, type=int)
     items_per_page = 6
     paginated_gallery_data, total_pages = paginate_data(

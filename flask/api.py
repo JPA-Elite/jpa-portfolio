@@ -4,6 +4,7 @@ from flask import Blueprint
 from Controllers.api.BaseController import change_language_route, delete_page_system_info_route, download_song_route, profile_config_route
 from Controllers.api.MusicController import add_music_route, delete_music_route, music_list_route, update_music_route
 from Controllers.api.VideoController import add_video_route, delete_video_route, update_video_route, video_list_route
+from Controllers.api.GalleryController import add_gallery_route, delete_gallery_route, gallery_list_route, update_gallery_route
 
 # Create a Blueprint for api
 api_bp = Blueprint("api", __name__)
@@ -38,6 +39,20 @@ def update_music(music_id):
 @api_bp.route("/admin/api/delete-music/<music_id>", methods=[http.DELETE])
 def delete_music(music_id):
     return delete_music_route(music_id)
+
+# Gallery API
+@api_bp.route("/admin/api/gallery-list", methods=[http.GET])
+def gallery_list():
+    return gallery_list_route()
+@api_bp.route("/admin/api/add-gallery", methods=[http.POST])
+def add_gallery():
+    return add_gallery_route()
+@api_bp.route("/admin/api/update-gallery/<gallery_id>", methods=[http.PUT])
+def update_gallery(gallery_id):
+    return update_gallery_route(gallery_id)
+@api_bp.route("/admin/api/delete-gallery/<gallery_id>", methods=[http.DELETE])
+def delete_gallery(gallery_id):
+    return delete_gallery_route(gallery_id)
 
 # Video API
 @api_bp.route("/admin/api/video-list", methods=[http.GET])

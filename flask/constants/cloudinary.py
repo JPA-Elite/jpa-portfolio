@@ -6,6 +6,7 @@ class CloudinaryFolders(Enum):
     VIDEO = "portfolio_videos"
     PROJECT = "portfolio_projects"
     PDF = "portfolio_pdf"
+    GALLERY = "portfolio_gallery"
 
 class CloudinaryResourceType(Enum):
     IMAGE = "image"

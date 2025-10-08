@@ -2,6 +2,7 @@ from datetime import timedelta
 from flask import current_app, flash, redirect, render_template, request, session, url_for
 from config import (
     ADMIN_DASHBOARD_PAGE,
+    ADMIN_GALLERY_PAGE,
     ADMIN_LOGIN_PAGE,
     ADMIN_MUSIC_PAGE,
     ADMIN_SETTINGS_PAGE,
@@ -53,6 +54,9 @@ def admin_logout_route():
 
 def admin_dashboard_route():
     return render_template(ADMIN_DASHBOARD_PAGE, title="Admin Dashboard")
+
+def admin_gallery_route():
+    return render_template(ADMIN_GALLERY_PAGE, title="Admin Gallery")
 
 def admin_video_route():
     return render_template(ADMIN_VIDEO_PAGE, title="Admin Video")

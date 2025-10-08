@@ -30,6 +30,7 @@ ERROR_404_PAGE = "error/404.html"
 ADMIN_LOGIN_PAGE = "admin/login.html"
 ADMIN_DASHBOARD_PAGE = "admin/dist/dashboard.html"
 ADMIN_MUSIC_PAGE = "admin/dist/music.html"
+ADMIN_GALLERY_PAGE = "admin/dist/gallery.html"
 ADMIN_VIDEO_PAGE = "admin/dist/video.html"
 ADMIN_SETTINGS_PAGE = "admin/dist/settings.html"
 

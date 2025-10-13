@@ -38,3 +38,6 @@ class VisitService:
 
         except Exception as e:
             return {"message": str(e), "status": "error"}
+
+    def count_visits(self, where_condition: dict = None):
+        return self.repository.count_visits(where_condition)

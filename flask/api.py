@@ -5,6 +5,7 @@ from Controllers.api.BaseController import change_language_route, delete_page_sy
 from Controllers.api.MusicController import add_music_route, delete_music_route, music_list_route, update_music_route
 from Controllers.api.VideoController import add_video_route, delete_video_route, update_video_route, video_list_route
 from Controllers.api.GalleryController import add_gallery_route, delete_gallery_route, gallery_list_route, update_gallery_route
+from Controllers.api.DashboardController import visits_info_route
 from auth.middleware import admin_login_required
 
 # Create a Blueprint for api
@@ -30,6 +31,12 @@ def download_song():
 
 
 # ************************** Administroller API ********************************
+# Dashboard API
+@api_bp.route("/admin/api/visits/info", methods=[http.GET])
+@admin_login_required
+def visits_info():
+    return visits_info_route()
+
 # Music API
 @api_bp.route("/admin/api/music-list", methods=[http.GET])
 @admin_login_required

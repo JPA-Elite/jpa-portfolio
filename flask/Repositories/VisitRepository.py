@@ -41,3 +41,15 @@ class VisitRepository(IVisitRepository, BaseRepository):
         Delete a system info record from the database using _id.
         """
         self.collection.delete_one({"_id": object_id})
+
+    def count_visits(self, where_condition: dict = None):
+        """
+        Count the number of visit documents in the collection.
+        Optionally accepts a filter condition to count specific visits.
+        Example: count_visits({"device": "Windows"})
+        """
+        if where_condition is None:
+            where_condition = {}
+
+        total_count = self.collection.count_documents(where_condition)
+        return total_count

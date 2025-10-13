@@ -10,3 +10,7 @@ class IVisitRepository(ABC):
     def delete_system_info_by_id(self, object_id):
         pass
 
+    @abstractmethod
+    def count_visits(self, where_condition: dict = None):
+        pass
+

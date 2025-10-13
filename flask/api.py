@@ -39,7 +39,6 @@ def visits_info():
 
 # Music API
 @api_bp.route("/admin/api/music-list", methods=[http.GET])
-@admin_login_required
 def music_list():
     return music_list_route()
 

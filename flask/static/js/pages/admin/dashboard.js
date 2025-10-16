@@ -16,11 +16,13 @@ function animateCount(element, start, end, duration) {
 
 document.addEventListener("DOMContentLoaded", async () => {
     const visitService = new VisitService();
-    const element = document.getElementById("visitorCount");
+    const visitorCount = document.getElementById("visitorCount");
+    const botCount = document.getElementById("botCount");
 
     try {
         const count = await visitService.getVisitCount();
-        animateCount(element, 0, count, 800);
+        animateCount(visitorCount, 0, count.visitor_total_count, 800);
+        animateCount(botCount, 0, count.bot_total_count, 800);
     } catch (err) {
         console.error("Dashboard Error:", err);
     }

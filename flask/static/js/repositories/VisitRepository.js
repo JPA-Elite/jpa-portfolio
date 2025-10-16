@@ -9,7 +9,7 @@ export class VisitRepository extends IVisitRepository {
 
     /**
      * Fetch total visits from API endpoint
-     * @returns {Promise<number>}
+     * @returns {Promise<any>}
      */
     async fetchVisitCount() {
         try {
@@ -17,7 +17,7 @@ export class VisitRepository extends IVisitRepository {
             if (!response.ok) throw new Error("Failed to fetch visit count");
 
             const data = await response.json();
-            return data.count || 0;
+            return data;
         } catch (error) {
             console.error("VisitRepository Error:", error);
             throw error;

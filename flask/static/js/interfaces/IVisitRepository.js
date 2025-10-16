@@ -7,7 +7,7 @@
 export class IVisitRepository {
     /**
      * Fetch total visit count from the server.
-     * @returns {Promise<number>} Resolves with the total visit count.
+     * @returns {Promise<any>} Resolves with the total visit count.
      */
     async fetchVisitCount() {
         throw new Error("Method 'fetchVisitCount()' must be implemented.");

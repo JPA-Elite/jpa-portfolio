@@ -44,12 +44,38 @@ class VisitRepository(IVisitRepository, BaseRepository):
 
     def count_visits(self, where_condition: dict = None):
         """
-        Count the number of visit documents in the collection.
-        Optionally accepts a filter condition to count specific visits.
-        Example: count_visits({"device": "Windows"})
+        Count total visits and separate 'Other' (bot) visits from normal visitors (case-insensitive).
+
+        Returns:
+            dict: {
+                "visitor_total_count": int,
+                "bot_total_count": int
+            }
+        Example:
+            {
+                "visitor_total_count": 120,
+                "bot_total_count": 15
+            }
         """
         if where_condition is None:
             where_condition = {}
 
-        total_count = self.collection.count_documents(where_condition)
-        return total_count
+        # Case-insensitive filter for 'Other'
+        other_filter = {"$regex": "^other$", "$options": "i"}
+
+        # Count where os is not 'Other' (case-insensitive)
+        visitor_total_count = self.collection.count_documents({
+            **where_condition,
+            "os": {"$not": other_filter}
+        })
+
+        # Count where os IS 'Other' (case-insensitive)
+        bot_total_count = self.collection.count_documents({
+            **where_condition,
+            "os": other_filter
+        })
+
+        return {
+            "visitor_total_count": visitor_total_count,
+            "bot_total_count": bot_total_count
+        }

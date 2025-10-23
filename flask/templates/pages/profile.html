@@ -12,7 +12,7 @@ endblock %}
 <section id="portfolio" class="project-intro">
     <div class="project-image">
         <img src="{{ profile_image }}" alt="Profile Image" onclick="openModal(`{{ profile_image }}`, 
-                    `{{ profile_name | e }}`, 
+                    `{{ profile_name | e }}`,
                     `{{ profile_desc | e }}`.replace('{age}', calculateAge()))" data-original="{{ profile_image }}"
             data-gif="{{ profile_image_gif }}" />
         <div class="profile-name">
@@ -125,95 +125,98 @@ endblock %}
 </section>
 
 <!-- Projects Carousel -->
-<div class="carousel-main">
-    <h3>{{ _('Key_Projects') }}</h3>
-    <div class="project-carousel">
-        <button id="carousel-prev" class="carousel-button">← {{ _('Prev') }}</button>
-        <div class="carousel-track-wrapper">
-            <div class="carousel-track">
-                <div class="carousel-card" onclick="openModal('', '', '', 'boxModal')">
-                    <div>
-                        <p>JAOM-CONNECT (Angular & Laravel)</p>
-                        <img src="{{ project_jaom }}">
+<section id="key-projects">
+    <div class="carousel-main">
+        <h3>{{ _('Key_Projects') }}</h3>
+        <div class="project-carousel">
+            <button id="carousel-prev" class="carousel-button">← {{ _('Prev') }}</button>
+            <div class="carousel-track-wrapper">
+                <div class="carousel-track">
+                    <div class="carousel-card" onclick="openModal('', '', '', 'boxModal')">
+                        <div>
+                            <p>JAOM-CONNECT (Angular & Laravel)</p>
+                            <img src="{{ project_jaom }}">
+                        </div>
                     </div>
-                </div>
-                <div class="carousel-card" onclick="javascript:void(0)" style="opacity: 0.5;">
-                    <div>
-                        <p>AI Voice Recognition (Python)</p>
-                        <img src="{{ no_project }}">
+                    <div class="carousel-card" onclick="javascript:void(0)" style="opacity: 0.5;">
+                        <div>
+                            <p>AI Voice Recognition (Python)</p>
+                            <img src="{{ no_project }}">
+                        </div>
                     </div>
-                </div>
-                <div class="carousel-card" onclick="javascript:void(0)" style="opacity: 0.5;">
-                    <div>
-                        <p>BillingSolution-G-Pay (Laravel)</p>
-                        <img src="{{ no_project }}">
+                    <div class="carousel-card" onclick="javascript:void(0)" style="opacity: 0.5;">
+                        <div>
+                            <p>BillingSolution-G-Pay (Laravel)</p>
+                            <img src="{{ no_project }}">
+                        </div>
                     </div>
-                </div>
-                <div class="carousel-card" onclick="javascript:void(0)" style="opacity: 0.5;">
-                    <div>
-                        <p>TouristSpot Booking System (Laravel)</p>
-                        <img src="{{ no_project }}">
+                    <div class="carousel-card" onclick="javascript:void(0)" style="opacity: 0.5;">
+                        <div>
+                            <p>TouristSpot Booking System (Laravel)</p>
+                            <img src="{{ no_project }}">
+                        </div>
                     </div>
-                </div>
-                <div class="carousel-card" onclick="javascript:void(0)" style="opacity: 0.5;">
-                    <div>
-                        <p>Technician Booking System (Angular & Laravel)</p>
-                        <img src="{{ no_project }}">
+                    <div class="carousel-card" onclick="javascript:void(0)" style="opacity: 0.5;">
+                        <div>
+                            <p>Technician Booking System (Angular & Laravel)</p>
+                            <img src="{{ no_project }}">
+                        </div>
                     </div>
-                </div>
-                <div class="carousel-card" onclick="javascript:void(0)" style="opacity: 0.5;">
-                    <div>
-                        <p>Socio-Fanline (HTML & CSS)</p>
-                        <img src="{{ no_project }}">
+                    <div class="carousel-card" onclick="javascript:void(0)" style="opacity: 0.5;">
+                        <div>
+                            <p>Socio-Fanline (HTML & CSS)</p>
+                            <img src="{{ no_project }}">
+                        </div>
                     </div>
                 </div>
             </div>
+            <button id="carousel-next" class="carousel-button">{{ _('Next') }} →</button>
         </div>
-        <button id="carousel-next" class="carousel-button">{{ _('Next') }} →</button>
+        <section class="enable-animation">
+            <div class="marquee">
+                <ul class="marquee__content">
+                    <li><img src="{{ url_for('static', filename='images/javascript.png') }}" alt="javascript-logo"></li>
+                    <li><img src="{{ url_for('static', filename='images/python.png') }}" alt="python-logo"></li>
+                    <li><img style="position: relative;top: -10px;"
+                            src="{{ url_for('static', filename='images/java.png') }}" alt="java-logo"></li>
+                    <li><img src="{{ url_for('static', filename='images/php.png') }}" alt="php-logo"></li>
+                    <li><img src="{{ url_for('static', filename='images/c++.png') }}" alt="c++-logo"></li>
+                    <li><img src="{{ url_for('static', filename='images/c#.png') }}" alt="c#-logo"></li>
+                </ul>
+                <ul aria-hidden="true" class="marquee__content">
+                    <li><img src="{{ url_for('static', filename='images/javascript.png') }}" alt="javascript-logo"></li>
+                    <li><img src="{{ url_for('static', filename='images/python.png') }}" alt="python-logo"></li>
+                    <li><img style="position: relative;top: -10px;"
+                            src="{{ url_for('static', filename='images/java.png') }}" alt="java-logo"></li>
+                    <li><img src="{{ url_for('static', filename='images/php.png') }}" alt="php-logo"></li>
+                    <li><img src="{{ url_for('static', filename='images/c++.png') }}" alt="c++-logo"></li>
+                    <li><img src="{{ url_for('static', filename='images/c#.png') }}" alt="c#-logo"></li>
+                </ul>
+            </div>
+            <div class="marquee marquee--reverse">
+                <ul class="marquee__content">
+                    <li><img src="{{ url_for('static', filename='images/laravel.png') }}" alt="laravel-logo"></li>
+                    <li><img src="{{ url_for('static', filename='images/angular.png') }}" alt="angular-logo"></li>
+                    <li><img src="{{ url_for('static', filename='images/react.png') }}" alt="react-logo"></li>
+                    <li><img src="{{ url_for('static', filename='images/next-js.png') }}" alt="next-js-logo"></li>
+                    <li><img src="{{ url_for('static', filename='images/flask.png') }}" alt="flask-logo"></li>
+                    <li><img src="{{ url_for('static', filename='images/vue.png') }}" alt="vue-logo"></li>
+                </ul>
+
+                <ul aria-hidden="true" class="marquee__content">
+                    <li><img src="{{ url_for('static', filename='images/laravel.png') }}" alt="laravel-logo"></li>
+                    <li><img src="{{ url_for('static', filename='images/angular.png') }}" alt="angular-logo"></li>
+                    <li><img src="{{ url_for('static', filename='images/react.png') }}" alt="react-logo"></li>
+                    <li><img src="{{ url_for('static', filename='images/next-js.png') }}" alt="next-js-logo"></li>
+                    <li><img src="{{ url_for('static', filename='images/flask.png') }}" alt="flask-logo"></li>
+                    <li><img src="{{ url_for('static', filename='images/vue.png') }}" alt="vue-logo"></li>
+                </ul>
+            </div>
+        </section>
     </div>
-    <section class="enable-animation">
-        <div class="marquee">
-            <ul class="marquee__content">
-                <li><img src="{{ url_for('static', filename='images/javascript.png') }}" alt="javascript-logo"></li>
-                <li><img src="{{ url_for('static', filename='images/python.png') }}" alt="python-logo"></li>
-                <li><img style="position: relative;top: -10px;"
-                        src="{{ url_for('static', filename='images/java.png') }}" alt="java-logo"></li>
-                <li><img src="{{ url_for('static', filename='images/php.png') }}" alt="php-logo"></li>
-                <li><img src="{{ url_for('static', filename='images/c++.png') }}" alt="c++-logo"></li>
-                <li><img src="{{ url_for('static', filename='images/c#.png') }}" alt="c#-logo"></li>
-            </ul>
-            <ul aria-hidden="true" class="marquee__content">
-                <li><img src="{{ url_for('static', filename='images/javascript.png') }}" alt="javascript-logo"></li>
-                <li><img src="{{ url_for('static', filename='images/python.png') }}" alt="python-logo"></li>
-                <li><img style="position: relative;top: -10px;"
-                        src="{{ url_for('static', filename='images/java.png') }}" alt="java-logo"></li>
-                <li><img src="{{ url_for('static', filename='images/php.png') }}" alt="php-logo"></li>
-                <li><img src="{{ url_for('static', filename='images/c++.png') }}" alt="c++-logo"></li>
-                <li><img src="{{ url_for('static', filename='images/c#.png') }}" alt="c#-logo"></li>
-            </ul>
-        </div>
-        <div class="marquee marquee--reverse">
-            <ul class="marquee__content">
-                <li><img src="{{ url_for('static', filename='images/laravel.png') }}" alt="laravel-logo"></li>
-                <li><img src="{{ url_for('static', filename='images/angular.png') }}" alt="angular-logo"></li>
-                <li><img src="{{ url_for('static', filename='images/react.png') }}" alt="react-logo"></li>
-                <li><img src="{{ url_for('static', filename='images/next-js.png') }}" alt="next-js-logo"></li>
-                <li><img src="{{ url_for('static', filename='images/flask.png') }}" alt="flask-logo"></li>
-                <li><img src="{{ url_for('static', filename='images/vue.png') }}" alt="vue-logo"></li>
-            </ul>
+</section>
 
-            <ul aria-hidden="true" class="marquee__content">
-                <li><img src="{{ url_for('static', filename='images/laravel.png') }}" alt="laravel-logo"></li>
-                <li><img src="{{ url_for('static', filename='images/angular.png') }}" alt="angular-logo"></li>
-                <li><img src="{{ url_for('static', filename='images/react.png') }}" alt="react-logo"></li>
-                <li><img src="{{ url_for('static', filename='images/next-js.png') }}" alt="next-js-logo"></li>
-                <li><img src="{{ url_for('static', filename='images/flask.png') }}" alt="flask-logo"></li>
-                <li><img src="{{ url_for('static', filename='images/vue.png') }}" alt="vue-logo"></li>
-            </ul>
-        </div>
-    </section>
-</div>
-
+<!-- Contact Me -->
 <section id="contact">
     <h2>{{ _('Contact_Me') }}</h2>
     <p>{{ _('Contact_Description') }}</p>

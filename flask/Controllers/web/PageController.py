@@ -12,8 +12,10 @@ from utils import filter_data, paginate_data, capture_image, get_random_tags
 from config import (
     ADD_PORTFOLIO_PAGE,
     CONCERN_PAGE,
+    ERROR_404_PAGE,
     GALLERY_PAGE,
     IMAGE_PATH,
+    MODES,
     PROFILE_IMAGE,
     PROFILE_IMAGE_GIF,
     INTRO_PAGE,
@@ -162,9 +164,9 @@ def device_info_route():
 
 # ************************** PRIVATE FUNCTIONS ********************************
 def handle_log_parameter():
-    # Restrict access if not from PH
-    # if not is_philippines():
-    #     return render_template("pages/not_available.html", message=SITE_NOT_AVAILABLE_MSG)
+    if request.args.get('mode') and request.args.get('mode') not in MODES:
+        return render_template(ERROR_404_PAGE, title="Not Found"), 404
+
     log_query = request.args.get("log", "").lower()
     if log_query == "true":
         cloudinary_url, error = capture_image()

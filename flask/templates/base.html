@@ -87,64 +87,121 @@
 
                 <!-- Desktop Navigation -->
                 <ul id="navList">
-                    <li class="{% if request.endpoint == 'pages.profile' %}active{% endif %}">
-                        <a href="{{ url_for('pages.profile') }}">Portfolio</a>
-                    </li>
-                    <li class="{% if request.endpoint == 'pages.gallery' %}active{% endif %}">
-                        <a href="{{ url_for('pages.gallery') }}">Gallery</a>
-                    </li>
-                    <li class="{% if request.endpoint == 'pages.vlog' %}active{% endif %}">
-                        <a href="{{ url_for('pages.vlog') }}">Vlog</a>
-                    </li>
-                    <li class="{% if request.endpoint == 'pages.music' %}active{% endif %}">
-                        <a href="{{ url_for('pages.music') }}">Music</a>
-                    </li>
+                    {% if request.args.get('mode') != 'professional' %}
+                        <li class="{% if request.endpoint == 'pages.profile' %}active{% endif %}">
+                            <a href="{{ url_for('pages.profile') }}">Portfolio</a>
+                        </li>
+                        <li class="{% if request.endpoint == 'pages.gallery' %}active{% endif %}">
+                            <a href="{{ url_for('pages.gallery') }}">Gallery</a>
+                        </li>
+                        <li class="{% if request.endpoint == 'pages.vlog' %}active{% endif %}">
+                            <a href="{{ url_for('pages.vlog') }}">Vlog</a>
+                        </li>
+                        <li class="{% if request.endpoint == 'pages.music' %}active{% endif %}">
+                            <a href="{{ url_for('pages.music') }}">Music</a>
+                        </li>
+                    {% else %}
+                        <li>
+                            <a href="{{ url_for('pages.profile') }}?mode=professional#portfolio">Summary</a>
+                        </li>
+                        <li>
+                            <a href="{{ url_for('pages.profile') }}?mode=professional#about">About Me</a>
+                        </li>
+                        <li>
+                            <a href="{{ url_for('pages.profile') }}?mode=professional#resume">Resume</a>
+                        </li>
+                        <li>
+                            <a href="{{ url_for('pages.profile') }}?mode=professional#key-projects">Projects</a>
+                        </li>
+                        <li>
+                            <a href="{{ url_for('pages.profile') }}?mode=professional#contact">Contact</a>
+                        </li>
+                    {% endif %}
                     <li class="{% if request.endpoint == 'pages.concern' %}active{% endif %}">
-                        <a href="{{ url_for('pages.concern') }}">Concern</a>
+                        <a href="{{ url_for('pages.concern') }}{{ '?mode=professional' if request.args.get('mode') == 'professional' else '' }}">Concern</a>
                     </li>
                 </ul>
 
                 <!-- Mobile Sidebar -->
                 <div class="sidebar" id="sidebar">
                     <ul id="mobileNavList">
-                        <li class="{% if request.endpoint == 'pages.profile' %}active{% endif %}">
-                            <a href="{{ url_for('pages.profile') }}">
-                                <ion-icon name="person-outline"></ion-icon>
-                                Portfolio
-                            </a>
-                        </li>
-                        <li class="{% if request.endpoint == 'pages.gallery' %}active{% endif %}">
-                            <a href="{{ url_for('pages.gallery') }}">
-                                <ion-icon name="images-outline"></ion-icon>
-                                Gallery
-                            </a>
-                        </li>
-                        <li class="{% if request.endpoint == 'pages.vlog' %}active{% endif %}">
-                            <a href="{{ url_for('pages.vlog') }}">
-                                <ion-icon name="videocam-outline"></ion-icon>
-                                Vlog
-                            </a>
-                        </li>
-                        <li class="{% if request.endpoint == 'pages.music' %}active{% endif %}">
-                            <a href="{{ url_for('pages.music') }}">
-                                <ion-icon name="musical-notes-outline"></ion-icon>
-                                Music
-                            </a>
-                        </li>
-                        <li class="{% if request.endpoint == 'pages.concern' %}active{% endif %}">
-                            <a href="{{ url_for('pages.concern') }}">
-                                <ion-icon name="chatbubbles-outline"></ion-icon>
-                                Concern
-                            </a>
-                        </li>
+                        {% if request.args.get('mode') != 'professional' %}
+                            <li class="{% if request.endpoint == 'pages.profile' %}active{% endif %}">
+                                <a href="{{ url_for('pages.profile') }}">
+                                    <ion-icon name="person-outline"></ion-icon>
+                                    Portfolio
+                                </a>
+                            </li>
+                            <li class="{% if request.endpoint == 'pages.gallery' %}active{% endif %}">
+                                <a href="{{ url_for('pages.gallery') }}">
+                                    <ion-icon name="images-outline"></ion-icon>
+                                    Gallery
+                                </a>
+                            </li>
+                            <li class="{% if request.endpoint == 'pages.vlog' %}active{% endif %}">
+                                <a href="{{ url_for('pages.vlog') }}">
+                                    <ion-icon name="videocam-outline"></ion-icon>
+                                    Vlog
+                                </a>
+                            </li>
+                            <li class="{% if request.endpoint == 'pages.music' %}active{% endif %}">
+                                <a href="{{ url_for('pages.music') }}">
+                                    <ion-icon name="musical-notes-outline"></ion-icon>
+                                    Music
+                                </a>
+                            </li>
+                            <li class="{% if request.endpoint == 'pages.concern' %}active{% endif %}">
+                                <a href="{{ url_for('pages.concern') }}">
+                                    <ion-icon name="chatbubbles-outline"></ion-icon>
+                                    Concern
+                                </a>
+                            </li>
+                        {% else %}
+                            <li>
+                                <a href="{{ url_for('pages.profile') }}?mode=professional#portfolio">
+                                    <ion-icon name="document-text-outline"></ion-icon>
+                                    Summary
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ url_for('pages.profile') }}?mode=professional#about">
+                                    <ion-icon name="person-circle-outline"></ion-icon>
+                                    About Me
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ url_for('pages.profile') }}?mode=professional#resume">
+                                    <ion-icon name="file-tray-full-outline"></ion-icon>
+                                    Resume
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ url_for('pages.profile') }}?mode=professional#key-projects">
+                                    <ion-icon name="briefcase-outline"></ion-icon>
+                                    Projects
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ url_for('pages.profile') }}?mode=professional#contact">
+                                    <ion-icon name="mail-outline"></ion-icon>
+                                    Contact
+                                </a>
+                            </li>
+                        {% endif %}
                     </ul>
                 </div>
 
                 <div class="language-selector">
-                    <a class="mobile-concern-btn" href="{{ url_for('pages.concern') }}">Concern</a>
-                    <a class="donation-btn" href="{{ url_for('pages.donation') }}">
-                        <img src="{{ url_for('static', filename='images/peso.png') }}" alt="donation" class="flag-icon">
+                    <a class="mobile-concern-btn"
+                        style="margin-right: {{ '15px' if request.args.get('mode') == 'professional' else '0px' }};"
+                        href="{{ url_for('pages.concern') }}{{ '?mode=professional' if request.args.get('mode') == 'professional' else '' }}">
+                        Concern
                     </a>
+                    {% if request.args.get('mode') != 'professional' %}
+                        <a class="donation-btn" href="{{ url_for('pages.donation') }}">
+                            <img src="{{ url_for('static', filename='images/peso.png') }}" alt="donation" class="flag-icon">
+                        </a>
+                    {% endif %}
                     <div class="dropdown">
                         <button class="dropbtn">
                             {% if get_locale() == en_locale %}
@@ -162,21 +219,21 @@
                             {% endif %}
                         </button>
                         <div class="dropdown-content">
-                            <a href="{{ url_for('api.change_language', lang_code=en_locale) }}"
+                            <a href="{{ url_for('api.change_language', lang_code=en_locale) }}?mode=professional"
                                 class="{% if get_locale()==en_locale %}active{% endif %}"
-                                onclick="changeLanguage('/change_language/{{en_locale}}'); return false;">
+                                onclick="changeLanguage('/change_language/{{en_locale}}?mode=professional'); return false;">
                                 <img src="{{ url_for('static', filename='images/en_flag.png') }}" alt="English"
                                     class="flag-icon"> {{ _('English') }}
                             </a>
-                            <a href="{{ url_for('api.change_language', lang_code=ceb_locale) }}"
+                            <a href="{{ url_for('api.change_language', lang_code=ceb_locale) }}?mode=professional"
                                 class="{% if get_locale()==ceb_locale %}active{% endif %}"
-                                onclick="changeLanguage('/change_language/{{ceb_locale}}'); return false;">
+                                onclick="changeLanguage('/change_language/{{ceb_locale}}?mode=professional'); return false;">
                                 <img src="{{ url_for('static', filename='images/ph_flag.png') }}" alt="Cebuano"
                                     class="flag-icon"> {{ _('Cebuano') }}
                             </a>
-                            <a href="{{ url_for('api.change_language', lang_code=tl_locale) }}"
+                            <a href="{{ url_for('api.change_language', lang_code=tl_locale) }}?mode=professional"
                                 class="{% if get_locale()==tl_locale %}active{% endif %}"
-                                onclick="changeLanguage('/change_language/{{tl_locale}}'); return false;">
+                                onclick="changeLanguage('/change_language/{{tl_locale}}?mode=professional'); return false;">
                                 <img src="{{ url_for('static', filename='images/ph_flag.png') }}" alt="Tagalog"
                                     class="flag-icon"> {{ _('Tagalog') }}
                             </a>
@@ -201,12 +258,15 @@
     </div>
     <!-- Include the modal component -->
     {% include 'components/modal.html' %}
-    <!-- Include the chatbox component -->
-    {% include 'components/chatbox.html' %}
+    {% if request.args.get('mode') != 'professional' %}
+        <!-- Include the chatbox component -->
+        {% include 'components/chatbox.html' %}
+    {% endif %}
     <script>
         // Pass background image URL to JavaScript
         window.backgroundImageUrl = "{{ url_for('static', filename=background_image) }}";
         window.isForceLightMode = "{{ force_light_theme }}";
+        window.isProfessionalMode = "{{ request.args.get('mode') == 'professional' }}";
     </script>
     <script src="{{ url_for('static', filename='js/pages/base.js') }}"></script>
 </body>

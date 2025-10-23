@@ -47,6 +47,11 @@ CEB_LOCALE = "ceb"
 FR_LOCALE = "fr"
 TL_LOCALE = "fil_PH"
 
+# mode options
+MODE_PROFESSIONAL = "professional"
+MODE_CASUAL = "casual"
+MODES = [MODE_PROFESSIONAL, MODE_CASUAL]
+
 # ************************** FUNCTIONS ********************************
 
 

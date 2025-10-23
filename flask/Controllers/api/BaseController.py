@@ -5,6 +5,7 @@ from Services.VisitService import VisitService
 from Repositories.PortfolioRepository import PortfolioRepository
 from Repositories.VisitRepository import VisitRepository
 from flask_babel import gettext
+from urllib.parse import urlparse, parse_qs, urlencode, urlunparse
 
 # Initialize Services
 portfolio_service = PortfolioService(repository=PortfolioRepository())
@@ -12,12 +13,24 @@ visit_service = VisitService(repository=VisitRepository())
 
 # ************************** API Controller ********************************
 
-def change_language_route(lang_code = ""):
-    referrer_url = request.referrer if request.referrer else url_for("index")
+def change_language_route(lang_code=""):
+    referrer_url = request.referrer or url_for("index")
 
-    response = redirect(
-        f"{referrer_url.split('?')[0]}?search="
-    )
+    parsed = urlparse(referrer_url)
+    params = parse_qs(parsed.query)
+
+    params.pop("search", None)
+
+    final_url = urlunparse((
+        parsed.scheme,
+        parsed.netloc,
+        parsed.path,
+        parsed.params,
+        urlencode(params, doseq=True),
+        parsed.fragment
+    ))
+
+    response = redirect(final_url)
     response.set_cookie("lang", lang_code)
     return response
 

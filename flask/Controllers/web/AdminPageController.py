@@ -29,6 +29,7 @@ def admin_login_route():
 
         user = auth_service.authenticate_admin(username, password)
         if user:
+            session['username'] = username
             session["user_id"] = str(user["_id"])
             session["role"] = user["role"]
 

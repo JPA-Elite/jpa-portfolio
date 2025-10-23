@@ -52,6 +52,7 @@ def admin_login():
     return admin_login_route()
 
 @pages_bp.route("/admin/logout")
+@admin_login_required
 def admin_logout():
     return admin_logout_route()
 

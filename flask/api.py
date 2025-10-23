@@ -7,6 +7,7 @@ from Controllers.api.VideoController import add_video_route, delete_video_route,
 from Controllers.api.GalleryController import add_gallery_route, delete_gallery_route, gallery_list_route, update_gallery_route
 from Controllers.api.DashboardController import visits_info_route
 from auth.middleware import admin_login_required
+from Controllers.api.AuthController import update_profile_route
 
 # Create a Blueprint for api
 api_bp = Blueprint("api", __name__)
@@ -93,6 +94,11 @@ def add_video():
 @admin_login_required
 def update_video(video_id):
     return update_video_route(video_id)
+
+@api_bp.route("/admin/api/update-profile", methods=[http.POST])
+@admin_login_required
+def update_profile():
+    return update_profile_route()
 
 @api_bp.route("/admin/api/delete-video/<video_id>", methods=[http.DELETE])
 @admin_login_required

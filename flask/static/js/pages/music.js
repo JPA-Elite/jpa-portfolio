@@ -281,9 +281,7 @@ async function renderList(activeSongId = null) {
                             </div>
                         </div>
                         <div class="share-section">
-                            <span class="duration">${formatTime(
-            track.duration
-        )}</span>
+                            <span class="duration">${formatTime(track.duration)}</span>
                             <button class="copy-btn"><ion-icon name="copy-outline"></ion-icon></button>
                         </div>
                     `;
@@ -316,6 +314,14 @@ function updateDuration() {
 }
 
 function formatTime(seconds) {
+    if (typeof seconds === "string" && /^\d{1,2}:\d{2}$/.test(seconds)) {
+        return seconds;
+    }
+
+    if (typeof seconds !== "number" || isNaN(seconds) || seconds < 0) {
+        return "0:00";
+    }
+
     const minutes = Math.floor(seconds / 60);
     const secs = Math.floor(seconds % 60)
         .toString()
@@ -347,6 +353,7 @@ progressBar.addEventListener("mousedown", (event) => {
     seek(event);
 });
 
+// --- Desktop Mouse Events ---
 document.addEventListener("mousemove", (event) => {
     if (isDragging) {
         seek(event);
@@ -354,6 +361,22 @@ document.addEventListener("mousemove", (event) => {
 });
 
 document.addEventListener("mouseup", () => {
+    isDragging = false;
+});
+
+// --- Mobile Touch Events ---
+progressBar.addEventListener("touchstart", (event) => {
+    isDragging = true;
+    seek(event.touches[0]); // First touch point
+});
+
+document.addEventListener("touchmove", (event) => {
+    if (isDragging) {
+        seek(event.touches[0]);
+    }
+});
+
+document.addEventListener("touchend", () => {
     isDragging = false;
 });
 

@@ -230,8 +230,13 @@ function updatePagination() {
 function prevPage() {
     if (currentPage > 1) {
         currentPage--;
+        showTripleLoading?.();
         renderList();
         updatePagination();
+        setTimeout(() => {
+            hideTripleLoading?.();
+        }, 500);
+
     }
 }
 
@@ -239,8 +244,12 @@ function nextPage() {
     const totalPages = Math.ceil(musicData.length / itemsPerPage);
     if (currentPage < totalPages) {
         currentPage++;
+        showTripleLoading?.();
         renderList();
         updatePagination();
+        setTimeout(() => {
+            hideTripleLoading?.();
+        }, 500);
     }
 }
 
@@ -421,4 +430,8 @@ if (autoplayBtn) {
     autoplayBtn.title = `Autoplay: ${autoplayEnabled ? "On" : "Off"}`;
 }
 
+showTripleLoading?.();
 renderList(); // Render the music list
+setTimeout(() => {
+    hideTripleLoading?.();
+}, 500);

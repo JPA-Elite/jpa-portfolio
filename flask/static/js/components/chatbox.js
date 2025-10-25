@@ -173,11 +173,11 @@ window.onload = async () => {
     const chatBoxBody = document.querySelector('.chatbox-body');
     chatBoxHeader.style.display = 'none';
     chatBoxBody.style.display = 'none'
-    showLoading();
+    showTripleLoading?.();
     const chatData = await initChat();
     initializeChatOptions(chatData);
     loadCachedChat(chatData);
-    hideLoading();
+    hideTripleLoading?.();
     chatBoxHeader.style.display = 'flex';
     chatBoxBody.style.display = 'flex'
 };

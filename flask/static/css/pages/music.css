@@ -249,7 +249,8 @@ main {
 .share-section {
     cursor: pointer;
     display: flex;
-    gap: 5px;
+    align-items: center;
+    gap: 15px;
 }
 
 .share-section button {
@@ -287,11 +288,27 @@ main {
     font-size: 1rem;
 }
 
+/* Rotation animation */
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Class added when playing */
+.spin {
+    animation: spin 5s linear infinite;
+}
+
 .cover-img {
     width: 200px;
     height: 200px;
     object-fit: cover;
-    border-radius: 20px;
+    border-radius: 50%;
     margin-bottom: 20px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
 }
@@ -365,14 +382,18 @@ main {
     min-width: 30px;
 }
 
-.fullscreen {
+.album-section.fullscreen {
     position: fixed;
     top: 0;
     left: 0;
     width: 100vw;
     height: 100vh;
-    z-index: 1000;
-    background: #121212;
+    z-index: 9999;
+    padding: 0;
+    margin: 0;
+    background-size: cover;
+    background-position: center;
+    overflow: auto;
 }
 
 .pagination-controls {
@@ -611,6 +632,12 @@ nav ul li.active {
 
 /* Mobile Navigation */
 @media only screen and (max-width: 768px) {
+    .music-list-items {
+        flex: 1;
+        overflow-y: auto;
+        max-height: calc(60vh - 100px);
+    }
+
     nav #navList {
         display: none; /* Hide desktop nav */
     }
@@ -654,8 +681,12 @@ nav ul li.active {
     main {
         grid-template-columns: 1fr;
         grid-template-rows: auto 1fr auto;
-        height: 60vh;
+        height: auto;
         overflow-y: auto;
+    }
+
+    .share-section {
+        margin-right: 10px;
     }
 
     .music-list {
@@ -664,7 +695,7 @@ nav ul li.active {
     }
 
     .music-item {
-        flex-direction: column;
+        flex-direction: row;
         align-items: flex-start;
         gap: 10px;
     }

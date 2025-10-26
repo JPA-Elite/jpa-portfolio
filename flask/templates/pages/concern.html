@@ -16,7 +16,7 @@
     <p>{{ _('concern_feedback_message') }}</p>
 
     <div class="concern-button">
-        <a href="https://forms.gle/QV5kHc3STEFDFUYf9" target="_blank">
+        <a href="{{ 'https://forms.gle/QV5kHc3STEFDFUYf9' if request.args.get('mode') != 'professional' else 'https://forms.gle/5UqVgzzxgkJS11Qj9' }}" target="_blank">
             <button class="concern-btn">{{ _('concern_button') }}</button>
         </a>
     </div>

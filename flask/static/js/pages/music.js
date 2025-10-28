@@ -111,6 +111,49 @@ function nextSong() {
     playSong(currentSongIndex);
 }
 
+function playNextSongOrNextPage() {
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage - 1;
+    const totalPages = Math.ceil(musicData.length / itemsPerPage);
+
+    if (currentSongIndex === Math.min(endIndex, musicData.length - 1)) {
+        if (currentPage < totalPages) {
+            currentPage++;
+            showTripleLoading?.();
+            renderList();
+            setTimeout(() => {
+                hideTripleLoading?.();
+
+                const musicListContainer = document.getElementById("musicList");
+                if (musicListContainer) {
+                    musicListContainer.scrollTo({
+                        top: 0,
+                        behavior: "smooth",
+                    });
+                }
+
+                const nextSongIndex = (currentPage - 1) * itemsPerPage;
+                playSong(nextSongIndex);
+
+                scrollToActiveSong();
+            }, 500);
+        }
+    } else {
+        nextSong();
+        scrollToActiveSong();
+    }
+}
+
+function scrollToActiveSong(behavior = "smooth") {
+    const activeItem = document.querySelector(".music-item.active");
+    if (activeItem) {
+        activeItem.scrollIntoView({
+            behavior: behavior,
+            block: "center",
+        });
+    }
+}
+
 function downloadSong() {
     const audio = document.getElementById("audioPlayer");
     const src = audio.getAttribute("src");
@@ -274,7 +317,12 @@ async function renderList(activeSongId = null) {
 
     for (const track of pageItems) {
         const div = document.createElement("div");
-        div.className = "music-item" + (track.id === activeSongId ? " active" : "");
+
+        const isActive =
+            track.id === activeSongId ||
+            musicData.indexOf(track) === currentSongIndex;
+
+        div.className = "music-item" + (isActive ? " active" : "");
 
         // Get duration if not already cached
         if (!track.duration) {
@@ -304,6 +352,7 @@ async function renderList(activeSongId = null) {
     }
 
     updatePagination();
+    scrollToActiveSong();
 }
 
 function updateProgress() {
@@ -392,7 +441,7 @@ document.addEventListener("touchend", () => {
 audioPlayer.addEventListener("ended", () => {
     coverImg.classList.remove("spin");
     if (autoplayEnabled) {
-        nextSong();
+        playNextSongOrNextPage();
     }
 });
 // Add volume control

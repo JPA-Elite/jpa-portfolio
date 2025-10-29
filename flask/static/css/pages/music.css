@@ -18,7 +18,8 @@ body {
 main {
     display: grid;
     grid-template-columns: 1fr 2fr;
-    height: calc(100vh - 120px); /* Subtract combined height of navbar and player */
+    height: calc(100vh - 120px);
+    /* Subtract combined height of navbar and player */
     min-height: 300px;
     overflow: hidden;
 }
@@ -471,6 +472,94 @@ main {
     cursor: pointer;
 }
 
+/* === Socials Dropdown === */
+.social-dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.social-dropdown-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    color: white;
+    padding: 8px 14px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+}
+
+.social-dropdown-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.dropdown-arrow {
+    transition: transform 0.3s ease;
+}
+
+.social-dropdown.active .dropdown-arrow {
+    transform: rotate(180deg);
+}
+
+/* Dropdown Menu */
+.social-dropdown .social-icon {
+    position: absolute;
+    top: 45px;
+    right: 0;
+    background: rgba(0, 0, 0, 0.95);
+    border-radius: 10px;
+    padding: 10px;
+    display: none;
+    flex-direction: column;
+    gap: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+    z-index: 1000;
+    align-items: start;
+}
+
+.social-dropdown.active .social-icon {
+    display: flex;
+    animation: fadeIn 0.2s ease-in-out;
+}
+
+.social-icon__link {
+    display: flex;
+    align-items: start;
+    gap: 10px;
+    color: white;
+    text-decoration: none;
+    font-size: 12px !important;
+    padding: 8px 15px;
+    transition: background 0.3s ease, color 0.3s ease;
+}
+
+.social-icon__link:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #2962ff;
+}
+
+.social-icon__link ion-icon, .social-icon__link span {
+    font-size: 14px;
+}
+
+/* Animation */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-5px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
 .social-icon {
     list-style: none;
     display: flex;
@@ -488,6 +577,7 @@ main {
 
 .social-icon__item {
     display: inline-block;
+    width: 100%;
 }
 
 .social-icon__link {
@@ -630,8 +720,101 @@ nav ul li.active {
     display: none;
 }
 
+/* Searchbar Styling */
+.searchbar-container {
+    display: flex;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 25px;
+    padding: 6px 12px;
+    gap: 10px;
+    width: 300px;
+    transition: all 0.3s ease;
+}
+
+.searchbar-container:focus-within {
+    background: rgba(255, 255, 255, 0.2);
+    box-shadow: 0 0 6px rgba(41, 98, 255, 0.5);
+}
+
+.searchbar-container ion-icon {
+    font-size: 18px;
+    color: white;
+    cursor: pointer;
+}
+
+.searchbar-container input {
+    background: transparent;
+    border: none;
+    outline: none;
+    color: white;
+    font-size: 14px;
+    width: 100%;
+}
+
+.searchbar-container input::placeholder {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.clear-icon {
+    display: none;
+}
+
+.searchbar-container input:not(:placeholder-shown)+.clear-icon {
+    display: block;
+}
+
+.navbarMenu2 {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
 /* Mobile Navigation */
 @media only screen and (max-width: 768px) {
+    .no-results {
+        padding: 20px;
+    }
+
+    .social-dropdown {
+        display: none;
+    }
+    .social-dropdown-btn {
+        width: 100%;
+        justify-content: space-between;
+        font-size: 13px;
+        padding: 10px 16px;
+    }
+
+    .social-dropdown .social-icon {
+        position: static;
+        width: 100%;
+        border-radius: 10px;
+        background: rgba(0, 0, 0, 0.8);
+        box-shadow: none;
+        margin-top: 8px;
+    }
+
+    .social-icon__link {
+        font-size: 13px;
+        padding: 10px 12px;
+        justify-content: flex-start;
+    }
+
+    .searchbar-container {
+        padding: 8px 14px;
+        border-radius: 20px;
+        gap: 8px;
+    }
+
+    .searchbar-container input {
+        font-size: 13px;
+    }
+
+    .searchbar-container ion-icon {
+        font-size: 16px;
+    }
+
     .music-list-items {
         flex: 1;
         overflow-y: auto;
@@ -639,7 +822,8 @@ nav ul li.active {
     }
 
     nav #navList {
-        display: none; /* Hide desktop nav */
+        display: none;
+        /* Hide desktop nav */
     }
 
     .sidebar {
@@ -781,6 +965,43 @@ nav ul li.active {
 }
 
 @media (max-width: 480px) {
+    .navbarMenu2 {
+        gap: 5px;
+    }
+
+    .social-dropdown-btn {
+        font-size: 12px;
+        padding: 8px 12px;
+    }
+
+    .social-icon__link span {
+        display: none;
+        /* icons only for smaller phones */
+    }
+
+    .social-icon__link ion-icon {
+        font-size: 20px;
+    }
+
+    .social-dropdown .social-icon {
+        gap: 6px;
+        min-width: unset;
+    }
+
+    .searchbar-container {
+        padding: 10px;
+        border-radius: 18px;
+        gap: 6px;
+    }
+
+    .searchbar-container input {
+        font-size: 12px;
+    }
+
+    .searchbar-container ion-icon {
+        font-size: 14px;
+    }
+
     .music-item img {
         width: 35px;
         height: 35px;
@@ -811,6 +1032,10 @@ nav ul li.active {
 }
 
 @media (max-width: 360px) {
+    .searchbar-container {
+        width: 100%;
+    }
+
     .player .volume-container {
         margin-right: 0;
     }

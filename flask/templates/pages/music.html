@@ -81,39 +81,59 @@
                 <a href="{{ url_for('pages.donation') }}">Donation</a>
             </li>
         </ul>
-        <ul class="social-icon">
-            <li class="social-icon__item">
-                <a class="social-icon__link" href="https://www.facebook.com/profile.php?id=100017724583212"
-                    target="_blank">
-                    <ion-icon name="logo-facebook"></ion-icon>
-                </a>
-            </li>
-            <li class="social-icon__item">
-                <a class="social-icon__link" href="https://www.linkedin.com/in/joshua-algadipe-53933924b/"
-                    target="_blank">
-                    <ion-icon name="logo-linkedin"></ion-icon>
-                </a>
-            </li>
-            <li class="social-icon__item">
-                <a class="social-icon__link" href="https://github.com/JPA-Elite" target="_blank">
-                    <ion-icon name="logo-github"></ion-icon>
-                </a>
-            </li>
-            <li class="social-icon__item">
-                <a class="social-icon__link" href="mailto:algadipej962@gmail.com" target="_blank">
-                    <ion-icon name="mail-outline"></ion-icon>
-                </a>
-            </li>
-            <li class="social-icon__item">
-                <a class="social-icon__link" href="tel:+639319127640" target="_blank">
-                    <ion-icon name="call-outline"></ion-icon>
-                </a>
-            </li>
-        </ul>
+        <div class="navbarMenu2">
+            <div class="social-dropdown">
+                <button class="social-dropdown-btn">
+                    <ion-icon name="share-social-outline"></ion-icon>
+                    <span>Socials</span>
+                    <ion-icon name="chevron-down-outline" class="dropdown-arrow"></ion-icon>
+                </button>
+                <ul class="social-icon">
+                    <li class="social-icon__item">
+                        <a class="social-icon__link" href="https://www.facebook.com/profile.php?id=100017724583212"
+                            target="_blank">
+                            <ion-icon name="logo-facebook"></ion-icon>
+                            <span>Facebook</span>
+                        </a>
+                    </li>
+                    <li class="social-icon__item">
+                        <a class="social-icon__link" href="https://www.linkedin.com/in/joshua-algadipe-53933924b/"
+                            target="_blank">
+                            <ion-icon name="logo-linkedin"></ion-icon>
+                            <span>LinkedIn</span>
+                        </a>
+                    </li>
+                    <li class="social-icon__item">
+                        <a class="social-icon__link" href="https://github.com/JPA-Elite" target="_blank">
+                            <ion-icon name="logo-github"></ion-icon>
+                            <span>GitHub</span>
+                        </a>
+                    </li>
+                    <li class="social-icon__item">
+                        <a class="social-icon__link" href="mailto:algadipej962@gmail.com" target="_blank">
+                            <ion-icon name="mail-outline"></ion-icon>
+                            <span>Email</span>
+                        </a>
+                    </li>
+                    <li class="social-icon__item">
+                        <a class="social-icon__link" href="tel:+639319127640" target="_blank">
+                            <ion-icon name="call-outline"></ion-icon>
+                            <span>Call</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div class="searchbar-container">
+                <ion-icon name="search-outline" class="search-icon"></ion-icon>
+                <input type="text" id="navbarSearch" placeholder="Search music, artist, or album..."
+                    oninput="handleSearch(this.value)" />
+                <ion-icon name="close-outline" class="clear-icon" onclick="clearSearch()"></ion-icon>
+            </div>
+        </div>
     </nav>
     <main>
         <div class="music-list">
-            <h2>My Music List</h2>
+            <h2 id="music-header">My Music List</h2>
             {% include 'spinners/triple_loading.html' %}
             <div class="music-list-items" id="musicList"></div>
             <div class="pagination-controls">

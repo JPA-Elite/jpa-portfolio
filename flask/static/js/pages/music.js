@@ -9,6 +9,7 @@ let musicData = [];
 let autoplayEnabled = true;
 let isDragging = false;
 const durationCache = JSON.parse(localStorage.getItem('audioDurationCache') || '{}');
+let filteredResults = null;
 
 document.addEventListener("DOMContentLoaded", async () => {
     const root = document.documentElement;
@@ -60,30 +61,35 @@ function selectFirstSong() {
     }
 }
 
-// Global functions
 function playSong(index) {
+    if (index < 0) return;
+
+    const source = filteredResults !== null ? filteredResults : musicData;
+    const song = source[index];
+    if (!song) {
+        console.warn("No valid song found for index:", index);
+        return;
+    }
+
     currentSongIndex = index;
-    const song = musicData[index];
     audioPlayer.src = song.url;
-    document.getElementById(
-        "nowPlaying"
-    ).textContent = `Now Playing: ${song.title}`;
+
+    document.getElementById("nowPlaying").textContent = `Now Playing: ${song.title}`;
     document.getElementById("coverImg").src = song.image;
     document.getElementById("playerNowPlaying").innerHTML = `
-                <div class="title-artist">
-                    <span class="title">${song.title}</span>
-                    <span class="artist">${song.artist}</span>
-                </div>
-            `;
+        <div class="title-artist">
+            <span class="title">${song.title}</span>
+            <span class="artist">${song.artist}</span>
+        </div>`;
     document.getElementById("playerCoverImg").src = song.image;
-
-    const albumSection = document.getElementById("albumSection");
-    albumSection.style.backgroundImage = `url('${song.image}')`;
+    document.getElementById("albumSection").style.backgroundImage = `url('${song.image}')`;
 
     coverImg.classList.add("spin");
     audioPlayer.play();
     playPauseBtn.textContent = "Pause";
-    renderList(song.id); // Pass the active song id
+
+    // ✅ Re-render the current page only
+    renderList(song.id);
 }
 
 function togglePlay() {
@@ -263,11 +269,18 @@ function toggleFullscreen() {
     }
 }
 
-function updatePagination() {
-    const totalPages = Math.ceil(musicData.length / itemsPerPage);
-    document.getElementById(
-        "pageInfo"
-    ).textContent = `Page ${currentPage} of ${totalPages}`;
+function updatePagination(source = null) {
+    const dataSource = source || (filteredResults && filteredResults.length > 0 ? filteredResults : musicData);
+    const totalPages = Math.ceil(dataSource.length / itemsPerPage);
+    const current = Math.min(currentPage, totalPages) || 1;
+
+    const pageInfo = document.getElementById("pageInfo");
+    if (pageInfo) {
+        pageInfo.textContent = `Page ${current} of ${totalPages || 1}`;
+    }
+
+    document.querySelector(".page-btn[onclick='prevPage()']").disabled = currentPage <= 1;
+    document.querySelector(".page-btn[onclick='nextPage()']").disabled = currentPage >= totalPages;
 }
 
 function prevPage() {
@@ -275,27 +288,21 @@ function prevPage() {
         currentPage--;
         showTripleLoading?.();
         renderList();
-        updatePagination();
-        setTimeout(() => {
-            hideTripleLoading?.();
-        }, 500);
-
+        setTimeout(() => hideTripleLoading?.(), 500);
     }
 }
 
 function nextPage() {
-    const totalPages = Math.ceil(musicData.length / itemsPerPage);
+    const source = filteredResults && filteredResults.length > 0 ? filteredResults : musicData;
+    const totalPages = Math.ceil(source.length / itemsPerPage);
+
     if (currentPage < totalPages) {
         currentPage++;
         showTripleLoading?.();
         renderList();
-        updatePagination();
-        setTimeout(() => {
-            hideTripleLoading?.();
-        }, 500);
+        setTimeout(() => hideTripleLoading?.(), 500);
     }
 }
-
 // Get DOM elements
 musicList = document.getElementById("musicList");
 audioPlayer = document.getElementById("audioPlayer");
@@ -309,50 +316,81 @@ const currentTimeEl = document.getElementById("currentTime");
 const totalDurationEl = document.getElementById("totalDuration");
 playPauseBtn = document.getElementById("playPauseBtn");
 
-async function renderList(activeSongId = null) {
-    musicList.innerHTML = ""; // Clear the list before rendering
-    const start = (currentPage - 1) * itemsPerPage;
-    const end = start + itemsPerPage;
-    const pageItems = musicData.slice(start, end);
+async function renderTracks(tracks, activeSongId = null) {
+    musicList.innerHTML = "";
 
-    for (const track of pageItems) {
-        const div = document.createElement("div");
+    if (tracks.length === 0) {
+        musicList.innerHTML = `<p class="no-results">No songs found.</p>`;
+        return;
+    }
 
+    for (let i = 0; i < tracks.length; i++) {
+        const track = tracks[i];
+
+        // ✅ Detect whether this song is active (either by ID or index)
         const isActive =
             track.id === activeSongId ||
-            musicData.indexOf(track) === currentSongIndex;
+            (filteredResults
+                ? i === currentSongIndex // use filtered index
+                : musicData.indexOf(track) === currentSongIndex);
 
+        const div = document.createElement("div");
         div.className = "music-item" + (isActive ? " active" : "");
 
-        // Get duration if not already cached
         if (!track.duration) {
             track.duration = await getDuration(track.url);
         }
 
         div.innerHTML = `
-                        <div class="left-content">
-                            <img src="${track.image}" alt="${track.title}" />
-                            <div class="title-artist">
-                                <span>${track.title}</span>
-                                <span class="artist">${track.artist}</span>
-                            </div>
-                        </div>
-                        <div class="share-section">
-                            <span class="duration">${formatTime(track.duration)}</span>
-                            <button class="copy-btn"><ion-icon name="copy-outline"></ion-icon></button>
-                        </div>
-                    `;
-        div.addEventListener("click", () => playSong(musicData.indexOf(track)));
+            <div class="left-content">
+                <img src="${track.image}" alt="${track.title}" />
+                <div class="title-artist">
+                    <span>${track.title}</span>
+                    <span class="artist">${track.artist}</span>
+                </div>
+            </div>
+            <div class="share-section">
+                <span class="duration">${formatTime(track.duration)}</span>
+                <button class="copy-btn"><ion-icon name="copy-outline"></ion-icon></button>
+            </div>
+        `;
+
+        div.addEventListener("click", () => {
+            const index = filteredResults
+                ? i // ✅ Use filtered index when searching
+                : musicData.indexOf(track);
+            playSong(index);
+        });
+
         const copyBtn = div.querySelector(".copy-btn");
         copyBtn.addEventListener("click", (event) => {
             event.stopPropagation();
             copyLink(track.url);
         });
+
         musicList.appendChild(div);
     }
+}
 
-    updatePagination();
+async function renderList(activeSongId = null) {
+    const source = filteredResults !== null ? filteredResults : musicData;
+
+    if (!source || source.length === 0) {
+        musicList.innerHTML = `<p class="no-results">No songs found.</p>`;
+        updatePagination([]);
+        updateMusicHeader();
+        return;
+    }
+
+    const start = (currentPage - 1) * itemsPerPage;
+    const end = start + itemsPerPage;
+    const pageItems = source.slice(start, end);
+
+    await renderTracks(pageItems, activeSongId);
+
+    updatePagination(source);
     scrollToActiveSong();
+    updateMusicHeader();
 }
 
 function updateProgress() {
@@ -480,7 +518,67 @@ if (autoplayBtn) {
 }
 
 showTripleLoading?.();
-renderList(); // Render the music list
+renderList();
 setTimeout(() => {
     hideTripleLoading?.();
 }, 500);
+
+function handleSearch(query) {
+    query = query.trim().toLowerCase();
+
+    if (!query) {
+        filteredResults = null;
+        currentPage = 1;
+        renderList();
+        updateMusicHeader();
+        return;
+    }
+
+    filteredResults = musicData.filter(track =>
+        track.title.toLowerCase().includes(query) ||
+        track.artist.toLowerCase().includes(query)
+    );
+
+    currentPage = 1;
+
+    if (filteredResults.length === 0) {
+        musicList.innerHTML = `<p class="no-results">No songs found.</p>`;
+        updatePagination([]);
+        updateMusicHeader();
+    } else {
+        renderList();
+        updateMusicHeader();
+    }
+}
+
+function clearSearch() {
+    const input = document.getElementById('navbarSearch');
+    input.value = '';
+    filteredResults = null;
+    currentPage = 1;
+    renderList();
+}
+
+const dropdownBtn = document.querySelector('.social-dropdown-btn');
+const dropdown = document.querySelector('.social-dropdown');
+
+dropdownBtn.addEventListener('click', () => {
+    dropdown.classList.toggle('active');
+});
+
+document.addEventListener('click', (e) => {
+    if (!dropdown.contains(e.target)) {
+        dropdown.classList.remove('active');
+    }
+});
+
+function updateMusicHeader() {
+    const header = document.getElementById("music-header");
+    if (!header) return;
+
+    const total = filteredResults
+        ? filteredResults.length
+        : musicData.length;
+
+    header.textContent = `My Music List (${total} ${total === 1 ? "song" : "songs"})`;
+}

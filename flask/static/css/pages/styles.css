@@ -47,6 +47,7 @@ nav {
     justify-content: space-between;
     align-items: center;
     width: 100%;
+    z-index: 2;
 }
 
 nav ul {
@@ -191,7 +192,6 @@ section p {
     background-color: white;
     min-width: 160px;
     box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
-    z-index: 1;
     border-radius: 8px;
 }
 

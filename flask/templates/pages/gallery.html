@@ -23,7 +23,6 @@ endblock %}
                     onclick="openModal('{{ item.image_url if item.image_url is defined else image_path ~ item.image_name }}', `{{ item.title[get_locale()] | e }}`,  `{{ item.description[get_locale()] | e }}`)" />
                 <h3>{{ item.title[get_locale()] }}</h3>
                 <p class="description">{{ item.description[get_locale()] | truncate_text(120) }}</p>
-            
                 {% if item.tags is defined and item.tags %}
                 <div class="tags">
                     {% for tag in item.tags %}
@@ -31,7 +30,7 @@ endblock %}
                     {% endfor %}
                 </div>
                 {% endif %}
-            </div>            
+        </div>
             {% endfor %}
         </div>
         {% set base_url = url_for('pages.gallery') %}

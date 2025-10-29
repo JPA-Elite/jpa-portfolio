@@ -98,11 +98,11 @@ function displayMessage(message, backgroundColor = '', color = '', typeEffect = 
     messageElement.classList.add("chat-message");
 
     if (backgroundColor !== 'transparent') {
-        // If background is not transparent, apply typing effect
+        messageElement.classList.add("chat-message-answer");
         chatMessages.appendChild(messageElement);
         addTypingEffect(messageElement, message, typeEffect);
     } else {
-        // Otherwise, display message instantly
+        messageElement.classList.add("chat-message-header");
         messageElement.textContent = 'Q: ' + message;
         chatMessages.appendChild(messageElement);
     }

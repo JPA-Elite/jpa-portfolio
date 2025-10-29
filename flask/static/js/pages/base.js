@@ -1,3 +1,100 @@
+// ---- CANVAS NEURAL NETWORK ANIMATION ----
+const canvas = document.getElementById("brainCanvas");
+const ctx = canvas.getContext("2d");
+
+function resizeCanvas() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+}
+
+let nodes = [];
+const numNodes = window.innerWidth < 600 ? 75 : 150;
+
+function initNodes() {
+    nodes = [];
+    for (let i = 0; i < numNodes; i++) {
+        nodes.push({
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            radius: Math.random() * 3 + 1.5,
+            speedX: (Math.random() - 0.5) * 2,
+            speedY: (Math.random() - 0.5) * 2,
+            flicker: Math.random() < 0.15
+        });
+    }
+}
+
+function drawConnections() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = "limegreen";
+    ctx.strokeStyle = "limegreen";
+    ctx.lineWidth = 1.2;
+
+    for (let i = 0; i < nodes.length; i++) {
+        let nodeA = nodes[i];
+        ctx.beginPath();
+        ctx.arc(nodeA.x, nodeA.y, nodeA.radius, 0, Math.PI * 2);
+        ctx.fill();
+
+        for (let j = i + 1; j < nodes.length; j++) {
+            let nodeB = nodes[j];
+            let distance = Math.hypot(nodeA.x - nodeB.x, nodeA.y - nodeB.y);
+            if (distance < 100) {
+                ctx.globalAlpha = 1 - (distance / 100);
+                ctx.beginPath();
+                ctx.moveTo(nodeA.x, nodeA.y);
+                ctx.lineTo(nodeB.x, nodeB.y);
+                ctx.stroke();
+            }
+        }
+    }
+    ctx.globalAlpha = 1;
+}
+
+function updateNodes() {
+    for (let node of nodes) {
+        node.x += node.speedX;
+        node.y += node.speedY;
+        if (node.x < 0 || node.x > canvas.width) node.speedX *= -1;
+        if (node.y < 0 || node.y > canvas.height) node.speedY *= -1;
+        if (node.flicker && Math.random() < 0.1) {
+            node.x += Math.random() * 6 - 3;
+            node.y += Math.random() * 6 - 3;
+        }
+    }
+}
+
+function animateBrain() {
+    if (canvas.style.display === "none") return; // stop drawing if hidden
+    drawConnections();
+    updateNodes();
+    requestAnimationFrame(animateBrain);
+}
+
+window.addEventListener("resize", resizeCanvas);
+
+// Initialize animation only when dark mode is active
+function startBrainAnimation() {
+    resizeCanvas();
+    initNodes();
+    canvas.style.display = "block";
+    animateBrain();
+}
+
+function stopBrainAnimation() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    canvas.style.display = "none";
+}
+
+// Check and apply theme-based display
+function handleBrainTheme(theme) {
+    if (theme === "dark") {
+        startBrainAnimation();
+    } else {
+        stopBrainAnimation();
+    }
+}
+
 // Speech Synthesis
 let isSpeaking = false; // Track if speech is playing
 let currentSpeech = null; // Track the current speech instance
@@ -178,11 +275,12 @@ function updateTheme(theme) {
     if (theme === "dark") {
         root.style.setProperty("--bg-opacity", "0.1");
         root.style.setProperty("--bg-color", "rgba(0, 0, 0, 0.95)");
-        // Let the CSS handle the brain cells animation background
+        handleBrainTheme("dark");
     } else {
         root.style.setProperty("--bg-opacity", "0.2");
         root.style.setProperty("--bg-color", "rgba(128, 128, 128, 1)");
         root.style.setProperty("--bg-image", `url('${originalBgImage}')`);
+        handleBrainTheme("light");
     }
 }
 

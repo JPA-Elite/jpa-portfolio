@@ -13,7 +13,9 @@ body {
     margin: auto;
 }
 
-header, main, footer {
+header,
+main,
+footer {
     padding: 20px;
 }
 
@@ -207,7 +209,8 @@ section p {
     align-items: center;
 }
 
-.dropdown-content a:hover, .dropdown-content a.active {
+.dropdown-content a:hover,
+.dropdown-content a.active {
     background-color: #f1f1f1;
 }
 
@@ -251,23 +254,6 @@ nav #navList {
 .carousel-card,
 .gallery-item {
     user-select: none;
-}
-
-.nav-toggle:focus,
-.nav-toggle:active,
-.chatbox-icon:focus,
-.chatbox-icon:active,
-#navList:focus,
-#navList:active,
-.carousel-card:focus,
-.carousel-card:active,
-.gallery-item:focus,
-.gallery-item:active {
-    outline: none;
-    /* background-color: white; */
-    /* Ensure no background is applied */
-    -webkit-tap-highlight-color: transparent;
-    /* Mobile-specific */
 }
 
 .project-intro,
@@ -504,7 +490,7 @@ nav #navList {
         left: 10px;
         padding: 8px;
     }
-    
+
     .theme-toggle {
         font-size: 20px;
     }
@@ -546,7 +532,8 @@ nav #navList {
 
 /* Add this to your existing theme-related styles */
 [data-theme='dark'] .donation-btn .flag-icon {
-    filter: invert(1) brightness(100%); /* This will make the black icon appear white */
+    filter: invert(1) brightness(100%);
+    /* This will make the black icon appear white */
 }
 
 footer {
@@ -667,10 +654,90 @@ nav #navList li a {
     display: none;
 }
 
+.admin-float-btn {
+    position: fixed;
+    top: 50%;
+    left: -3%;
+    transform: translateY(-50%);
+    background: #007bff;
+    color: white;
+    width: 130px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    font-size: 16px;
+    font-weight: 500;
+    border-radius: 0 25px 25px 0;
+    padding-right: 18px;
+    box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.25);
+    cursor: pointer;
+    text-decoration: none;
+    z-index: 9999;
+    overflow: visible;
+    transition: all 0.3s ease;
+}
+
+/* Hover animation */
+.admin-float-btn:hover {
+    background: #0056b3;
+}
+
+/* Icon inside */
+.admin-float-btn ion-icon {
+    font-size: 20px;
+    margin-left: 12px;
+    margin-right: 8px;
+}
+
+/* Label text (optional) */
+.admin-float-btn span {
+    font-weight: 600;
+    font-size: 14px;
+}
+
 /* Mobile Navigation */
 @media only screen and (max-width: 768px) {
+    .admin-float-btn {
+        top: auto;
+        bottom: 15px;
+        left: 15px;
+        transform: none;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        justify-content: center;
+        text-align: center;
+        padding: 0;
+        visibility: hidden;
+    }
+
+    .admin-float-btn ion-icon {
+        font-size: 22px;
+        margin: 0;
+    }
+
+    .admin-float-btn::before {
+        display: none;
+    }
+
+    .admin-float-btn:hover {
+        transform: scale(1.1);
+    }
+
+    .admin-float-btn span {
+        display: none;
+    }
+
+    body.nav-active .admin-float-btn {
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+    }
+
     nav #navList {
-        display: none; /* Hide desktop nav */
+        display: none;
+        /* Hide desktop nav */
     }
 
     .sidebar {

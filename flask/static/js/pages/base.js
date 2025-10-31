@@ -19,7 +19,7 @@ function initNodes() {
             radius: Math.random() * 3 + 1.5,
             speedX: (Math.random() - 0.5) * 2,
             speedY: (Math.random() - 0.5) * 2,
-            flicker: Math.random() < 0.15
+            flicker: Math.random() < 0.15,
         });
     }
 }
@@ -40,7 +40,7 @@ function drawConnections() {
             let nodeB = nodes[j];
             let distance = Math.hypot(nodeA.x - nodeB.x, nodeA.y - nodeB.y);
             if (distance < 100) {
-                ctx.globalAlpha = 1 - (distance / 100);
+                ctx.globalAlpha = 1 - distance / 100;
                 ctx.beginPath();
                 ctx.moveTo(nodeA.x, nodeA.y);
                 ctx.lineTo(nodeB.x, nodeB.y);
@@ -117,6 +117,9 @@ function toggleNav() {
     const toggleButton = document.getElementById("toggleButton");
     sidebar.classList.toggle("active");
     toggleButton.classList.toggle("active");
+    setTimeout(() => {
+        document.body.classList.toggle("nav-active");
+    }, 100);
 }
 
 // Close sidebar when clicking outside
@@ -128,6 +131,7 @@ document.addEventListener("click", function (e) {
         !toggle.contains(e.target) &&
         sidebar.classList.contains("active")
     ) {
+        document.body.classList.remove("nav-active");
         sidebar.classList.remove("active");
         toggle.classList.remove("active");
     }
@@ -142,6 +146,7 @@ function handleClickOutside(event) {
         !toggleButton.contains(event.target) &&
         !navList.contains(event.target)
     ) {
+        document.body.classList.remove("nav-active");
         navList.classList.remove("show");
     }
 }
@@ -297,19 +302,22 @@ themeToggle.addEventListener("click", () => {
 
 document.addEventListener("DOMContentLoaded", function () {
     if (window.isProfessionalMode) {
-        const header = document.querySelector("header, .app-header, .navbar-fixed-top");
+        const header = document.querySelector(
+            "header, .app-header, .navbar-fixed-top"
+        );
         const offset = header ? header.offsetHeight : 0;
 
         function scrollToHash(hash, smooth = true) {
             if (!hash) return;
             const target = document.querySelector(hash);
             if (!target) return;
-            const top = target.getBoundingClientRect().top + window.pageYOffset - offset;
+            const top =
+                target.getBoundingClientRect().top + window.pageYOffset - offset;
             window.scrollTo({ top, behavior: smooth ? "smooth" : "auto" });
         }
 
         function clearActiveClasses() {
-            document.querySelectorAll("li.active").forEach(li => {
+            document.querySelectorAll("li.active").forEach((li) => {
                 li.classList.remove("active");
             });
         }

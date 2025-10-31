@@ -8,7 +8,8 @@
     --shadow-color: rgba(0, 0, 0, 0.1);
     --nav-bg: rgba(255, 255, 255, 0.8);
     --card-bg: #ffffff;
-    --bg-image: url('');  /* Will be set dynamically via JS */
+    --bg-image: url('');
+    /* Will be set dynamically via JS */
     --bg-opacity: 0.2;
     --bg-color: rgba(128, 128, 128, 1);
 }
@@ -24,7 +25,8 @@
     --shadow-color: rgba(0, 0, 0, 0.3);
     --nav-bg: rgba(18, 18, 18, 0.8);
     --card-bg: #1e1e1e;
-    --bg-image: none;  /* Will be overridden for brain cells animation */
+    --bg-image: none;
+    /* Will be overridden for brain cells animation */
     --bg-opacity: 0.1;
     --bg-color: rgba(0, 0, 0, 0.95);
 }
@@ -37,11 +39,10 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background: 
-        radial-gradient(circle at center, 
-            rgba(0, 255, 0, 0.2) 1px, 
-            transparent 2px
-        );
+    background:
+        radial-gradient(circle at center,
+            rgba(0, 255, 0, 0.2) 1px,
+            transparent 2px);
     background-size: 30px 30px;
     animation: neuronPulse 4s infinite ease-in-out;
 }
@@ -53,21 +54,19 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background: 
-        linear-gradient(45deg, 
-            transparent 48%, 
-            rgba(0, 255, 0, 0.15) 49%, 
-            rgba(0, 255, 0, 0.25) 50%, 
-            rgba(0, 255, 0, 0.15) 51%, 
-            transparent 52%
-        ),
-        linear-gradient(-45deg, 
-            transparent 48%, 
-            rgba(0, 255, 0, 0.15) 49%, 
-            rgba(0, 255, 0, 0.25) 50%, 
-            rgba(0, 255, 0, 0.15) 51%, 
-            transparent 52%
-        );
+    background:
+        linear-gradient(45deg,
+            transparent 48%,
+            rgba(0, 255, 0, 0.15) 49%,
+            rgba(0, 255, 0, 0.25) 50%,
+            rgba(0, 255, 0, 0.15) 51%,
+            transparent 52%),
+        linear-gradient(-45deg,
+            transparent 48%,
+            rgba(0, 255, 0, 0.15) 49%,
+            rgba(0, 255, 0, 0.25) 50%,
+            rgba(0, 255, 0, 0.15) 51%,
+            transparent 52%);
     background-size: 50px 50px;
     animation: neuralConnections 8s infinite linear;
     z-index: -1;
@@ -79,6 +78,7 @@
     0% {
         background-position: 0 0;
     }
+
     100% {
         background-position: 50px 50px;
     }
@@ -88,6 +88,7 @@
     0% {
         background-position: 0 0;
     }
+
     100% {
         background-position: 50px 50px;
     }
@@ -99,7 +100,41 @@
     left: 0;
     width: 100%;
     height: 100%;
-    z-index: -2; /* Behind everything else */
+    z-index: -2;
+    /* Behind everything else */
     background: transparent;
-    display: none; /* Hidden by default */
+    display: none;
+    /* Hidden by default */
+}
+
+.nav-toggle:focus,
+.nav-toggle:active,
+.chatbox-icon:focus,
+.chatbox-icon:active,
+#navList:focus,
+#navList:active,
+.carousel-card:focus,
+.carousel-card:active,
+.gallery-item:focus,
+.gallery-item:active,
+img:focus,
+img:active,
+.voice-icon:focus,
+.voice-icon:active,
+button:focus,
+button:active,
+a:focus,
+a:active,
+li:focus,
+li:active,
+ul:focus,
+ul:active,
+ion-icon:focus,
+ion-icon:active
+{
+    outline: none !important;
+    /* background-color: white; */
+    /* Ensure no background is applied */
+    -webkit-tap-highlight-color: transparent !important;
+    /* Mobile-specific */
 }

@@ -1,4 +1,4 @@
-from datetime import timedelta
+from datetime import timedelta, datetime
 from flask import current_app, flash, redirect, render_template, request, session, url_for
 from config import (
     ADMIN_DASHBOARD_PAGE,
@@ -16,11 +16,25 @@ from Repositories.AuthRepository import AuthRepository
 # Initialize Services
 auth_service = AuthService(repository=AuthRepository())
 
+MAX_ATTEMPTS = 3
+LOCKOUT_TIME = timedelta(hours=1)
+
 # ************************** PAGES ********************************
 def admin_login_route():
     # If already logged in as admin, redirect to dashboard
     if "user_id" in session and session.get("role") == ROLE_ADMIN:
         return redirect(url_for("pages.admin_dashboard"))
+
+    # Initialize attempt tracking for this user
+    if "login_attempts" not in session:
+        session["login_attempts"] = 0
+        session["lockout_until"] = None
+
+    lockout_until = session.get("lockout_until")
+    if lockout_until and datetime.utcnow() < datetime.fromisoformat(lockout_until):
+        remaining = datetime.fromisoformat(lockout_until) - datetime.utcnow()
+        flash(f"Too many failed attempts. Please wait {int(remaining.total_seconds() // 60)} minutes before trying again.", "danger")
+        return render_template(ADMIN_LOGIN_PAGE)
 
     if request.method == http.POST:
         username = request.form.get("username")
@@ -29,6 +43,8 @@ def admin_login_route():
 
         user = auth_service.authenticate_admin(username, password)
         if user:
+            session["login_attempts"] = 0
+            session["lockout_until"] = None
             session['username'] = username
             session["user_id"] = str(user["_id"])
             session["role"] = user["role"]
@@ -43,7 +59,14 @@ def admin_login_route():
             flash("Welcome back, Admin!", "success")
             return redirect(url_for("pages.admin_dashboard"))
         else:
-            flash("Invalid username or password", "danger")
+            session["login_attempts"] += 1
+            if session["login_attempts"] >= MAX_ATTEMPTS:
+                lockout_until_time = datetime.utcnow() + LOCKOUT_TIME
+                session["lockout_until"] = lockout_until_time.isoformat()
+                flash("Too many failed attempts. Please wait 1 hour before logging in again.", "danger")
+            else:
+                remaining = MAX_ATTEMPTS - session["login_attempts"]
+                flash(f"Invalid username or password. {remaining} attempt(s) left.", "warning")
 
     return render_template(ADMIN_LOGIN_PAGE)
 

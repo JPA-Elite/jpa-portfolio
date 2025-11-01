@@ -257,10 +257,12 @@
             <p id="copyright"></p>
         </footer>
     </div>
-    <a href="/admin/login" class="admin-float-btn" title="Admin Panel">
-        <ion-icon name="settings-outline"></ion-icon>
-        <span>Admin</span>
-    </a>
+    {% if request.args.get('mode') != 'professional' %}
+        <a href="/admin/login" class="admin-float-btn" title="Admin Panel">
+            <ion-icon name="settings-outline"></ion-icon>
+            <span>Admin</span>
+        </a>
+    {% endif %}
     <!-- Include the modal component -->
     {% include 'components/modal.html' %}
     {% if request.args.get('mode') != 'professional' %}

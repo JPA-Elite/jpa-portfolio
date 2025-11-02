@@ -37,3 +37,4 @@ config.py
 # Inside Flask Folder
 flask/__pycache__/
 flask/.env
+.env

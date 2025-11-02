@@ -10,3 +10,4 @@ class MongoCollections:
     VISITORS = "visitors"
     USERS = "users"
     GALLERY = "gallery"
+    LOGIN_ATTEMPTS = "login_attempts"

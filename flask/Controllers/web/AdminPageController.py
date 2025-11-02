@@ -1,4 +1,4 @@
-from datetime import timedelta, datetime
+from datetime import timedelta
 from flask import current_app, flash, redirect, render_template, request, session, url_for
 from config import (
     ADMIN_DASHBOARD_PAGE,
@@ -12,12 +12,13 @@ from config import HTTPMethod as http
 from constants.login_roles import ROLE_ADMIN
 from Services.AuthService import AuthService
 from Repositories.AuthRepository import AuthRepository
+from Repositories.LoginAttemptRepository import LoginAttemptRepository
 
 # Initialize Services
-auth_service = AuthService(repository=AuthRepository())
-
-MAX_ATTEMPTS = 3
-LOCKOUT_TIME = timedelta(hours=1)
+auth_service = AuthService(
+    repository=AuthRepository(),
+    attempt_repository=LoginAttemptRepository()
+)
 
 # ************************** PAGES ********************************
 def admin_login_route():
@@ -25,31 +26,22 @@ def admin_login_route():
     if "user_id" in session and session.get("role") == ROLE_ADMIN:
         return redirect(url_for("pages.admin_dashboard"))
 
-    # Initialize attempt tracking for this user
-    if "login_attempts" not in session:
-        session["login_attempts"] = 0
-        session["lockout_until"] = None
-
-    lockout_until = session.get("lockout_until")
-    if lockout_until and datetime.utcnow() < datetime.fromisoformat(lockout_until):
-        remaining = datetime.fromisoformat(lockout_until) - datetime.utcnow()
-        flash(f"Too many failed attempts. Please wait {int(remaining.total_seconds() // 60)} minutes before trying again.", "danger")
-        return render_template(ADMIN_LOGIN_PAGE)
-
     if request.method == http.POST:
         username = request.form.get("username")
         password = request.form.get("password")
         remember = request.form.get("remember")
 
-        user = auth_service.authenticate_admin(username, password)
+        user, message, locked = auth_service.authenticate_admin(username, password)
+
+        if locked:
+            flash(message, "danger")
+            return render_template(ADMIN_LOGIN_PAGE)
+
         if user:
-            session["login_attempts"] = 0
-            session["lockout_until"] = None
             session['username'] = username
             session["user_id"] = str(user["_id"])
             session["role"] = user["role"]
 
-            # ✅ Set session lifetime if "remember me" is checked
             if remember:
                 session.permanent = True
                 current_app.permanent_session_lifetime = timedelta(days=30)
@@ -58,15 +50,9 @@ def admin_login_route():
 
             flash("Welcome back, Admin!", "success")
             return redirect(url_for("pages.admin_dashboard"))
-        else:
-            session["login_attempts"] += 1
-            if session["login_attempts"] >= MAX_ATTEMPTS:
-                lockout_until_time = datetime.utcnow() + LOCKOUT_TIME
-                session["lockout_until"] = lockout_until_time.isoformat()
-                flash("Too many failed attempts. Please wait 1 hour before logging in again.", "danger")
-            else:
-                remaining = MAX_ATTEMPTS - session["login_attempts"]
-                flash(f"Invalid username or password. {remaining} attempt(s) left.", "warning")
+
+        # Invalid login
+        flash(message, "warning")
 
     return render_template(ADMIN_LOGIN_PAGE)
 

@@ -1,22 +1,43 @@
 from flask import jsonify, request, session
 from werkzeug.security import check_password_hash
 from Repositories.Interfaces.IAuthRepository import IAuthRepository
+from Repositories.Interfaces.ILoginAttemptRepository import ILoginAttemptRepository
+from Repositories.LoginAttemptRepository import MAX_ATTEMPTS
 from werkzeug.security import generate_password_hash
+from datetime import datetime
 
 class AuthService:
-    def __init__(self, repository: IAuthRepository):
+    def __init__(self, repository: IAuthRepository, attempt_repository: ILoginAttemptRepository):
         self.repository = repository
+        self.login_attempt_repo = attempt_repository
 
     def authenticate_admin(self, username: str, password: str):
-        """Return user dict if credentials are valid, else None"""
+        attempt_info = self.login_attempt_repo.get_attempt_info()
+        now = datetime.utcnow()
+
+        # ✅ Check for lockout first
+        if attempt_info and attempt_info.get("lockout_until"):
+            lockout_until = attempt_info["lockout_until"]
+            if lockout_until and now < lockout_until:
+                remaining = int((lockout_until - now).total_seconds() // 60)
+                return None, f"Too many failed attempts. Try again in {remaining} minutes.", True
+
         user = self.repository.find_by_username(username)
         if not user:
-            return None
+            self.login_attempt_repo.update_attempt(success=False)
+            remaining = MAX_ATTEMPTS - (attempt_info.get("attempts", 0) + 1)
+            return None, f"Invalid username or password. {remaining} attempt(s) left.", False
 
         # verify password hash
         if check_password_hash(user["password"], password):
-            return user
-        return None
+            self.login_attempt_repo.update_attempt(success=True)
+            return user, "Login successful!", False
+        else:
+            updated = self.login_attempt_repo.update_attempt(success=False)
+            if updated.get("lockout_until"):
+                return None, "Too many failed attempts. Please wait 1 hour before logging in again.", True
+            remaining = MAX_ATTEMPTS - updated["attempts"]
+            return None, f"Invalid username or password. {remaining} attempt(s) left.", False
 
 
     def update_profile(self):

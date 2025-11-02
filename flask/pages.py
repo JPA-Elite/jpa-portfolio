@@ -9,39 +9,39 @@ from Controllers.web.AdminPageController import admin_dashboard_route, admin_gal
 pages_bp = Blueprint("pages", __name__)
 
 # ************************** PAGES ********************************
-@pages_bp.route("/")
+@pages_bp.route("/", methods=[http.GET])
 def index():
     return index_route()
 
-@pages_bp.route("/profile")
+@pages_bp.route("/profile", methods=[http.GET])
 def profile():
     return profile_route()
 
-@pages_bp.route("/gallery")
+@pages_bp.route("/gallery", methods=[http.GET])
 def gallery():
     return gallery_route()
 
-@pages_bp.route("/vlog")
+@pages_bp.route("/vlog", methods=[http.GET])
 def vlog():
     return vlog_route()
 
-@pages_bp.route("/music")
+@pages_bp.route("/music", methods=[http.GET])
 def music():
     return music_route()
 
-@pages_bp.route("/concern")
+@pages_bp.route("/concern", methods=[http.GET])
 def concern():
     return concern_route()
 
-@pages_bp.route("/donation")
+@pages_bp.route("/donation", methods=[http.GET])
 def donation():
     return donation_route()
 
-@pages_bp.route("/device-info/visits")
+@pages_bp.route("/device-info/visits", methods=[http.GET])
 def device_info():
     return device_info_route()
 
-@pages_bp.route("/add_portfolio_form")
+@pages_bp.route("/add_portfolio_form", methods=[http.GET])
 def add_portfolio_form():
     return add_portfolio_form_route()
 
@@ -51,37 +51,37 @@ def add_portfolio_form():
 def admin_login():
     return admin_login_route()
 
-@pages_bp.route("/admin/logout")
+@pages_bp.route("/admin/logout", methods=[http.GET])
 @admin_login_required
 def admin_logout():
     return admin_logout_route()
 
-@pages_bp.route("/admin/dashboard")
+@pages_bp.route("/admin/dashboard", methods=[http.GET])
 @admin_login_required
 def admin_dashboard():
     return admin_dashboard_route()
 
-@pages_bp.route("/admin/gallery")
+@pages_bp.route("/admin/gallery", methods=[http.GET])
 @admin_login_required
 def admin_gallery():
     return admin_gallery_route()
 
-@pages_bp.route("/admin/video")
+@pages_bp.route("/admin/video", methods=[http.GET])
 @admin_login_required
 def admin_video():
     return admin_video_route()
 
-@pages_bp.route("/admin/music")
+@pages_bp.route("/admin/music", methods=[http.GET])
 @admin_login_required
 def admin_music():
     return admin_music_route()
 
-@pages_bp.route("/admin/settings")
+@pages_bp.route("/admin/settings", methods=[http.GET])
 @admin_login_required
 def admin_settings():
     return admin_settings_route()
 
-@pages_bp.route("/admin/login-attempts")
+@pages_bp.route("/admin/login-attempts", methods=[http.GET])
 @admin_login_required
 def admin_login_attempts():
     return admin_login_attempts_route()

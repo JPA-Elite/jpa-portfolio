@@ -1,7 +1,7 @@
 # pages.py
 from config import HTTPMethod as http
 from flask import Blueprint
-from Controllers.api.BaseController import change_language_route, delete_page_system_info_route, download_song_route, profile_config_route
+from Controllers.api.BaseController import change_language_route, delete_page_system_info_route, download_song_route, get_client_ip_route, profile_config_route
 from Controllers.api.MusicController import add_music_route, delete_music_route, music_list_route, update_music_route
 from Controllers.api.VideoController import add_video_route, delete_video_route, update_video_route, video_list_route
 from Controllers.api.GalleryController import add_gallery_route, delete_gallery_route, gallery_list_route, update_gallery_route
@@ -116,3 +116,9 @@ def login_attempts():
 @admin_login_required
 def delete_login_attempt(login_attempt_id):
     return delete_login_attempt_route(login_attempt_id)
+
+# Other API
+@api_bp.route("/admin/api/get-client-ip", methods=[http.GET])
+@admin_login_required
+def get_client_ip():
+    return get_client_ip_route()

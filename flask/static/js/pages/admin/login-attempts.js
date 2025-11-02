@@ -2,6 +2,7 @@ let currentPage = 1;
 let currentAudio = null;
 let currentButton = null;
 let perPage = 10;
+let currentIP = null;
 
 function setButtonLoading(button, isLoading) {
     if (!button) return;
@@ -13,6 +14,17 @@ function setButtonLoading(button, isLoading) {
     } else {
         button.innerHTML = button.dataset.originalText || "Save";
         button.disabled = false;
+    }
+}
+
+async function getCurrentIP() {
+    try {
+        const res = await fetch("/admin/api/get-client-ip");
+        const data = await res.json();
+        currentIP = data.ip;
+        console.log("Current Device IP:", currentIP);
+    } catch (error) {
+        console.error("Failed to get local IP from backend:", error);
     }
 }
 
@@ -42,19 +54,22 @@ async function loadLoginAttempt(page = 1) {
 
         data.login_attempt.forEach((loginAttempt, index) => {
             const modalIdDelete = `deleteModal${page}_${index}`;
+            const isCurrent = loginAttempt._id == currentIP;
 
-            // ✅ Add table row
             tbody.innerHTML += `
-        <tr>
-            <td>${(page - 1) * perPage + (index + 1)}</td>
-            <td>${loginAttempt._id}</td>
-            <td>${loginAttempt.attempts}</td>
-            <td>${loginAttempt.lockout_until}</td>
-            <td>
-                <button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#${modalIdDelete}">
-                <i class="bi bi-trash"></i> Delete
-                </button>
-            </td>
+            <tr ${isCurrent ? 'class="table-success"' : ""}>
+                <td>${(page - 1) * perPage + (index + 1)}</td>
+                <td>
+                    ${loginAttempt._id}
+                    ${isCurrent ? '<span class="badge bg-success ms-2">(Current Device)</span>' : ''}
+                </td>
+                <td>${loginAttempt.attempts}</td>
+                <td>${loginAttempt.lockout_until}</td>
+                <td>
+                    <button ${isCurrent ? 'disabled' : ''} class="btn btn-sm btn-${isCurrent ? 'secondary' : 'danger'}" data-bs-toggle="modal" data-bs-target="#${modalIdDelete}">
+                        <i class="bi bi-trash"></i> Delete
+                    </button>
+                </td>
             </tr>
             `;
 
@@ -78,7 +93,6 @@ async function loadLoginAttempt(page = 1) {
             </div>
             </div>
             `;
-
         });
 
         // ✅ Update page info
@@ -106,7 +120,8 @@ async function deleteLoginAttempt(loginAttemptId, modalId) {
     }
 }
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
+    await getCurrentIP();
     loadLoginAttempt(currentPage);
 
     document.getElementById("prevPage").addEventListener("click", () => {

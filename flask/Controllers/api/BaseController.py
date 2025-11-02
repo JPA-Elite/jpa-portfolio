@@ -73,3 +73,7 @@ def download_song_route():
             "Content-Type": r.headers.get("Content-Type", "audio/mpeg")
         }
     )
+
+def get_client_ip_route():
+    client_ip = request.headers.get('X-Forwarded-For', request.remote_addr)
+    return jsonify({"ip": client_ip})

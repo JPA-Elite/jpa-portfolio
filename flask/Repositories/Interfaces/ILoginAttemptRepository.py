@@ -12,3 +12,15 @@ class ILoginAttemptRepository(ABC):
     @abstractmethod
     def update_attempt(self, success: bool = False):
         pass
+
+    @abstractmethod
+    def get_login_attempt_by_id(self, login_attempt_id: str):
+        pass
+
+    @abstractmethod
+    def get_paginated_login_attempt_list(self, page: int, per_page: int, order):
+        pass
+
+    @abstractmethod
+    def delete_login_attempt(self, login_attempt_id: str):
+        pass

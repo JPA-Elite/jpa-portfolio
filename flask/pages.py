@@ -3,7 +3,7 @@ from flask import Blueprint
 from config import HTTPMethod as http
 from auth.middleware import admin_login_required
 from Controllers.web.PageController import add_portfolio_form_route, concern_route, device_info_route, donation_route, gallery_route, index_route, music_route, profile_route, vlog_route
-from Controllers.web.AdminPageController import admin_dashboard_route, admin_gallery_route, admin_login_route, admin_logout_route, admin_music_route, admin_settings_route, admin_video_route
+from Controllers.web.AdminPageController import admin_dashboard_route, admin_gallery_route, admin_login_attempts_route, admin_login_route, admin_logout_route, admin_music_route, admin_settings_route, admin_video_route
 
 # Create a Blueprint for pages
 pages_bp = Blueprint("pages", __name__)
@@ -80,3 +80,8 @@ def admin_music():
 @admin_login_required
 def admin_settings():
     return admin_settings_route()
+
+@pages_bp.route("/admin/login-attempts")
+@admin_login_required
+def admin_login_attempts():
+    return admin_login_attempts_route()

@@ -3,6 +3,7 @@ from flask import current_app, flash, redirect, render_template, request, sessio
 from config import (
     ADMIN_DASHBOARD_PAGE,
     ADMIN_GALLERY_PAGE,
+    ADMIN_LOGIN_ATTEMPTS_PAGE,
     ADMIN_LOGIN_PAGE,
     ADMIN_MUSIC_PAGE,
     ADMIN_SETTINGS_PAGE,
@@ -76,3 +77,6 @@ def admin_music_route():
 
 def admin_settings_route():
     return render_template(ADMIN_SETTINGS_PAGE, title="Admin Settings")
+
+def admin_login_attempts_route():
+    return render_template(ADMIN_LOGIN_ATTEMPTS_PAGE, title="Login Attempts")

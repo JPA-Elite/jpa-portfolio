@@ -1,8 +1,12 @@
 from Services.AuthService import AuthService
 from Repositories.AuthRepository import AuthRepository
+from Repositories.LoginAttemptRepository import LoginAttemptRepository
 
 # Initialize Services
-auth_service = AuthService(repository=AuthRepository())
+auth_service = AuthService(
+    repository=AuthRepository(),
+    attempt_repository=LoginAttemptRepository()
+)
 
 # ************************** API Controller ********************************
 

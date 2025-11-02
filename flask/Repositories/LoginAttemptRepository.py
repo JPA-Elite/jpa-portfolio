@@ -3,6 +3,8 @@ from flask import request
 from Repositories.BaseRepository import BaseRepository
 from constants.db_collections import MongoCollections as mc
 from Repositories.Interfaces.ILoginAttemptRepository import ILoginAttemptRepository
+from bson import ObjectId, errors as bson_errors
+from config import SortOrder
 
 MAX_ATTEMPTS = 3
 LOCKOUT_HOURS = 1
@@ -54,3 +56,41 @@ class LoginAttemptRepository(ILoginAttemptRepository, BaseRepository):
         )
 
         return update_data
+
+    def get_login_attempt_by_id(self, login_attempt_id: str):
+        """Fetch a login_attempt document by _id (supports both ObjectId and string IP)."""
+        try:
+            query = {"_id": ObjectId(login_attempt_id)}
+        except bson_errors.InvalidId:
+            query = {"_id": login_attempt_id}
+
+        return self.collection.find_one(query)
+
+    def get_paginated_login_attempt_list(self, page: int, per_page: int, order: SortOrder):
+        # Mongo sort order by _id
+        sort_order = -1 if order == SortOrder.DESC else 1
+
+        # Use MongoDB skip + limit for pagination
+        cursor = (
+            self.collection.find()
+            .sort("_id", sort_order)
+            .skip((page - 1) * per_page)
+            .limit(per_page)
+        )
+
+        data = list(cursor)
+        total_data = self.collection.count_documents({})
+
+        return data, total_data
+
+    def delete_login_attempt(self, login_attempt_id: str):
+        """Delete a login_attempt document by _id (IP or ObjectId)."""
+        try:
+            print("Trying ObjectId for deletion")
+            query = {"_id": ObjectId(login_attempt_id)}
+        except bson_errors.InvalidId:
+            print("Falling back to IP string for deletion")
+            query = {"_id": login_attempt_id}
+
+        result = self.collection.delete_one(query)
+        return result.deleted_count > 0

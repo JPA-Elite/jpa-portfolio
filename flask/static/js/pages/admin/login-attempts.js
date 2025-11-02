@@ -54,7 +54,8 @@ async function loadLoginAttempt(page = 1) {
 
         data.login_attempt.forEach((loginAttempt, index) => {
             const modalIdDelete = `deleteModal${page}_${index}`;
-            const isCurrent = loginAttempt._id == currentIP;
+            const ipList = currentIP ? currentIP.split(",").map(ip => ip.trim()) : [];
+            const isCurrent = ipList.includes(loginAttempt._id);
 
             tbody.innerHTML += `
             <tr ${isCurrent ? 'class="table-success"' : ""}>

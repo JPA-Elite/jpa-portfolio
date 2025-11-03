@@ -107,8 +107,8 @@ async function loadGallery(page = 1) {
             </td>
             <td>
                 <img src="${gallery.image_url
-                }" onclick="window.location.href='${gallery.image_url}'" alt="${gallery.title.en
-                }" style="width: 60px; height: auto; border-radius:4px;">
+                }" onclick="playGalleryPreview('${gallery.image_url}')" alt="${gallery.title.en
+                }" style="cursor: pointer; width: 60px; height: auto; border-radius:4px;">
             </td>
             <td>
                 <div style="max-width: 200px;
@@ -297,6 +297,36 @@ function validateTags(tags) {
     }
 
     return null; // ✅ valid
+}
+
+function playGalleryPreview(url) {
+    const modalId = "galleryPreviewModal";
+    if (!document.getElementById(modalId)) {
+        const modalHtml = `
+        <div class="modal fade" id="${modalId}" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-xl modal-fullscreen-sm-down">
+                <div class="modal-content bg-dark">
+                    <div class="modal-header">
+                        <h5 class="modal-title text-white">Image Preview</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body d-flex justify-content-center align-items-center">
+                        <img id="previewSource"
+                            class="img-fluid rounded shadow"
+                            style="max-width:100%; max-height:80vh; object-fit:contain;" />
+                    </div>
+                </div>
+            </div>
+        </div>`;
+        document.body.insertAdjacentHTML("beforeend", modalHtml);
+    }
+
+    const previewImg = document.getElementById("previewSource");
+    previewImg.src = url;
+    previewImg.alt = "Gallery Image";
+
+    const modal = new bootstrap.Modal(document.getElementById(modalId));
+    modal.show();
 }
 
 async function addGallery() {

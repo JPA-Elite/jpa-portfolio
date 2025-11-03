@@ -146,8 +146,8 @@ async function loadMusic(page = 1) {
                 }" style="display:none; width:100%; margin-top:5px;"></audio>
             </td>
             <td>
-                <img src="${music.image}" onclick="window.location.href='${music.image}'" alt="${
-                music.title}" style="width: 60px; height: auto; border-radius:4px;">
+                <img src="${music.image}" onclick="playMusicPreview('${music.image}')" alt="${
+                music.title}" style="cursor: pointer; width: 60px; height: auto; border-radius:4px;">
             </td>
             <td>
                 <button class="btn btn-sm btn-primary me-1" data-bs-toggle="modal" data-bs-target="#${modalIdEdit}">
@@ -250,6 +250,36 @@ async function loadMusic(page = 1) {
         console.error("Error fetching music list:", error);
         tbody.innerHTML = `<tr><td colspan="6" class="text-center text-danger">Error loading data</td></tr>`;
     }
+}
+
+function playMusicPreview(url) {
+    const modalId = "musicPreviewModal";
+    if (!document.getElementById(modalId)) {
+        const modalHtml = `
+        <div class="modal fade" id="${modalId}" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-xl modal-fullscreen-sm-down">
+                <div class="modal-content bg-dark">
+                    <div class="modal-header">
+                        <h5 class="modal-title text-white">Image Preview</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body d-flex justify-content-center align-items-center">
+                        <img id="previewSource"
+                            class="img-fluid rounded shadow"
+                            style="max-width:100%; max-height:80vh; object-fit:contain;" />
+                    </div>
+                </div>
+            </div>
+        </div>`;
+        document.body.insertAdjacentHTML("beforeend", modalHtml);
+    }
+
+    const previewImg = document.getElementById("previewSource");
+    previewImg.src = url;
+    previewImg.alt = "Preview Image";
+
+    const modal = new bootstrap.Modal(document.getElementById(modalId));
+    modal.show();
 }
 
 async function addMusic() {

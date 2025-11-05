@@ -1,4 +1,4 @@
-from flask import redirect, url_for, request, jsonify, Response
+from flask import redirect, stream_with_context, url_for, request, jsonify, Response
 import requests
 from Services.PortfolioService import PortfolioService
 from Services.VisitService import VisitService
@@ -77,3 +77,30 @@ def download_song_route():
 def get_client_ip_route():
     client_ip = request.headers.get('X-Forwarded-For', request.remote_addr)
     return jsonify({"ip": client_ip})
+
+def proxy_audio_route():
+    url = request.args.get("url")
+    range_header = request.headers.get('Range', None)
+    headers = {}
+
+    if range_header:
+        headers['Range'] = range_header
+
+    resp = requests.get(url, headers=headers, stream=True)
+
+    def generate():
+        for chunk in resp.iter_content(chunk_size=4096):
+            if chunk:
+                yield chunk
+
+    excluded_headers = ['content-encoding', 'content-length', 'transfer-encoding', 'connection']
+    response_headers = [
+        (name, value) for (name, value) in resp.raw.headers.items()
+        if name.lower() not in excluded_headers
+    ]
+
+    return Response(
+        stream_with_context(generate()),
+        status=resp.status_code,
+        headers=response_headers,
+    )

@@ -1,7 +1,7 @@
 # pages.py
 from config import HTTPMethod as http
 from flask import Blueprint
-from Controllers.api.BaseController import change_language_route, delete_page_system_info_route, download_song_route, get_client_ip_route, profile_config_route
+from Controllers.api.BaseController import change_language_route, delete_page_system_info_route, download_song_route, get_client_ip_route, profile_config_route, proxy_audio_route
 from Controllers.api.MusicController import add_music_route, delete_music_route, music_list_route, update_music_route
 from Controllers.api.VideoController import add_video_route, delete_video_route, update_video_route, video_list_route
 from Controllers.api.GalleryController import add_gallery_route, delete_gallery_route, gallery_list_route, update_gallery_route
@@ -9,6 +9,7 @@ from Controllers.api.DashboardController import visits_info_route
 from Controllers.api.LoginAttemptController import login_attempt_list_route, delete_login_attempt_route
 from auth.middleware import admin_login_required
 from Controllers.api.AuthController import update_profile_route
+from extensions import cache
 
 # Create a Blueprint for api
 api_bp = Blueprint("api", __name__)
@@ -31,6 +32,15 @@ def profile_config():
 def download_song():
     return download_song_route()
 
+@api_bp.route("/api/proxy-audio")
+def proxy_audio():
+    return proxy_audio_route()
+
+@api_bp.route("/api/music-list", methods=[http.GET])
+@cache.cached(query_string=True)
+def user_music_list():
+    return music_list_route()
+
 
 # ************************** Administroller API ********************************
 # Dashboard API
@@ -40,7 +50,10 @@ def visits_info():
     return visits_info_route()
 
 # Music API
+
 @api_bp.route("/admin/api/music-list", methods=[http.GET])
+@cache.cached(query_string=True)
+@admin_login_required
 def music_list():
     return music_list_route()
 

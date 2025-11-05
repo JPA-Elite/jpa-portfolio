@@ -14,6 +14,7 @@ from api import api_bp
 from datetime import datetime, timedelta
 from sitemap import sitemap_bp  # Import the sitemap blueprint
 import os
+from extensions import cache
 
 app = Flask(__name__)
 
@@ -21,11 +22,19 @@ app.config["SECRET_KEY"] = os.urandom(24)
 app.config["LANGUAGES"] = LANGUAGES
 app.config["BABEL_DEFAULT_LOCALE"] = BABEL_DEFAULT_LOCALE
 app.config["PERMANENT_SESSION_LIFETIME"] = timedelta(days=30)
+# ✅ Configure cache globally
+app.config["CACHE_TYPE"] = "simple"
+app.config["CACHE_DEFAULT_TIMEOUT"] = 86400
+
 app.register_blueprint(pages_bp)
-# Register the sitemap blueprint
 app.register_blueprint(sitemap_bp)
 app.register_blueprint(api_bp)
 
+
+# ✅ Initialize cache
+cache.init_app(app)
+
+# ✅ Initialize Babel
 babel = Babel(app)
 babel.init_app(app, locale_selector=get_locale)
 

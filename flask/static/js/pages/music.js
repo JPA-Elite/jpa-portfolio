@@ -10,12 +10,26 @@ let autoplayEnabled = true;
 let isDragging = false;
 const durationCache = JSON.parse(localStorage.getItem('audioDurationCache') || '{}');
 let filteredResults = null;
+musicList = document.getElementById("musicList");
+audioPlayer = document.getElementById("audioPlayer");
+const nowPlaying = document.getElementById("nowPlaying");
+const coverImg = document.getElementById("coverImg");
+const playerNowPlaying = document.getElementById("playerNowPlaying");
+const playerCoverImg = document.getElementById("playerCoverImg");
+const progressBar = document.getElementById("progressBar");
+const progress = document.getElementById("progress");
+const currentTimeEl = document.getElementById("currentTime");
+const totalDurationEl = document.getElementById("totalDuration");
+playPauseBtn = document.getElementById("playPauseBtn");
+const canvas = document.getElementById("beatVisualizer");
+const ctx = canvas.getContext("2d");
+let audioContext, analyser, source, dataArray, bufferLength, visualizerRunning;
 
 document.addEventListener("DOMContentLoaded", async () => {
     const root = document.documentElement;
     root.setAttribute("data-theme", "dark");
     try {
-        const response = await fetch("/admin/api/music-list?per_page=999999");
+        const response = await fetch("/api/music-list?per_page=999999");
         const result = await response.json();
 
         musicData = result?.music || [];
@@ -32,7 +46,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 function selectFirstSong() {
     currentSongIndex = Math.floor(Math.random() * musicData.length); // Randomly select an index
     const song = musicData[currentSongIndex];
-    audioPlayer.src = song.url; // Set the audio source for the selected song
+    audioPlayer.src = `/api/proxy-audio?url=${encodeURIComponent(song.url)}`; // Set the audio source for the selected song
     let nowPlaying = document.getElementById("nowPlaying");
     let coverImg = document.getElementById("coverImg");
     let playerNowPlaying = document.getElementById("playerNowPlaying");
@@ -72,7 +86,7 @@ function playSong(index) {
     }
 
     currentSongIndex = index;
-    audioPlayer.src = song.url;
+    audioPlayer.src = `/api/proxy-audio?url=${encodeURIComponent(song.url)}`;
 
     document.getElementById("nowPlaying").textContent = `Now Playing: ${song.title}`;
     document.getElementById("coverImg").src = song.image;
@@ -86,6 +100,7 @@ function playSong(index) {
 
     coverImg.classList.add("spin");
     audioPlayer.play();
+    startVisualizer();
     playPauseBtn.textContent = "Pause";
 
     // ✅ Re-render the current page only
@@ -103,6 +118,7 @@ function togglePlay() {
             audioPlayer.pause();
             playPauseBtn.textContent = "Play";
         }
+        startVisualizer();
     }
 }
 
@@ -303,18 +319,6 @@ function nextPage() {
         setTimeout(() => hideTripleLoading?.(), 500);
     }
 }
-// Get DOM elements
-musicList = document.getElementById("musicList");
-audioPlayer = document.getElementById("audioPlayer");
-const nowPlaying = document.getElementById("nowPlaying");
-const coverImg = document.getElementById("coverImg");
-const playerNowPlaying = document.getElementById("playerNowPlaying");
-const playerCoverImg = document.getElementById("playerCoverImg");
-const progressBar = document.getElementById("progressBar");
-const progress = document.getElementById("progress");
-const currentTimeEl = document.getElementById("currentTime");
-const totalDurationEl = document.getElementById("totalDuration");
-playPauseBtn = document.getElementById("playPauseBtn");
 
 async function renderTracks(tracks, activeSongId = null) {
     musicList.innerHTML = "";
@@ -356,9 +360,7 @@ async function renderTracks(tracks, activeSongId = null) {
         `;
 
         div.addEventListener("click", () => {
-            const index = filteredResults
-                ? i // ✅ Use filtered index when searching
-                : musicData.indexOf(track);
+            const index = (currentPage - 1) * itemsPerPage + i;
             playSong(index);
         });
 
@@ -426,11 +428,20 @@ function formatTime(seconds) {
 }
 
 function seek(event) {
+    if (!audioPlayer.duration) return;
+
     const rect = progressBar.getBoundingClientRect();
     const offsetX = event.clientX - rect.left;
     const width = rect.width;
     const seekTime = (offsetX / width) * audioPlayer.duration;
+
+    const wasPaused = audioPlayer.paused;
     audioPlayer.currentTime = seekTime;
+
+    // ✅ Only play if it was already playing
+    if (wasPaused) {
+        audioPlayer.pause();
+    }
 }
 
 function toggleAutoplay() {
@@ -443,9 +454,10 @@ function toggleAutoplay() {
 
 audioPlayer.addEventListener("timeupdate", updateProgress);
 audioPlayer.addEventListener("loadedmetadata", updateDuration);
-progressBar.addEventListener("click", seek);
+progressBar.addEventListener("click", (event) => seek(event));
 progressBar.addEventListener("mousedown", (event) => {
     isDragging = true;
+    stopVisualizer();
     seek(event);
 });
 
@@ -458,11 +470,13 @@ document.addEventListener("mousemove", (event) => {
 
 document.addEventListener("mouseup", () => {
     isDragging = false;
+    startVisualizer();
 });
 
 // --- Mobile Touch Events ---
 progressBar.addEventListener("touchstart", (event) => {
     isDragging = true;
+    stopVisualizer();
     seek(event.touches[0]); // First touch point
 });
 
@@ -474,6 +488,7 @@ document.addEventListener("touchmove", (event) => {
 
 document.addEventListener("touchend", () => {
     isDragging = false;
+    startVisualizer();
 });
 
 audioPlayer.addEventListener("ended", () => {
@@ -581,4 +596,87 @@ function updateMusicHeader() {
         : musicData.length;
 
     header.textContent = `My Music List (${total} ${total === 1 ? "song" : "songs"})`;
+}
+
+function initVisualizer() {
+    if (!audioPlayer) return;
+
+    if (!audioContext) {
+        audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        analyser = audioContext.createAnalyser();
+        analyser.fftSize = 256; // Adjust smoothness/detail
+        bufferLength = analyser.frequencyBinCount;
+        dataArray = new Uint8Array(bufferLength);
+
+        source = audioContext.createMediaElementSource(audioPlayer);
+        source.connect(analyser);
+        analyser.connect(audioContext.destination);
+    }
+
+    resizeCanvas();
+    drawVisualizer();
+}
+
+function resizeCanvas() {
+    canvas.width = canvas.clientWidth;
+    canvas.height = canvas.clientHeight;
+}
+
+window.addEventListener("resize", resizeCanvas);
+
+function drawVisualizer() {
+    if (!visualizerRunning || !analyser) return; // stop cleanly
+
+    requestAnimationFrame(drawVisualizer);
+    analyser.getByteFrequencyData(dataArray);
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    const barWidth = (canvas.width / bufferLength) * 2.5;
+    let x = 0;
+
+    for (let i = 0; i < bufferLength; i++) {
+        const barHeight = dataArray[i] * 0.6;
+        const gradient = ctx.createLinearGradient(0, canvas.height, 0, 0);
+        gradient.addColorStop(0, "#00b4ff");
+        gradient.addColorStop(0.5, "#009dff");
+        gradient.addColorStop(1, "#80eaff");
+        ctx.fillStyle = gradient;
+        ctx.fillRect(x, canvas.height - barHeight, barWidth, barHeight);
+        x += barWidth + 1;
+    }
+}
+
+function startVisualizer() {
+    if (!audioPlayer) return;
+
+    // 🔒 Initialize audio context and analyser only once
+    if (!audioContext) {
+        audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        analyser = audioContext.createAnalyser();
+        analyser.fftSize = 256;
+        bufferLength = analyser.frequencyBinCount;
+        dataArray = new Uint8Array(bufferLength);
+
+        source = audioContext.createMediaElementSource(audioPlayer);
+        source.connect(analyser);
+        analyser.connect(audioContext.destination);
+    }
+
+    // ✅ Resume context if paused (required on Chrome mobile sometimes)
+    if (audioContext.state === "suspended") {
+        audioContext.resume();
+    }
+
+    // ✅ Only start drawing if not already running
+    if (!visualizerRunning) {
+        visualizerRunning = true;
+        resizeCanvas();
+        drawVisualizer();
+    }
+}
+
+function stopVisualizer() {
+    // 🚫 Do NOT touch audio context or source, only pause animation
+    visualizerRunning = false;
 }

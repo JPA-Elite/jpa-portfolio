@@ -71,9 +71,6 @@ def profile_route():
     )
 
 def gallery_route():
-    gallery_url = url_for("static", filename="json/gallery.json", _external=True)
-    response = requests.get(gallery_url)
-    gallery_data = response.json()
     search_query = request.args.get("search", "")
     tags_query = request.args.get("tags", "")
     items_per_page = 6

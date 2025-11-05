@@ -11,3 +11,4 @@ opencv-python==4.10.0.84
 cloudinary==1.41.0
 mutagen==1.47.0
 python-dateutil==2.9.0.post0
+Flask-Caching==2.3.1

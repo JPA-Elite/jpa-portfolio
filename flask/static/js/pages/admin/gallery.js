@@ -257,7 +257,7 @@ async function loadGallery(page = 1) {
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-danger" onclick="deleteGallery('${gallery._id}', '${modalIdDelete}')">Delete</button>
+                    <button id="deleteBtn_${gallery._id}" data-loading-text='<span class="spinner-border spinner-border-sm me-2"></span> Deleting...' type="button" class="btn btn-danger" onclick="deleteGallery('${gallery._id}', '${modalIdDelete}')">Delete</button>
                 </div>
                 </div>
             </div>
@@ -515,17 +515,28 @@ async function updateGallery(galleryId, formId) {
 }
 
 async function deleteGallery(galleryId, modalId) {
-    const res = await fetch(`/admin/api/delete-gallery/${galleryId}`, {
-        method: "DELETE",
-    });
+    const btn = document.getElementById(`deleteBtn_${galleryId}`);
+    setButtonLoading(btn, true);
 
-    if (res.ok) {
-        bootstrap.Modal.getInstance(document.getElementById(modalId)).hide();
-        const data = await res.json();
-        loadGallery(currentPage);
-        alert(data.message);
-    } else {
-        alert("Failed to delete gallery.");
+    try {
+        const res = await fetch(`/admin/api/delete-gallery/${galleryId}`, {
+            method: "DELETE",
+        });
+
+        if (res.ok) {
+            bootstrap.Modal.getInstance(document.getElementById(modalId)).hide();
+            const data = await res.json();
+            loadGallery(currentPage);
+            alert(data.message);
+        } else {
+            alert("Failed to delete gallery.");
+        }
+
+    } catch (error) {
+        console.error("Error deleting gallery:", error);
+        alert("An error occurred while deleting the gallery.");
+    } finally {
+        setButtonLoading(btn, false);
     }
 }
 

@@ -262,7 +262,7 @@ async function loadVideo(page = 1) {
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-danger" onclick="deleteVideo('${video._id}', '${modalIdDelete}')">Delete</button>
+                    <button id="deleteBtn_${video._id}" data-loading-text='<span class="spinner-border spinner-border-sm me-2"></span> Deleting...' type="button" class="btn btn-danger" onclick="deleteVideo('${video._id}', '${modalIdDelete}')">Delete</button>
                 </div>
                 </div>
             </div>
@@ -474,17 +474,29 @@ async function updateVideo(videoId, formId) {
 }
 
 async function deleteVideo(videoId, modalId) {
-    const res = await fetch(`/admin/api/delete-video/${videoId}`, {
-        method: "DELETE",
-    });
+    const btn = document.getElementById(`deleteBtn_${videoId}`);
+    setButtonLoading(btn, true);
 
-    if (res.ok) {
-        bootstrap.Modal.getInstance(document.getElementById(modalId)).hide();
-        const data = await res.json();
-        loadVideo(currentPage);
-        alert(data.message);
-    } else {
-        alert("Failed to delete video.");
+    try {
+        const res = await fetch(`/admin/api/delete-video/${videoId}`, {
+            method: "DELETE",
+        });
+
+        if (res.ok) {
+            bootstrap.Modal.getInstance(document.getElementById(modalId)).hide();
+            const data = await res.json();
+            loadVideo(currentPage);
+            alert(data.message);
+        } else {
+            alert("Failed to delete video.");
+        }
+
+    } catch (error) {
+        console.error("Error deleting video:", error);
+        alert("An error occurred while deleting the video.");
+    }
+    finally {
+        setButtonLoading(btn, false);
     }
 }
 

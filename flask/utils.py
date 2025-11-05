@@ -7,6 +7,8 @@ import cloudinary
 from datetime import datetime
 import random
 from constants.cloudinary import CloudinaryFolders, CloudinaryResourceType
+from werkzeug.urls import url_encode
+from extensions import cache
 
 load_dotenv()
 
@@ -82,6 +84,23 @@ def get_random_tags(data, tags_length=10):
 
     # Return limited number of random tags
     return unique_tags[:tags_length]
+
+def get_cache_data(func_name, args=None, timeout=None, default=None):
+    cache_key = f"{func_name}:{url_encode(args)}" if args else f"{func_name}:all"
+    cached_data = cache.get(cache_key)
+
+    if cached_data is None and default is not None:
+        cache.set(cache_key, default, timeout=timeout)
+        cached_data = default
+
+    return cached_data, cache_key
+
+
+def clear_cache_by_prefix(prefix: str):
+    for key in list(cache.cache._cache.keys()):
+        if key.startswith(prefix):
+            print("Deleting cache key:", key)
+            cache.delete(key)
 
 
 # Configure Cloudinary

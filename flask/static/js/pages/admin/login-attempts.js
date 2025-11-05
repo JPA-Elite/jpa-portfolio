@@ -88,7 +88,7 @@ async function loadLoginAttempt(page = 1) {
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-danger" onclick="deleteLoginAttempt('${loginAttempt._id}', '${modalIdDelete}')">Delete</button>
+                    <button id="deleteBtn_${loginAttempt._id}" data-loading-text='<span class="spinner-border spinner-border-sm me-2"></span> Deleting...' type="button" class="btn btn-danger" onclick="deleteLoginAttempt('${loginAttempt._id}', '${modalIdDelete}')">Delete</button>
                 </div>
                 </div>
             </div>
@@ -107,17 +107,27 @@ async function loadLoginAttempt(page = 1) {
 }
 
 async function deleteLoginAttempt(loginAttemptId, modalId) {
-    const res = await fetch(`/admin/api/delete-login-attempt/${loginAttemptId}`, {
-        method: "DELETE",
-    });
+    const btn = document.getElementById(`deleteBtn_${loginAttemptId}`);
+    setButtonLoading(btn, true);
 
-    if (res.ok) {
-        bootstrap.Modal.getInstance(document.getElementById(modalId)).hide();
-        const data = await res.json();
-        loadLoginAttempt(currentPage);
-        alert(data.message);
-    } else {
-        alert("Failed to delete login attempt.");
+    try {
+        const res = await fetch(`/admin/api/delete-login-attempt/${loginAttemptId}`, {
+            method: "DELETE",
+        });
+
+        if (res.ok) {
+            bootstrap.Modal.getInstance(document.getElementById(modalId)).hide();
+            const data = await res.json();
+            loadLoginAttempt(currentPage);
+            alert(data.message);
+        } else {
+            alert("Failed to delete login attempt.");
+        }
+    } catch (error) {
+        console.error("Error deleting login attempt:", error);
+        alert("An error occurred while deleting the login attempt.");
+    } finally {
+        setButtonLoading(btn, false);
     }
 }
 

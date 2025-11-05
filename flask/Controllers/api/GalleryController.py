@@ -3,6 +3,8 @@ from Services.GalleryService import GalleryService
 from Repositories.GalleryRepository import GalleryRepository
 from config import SortOrder, SortOrderStr
 import json
+from utils import clear_cache_by_prefix, get_cache_data
+from extensions import cache
 
 # Initialize Services
 gallery_service = GalleryService(repository=GalleryRepository())
@@ -10,15 +12,23 @@ gallery_service = GalleryService(repository=GalleryRepository())
 # -------------------Administrator Controller------------------------
 # Gallery Controller
 def gallery_list_route():
+    cached_data, cache_key = get_cache_data("admin.api.gallery_list", request.args)
+    if cached_data:
+        return jsonify(cached_data)
+
     page = int(request.args.get("page", 1))
     per_page = int(request.args.get("per_page", 10))
     order = SortOrder.DESC if request.args.get("order", "desc").upper() == SortOrderStr.DESC else SortOrder.ASC
     gallery_list, total_gallery = gallery_service.get_paginated_gallery_list(page, per_page, order)
-    return jsonify({
+
+    response_data = {
         "gallery": [gallery.to_dict() for gallery in gallery_list],
         "total_gallery": total_gallery,
         "total_pages": (total_gallery + per_page - 1) // per_page,
-    })
+    }
+
+    cache.set(cache_key, response_data, timeout=300)
+    return jsonify(response_data)
 
 def add_gallery_route():
     title = request.form.get("title")
@@ -34,6 +44,7 @@ def add_gallery_route():
     }
 
     gallery_id = gallery_service.add_gallery(data)
+    clear_cache_by_prefix("admin.api.gallery_list:")
     return jsonify({"message": "Gallery added successfully", "gallery_id": gallery_id}), 201
 
 def update_gallery_route(gallery_id):
@@ -51,6 +62,7 @@ def update_gallery_route(gallery_id):
 
     success = gallery_service.update_gallery(gallery_id, update_data)
     if success:
+        clear_cache_by_prefix("admin.api.gallery_list:")
         return jsonify({"message": "Gallery updated successfully"}), 200
     else:
         return jsonify({"message": "Failed to update gallery"}), 400
@@ -58,6 +70,7 @@ def update_gallery_route(gallery_id):
 def delete_gallery_route(gallery_id):
     success = gallery_service.delete_gallery(gallery_id)
     if success:
+        clear_cache_by_prefix("admin.api.gallery_list:")
         return jsonify({"message": "Gallery deleted successfully"}), 200
     else:
         return jsonify({"message": "Gallery not found"}), 404

@@ -227,7 +227,7 @@ async function loadMusic(page = 1) {
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-danger" onclick="deleteMusic('${music._id}', '${modalIdDelete}')">Delete</button>
+                    <button type="button" id="deleteBtn_${music._id}" class="btn btn-danger" data-loading-text='<span class="spinner-border spinner-border-sm me-2"></span> Deleting...' onclick="deleteMusic('${music._id}', '${modalIdDelete}')">Delete</button>
                 </div>
                 </div>
             </div>
@@ -416,6 +416,10 @@ async function updateMusic(musicId, formId) {
 }
 
 async function deleteMusic(musicId, modalId) {
+    const btn = document.getElementById(`deleteBtn_${musicId}`);
+    setButtonLoading(btn, true);
+
+    try {
     const res = await fetch(`/admin/api/delete-music/${musicId}`, {
         method: "DELETE",
     });
@@ -427,6 +431,12 @@ async function deleteMusic(musicId, modalId) {
         alert(data.message);
     } else {
         alert("Failed to delete music.");
+    }
+    } catch (err) {
+        console.error(err);
+        alert("Error deleting music.");
+    } finally {
+        setButtonLoading(btn, false);
     }
 }
 

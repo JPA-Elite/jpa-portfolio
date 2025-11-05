@@ -37,7 +37,6 @@ def proxy_audio():
     return proxy_audio_route()
 
 @api_bp.route("/api/music-list", methods=[http.GET])
-@cache.cached(query_string=True)
 def user_music_list():
     return music_list_route()
 
@@ -52,7 +51,6 @@ def visits_info():
 # Music API
 
 @api_bp.route("/admin/api/music-list", methods=[http.GET])
-@cache.cached(query_string=True)
 @admin_login_required
 def music_list():
     return music_list_route()

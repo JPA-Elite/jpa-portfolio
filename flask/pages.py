@@ -46,7 +46,6 @@ def donation():
     return donation_route()
 
 @pages_bp.route("/device-info/visits", methods=[http.GET])
-@cache.cached(key_prefix=lambda: f"device_info_{get_locale()}_{request.query_string.decode()}")
 def device_info():
     return device_info_route()
 
@@ -68,30 +67,36 @@ def admin_logout():
 
 @pages_bp.route("/admin/dashboard", methods=[http.GET])
 @admin_login_required
+@cache.cached()
 def admin_dashboard():
     return admin_dashboard_route()
 
 @pages_bp.route("/admin/gallery", methods=[http.GET])
 @admin_login_required
+@cache.cached()
 def admin_gallery():
     return admin_gallery_route()
 
 @pages_bp.route("/admin/video", methods=[http.GET])
 @admin_login_required
+@cache.cached()
 def admin_video():
     return admin_video_route()
 
 @pages_bp.route("/admin/music", methods=[http.GET])
 @admin_login_required
+@cache.cached()
 def admin_music():
     return admin_music_route()
 
 @pages_bp.route("/admin/settings", methods=[http.GET])
 @admin_login_required
+@cache.cached()
 def admin_settings():
     return admin_settings_route()
 
 @pages_bp.route("/admin/login-attempts", methods=[http.GET])
 @admin_login_required
+@cache.cached()
 def admin_login_attempts():
     return admin_login_attempts_route()

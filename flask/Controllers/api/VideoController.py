@@ -45,6 +45,7 @@ def add_video_route():
 
     video_id = video_service.add_video(data)
     clear_cache_by_prefix("admin.api.video_list:")
+    clear_cache_by_prefix("vlog_")
     return jsonify({"message": "Video added successfully", "video_id": video_id}), 201
 
 def update_video_route(video_id):
@@ -63,6 +64,7 @@ def update_video_route(video_id):
     success = video_service.update_video(video_id, update_data)
     if success:
         clear_cache_by_prefix("admin.api.video_list:")
+        clear_cache_by_prefix("vlog_")
         return jsonify({"message": "Video updated successfully"}), 200
     else:
         return jsonify({"message": "Failed to update video"}), 400
@@ -71,6 +73,7 @@ def delete_video_route(video_id):
     success = video_service.delete_video(video_id)
     if success:
         clear_cache_by_prefix("admin.api.video_list:")
+        clear_cache_by_prefix("vlog_")
         return jsonify({"message": "Video deleted successfully"}), 200
     else:
         return jsonify({"message": "Video not found"}), 404

@@ -21,6 +21,12 @@ msgstr ""
 msgid "Contact_Me"
 msgstr "Makipag-ugnay"
 
+msgid "Certifications"
+msgstr "Mga Sertipikasyon"
+
+msgid "Certifications_Description"
+msgstr "Ang mga sertipikasyong ito ay nagpapakita ng aking dedikasyon sa patuloy na pagkatuto at propesyonal na pag-unlad sa larangan ng software development."
+
 msgid "Contact_Description"
 msgstr "Kung nais mong makipag-ugnay, mangyaring makipag-ugnay sa pamamagitan ng mga pamamaraan sa ibaba:"
 

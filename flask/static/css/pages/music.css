@@ -74,6 +74,26 @@ main {
     flex: 1;
     overflow-y: auto;
     max-height: calc(100% - 40px);
+    scrollbar-width: thin; /* for Firefox */
+    scrollbar-color: rgba(255, 255, 255, 0.6) transparent;
+}
+
+/* ✅ For Chrome, Edge, Safari */
+.music-list-items::-webkit-scrollbar {
+    width: 2px;
+}
+
+.music-list-items::-webkit-scrollbar-track {
+    background: transparent; /* transparent track */
+}
+
+.music-list-items::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.4); /* semi-transparent thumb */
+    border-radius: 4px;
+}
+
+.music-list-items::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.6);
 }
 
 .music-item {

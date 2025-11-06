@@ -21,6 +21,12 @@ msgstr ""
 msgid "Contact_Me"
 msgstr "Contact Me"
 
+msgid "Certifications"
+msgstr "Certifications"
+
+msgid "Certifications_Description"
+msgstr "this certifications showcase my dedication to continuous learning and professional growth in the field of software development."
+
 msgid "Contact_Description"
 msgstr "If you would like to get in touch, please reach out via the methods below:"
 

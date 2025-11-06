@@ -216,6 +216,22 @@ endblock %}
     </div>
 </section>
 
+<!-- Certications -->
+<section id="certifications">
+    <h2>{{ _('Certifications') }}</h2>
+    <p>{{ _('Certifications_Description') }}</p>
+    <div class="certification-images">
+        <img onclick="openModal(`{{ url_for('static', filename='images/cert1.jpg') }}`, 'Angular Basic Certificate')" src="{{ url_for('static', filename='images/cert1.jpg') }}" alt="Certification 1">
+        <img onclick="openModal(`{{ url_for('static', filename='images/cert2.jpg') }}`, 'Java Basic Certificate')" src="{{ url_for('static', filename='images/cert2.jpg') }}" alt="Certification 2">
+        <img onclick="openModal(`{{ url_for('static', filename='images/cert3.jpg') }}`, 'Javascript Basic Certificate')" src="{{ url_for('static', filename='images/cert3.jpg') }}" alt="Certification 3">
+        <img onclick="openModal(`{{ url_for('static', filename='images/cert4.jpg') }}`, 'SQL Basic Certificate')" src="{{ url_for('static', filename='images/cert4.jpg') }}" alt="Certification 4">
+        <img onclick="openModal(`{{ url_for('static', filename='images/cert5.jpg') }}`, 'Analyze Data with Python Certificate')" src="{{ url_for('static', filename='images/cert5.jpg') }}" alt="Certification 5">
+        <img onclick="openModal(`{{ url_for('static', filename='images/cert6.jpg') }}`, 'Learn Basic Statistics with Python Certificate')" src="{{ url_for('static', filename='images/cert6.jpg') }}" alt="Certification 6">
+        <img onclick="openModal(`{{ url_for('static', filename='images/cert7.jpg') }}`, 'Using HTML and CSS to Design a Website Certificate')" src="{{ url_for('static', filename='images/cert7.jpg') }}" alt="Certification 7">
+        <img onclick="openModal(`{{ url_for('static', filename='images/cert8.jpg') }}`, 'Build Python Web Apps with Flask Certificate')" src="{{ url_for('static', filename='images/cert8.jpg') }}" alt="Certification 8">
+    </div>
+</section>
+
 <!-- Contact Me -->
 <section id="contact">
     <h2>{{ _('Contact_Me') }}</h2>

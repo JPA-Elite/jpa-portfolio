@@ -9,6 +9,26 @@
     background-color: rgba(0, 0, 0, 0.9);
     padding: 20px 0;
     overflow-y: auto;
+    scrollbar-width: thin; /* for Firefox */
+    scrollbar-color: rgba(255, 255, 255, 0.6) transparent;
+}
+
+/* ✅ For Chrome, Edge, Safari */
+.modal::-webkit-scrollbar {
+    width: 2px;
+}
+
+.modal::-webkit-scrollbar-track {
+    background: transparent; /* transparent track */
+}
+
+.modal::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.4); /* semi-transparent thumb */
+    border-radius: 4px;
+}
+
+.modal::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.6);
 }
 
 .modal-content {

@@ -183,7 +183,14 @@ function downloadSong() {
         alert("No song is currently loaded.");
         return;
     }
-    window.open(`/api/download_song?url=${encodeURIComponent(src)}`, "_blank");
+
+    let actualUrl = src;
+    const urlParamMatch = src.match(/[?&]url=([^&]+)/);
+    if (urlParamMatch) {
+        actualUrl = decodeURIComponent(urlParamMatch[1]);
+    }
+
+    window.open(`/api/download_song?url=${encodeURIComponent(actualUrl)}`, "_blank");
 }
 
 function copyLink(url = null) {

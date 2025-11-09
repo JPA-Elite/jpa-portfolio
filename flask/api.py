@@ -5,6 +5,7 @@ from Controllers.api.BaseController import change_language_route, delete_page_sy
 from Controllers.api.MusicController import add_music_route, delete_music_route, music_list_route, update_music_route
 from Controllers.api.VideoController import add_video_route, delete_video_route, update_video_route, video_list_route
 from Controllers.api.GalleryController import add_gallery_route, delete_gallery_route, gallery_list_route, update_gallery_route
+from Controllers.api.GalleryLikeController import add_gallery_like_route
 from Controllers.api.DashboardController import visits_info_route
 from Controllers.api.LoginAttemptController import login_attempt_list_route, delete_login_attempt_route
 from auth.middleware import admin_login_required
@@ -116,6 +117,11 @@ def update_profile():
 @admin_login_required
 def delete_video(video_id):
     return delete_video_route(video_id)
+
+# Gallery Likes API
+@api_bp.route("/api/gallery-like", methods=[http.POST])
+def add_gallery_like():
+    return add_gallery_like_route()
 
 # Login Attempt API
 @api_bp.route("/admin/api/login-attempts", methods=[http.GET])

@@ -96,12 +96,12 @@ function moveSlide(direction) {
 }
 
 // Function to open the modal and show the image
-function openModal(imageSrc, title = '', description = '', type = ModalType.IMAGE) {
+function openModal(imageSrc, title = '', description = '', type = ModalType.IMAGE, enableComments = false) {
     var boxModalContainer = document.querySelector(".box-modal-container");
     var modalImage = document.getElementById("modalImage");
     var caption = document.getElementById("caption");
     var imageModal = document.getElementById("imageModal");
-    imageModal.style.display = "block";
+    imageModal.style.display = "flex";
 
     if (type == ModalType.BOX) {
         boxModalContainer.style.display = "block";
@@ -109,7 +109,7 @@ function openModal(imageSrc, title = '', description = '', type = ModalType.IMAG
         caption.style.display = "none";
     } else {
         boxModalContainer.style.display = "none";
-        modalImage.style.display = "block";
+        modalImage.style.display = "flex";
         caption.style.display = "block";
         document.getElementById("modalImage").src = imageSrc;
 
@@ -127,6 +127,18 @@ function openModal(imageSrc, title = '', description = '', type = ModalType.IMAG
             captionElement.innerHTML += "<p>" + description + "</p>";
         }
     }
+
+    // Show or hide comment section
+    const isMobile = window.innerWidth <= 900;
+    const commentSection = document.querySelector(".comment-section");
+    const modalContentContainer = document.querySelector(".modal-content-container");
+    if (enableComments) {
+        commentSection.style.display = isMobile ? "block" : "flex";
+        modalContentContainer.style.width = isMobile ? "100%" : "50%";
+    } else {
+        commentSection.style.display = "none";
+        modalContentContainer.style.width = "100%";
+    }
 }
 
 // Function to close the modal
@@ -134,3 +146,25 @@ function closeModal() {
     document.getElementById("imageModal").style.display = "none";
     document.querySelector(".box-modal-container").style.display = "none";
 }
+
+const commentBox = document.getElementById("commentBox");
+const commentList = document.querySelector(".comment-list");
+const commentCount = document.getElementById("commentCount");
+
+commentBox.addEventListener("keypress", (e) => {
+    if (e.key === "Enter" && commentBox.value.trim() !== "") {
+        const newComment = document.createElement("div");
+        newComment.classList.add("comment-item");
+        newComment.innerHTML = `
+        <img src="https://i.ibb.co/TRbDC7f/a.webp" alt="Your profile picture" />
+        <div class="comment-content">
+            <p class="comment-author">You</p>
+            <p class="comment-text">${commentBox.value}</p>
+            <div class="comment-meta"><u>Just now</u> <u>Like</u></div>
+        </div>`;
+        commentList.appendChild(newComment);
+        commentBox.value = "";
+        commentList.scrollTop = commentList.scrollHeight;
+        commentCount.textContent = Number(commentCount.textContent) + 1;
+    }
+});

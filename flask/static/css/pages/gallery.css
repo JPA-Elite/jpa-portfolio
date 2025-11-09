@@ -22,10 +22,8 @@
     border-radius: 8px;
     cursor: pointer;
     transition: all 0.3s ease;
-    clip-path: polygon(
-        30% 0%, 70% 0%, 100% 30%, 100% 70%, 
-        70% 100%, 30% 100%, 0% 70%, 0% 30%
-    );
+    clip-path: polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%,
+            70% 100%, 30% 100%, 0% 70%, 0% 30%);
 }
 
 .gallery-item .gallery-image:hover {
@@ -34,7 +32,8 @@
 }
 
 .gallery-item .description {
-    color: var(--text-primary);  /* Changed from #555 to use theme variable */
+    color: var(--text-primary);
+    /* Changed from #555 to use theme variable */
 }
 
 .tags {
@@ -68,8 +67,50 @@
     background-color: #ccc;
 }
 
+.gallery-actions {
+   display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.action-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: transparent;
+    border: 1px solid var(--accent-color, #555);
+    color: var(--text-primary, #333);
+    padding: 6px 14px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 0.85rem;
+}
+
+.action-btn ion-icon {
+    font-size: 1.1rem;
+}
+
+.action-btn:hover {
+    background-color: var(--accent-color, #333);
+    color: #fff;
+}
+
+/* ❤️ Active Like State */
+.like-btn.liked {
+    color: #e63946;
+    border-color: #e63946;
+}
+
+.like-btn.liked ion-icon {
+    content: "\f443";
+    /* Heart filled icon */
+}
+
 /* Mobile responsiveness */
 @media only screen and (max-width: 768px) {
+
     /* For tablets and smaller screens */
     .gallery-item {
         width: 45%;
@@ -82,8 +123,20 @@
 }
 
 @media only screen and (max-width: 480px) {
+
     /* For mobile screens */
     .gallery-item {
-        width: 100%; /* One item per row */
+        width: 100%;
+        /* One item per row */
+    }
+
+    .gallery-actions {
+        flex-direction: row;
+        gap: 10px;
+    }
+
+    .action-btn {
+        font-size: 0.8rem;
+        padding: 6px 10px;
     }
 }

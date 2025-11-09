@@ -20,7 +20,7 @@ endblock %}
             <div class="gallery-item">
                 <img src="{{ item.image_url if item.image_url is defined else image_path ~ item.image_name }}" alt="{{ item.title[get_locale()] }}"
                     class="gallery-image"
-                    onclick="openModal('{{ item.image_url if item.image_url is defined else image_path ~ item.image_name }}', `{{ item.title[get_locale()] | e }}`,  `{{ item.description[get_locale()] | e }}`)" />
+                    onclick="openModal('{{ item.image_url if item.image_url is defined else image_path ~ item.image_name }}', `{{ item.title[get_locale()] | e }}`,  `{{ item.description[get_locale()] | e }}`, 'imageModal', true)" />
                 <h3>{{ item.title[get_locale()] }}</h3>
                 <p class="description">{{ item.description[get_locale()] | truncate_text(120) }}</p>
                 {% if item.tags is defined and item.tags %}
@@ -30,7 +30,18 @@ endblock %}
                     {% endfor %}
                 </div>
                 {% endif %}
-        </div>
+                <!-- 💬 Like & Comment Buttons -->
+                <div class="gallery-actions">
+                    <button class="action-btn like-btn {% if item.is_liked %}liked{% endif %}" onclick="toggleLike(this, '{{ item._id }}')">
+                        <ion-icon name="heart-outline"></ion-icon>
+                        <span class="like-text">Like</span>
+                        <span class="like-count">{{ item.like_counts if item.like_counts is defined else 0 }}</span>
+                    </button>
+                    <button class="action-btn comment-btn" onclick="openModal('{{ item.image_url if item.image_url is defined else image_path ~ item.image_name }}', `{{ item.title[get_locale()] | e }}`,  `{{ item.description[get_locale()] | e }}`, 'imageModal', true)">
+                        <ion-icon name="chatbubbles-outline"></ion-icon> Comment
+                    </button>
+                </div>
+            </div>
             {% endfor %}
         </div>
         {% set base_url = url_for('pages.gallery') %}
@@ -38,4 +49,5 @@ endblock %}
         {% include 'components/pagination.html' %}
     </section>
 </div>
+<script src="{{ url_for('static', filename='js/pages/gallery.js') }}"></script>
 {% endblock %}

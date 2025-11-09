@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from config import SortOrder
-from Models import Music
+from Models import Gallery
 
 class IGalleryRepository(ABC):
     @abstractmethod
@@ -12,11 +12,11 @@ class IGalleryRepository(ABC):
         pass
 
     @abstractmethod
-    def add_gallery(self, gallery: Music):
+    def add_gallery(self, gallery: Gallery):
         pass
 
     @abstractmethod
-    def update_gallery(self, gallery_id: str, gallery: Music):
+    def update_gallery(self, gallery_id: str, gallery: Gallery):
         pass
 
     @abstractmethod

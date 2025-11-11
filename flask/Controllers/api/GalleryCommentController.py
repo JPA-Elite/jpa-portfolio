@@ -11,8 +11,15 @@ def gallery_comments_route():
     ip_address = request.remote_addr
     if request.method == http.GET:
         gallery_id = request.args.get("gallery_id")
-        comments = gallery_comment_service.get_comments(gallery_id, ip_address=ip_address)
-        return jsonify(comments)
+        page = int(request.args.get("page", 1))
+        limit = int(request.args.get("limit", 10))
+        comments, total = gallery_comment_service.get_comments(gallery_id, ip_address=ip_address, page=page, limit=limit)
+        return jsonify({
+            "comments": comments,
+            "total": total,
+            "page": page,
+            "limit": limit
+        })
 
     # POST new comment
     data = request.json

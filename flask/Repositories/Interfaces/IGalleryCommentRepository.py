@@ -7,6 +7,14 @@ class IGalleryCommentRepository(ABC):
         pass
 
     @abstractmethod
+    def find__paginate_comments_by_gallery(self, gallery_id: str, page: int, limit: int):
+        pass
+
+    @abstractmethod
+    def count_comments_by_gallery(self, gallery_id: str):
+        pass
+
+    @abstractmethod
     def add_comment(self, comment: GalleryComment):
         pass
 

@@ -7,7 +7,6 @@ from utils import clear_cache_by_prefix
 # Initialize Services
 gallery_like_service = GalleryLikeService(repository=GalleryLikeRepository())
 
-# -------------------Administrator Controller------------------------
 # Gallery Like Controller
 def add_gallery_like_route():
     gallery_id = request.form.get("gallery_id")

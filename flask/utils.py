@@ -103,6 +103,21 @@ def clear_cache_by_prefix(prefix: str):
             cache.delete(key)
 
 
+def num_to_alpha_lower(num_str: str) -> str:
+    """Convert numeric string to corresponding lowercase alphabet letters (1 → a, 2 → b, ...)."""
+    result = ""
+    for char in num_str:
+        if char.isdigit():
+            n = int(char)
+            if n == 0:
+                result += "z"  # optional: treat 0 as 'z'
+            else:
+                result += chr(96 + n)  # 1 -> a, 2 -> b, ..., 9 -> i
+        else:
+            result += char
+    return result
+
+
 # Configure Cloudinary
 cloudinary.config(
     cloud_name=os.getenv('CLOUDINARY_CLOUD_NAME'),

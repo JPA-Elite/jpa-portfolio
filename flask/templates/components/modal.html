@@ -22,86 +22,14 @@
     </div>
     <div class="comment-section">
         <div class="comment-header">
-            <span>Comments (<span id="commentCount">7</span>)</span>
+            <span>Comments (<span id="commentCount">0</span>)</span>
         </div>
+        <div class="comment-list"></div>
 
-        <div class="comment-list">
-            <!-- Comment 1 -->
-            <div class="comment-item">
-                <img src="https://i.ibb.co/TRbDC7f/a.webp" alt="Profile picture of Eder Dionízio" />
-                <div class="comment-content">
-                    <p class="comment-author">Eder Dionízio</p>
-                    <p class="comment-text">Omg, for real? Now I gotta try it!</p>
-                    <div class="comment-meta">
-                        <u>5 d</u>
-                        <u>Like</u>
-                        <span>4 👍</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Comment 2 -->
-            <div class="comment-item">
-                <img src="https://i.ibb.co/qYSwrxj/b.webp" alt="Profile picture of Lucia Helena" />
-                <div class="comment-content">
-                    <p class="comment-author">Lucia Helena</p>
-                    <p class="comment-text">I might try it too 😂</p>
-                    <div class="comment-meta">
-                        <u>5 d</u>
-                        <u>Like</u>
-                        <span>11 ❤️</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Comment 3 -->
-            <div class="comment-item">
-                <img src="https://i.ibb.co/gj3wf7F/c.webp" alt="Profile picture of Roberval Callegari" />
-                <div class="comment-content">
-                    <p class="comment-author">Roberval Callegari</p>
-                    <p class="comment-text">No suffering at all 💪</p>
-                    <div class="comment-meta">
-                        <u>4 d</u>
-                        <u>Like</u>
-                        <span>6 👍</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Comment 4 -->
-            <div class="comment-item">
-                <img src="https://i.ibb.co/MVJHGkC/g.webp" alt="Profile picture of Ligia dos Santos" />
-                <div class="comment-content">
-                    <p class="comment-author">Ligia dos Santos</p>
-                    <p class="comment-text">I finally fit into my old clothes again! Best feeling ever 😍</p>
-                    <div class="comment-meta">
-                        <u>3 d</u>
-                        <u>Like</u>
-                        <span>3 ❤️</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Comment 5 -->
-            <div class="comment-item">
-                <img src="https://i.ibb.co/LJx9SHT/h.webp" alt="Profile picture of Marcelo Essado" />
-                <div class="comment-content">
-                    <p class="comment-author">Marcelo Essado</p>
-                    <p class="comment-text">Makes all the difference!</p>
-                    <div class="comment-meta">
-                        <u>2 d</u>
-                        <u>Like</u>
-                        <span>4 👍</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Comment Input -->
         <div class="comment-input">
             <img src="https://i.ibb.co/TRbDC7f/a.webp" alt="Your profile picture" />
             <input type="text" id="commentBox" placeholder="Write a comment..." />
-            <button class="send-btn">Send</button>
+            <button class="send-btn" onclick="submitComment()">Send</button>
         </div>
     </div>
 </div>

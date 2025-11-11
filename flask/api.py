@@ -8,9 +8,9 @@ from Controllers.api.GalleryController import add_gallery_route, delete_gallery_
 from Controllers.api.GalleryLikeController import add_gallery_like_route
 from Controllers.api.DashboardController import visits_info_route
 from Controllers.api.LoginAttemptController import login_attempt_list_route, delete_login_attempt_route
+from Controllers.api.GalleryCommentController import gallery_comments_route, like_comment_route
 from auth.middleware import admin_login_required
 from Controllers.api.AuthController import update_profile_route
-from extensions import cache
 
 # Create a Blueprint for api
 api_bp = Blueprint("api", __name__)
@@ -122,6 +122,15 @@ def delete_video(video_id):
 @api_bp.route("/api/gallery-like", methods=[http.POST])
 def add_gallery_like():
     return add_gallery_like_route()
+
+# Gallery Comments API
+@api_bp.route("/api/gallery-comments", methods=["GET", "POST"])
+def gallery_comments():
+    return gallery_comments_route()
+
+@api_bp.route("/api/gallery-comments/like", methods=["POST"])
+def like_comment():
+    return like_comment_route()
 
 # Login Attempt API
 @api_bp.route("/admin/api/login-attempts", methods=[http.GET])

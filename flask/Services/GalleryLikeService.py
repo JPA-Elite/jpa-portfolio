@@ -1,9 +1,5 @@
-import uuid
 from Repositories.Interfaces.IGalleryLikeRepository import IGalleryLikeRepository
 from Models.GalleryLike import GalleryLike
-import tempfile, os
-from constants.cloudinary import CloudinaryFolders, CloudinaryResourceType
-from utils import cleanup_uploaded_files, upload_file_to_cloudinary
 
 class GalleryLikeService:
     def __init__(self, repository: IGalleryLikeRepository):

@@ -309,6 +309,13 @@
     background: rgba(255, 255, 255, 0.6);
 }
 
+.no-comments {
+    text-align: center;
+    color: #666;
+    font-style: italic;
+    margin: 10px 0;
+}
+
 /* Mobile responsiveness */
 @media only screen and (max-width: 768px) {
 

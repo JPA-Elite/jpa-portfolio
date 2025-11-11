@@ -316,6 +316,36 @@
     margin: 10px 0;
 }
 
+.prev-comments-btn {
+    display: block;
+    margin-bottom: 10px;
+    padding: 4px 8px;
+    background-color: #eee;
+    border: 1px solid #ccc;
+    cursor: pointer;
+}
+
+.comment-spinner {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 8px 0;
+}
+
+.comment-spinner .spinner {
+    border: 3px solid #ddd;
+    border-top: 3px solid #007bff;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    animation: comment-spinner 0.7s linear infinite;
+}
+
+@keyframes comment-spinner {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
 /* Mobile responsiveness */
 @media only screen and (max-width: 768px) {
 

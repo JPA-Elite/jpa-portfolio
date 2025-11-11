@@ -6,8 +6,9 @@ class GalleryCommentService:
     def __init__(self, repository: IGalleryCommentRepository):
         self.repository = repository
 
-    def get_comments(self, gallery_id: str, ip_address: str = None):
-        comments_data = self.repository.find_comments_by_gallery(gallery_id)
+    def get_comments(self, gallery_id: str, ip_address: str = None, page: int = 1, limit: int = 10):
+        comments_data = self.repository.find__paginate_comments_by_gallery(gallery_id, page, limit)
+        total = self.repository.count_comments_by_gallery(gallery_id)
         comments = []
 
         for c in comments_data:
@@ -22,7 +23,7 @@ class GalleryCommentService:
 
             comments.append(data)
 
-        return comments
+        return comments, total
 
     def add_comment(self, gallery_id: str, ip_address: str, text: str):
         author_name = 'user_' + ip_address

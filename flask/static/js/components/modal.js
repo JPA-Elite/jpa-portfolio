@@ -6,6 +6,8 @@ let currentSlide = 0;
 const currentLocale = "{{ get_locale() }}";
 let slideData = [];
 let currentGalleryId = null;
+let currentCommentPage = 1;
+const COMMENTS_PER_PAGE = 10;
 
 fetch("/static/json/project.json")
     .then(response => response.json())
@@ -97,7 +99,7 @@ function moveSlide(direction) {
 }
 
 // Function to open the modal and show the image
-function openModal(imageSrc, title = '', description = '', type = ModalType.IMAGE, enableComments = false, galleryId=null) {
+function openModal(imageSrc, title = '', description = '', type = ModalType.IMAGE, enableComments = false, galleryId = null) {
     currentGalleryId = galleryId;
     var boxModalContainer = document.querySelector(".box-modal-container");
     var modalImage = document.getElementById("modalImage");
@@ -137,7 +139,8 @@ function openModal(imageSrc, title = '', description = '', type = ModalType.IMAG
     if (enableComments) {
         commentSection.style.display = isMobile ? "block" : "flex";
         modalContentContainer.style.width = isMobile ? "100%" : "50%";
-        loadComments(galleryId);
+        currentCommentPage = 1;
+        loadComments(galleryId, currentCommentPage, false, true);
     } else {
         commentSection.style.display = "none";
         modalContentContainer.style.width = "100%";
@@ -171,38 +174,101 @@ commentBox.addEventListener("keypress", async (e) => {
 });
 
 // ---------------- Comments ----------------
-async function loadComments(galleryId) {
+async function loadComments(galleryId, page = 1, prependOlder = false, initial = false) {
     const commentList = document.querySelector(".comment-list");
-    commentList.innerHTML = "";
-    try {
-        const res = await fetch(`/api/gallery-comments?gallery_id=${galleryId}`);
-        const comments = await res.json();
+    const commentSection = document.querySelector(".comment-section");
 
-        if (!comments || comments.length === 0) {
-            // Display a "No comments" message
+    if (initial) commentList.innerHTML = '';
+
+    // Save current scroll position if prepending older comments
+    let previousScrollHeight = 0;
+    let previousScrollTop = 0;
+    if (prependOlder) {
+        previousScrollHeight = commentList.scrollHeight;
+        previousScrollTop = commentList.scrollTop;
+    }
+
+    // “Load Previous” button logic
+    let prevBtn = document.getElementById("prevCommentsBtn");
+    if (!prevBtn) {
+        prevBtn = document.createElement("button");
+        prevBtn.id = "prevCommentsBtn";
+        prevBtn.textContent = "Previous";
+        prevBtn.classList.add("prev-comments-btn");
+        commentSection.insertBefore(prevBtn, commentList);
+    }
+
+    // let spinner = document.getElementById("commentSpinner");
+    // if (!spinner) {
+    //     spinner = document.createElement("div");
+    //     spinner.id = "commentSpinner";
+    //     spinner.classList.add("comment-spinner");
+    //     spinner.style.display = "none";
+    //     spinner.innerHTML = `<div class="spinner"></div>`;
+    //     prevBtn.insertAdjacentElement("afterend", spinner);
+    // }
+
+    try {
+        // spinner.style.display = "flex";
+        prevBtn.disabled = true;
+        prevBtn.textContent = "Loading...";
+
+        const res = await fetch(`/api/gallery-comments?gallery_id=${galleryId}&page=${page}&limit=${COMMENTS_PER_PAGE}`);
+        const data = await res.json();
+
+        const comments = data.comments || [];
+        const totalComments = data.total || 0;
+        const totalPages = Math.ceil(totalComments / COMMENTS_PER_PAGE);
+
+        if (!prependOlder && comments.length === 0) {
             const emptyDiv = document.createElement("div");
             emptyDiv.classList.add("no-comments");
             emptyDiv.textContent = "No comments yet.";
             commentList.appendChild(emptyDiv);
-
             document.getElementById("commentCount").textContent = 0;
             return;
         }
 
-        comments.forEach(renderComment);
-        document.getElementById("commentCount").textContent = comments.length;
-    } catch(err) {
+        // Backend sends newest first, so reverse for UI (oldest → newest)
+        const sortedComments = !prependOlder ? [...comments].reverse() : comments;
+        sortedComments.forEach(comment => {
+            const div = renderComment(comment);
+            if (prependOlder) {
+                commentList.prepend(div); // older page gets prepended to top
+            } else {
+                commentList.appendChild(div); // normal order: bottom = latest
+            }
+        });
+
+        document.getElementById("commentCount").textContent = totalComments;
+
+        prevBtn.style.display = page < totalPages ? "block" : "none";
+        prevBtn.onclick = () => {
+            currentCommentPage++;
+            loadComments(galleryId, currentCommentPage, true);
+        };
+
+        if (prependOlder) {
+            const newScrollHeight = commentList.scrollHeight;
+            commentList.scrollTop = newScrollHeight - previousScrollHeight + previousScrollTop;
+        } else {
+            commentList.scrollTop = commentList.scrollHeight;
+        }
+    } catch (err) {
         console.error(err);
-        // Optional: show error message
         const emptyDiv = document.createElement("div");
         emptyDiv.classList.add("no-comments");
         emptyDiv.textContent = "Failed to load comments.";
         commentList.appendChild(emptyDiv);
+    } finally {
+        // spinner.style.display = "none";
+        prevBtn.disabled = false;
+        prevBtn.textContent = "Previous";
     }
 }
 
+
 function renderComment(comment) {
-    const commentList = document.querySelector(".comment-list");
     const div = document.createElement("div");
     div.classList.add("comment-item");
     div.dataset.commentId = comment._id;
@@ -220,14 +286,14 @@ function renderComment(comment) {
             </div>
         </div>
     `;
-    commentList.appendChild(div);
+    return div;
 }
 
 async function submitComment() {
     const box = document.getElementById("commentBox");
     const text = box.value.trim();
 
-    if(!text || !currentGalleryId) return;
+    if (!text || !currentGalleryId) return;
     if (text.length > MAX_COMMENT_LENGTH) {
         alert(`Comment cannot exceed ${MAX_COMMENT_LENGTH} characters.`);
         return;
@@ -237,19 +303,38 @@ async function submitComment() {
 
     try {
         const res = await fetch("/api/gallery-comments", {
-            method:"POST",
-            headers:{"Content-Type":"application/json"},
-            body:JSON.stringify({ gallery_id: currentGalleryId, author_name:"You", text })
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ gallery_id: currentGalleryId, author_name: "You", text }),
         });
-        const data = await res.json();
 
+        const data = await res.json();
         const noCommentsDiv = document.querySelector(".no-comments");
         if (noCommentsDiv) noCommentsDiv.remove();
 
-        renderComment({ _id: data.comment_id, author_name:"You", text, liked_ips:[], like_count:0, created_at:new Date() });
+        // Create and append the new comment directly at the bottom
+        const newComment = {
+            _id: data.comment_id,
+            author_name: "You",
+            text,
+            liked_ips: [],
+            created_at: new Date(),
+        };
+        const div = renderComment(newComment);
+        document.querySelector(".comment-list").appendChild(div);
+
+        // Update count
+        document.getElementById("commentCount").textContent =
+            Number(document.getElementById("commentCount").textContent) + 1;
+
         box.value = "";
-        document.getElementById("commentCount").textContent = Number(document.getElementById("commentCount").textContent)+1;
-    } catch(err) {
+
+        // 🧷 Auto-scroll to bottom smoothly
+        commentList.scrollTo({
+            top: commentList.scrollHeight,
+            behavior: "smooth",
+        });
+    } catch (err) {
         console.error(err);
     } finally {
         box.disabled = false;
@@ -262,14 +347,14 @@ async function toggleCommentLike(button, commentId) {
     const countSpan = button.nextElementSibling;
     try {
         const res = await fetch("/api/gallery-comments/like", {
-            method:"POST",
-            headers:{"Content-Type":"application/json"},
-            body:JSON.stringify({ comment_id: commentId })
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ comment_id: commentId })
         });
         const data = await res.json();
         if (data.liked !== undefined && data.like_count !== undefined) {
             button.classList.toggle("liked", data.liked);
             countSpan.textContent = data.like_count;
         }
-    } catch(err) { console.error(err); }
+    } catch (err) { console.error(err); }
 }

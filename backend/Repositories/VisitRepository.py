@@ -1,7 +1,7 @@
 from Repositories.Interfaces.IVisitRepository import IVisitRepository
 from Repositories.BaseRepository import BaseRepository
 from datetime import datetime
-from config import SortOrder
+from configurations import SortOrder
 from constants.db_collections import MongoCollections as mc
 
 class VisitRepository(IVisitRepository, BaseRepository):

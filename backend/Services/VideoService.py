@@ -1,7 +1,7 @@
 import uuid
 from Repositories.Interfaces.IVideoRepository import IVideoRepository
 from Models.Video import Video
-from config import SortOrder
+from configurations import SortOrder
 import tempfile, os
 from constants.cloudinary import CloudinaryFolders, CloudinaryResourceType
 from utils import cleanup_uploaded_files, upload_file_to_cloudinary

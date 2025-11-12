@@ -1,5 +1,5 @@
 from flask import Flask, render_template, send_from_directory # type: ignore
-from config import (
+from configurations import (
     ERROR_404_PAGE,
     LANGUAGES,
     BABEL_DEFAULT_LOCALE,

@@ -11,7 +11,7 @@ from Repositories.GalleryRepository import GalleryRepository
 from Services.GalleryLikeService import GalleryLikeService
 from Repositories.GalleryLikeRepository import GalleryLikeRepository
 from utils import filter_data, paginate_data, capture_image, get_random_tags
-from config import (
+from configurations import (
     ADD_PORTFOLIO_PAGE,
     CONCERN_PAGE,
     ERROR_404_PAGE,

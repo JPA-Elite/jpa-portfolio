@@ -1,7 +1,7 @@
 from flask import request, jsonify
 from Services.VideoService import VideoService
 from Repositories.VideoRepository import VideoRepository
-from config import SortOrder, SortOrderStr
+from configurations import SortOrder, SortOrderStr
 import json
 from utils import clear_cache_by_prefix, get_cache_data
 from extensions import cache

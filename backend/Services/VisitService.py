@@ -1,6 +1,6 @@
 from Repositories.Interfaces.IVisitRepository import IVisitRepository
 from Models.SystemInfo import SystemInfo
-from config import SortOrder
+from configurations import SortOrder
 from bson import ObjectId
 from utils import delete_image_from_cloudinary
 

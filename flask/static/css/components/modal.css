@@ -67,6 +67,12 @@
     z-index: 1;
 }
 
+.close ion-icon {
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+    border-radius: 50%;
+    background-color: #000;
+}
+
 #caption {
     margin: auto;
     display: block;

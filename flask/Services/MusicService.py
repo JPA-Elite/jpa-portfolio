@@ -4,7 +4,7 @@ from Models.Music import Music
 from config import SortOrder
 import tempfile, os
 from constants.cloudinary import CloudinaryFolders, CloudinaryResourceType
-from utils import cleanup_uploaded_files, upload_file_to_cloudinary
+from utils import cleanup_uploaded_files, convert_to_webp, upload_file_to_cloudinary
 from mutagen import File as MutagenFile
 import requests
 
@@ -68,12 +68,16 @@ class MusicService:
                 os.close(fd)
                 image_file.save(path)
 
+                webp_path = convert_to_webp(path)
+
                 image_url = upload_file_to_cloudinary(
-                    path,
+                    webp_path,
                     resource_type=CloudinaryResourceType.IMAGE,
                     folder=CloudinaryFolders.MUSIC
                 )
                 os.remove(path)
+                if webp_path != path:
+                    os.remove(webp_path)
 
             data["url"] = music_url
             data["image"] = image_url
@@ -132,12 +136,16 @@ class MusicService:
                 os.close(fd)
                 image_file.save(path)
 
+                webp_path = convert_to_webp(path)
+
                 new_image_url = upload_file_to_cloudinary(
-                    path,
+                    webp_path,
                     resource_type=CloudinaryResourceType.IMAGE,
                     folder=CloudinaryFolders.MUSIC
                 )
                 os.remove(path)
+                if webp_path != path:
+                    os.remove(webp_path)
 
                 update_data["image"] = new_image_url
             else:

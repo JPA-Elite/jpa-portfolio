@@ -9,7 +9,6 @@ Languages: flask (python)
 1. run command: `python -m venv .venv`
 2. run command: `.\.venv\Scripts\activate.bat`
 
-
 ## INSTALL PACKAGE
 
 - `cd backend && pip install -r requirements.txt` or run `make package-install`

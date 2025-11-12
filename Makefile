@@ -1,7 +1,7 @@
 # Define variables
 APP_NAME := flask_app
 DOCKER_IMAGE := flask_image
-DOCKERFILE_DIR := ./flask  # Path to the folder containing Dockerfile
+DOCKERFILE_DIR := ./backend  # Path to the folder containing Dockerfile
 PORT := 5000
 
 # Build the Docker image
@@ -10,17 +10,17 @@ build:
 
 # Install Package
 package-install:
-	cd flask && pip install -r requirements.txt
+	cd backend && pip install -r requirements.txt
 
 # Run the Docker container
 run:
 	docker run -d -p $(PORT):5000 --name $(APP_NAME) $(DOCKER_IMAGE)
 
 run-local:
-	cd flask && python app.py
+	cd backend && python app.py
 
 start-local:
-	cd flask && python app.py
+	cd backend && python app.py
 
 # Stop the Docker container
 stop:
@@ -47,4 +47,4 @@ shell:
 
 # Compile the translations
 compile-translations:
-	cd flask && pybabel compile -d translations
+	cd backend && pybabel compile -d translations

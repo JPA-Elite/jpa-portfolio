@@ -35,6 +35,6 @@ config.py
 *.egg
 
 # Inside Flask Folder
-flask/__pycache__/
-flask/.env
+backend/__pycache__/
+backend/.env
 .env

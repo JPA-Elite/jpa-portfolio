@@ -2,7 +2,7 @@ services:
   flask:
     restart: unless-stopped
     build:
-      context: ./flask
+      context: ./backend
       dockerfile: Dockerfile
     deploy:
       resources:

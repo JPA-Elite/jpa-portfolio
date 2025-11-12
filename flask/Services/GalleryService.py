@@ -4,7 +4,7 @@ from Models.Gallery import Gallery
 from config import SortOrder
 import tempfile, os
 from constants.cloudinary import CloudinaryFolders, CloudinaryResourceType
-from utils import cleanup_uploaded_files, upload_file_to_cloudinary
+from utils import cleanup_uploaded_files, convert_to_webp, upload_file_to_cloudinary
 
 class GalleryService:
     def __init__(self, repository: IGalleryRepository):
@@ -33,12 +33,16 @@ class GalleryService:
                 os.close(fd)
                 gallery_file.save(path)
 
+                webp_path = convert_to_webp(path)
+
                 gallery_url = upload_file_to_cloudinary(
-                    path,
+                    webp_path,
                     resource_type=CloudinaryResourceType.IMAGE,
                     folder=CloudinaryFolders.GALLERY
                 )
                 os.remove(path)
+                if webp_path != path:
+                    os.remove(webp_path)
 
             data["image_url"] = gallery_url
             gallery = Gallery.from_dict(data)
@@ -71,12 +75,16 @@ class GalleryService:
                 os.close(fd)
                 gallery_file.save(path)
 
+                webp_path = convert_to_webp(path)
+
                 new_gallery_url = upload_file_to_cloudinary(
-                    path,
+                    webp_path,
                     resource_type=CloudinaryResourceType.IMAGE,
                     folder=CloudinaryFolders.GALLERY
                 )
                 os.remove(path)
+                if webp_path != path:
+                    os.remove(webp_path)
 
                 update_data["image_url"] = new_gallery_url
             else:

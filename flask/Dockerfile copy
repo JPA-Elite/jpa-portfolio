@@ -27,4 +27,5 @@ RUN pip install --no-cache-dir -r requirements.txt
 EXPOSE 5000
 
 # Run app.py when the container launches
-CMD ["python", "./flask/app.py"]
+# CMD ["python", "./flask/app.py"] #development server
+CMD ["gunicorn", "--bind", "0.0.0.0:5000", "flask.app:app", "--workers", "4"]

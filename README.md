@@ -4,9 +4,15 @@ Short Description: a project for my own portfolio
 
 Languages: flask (python)
 
+## CREATE A VIRTUAL ENVIRONMENT
+
+1. run command: `python -m venv .venv`
+2. run command: `.\.venv\Scripts\activate.bat`
+
+
 ## INSTALL PACKAGE
 
-- `cd flask && pip install -r requirements.txt` or run `make package-install`
+- `cd backend && pip install -r requirements.txt` or run `make package-install`
 
 ## LANGUAGE TRANSLATION COMMANDS
 
@@ -18,5 +24,5 @@ Languages: flask (python)
 ## START UP
 
 1. cd fask
-2. run command: `cd flask && python app.py`,
+2. run command: `cd backend && python app.py`,
    run command: `make start-local` or `make run-local`

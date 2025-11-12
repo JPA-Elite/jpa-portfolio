@@ -1,3 +1,11 @@
+import os
+import sys
+
+# Ensure backend is in the path for absolute imports
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+if BASE_DIR not in sys.path:
+    sys.path.insert(0, BASE_DIR)
+
 from flask import Flask, render_template, send_from_directory # type: ignore
 from config import (
     ERROR_404_PAGE,

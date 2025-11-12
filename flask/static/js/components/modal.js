@@ -7,7 +7,7 @@ const currentLocale = "{{ get_locale() }}";
 let slideData = [];
 let currentGalleryId = null;
 let currentCommentPage = 1;
-const COMMENTS_PER_PAGE = 10;
+const COMMENTS_PER_PAGE = 100;
 
 fetch("/static/json/project.json")
     .then(response => response.json())
@@ -226,6 +226,7 @@ async function loadComments(galleryId, page = 1, prependOlder = false, initial =
             emptyDiv.textContent = "No comments yet.";
             commentList.appendChild(emptyDiv);
             document.getElementById("commentCount").textContent = 0;
+            prevBtn.style.display = "none";
             return;
         }
 

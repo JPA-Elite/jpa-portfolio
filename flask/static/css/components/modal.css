@@ -8,18 +8,21 @@
     height: 100%;
     background-color: rgba(0, 0, 0, 0.9);
     align-items: start;
-    padding: 10px 0 10px 0;
+    /* padding: 10px 0 10px 0; */
     overflow-y: auto;
     scrollbar-width: thin;
+    overflow: hidden;
     /* for Firefox */
     scrollbar-color: rgba(255, 255, 255, 0.6) transparent;
 }
 
 .modal-content-container {
     display: block;
-    width: 100%;
-    height: 100%;
+    width: 90%;
+    height: 90%;
     overflow-y: auto;
+    position: relative;
+    padding: 20px;
 }
 
 /* ✅ For Chrome, Edge, Safari */
@@ -43,21 +46,25 @@
 }
 
 .modal-content {
+    flex: 1;
+    object-fit: contain;
     margin: auto;
     display: block;
-    max-width: 80%;
-    max-height: 80%;
+    max-width: 50%;
+    max-height: 100%;
     border-radius: 8px;
 }
 
 .close {
-    position: absolute;
+    position: fixed;
     top: 10px;
-    right: 25px;
+    right: 10px;
     color: #fff;
     font-size: 35px;
     font-weight: bold;
     cursor: pointer;
+    border-radius: 50%;
+    z-index: 1;
 }
 
 #caption {
@@ -161,8 +168,8 @@
 }
 
 .comment-section {
-    width: 50%;
-    height: 90%;
+    flex: 1;
+    height: 96%;
     display: none;
     flex-direction: column;
     background: rgba(30, 30, 30, 0.9);
@@ -258,7 +265,6 @@
 }
 
 .comment-input input {
-    flex: 1;
     background: rgba(255, 255, 255, 0.1);
     border: none;
     border-radius: 20px;
@@ -342,50 +348,78 @@
 }
 
 @keyframes comment-spinner {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
 }
 
 /* Mobile responsiveness */
 @media only screen and (max-width: 768px) {
+    .modal {
+        flex-direction: column;
+        overflow-y: auto;
+        /* allow scrolling only inside modal, not window */
+        align-items: flex-start;
+    }
 
-    .modal-content-container,
-    .comment-section {
+    .modal-content-container {
+        flex-direction: column;
         width: 100%;
         height: auto;
+        overflow: visible;
+        padding: 0;
+    }
+
+    .modal-content {
+        max-width: 100%;
+        width: 100%;
+        border-radius: 0;
+        max-height: 40vh;
+        overflow-y: auto;
+        flex-basis: 40%;
     }
 
     .comment-section {
+        flex: 1;
+        flex-basis: 60%;
+        width: 100%;
+        height: auto;
+        max-height: 50vh;
+        /* ✅ keeps comments scrollable without overflow */
+        overflow-y: auto;
         border-left: none;
         border-top: 1px solid rgba(255, 255, 255, 0.15);
+        padding: 15px;
+        box-sizing: border-box;
     }
 
-    .modal {
-        overflow-y: auto;
-        flex-direction: column;
-    }
+
 
     .close {
-        font-size: 30px;
-        background-color: rgba(0, 0, 0, 0.9);
-        border-radius: 50%;
-        padding: 0 10px;
+        font-size: 40px;
     }
 
     #caption {
         font-size: 16px;
     }
 
-    .comment-list, .comment-header {
+    .comment-list {
+        max-height: 55vh;
+        overflow-y: auto;
+    }
+
+    .comment-list,
+    .comment-header {
         padding: 10px;
     }
 
     .comment-input {
         display: flex;
         padding: 10px;
-    }
-
-    .comment-input {
         gap: 8px;
     }
 
@@ -396,7 +430,7 @@
     }
 
     .comment-input input {
-        width: 70% !important;
+        width: 80% !important;
         border-radius: 10px;
         font-size: 0.85rem;
         padding: 10px 12px;
@@ -406,6 +440,11 @@
         padding: 10px;
         border-radius: 10px;
         font-size: 0.85rem;
+    }
+
+    .prev-comments-btn {
+        width: 50%;
+        margin: auto;
     }
 }
 

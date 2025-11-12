@@ -10,6 +10,9 @@ from constants.cloudinary import CloudinaryFolders, CloudinaryResourceType
 from werkzeug.urls import url_encode
 from extensions import cache
 from PIL import Image, ImageOps
+import ffmpeg
+import sys
+import pathlib
 
 load_dotenv()
 
@@ -137,6 +140,48 @@ def convert_to_webp(input_path: str, quality: int = 80) -> str:
         img.save(webp_path, "WEBP", quality=quality, method=6)
 
     return webp_path
+
+
+def convert_video(input_path: str, crf: int = 30, bitrate: str = "1M") -> str:
+    input_path = str(pathlib.Path(input_path).resolve())
+
+    if sys.platform.startswith("win"):
+        output_path = os.path.splitext(input_path)[0] + ".mp4"
+        vcodec = "libx264"
+        acodec = "aac"
+        extra_args = {"preset": "fast", "strict": "experimental"}
+    else:
+        output_path = os.path.splitext(input_path)[0] + ".webm"
+        vcodec = "libvpx-vp9"
+        acodec = "libopus"
+        extra_args = {"threads": "4"}
+
+    if input_path.lower().endswith(os.path.splitext(output_path)[1]):
+        return input_path
+
+    try:
+        output_kwargs = {
+            "vcodec": vcodec,
+            "acodec": acodec,
+            "crf": crf,
+            **extra_args
+        }
+        # Only set video_bitrate for VP9
+        if "libvpx" in vcodec:
+            output_kwargs["b:v"] = bitrate
+
+        (
+            ffmpeg
+            .input(input_path)
+            .output(output_path, **output_kwargs)
+            .overwrite_output()
+            .run(quiet=False)
+        )
+        return output_path
+
+    except ffmpeg.Error as e:
+        print(f"[❌] Failed to convert video: {e}")
+        raise e
 
 
 # Configure Cloudinary

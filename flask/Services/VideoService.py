@@ -4,7 +4,7 @@ from Models.Video import Video
 from config import SortOrder
 import tempfile, os
 from constants.cloudinary import CloudinaryFolders, CloudinaryResourceType
-from utils import cleanup_uploaded_files, upload_file_to_cloudinary
+from utils import cleanup_uploaded_files, convert_video, upload_file_to_cloudinary
 
 class VideoService:
     def __init__(self, repository: IVideoRepository):
@@ -33,12 +33,16 @@ class VideoService:
                 os.close(fd)
                 video_file.save(path)
 
+                converted_path = convert_video(path, crf=30)
+
                 video_url = upload_file_to_cloudinary(
-                    path,
+                    converted_path,
                     resource_type=CloudinaryResourceType.VIDEO,
                     folder=CloudinaryFolders.VIDEO
                 )
                 os.remove(path)
+                if converted_path != path:
+                    os.remove(converted_path)
 
             data["video_url"] = video_url
             video = Video.from_dict(data)
@@ -71,12 +75,16 @@ class VideoService:
                 os.close(fd)
                 video_file.save(path)
 
+                converted_path = convert_video(path, crf=30)
+
                 new_video_url = upload_file_to_cloudinary(
-                    path,
+                    converted_path,
                     resource_type=CloudinaryResourceType.VIDEO,
                     folder=CloudinaryFolders.VIDEO
                 )
                 os.remove(path)
+                if converted_path != path:
+                    os.remove(converted_path)
 
                 update_data["video_url"] = new_video_url
             else:

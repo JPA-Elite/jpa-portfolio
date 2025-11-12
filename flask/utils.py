@@ -9,6 +9,7 @@ import random
 from constants.cloudinary import CloudinaryFolders, CloudinaryResourceType
 from werkzeug.urls import url_encode
 from extensions import cache
+from PIL import Image, ImageOps
 
 load_dotenv()
 
@@ -116,6 +117,26 @@ def num_to_alpha_lower(num_str: str) -> str:
         else:
             result += char
     return result
+
+
+def convert_to_webp(input_path: str, quality: int = 80) -> str:
+    if input_path.lower().endswith(".webp"):
+        return input_path
+
+    webp_path = os.path.splitext(input_path)[0] + ".webp"
+
+    with Image.open(input_path) as img:
+        # Auto-rotate image based on EXIF orientation
+        img = ImageOps.exif_transpose(img)
+
+        # Convert transparent or palette images to RGB
+        if img.mode in ("RGBA", "P"):
+            img = img.convert("RGB")
+
+        # Save as WebP
+        img.save(webp_path, "WEBP", quality=quality, method=6)
+
+    return webp_path
 
 
 # Configure Cloudinary

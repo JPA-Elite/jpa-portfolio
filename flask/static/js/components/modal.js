@@ -7,7 +7,7 @@ const currentLocale = "{{ get_locale() }}";
 let slideData = [];
 let currentGalleryId = null;
 let currentCommentPage = 1;
-const COMMENTS_PER_PAGE =5;
+const COMMENTS_PER_PAGE = 100;
 
 fetch("/static/json/project.json")
     .then(response => response.json())

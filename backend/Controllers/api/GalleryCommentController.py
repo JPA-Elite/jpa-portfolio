@@ -1,7 +1,7 @@
 from flask import request, jsonify
 from Services.GalleryCommentService import GalleryCommentService
 from Repositories.GalleryCommentRepository import GalleryCommentRepository
-from config import HTTPMethod as http
+from configurations import HTTPMethod as http
 
 # Initialize Services
 gallery_comment_service = GalleryCommentService(repository=GalleryCommentRepository())

@@ -1,5 +1,5 @@
 # pages.py
-from config import HTTPMethod as http
+from configurations import HTTPMethod as http
 from flask import Blueprint
 from Controllers.api.BaseController import change_language_route, delete_page_system_info_route, download_song_route, get_client_ip_route, profile_config_route, proxy_audio_route
 from Controllers.api.MusicController import add_music_route, delete_music_route, music_list_route, update_music_route

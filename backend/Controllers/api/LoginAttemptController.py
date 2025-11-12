@@ -1,7 +1,7 @@
 from flask import request, jsonify
 from Services.LoginAttemptService import LoginAttemptService
 from Repositories.LoginAttemptRepository import LoginAttemptRepository
-from config import SortOrder, SortOrderStr
+from configurations import SortOrder, SortOrderStr
 from utils import clear_cache_by_prefix, get_cache_data
 from extensions import cache
 

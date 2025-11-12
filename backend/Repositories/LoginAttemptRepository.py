@@ -4,7 +4,7 @@ from Repositories.BaseRepository import BaseRepository
 from constants.db_collections import MongoCollections as mc
 from Repositories.Interfaces.ILoginAttemptRepository import ILoginAttemptRepository
 from bson import ObjectId, errors as bson_errors
-from config import SortOrder
+from configurations import SortOrder
 
 MAX_ATTEMPTS = 3
 LOCKOUT_HOURS = 1

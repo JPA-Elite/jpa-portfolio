@@ -1,6 +1,6 @@
 from datetime import timedelta
 from flask import current_app, flash, redirect, render_template, request, session, url_for
-from config import (
+from configurations import (
     ADMIN_DASHBOARD_PAGE,
     ADMIN_GALLERY_PAGE,
     ADMIN_LOGIN_ATTEMPTS_PAGE,
@@ -9,7 +9,7 @@ from config import (
     ADMIN_SETTINGS_PAGE,
     ADMIN_VIDEO_PAGE,
 )
-from config import HTTPMethod as http
+from configurations import HTTPMethod as http
 from constants.login_roles import ROLE_ADMIN
 from Services.AuthService import AuthService
 from Repositories.AuthRepository import AuthRepository

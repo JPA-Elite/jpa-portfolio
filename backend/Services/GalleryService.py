@@ -1,7 +1,7 @@
 import uuid
 from Repositories.Interfaces.IGalleryRepository import IGalleryRepository
 from Models.Gallery import Gallery
-from config import SortOrder
+from configurations import SortOrder
 import tempfile, os
 from constants.cloudinary import CloudinaryFolders, CloudinaryResourceType
 from utils import cleanup_uploaded_files, convert_to_webp, upload_file_to_cloudinary

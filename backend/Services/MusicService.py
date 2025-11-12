@@ -1,7 +1,7 @@
 import uuid
 from Repositories.Interfaces.IMusicRepository import IMusicRepository
 from Models.Music import Music
-from config import SortOrder
+from configurations import SortOrder
 import tempfile, os
 from constants.cloudinary import CloudinaryFolders, CloudinaryResourceType
 from utils import cleanup_uploaded_files, convert_to_webp, upload_file_to_cloudinary

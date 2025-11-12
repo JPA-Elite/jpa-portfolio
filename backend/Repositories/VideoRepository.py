@@ -1,6 +1,6 @@
 from Repositories.Interfaces.IVideoRepository import IVideoRepository
 from Repositories.BaseRepository import BaseRepository
-from config import SortOrder
+from configurations import SortOrder
 from constants.db_collections import MongoCollections as mc
 from bson import ObjectId
 from Models.Video import Video

@@ -41,3 +41,31 @@ async function toggleLike(button, galleryId) {
         countElement.textContent = revertedLiked ? count + 1 : Math.max(0, count - 1);
     }
 }
+
+async function fetchLikeCount(galleryId, btnElement) {
+    try {
+        const response = await fetch(`/api/gallery-like/counts?gallery_id=${galleryId}`);
+        const data = await response.json();
+
+        // Update like count
+        const likeCountEl = btnElement.querySelector(".like-count");
+        likeCountEl.textContent = data.like_counts;
+
+        // Toggle liked state visually
+        if (data.is_liked) {
+            btnElement.classList.add("liked");
+        } else {
+            btnElement.classList.remove("liked");
+        }
+    } catch (err) {
+        console.error("Error fetching like count:", err);
+    }
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+    const likeButtons = document.querySelectorAll(".like-btn");
+    likeButtons.forEach(btn => {
+        const galleryId = btn.getAttribute("onclick").match(/'([^']+)'/)[1];
+        fetchLikeCount(galleryId, btn);
+    });
+});

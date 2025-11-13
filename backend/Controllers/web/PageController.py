@@ -10,7 +10,7 @@ from backend.Services.GalleryService import GalleryService
 from backend.Repositories.GalleryRepository import GalleryRepository
 from backend.Services.GalleryLikeService import GalleryLikeService
 from backend.Repositories.GalleryLikeRepository import GalleryLikeRepository
-from backend.utils import filter_data, paginate_data, capture_image, get_random_tags
+from backend.utils import capture_image, get_random_tags
 from backend.configurations import (
     ADD_PORTFOLIO_PAGE,
     CONCERN_PAGE,
@@ -90,14 +90,8 @@ def gallery_route():
 
     # Combine gallery data with like counts
     gallery_data = []
-    client_ip = request.remote_addr
     for gallery in gallery_list:
         gallery_dict = gallery.to_dict()
-        like_count = gallery_like_service.get_gallery_likes_count_by_id(gallery_dict["_id"])
-        like_doc = gallery_like_service.get_gallery_likes_by_id_and_ip(gallery_dict["_id"], client_ip, {"like": 1})
-        is_liked = like_doc.to_dict() if like_doc else False
-        gallery_dict["like_counts"] = like_count
-        gallery_dict["is_liked"] = is_liked['like'] if is_liked else False
         gallery_data.append(gallery_dict)
 
     total_pages = math.ceil(total / items_per_page)

@@ -18,21 +18,27 @@ class GalleryLikeRepository(IGalleryLikeRepository, BaseRepository):
         return count
 
     def get_gallery_likes_by_id_and_ip(self, gallery_id: str, ip_address: str, fields: dict = None):
+        # Base query: try exact match first
         query = {
             "gallery_id": gallery_id,
             "ip_address": ip_address
         }
 
-        result = self.collection.find_one(query, fields or None)
+        projection = fields or None
+        result = self.collection.find_one(query, projection)
         if result:
             return result
 
+        # If not found, try fuzzy search — handles comma-separated IPs with optional spaces
         fuzzy_query = {
             "gallery_id": gallery_id,
-            "ip_address": {"$regex": fr"\b{ip_address}\b"}
+            "ip_address": {
+                "$regex": fr"(^|,\s*){ip_address}(\s*,|$)",
+                "$options": "i"  # case-insensitive just in case
+            }
         }
 
-        return self.collection.find_one(fuzzy_query, fields or None)
+        return self.collection.find_one(fuzzy_query, projection)
 
 
     def add_gallery_like(self, gallery_like: GalleryLike):

@@ -90,7 +90,7 @@ def gallery_route():
 
     # Combine gallery data with like counts
     gallery_data = []
-    client_ip = request.headers.get('X-Forwarded-For', request.remote_addr)
+    client_ip = request.remote_addr
     for gallery in gallery_list:
         gallery_dict = gallery.to_dict()
         like_count = gallery_like_service.get_gallery_likes_count_by_id(gallery_dict["_id"])

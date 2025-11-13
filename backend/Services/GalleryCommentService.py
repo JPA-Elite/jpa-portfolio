@@ -53,6 +53,9 @@ class GalleryCommentService:
 
 
     def toggle_like(self, comment_id: str, ip_address: str):
+        if ip_address and "," in ip_address:
+            ip_address = ip_address.split(",")[0].strip()
+
         comment = self.repository.find_by_id(comment_id)
         if not comment:
             return None

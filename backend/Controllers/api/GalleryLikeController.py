@@ -8,6 +8,18 @@ from backend.utils import clear_cache_by_prefix
 gallery_like_service = GalleryLikeService(repository=GalleryLikeRepository())
 
 # Gallery Like Controller
+def get_gallery_likes_count_route():
+    client_ip = request.remote_addr
+    gallery_id = request.args.get("gallery_id", "")
+    like_count = gallery_like_service.get_gallery_likes_count_by_id(gallery_id)
+    like_doc = gallery_like_service.get_gallery_likes_by_id_and_ip(gallery_id, client_ip, {"like": 1})
+    is_liked = like_doc.to_dict() if like_doc else False
+
+    return jsonify({
+            "like_counts": like_count,
+            "is_liked": is_liked['like'] if is_liked else False
+        }), 200
+
 def add_gallery_like_route():
     gallery_id = request.form.get("gallery_id")
     client_ip = request.remote_addr

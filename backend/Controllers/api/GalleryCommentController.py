@@ -8,7 +8,7 @@ gallery_comment_service = GalleryCommentService(repository=GalleryCommentReposit
 
 # Gallery Comment Controller
 def gallery_comments_route():
-    ip_address = request.remote_addr
+    ip_address = request.headers.get('X-Forwarded-For', request.remote_addr)
     if request.method == http.GET:
         gallery_id = request.args.get("gallery_id")
         page = int(request.args.get("page", 1))
@@ -32,7 +32,7 @@ def gallery_comments_route():
 def like_comment_route():
     data = request.json
     comment_id = data.get("comment_id")
-    ip_address = request.remote_addr
+    ip_address = request.headers.get('X-Forwarded-For', request.remote_addr)
     result = gallery_comment_service.toggle_like(comment_id, ip_address)
     if result is None:
         return jsonify({"status": "error", "message": "Comment not found"}), 404

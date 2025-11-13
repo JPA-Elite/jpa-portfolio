@@ -10,22 +10,36 @@ class GalleryLikeService:
     def get_gallery_likes_count_by_id(self, gallery_id: str):
         return self.repository.get_gallery_likes_count_by_id(gallery_id)
 
+
     def get_gallery_likes_by_id_and_ip(self, gallery_id: str, ip_address: str, fields: dict = None):
+        if ip_address and "," in ip_address:
+            ip_address = ip_address.split(",")[0].strip()
+
         result = self.repository.get_gallery_likes_by_id_and_ip(gallery_id, ip_address, fields)
         if not result:
             return None
 
         return GalleryLike.from_dict(result)
 
+
     def add_gallery_like(self, data: dict):
         try:
+            # Normalize IP address (only take the first one if multiple exist)
+            ip_address = data.get("ip_address")
+            if ip_address and "," in ip_address:
+                data["ip_address"] = ip_address.split(",")[0].strip()
+
             gallery = GalleryLike.from_dict(data)
             return self.repository.add_gallery_like(gallery)
 
         except Exception as e:
             raise e
 
+
     def toggle_gallery_like(self, gallery_id: str, ip_address: str):
+        if ip_address and "," in ip_address:
+            ip_address = ip_address.split(",")[0].strip()
+
         existing_like = self.repository.get_gallery_likes_by_id_and_ip(gallery_id, ip_address)
 
         if existing_like:

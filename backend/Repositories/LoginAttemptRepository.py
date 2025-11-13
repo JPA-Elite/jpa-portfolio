@@ -1,10 +1,10 @@
 from datetime import datetime, timedelta
 from flask import request
-from Repositories.BaseRepository import BaseRepository
-from constants.db_collections import MongoCollections as mc
-from Repositories.Interfaces.ILoginAttemptRepository import ILoginAttemptRepository
+from backend.Repositories.BaseRepository import BaseRepository
+from backend.constants.db_collections import MongoCollections as mc
+from backend.Repositories.Interfaces.ILoginAttemptRepository import ILoginAttemptRepository
 from bson import ObjectId, errors as bson_errors
-from configurations import SortOrder
+from backend.configurations import SortOrder
 
 MAX_ATTEMPTS = 3
 LOCKOUT_HOURS = 1

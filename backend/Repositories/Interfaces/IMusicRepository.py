@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
-from configurations import SortOrder
-from Models import Music
+from backend.configurations import SortOrder
+from backend.Models import Music
 
 class IMusicRepository(ABC):
     @abstractmethod

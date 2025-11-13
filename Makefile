@@ -17,10 +17,10 @@ run:
 	docker run -d -p $(PORT):5000 --name $(APP_NAME) $(DOCKER_IMAGE)
 
 run-local:
-	cd backend && python app.py
+	python -m backend.app
 
 start-local:
-	cd backend && python app.py
+	python -m backend.app
 
 # Stop the Docker container
 stop:

@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from Models import GalleryLike
+from backend.Models import GalleryLike
 
 class IGalleryLikeRepository(ABC):
     @abstractmethod

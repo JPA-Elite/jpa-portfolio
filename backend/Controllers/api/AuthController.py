@@ -1,6 +1,6 @@
-from Services.AuthService import AuthService
-from Repositories.AuthRepository import AuthRepository
-from Repositories.LoginAttemptRepository import LoginAttemptRepository
+from backend.Services.AuthService import AuthService
+from backend.Repositories.AuthRepository import AuthRepository
+from backend.Repositories.LoginAttemptRepository import LoginAttemptRepository
 
 # Initialize Services
 auth_service = AuthService(

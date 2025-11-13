@@ -10,7 +10,7 @@ gallery_like_service = GalleryLikeService(repository=GalleryLikeRepository())
 # Gallery Like Controller
 def add_gallery_like_route():
     gallery_id = request.form.get("gallery_id")
-    client_ip = request.headers.get('X-Forwarded-For', request.remote_addr)
+    client_ip = request.remote_addr
 
     if not gallery_id:
         return jsonify({"error": "Missing gallery_id"}), 400

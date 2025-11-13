@@ -18,23 +18,21 @@ class GalleryLikeRepository(IGalleryLikeRepository, BaseRepository):
         return count
 
     def get_gallery_likes_by_id_and_ip(self, gallery_id: str, ip_address: str, fields: dict = None):
-        """
-        Check if a specific IP has already liked a specific gallery item.
-        Optionally limit which fields to return using the 'fields' (projection) parameter.
-
-        Example:
-            repo.get_gallery_likes_by_id_and_ip("123", "192.168.0.1", {"_id": 1, "like": 1})
-        """
         query = {
             "gallery_id": gallery_id,
             "ip_address": ip_address
         }
 
-        # Apply projection if provided
-        if fields:
-            return self.collection.find_one(query, fields)
-        else:
-            return self.collection.find_one(query)
+        result = self.collection.find_one(query, fields or None)
+        if result:
+            return result
+
+        fuzzy_query = {
+            "gallery_id": gallery_id,
+            "ip_address": {"$regex": fr"\b{ip_address}\b"}
+        }
+
+        return self.collection.find_one(fuzzy_query, fields or None)
 
 
     def add_gallery_like(self, gallery_like: GalleryLike):

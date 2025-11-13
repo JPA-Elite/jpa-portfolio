@@ -17,28 +17,32 @@ class GalleryLikeRepository(IGalleryLikeRepository, BaseRepository):
         })
         return count
 
+
     def get_gallery_likes_by_id_and_ip(self, gallery_id: str, ip_address: str, fields: dict = None):
-        # Base query: try exact match first
-        query = {
-            "gallery_id": gallery_id,
-            "ip_address": ip_address
-        }
-
         projection = fields or None
-        result = self.collection.find_one(query, projection)
-        if result:
-            return result
 
-        # If not found, try fuzzy search — handles comma-separated IPs with optional spaces
-        fuzzy_query = {
-            "gallery_id": gallery_id,
-            "ip_address": {
-                "$regex": fr"(^|,\s*){ip_address}(\s*,|$)",
-                "$options": "i"  # case-insensitive just in case
+        # Normalize incoming IP list
+        input_ips = [ip.strip() for ip in ip_address.replace(",", " ").split() if ip.strip()]
+        if not input_ips:
+            return None
+
+        # Build regex patterns that match any of the given IPs
+        regex_conditions = [
+            {
+                "gallery_id": gallery_id,
+                "ip_address": {
+                    "$regex": fr"(^|[,\s]+){ip}([,\s]+|$)",
+                    "$options": "i"
+                }
             }
-        }
+            for ip in input_ips
+        ]
 
-        return self.collection.find_one(fuzzy_query, projection)
+        # Combine with $or for MongoDB to check any match
+        query = {"$or": regex_conditions}
+
+        # This will let MongoDB handle filtering efficiently
+        return self.collection.find_one(query, projection)
 
 
     def add_gallery_like(self, gallery_like: GalleryLike):

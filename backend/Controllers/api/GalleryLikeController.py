@@ -9,7 +9,7 @@ gallery_like_service = GalleryLikeService(repository=GalleryLikeRepository())
 
 # Gallery Like Controller
 def get_gallery_likes_count_route():
-    client_ip = request.remote_addr
+    client_ip = request.headers.get('X-Forwarded-For', request.remote_addr)
     gallery_id = request.args.get("gallery_id", "")
     like_count = gallery_like_service.get_gallery_likes_count_by_id(gallery_id)
     like_doc = gallery_like_service.get_gallery_likes_by_id_and_ip(gallery_id, client_ip, {"like": 1})
@@ -22,7 +22,7 @@ def get_gallery_likes_count_route():
 
 def add_gallery_like_route():
     gallery_id = request.form.get("gallery_id")
-    client_ip = request.remote_addr
+    client_ip = request.headers.get('X-Forwarded-For', request.remote_addr)
 
     if not gallery_id:
         return jsonify({"error": "Missing gallery_id"}), 400

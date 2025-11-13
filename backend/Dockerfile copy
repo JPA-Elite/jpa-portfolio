@@ -17,7 +17,7 @@ RUN apt-get update -qq \
       && rm -rf /var/lib/apt/lists/*
 
 # Copy only requirements first to leverage Docker cache
-COPY backend/requirements.txt /app/
+COPY ./backend/requirements.txt /app/
 
 # Install Python dependencies
 RUN pip install --no-cache-dir -r requirements.txt

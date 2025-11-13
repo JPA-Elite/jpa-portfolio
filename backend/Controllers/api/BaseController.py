@@ -1,9 +1,9 @@
 from flask import redirect, stream_with_context, url_for, request, jsonify, Response
 import requests
-from Services.PortfolioService import PortfolioService
-from Services.VisitService import VisitService
-from Repositories.PortfolioRepository import PortfolioRepository
-from Repositories.VisitRepository import VisitRepository
+from backend.Services.PortfolioService import PortfolioService
+from backend.Services.VisitService import VisitService
+from backend.Repositories.PortfolioRepository import PortfolioRepository
+from backend.Repositories.VisitRepository import VisitRepository
 from flask_babel import gettext
 from urllib.parse import urlparse, parse_qs, urlencode, urlunparse
 

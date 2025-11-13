@@ -1,8 +1,8 @@
 from flask import jsonify, request, session
 from werkzeug.security import check_password_hash
-from Repositories.Interfaces.IAuthRepository import IAuthRepository
-from Repositories.Interfaces.ILoginAttemptRepository import ILoginAttemptRepository
-from Repositories.LoginAttemptRepository import MAX_ATTEMPTS
+from backend.Repositories.Interfaces.IAuthRepository import IAuthRepository
+from backend.Repositories.Interfaces.ILoginAttemptRepository import ILoginAttemptRepository
+from backend.Repositories.LoginAttemptRepository import MAX_ATTEMPTS
 from werkzeug.security import generate_password_hash
 from datetime import datetime
 

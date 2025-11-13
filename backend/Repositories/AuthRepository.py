@@ -1,7 +1,7 @@
 from bson import ObjectId
-from Repositories.Interfaces.IAuthRepository import IAuthRepository
-from Repositories.BaseRepository import BaseRepository
-from constants.db_collections import MongoCollections as mc
+from backend.Repositories.Interfaces.IAuthRepository import IAuthRepository
+from backend.Repositories.BaseRepository import BaseRepository
+from backend.constants.db_collections import MongoCollections as mc
 
 class AuthRepository(IAuthRepository, BaseRepository):
     def __init__(self):

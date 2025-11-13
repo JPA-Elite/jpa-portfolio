@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
-from configurations import SortOrder
-from Models import Gallery
+from backend.configurations import SortOrder
+from backend.Models import Gallery
 
 class IGalleryRepository(ABC):
     @abstractmethod

@@ -1,5 +1,5 @@
-from Repositories.Interfaces.IGalleryLikeRepository import IGalleryLikeRepository
-from Models.GalleryLike import GalleryLike
+from backend.Repositories.Interfaces.IGalleryLikeRepository import IGalleryLikeRepository
+from backend.Models.GalleryLike import GalleryLike
 
 class GalleryLikeService:
     def __init__(self, repository: IGalleryLikeRepository):

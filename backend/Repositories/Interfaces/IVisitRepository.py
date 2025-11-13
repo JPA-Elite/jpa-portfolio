@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from configurations import SortOrder
+from backend.configurations import SortOrder
 
 class IVisitRepository(ABC):
     @abstractmethod

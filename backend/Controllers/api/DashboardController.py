@@ -1,7 +1,7 @@
 from flask import jsonify
-from Services.VisitService import VisitService
-from Services.VisitService import VisitService
-from Repositories.VisitRepository import VisitRepository
+from backend.Services.VisitService import VisitService
+from backend.Services.VisitService import VisitService
+from backend.Repositories.VisitRepository import VisitRepository
 
 # Initialize Services
 visit_service = VisitService(repository=VisitRepository())

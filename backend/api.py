@@ -1,16 +1,16 @@
 # pages.py
-from configurations import HTTPMethod as http
+from backend.configurations import HTTPMethod as http
 from flask import Blueprint
-from Controllers.api.BaseController import change_language_route, delete_page_system_info_route, download_song_route, get_client_ip_route, profile_config_route, proxy_audio_route
-from Controllers.api.MusicController import add_music_route, delete_music_route, music_list_route, update_music_route
-from Controllers.api.VideoController import add_video_route, delete_video_route, update_video_route, video_list_route
-from Controllers.api.GalleryController import add_gallery_route, delete_gallery_route, gallery_list_route, update_gallery_route
-from Controllers.api.GalleryLikeController import add_gallery_like_route
-from Controllers.api.DashboardController import visits_info_route
-from Controllers.api.LoginAttemptController import login_attempt_list_route, delete_login_attempt_route
-from Controllers.api.GalleryCommentController import gallery_comments_route, like_comment_route
-from auth.middleware import admin_login_required
-from Controllers.api.AuthController import update_profile_route
+from backend.Controllers.api.BaseController import change_language_route, delete_page_system_info_route, download_song_route, get_client_ip_route, profile_config_route, proxy_audio_route
+from backend.Controllers.api.MusicController import add_music_route, delete_music_route, music_list_route, update_music_route
+from backend.Controllers.api.VideoController import add_video_route, delete_video_route, update_video_route, video_list_route
+from backend.Controllers.api.GalleryController import add_gallery_route, delete_gallery_route, gallery_list_route, update_gallery_route
+from backend.Controllers.api.GalleryLikeController import add_gallery_like_route
+from backend.Controllers.api.DashboardController import visits_info_route
+from backend.Controllers.api.LoginAttemptController import login_attempt_list_route, delete_login_attempt_route
+from backend.Controllers.api.GalleryCommentController import gallery_comments_route, like_comment_route
+from backend.auth.middleware import admin_login_required
+from backend.Controllers.api.AuthController import update_profile_route
 
 # Create a Blueprint for api
 api_bp = Blueprint("api", __name__)

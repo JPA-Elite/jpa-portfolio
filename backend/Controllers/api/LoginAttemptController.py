@@ -1,9 +1,9 @@
 from flask import request, jsonify
-from Services.LoginAttemptService import LoginAttemptService
-from Repositories.LoginAttemptRepository import LoginAttemptRepository
-from configurations import SortOrder, SortOrderStr
-from utils import clear_cache_by_prefix, get_cache_data
-from extensions import cache
+from backend.Services.LoginAttemptService import LoginAttemptService
+from backend.Repositories.LoginAttemptRepository import LoginAttemptRepository
+from backend.configurations import SortOrder, SortOrderStr
+from backend.utils import clear_cache_by_prefix, get_cache_data
+from backend.extensions import cache
 
 # Initialize Services
 login_attempt_service = LoginAttemptService(repository=LoginAttemptRepository())

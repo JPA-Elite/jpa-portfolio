@@ -1,7 +1,7 @@
 # app/middleware.py
 from flask import session, redirect, url_for, flash
 from functools import wraps
-from constants.login_roles import ROLE_ADMIN
+from backend.constants.login_roles import ROLE_ADMIN
 
 def admin_login_required(f):
     """Protect routes to require admin login."""

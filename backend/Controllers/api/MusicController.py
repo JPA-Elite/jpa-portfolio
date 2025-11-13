@@ -1,9 +1,9 @@
 from flask import request, jsonify
-from Services.MusicService import MusicService
-from Repositories.MusicRepository import MusicRepository
-from configurations import SortOrder, SortOrderStr
-from utils import clear_cache_by_prefix, get_cache_data
-from extensions import cache
+from backend.Services.MusicService import MusicService
+from backend.Repositories.MusicRepository import MusicRepository
+from backend.configurations import SortOrder, SortOrderStr
+from backend.utils import clear_cache_by_prefix, get_cache_data
+from backend.extensions import cache
 
 # Initialize Services
 music_service = MusicService(repository=MusicRepository())

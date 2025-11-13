@@ -1,10 +1,10 @@
 from flask import request, jsonify
-from Services.VideoService import VideoService
-from Repositories.VideoRepository import VideoRepository
-from configurations import SortOrder, SortOrderStr
+from backend.Services.VideoService import VideoService
+from backend.Repositories.VideoRepository import VideoRepository
+from backend.configurations import SortOrder, SortOrderStr
 import json
-from utils import clear_cache_by_prefix, get_cache_data
-from extensions import cache
+from backend.utils import clear_cache_by_prefix, get_cache_data
+from backend.extensions import cache
 
 # Initialize Services
 video_service = VideoService(repository=VideoRepository())

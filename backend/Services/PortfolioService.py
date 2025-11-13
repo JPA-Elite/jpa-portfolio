@@ -1,5 +1,5 @@
-from Repositories.Interfaces.IPortfolioRepository import IPortfolioRepository
-from Models.SystemInfo import SystemInfo
+from backend.Repositories.Interfaces.IPortfolioRepository import IPortfolioRepository
+from backend.Models.SystemInfo import SystemInfo
 from flask import request, url_for
 from user_agents import parse  # type: ignore
 import platform

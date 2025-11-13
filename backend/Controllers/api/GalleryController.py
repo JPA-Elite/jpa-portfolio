@@ -1,10 +1,10 @@
 from flask import request, jsonify
-from Services.GalleryService import GalleryService
-from Repositories.GalleryRepository import GalleryRepository
-from configurations import SortOrder, SortOrderStr
+from backend.Services.GalleryService import GalleryService
+from backend.Repositories.GalleryRepository import GalleryRepository
+from backend.configurations import SortOrder, SortOrderStr
 import json
-from utils import clear_cache_by_prefix, get_cache_data
-from extensions import cache
+from backend.utils import clear_cache_by_prefix, get_cache_data
+from backend.extensions import cache
 
 # Initialize Services
 gallery_service = GalleryService(repository=GalleryRepository())

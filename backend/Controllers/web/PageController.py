@@ -1,17 +1,17 @@
 import math
 from flask import redirect, url_for, render_template, request
-from Services.PortfolioService import PortfolioService
-from Services.VisitService import VisitService
-from Repositories.PortfolioRepository import PortfolioRepository
-from Repositories.VisitRepository import VisitRepository
-from Services.VideoService import VideoService
-from Repositories.VideoRepository import VideoRepository
-from Services.GalleryService import GalleryService
-from Repositories.GalleryRepository import GalleryRepository
-from Services.GalleryLikeService import GalleryLikeService
-from Repositories.GalleryLikeRepository import GalleryLikeRepository
-from utils import filter_data, paginate_data, capture_image, get_random_tags
-from configurations import (
+from backend.Services.PortfolioService import PortfolioService
+from backend.Services.VisitService import VisitService
+from backend.Repositories.PortfolioRepository import PortfolioRepository
+from backend.Repositories.VisitRepository import VisitRepository
+from backend.Services.VideoService import VideoService
+from backend.Repositories.VideoRepository import VideoRepository
+from backend.Services.GalleryService import GalleryService
+from backend.Repositories.GalleryRepository import GalleryRepository
+from backend.Services.GalleryLikeService import GalleryLikeService
+from backend.Repositories.GalleryLikeRepository import GalleryLikeRepository
+from backend.utils import filter_data, paginate_data, capture_image, get_random_tags
+from backend.configurations import (
     ADD_PORTFOLIO_PAGE,
     CONCERN_PAGE,
     ERROR_404_PAGE,

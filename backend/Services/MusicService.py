@@ -1,10 +1,10 @@
 import uuid
-from Repositories.Interfaces.IMusicRepository import IMusicRepository
-from Models.Music import Music
-from configurations import SortOrder
+from backend.Repositories.Interfaces.IMusicRepository import IMusicRepository
+from backend.Models.Music import Music
+from backend.configurations import SortOrder
 import tempfile, os
-from constants.cloudinary import CloudinaryFolders, CloudinaryResourceType
-from utils import cleanup_uploaded_files, convert_to_webp, upload_file_to_cloudinary
+from backend.constants.cloudinary import CloudinaryFolders, CloudinaryResourceType
+from backend.utils import cleanup_uploaded_files, convert_to_webp, upload_file_to_cloudinary
 from mutagen import File as MutagenFile
 import requests
 

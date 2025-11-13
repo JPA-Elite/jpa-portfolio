@@ -1,5 +1,5 @@
-from Repositories.Interfaces.ILoginAttemptRepository import ILoginAttemptRepository
-from Models.LoginAttempt import LoginAttempt
+from backend.Repositories.Interfaces.ILoginAttemptRepository import ILoginAttemptRepository
+from backend.Models.LoginAttempt import LoginAttempt
 from datetime import datetime, timedelta
 from dateutil import parser
 

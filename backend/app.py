@@ -15,13 +15,20 @@ from datetime import datetime, timedelta
 from backend.sitemap import sitemap_bp  # Import the sitemap blueprint
 import os
 from backend.extensions import cache
+from dotenv import load_dotenv
+
+load_dotenv()
 
 app = Flask(__name__)
 
-app.config["SECRET_KEY"] = os.urandom(24)
+app.config["SECRET_KEY"] = os.getenv('SECRET_KEY')
 app.config["LANGUAGES"] = LANGUAGES
 app.config["BABEL_DEFAULT_LOCALE"] = BABEL_DEFAULT_LOCALE
+
+app.config["SESSION_TYPE"] = "filesystem"
+app.config["SESSION_PERMANENT"] = True
 app.config["PERMANENT_SESSION_LIFETIME"] = timedelta(days=30)
+
 # ✅ Configure cache globally
 app.config["CACHE_TYPE"] = "simple"
 app.config["CACHE_DEFAULT_TIMEOUT"] = 86400

@@ -2,6 +2,7 @@ from flask import request, jsonify
 from backend.Services.GalleryLikeService import GalleryLikeService
 from backend.Repositories.GalleryLikeRepository import GalleryLikeRepository
 import json
+from backend.constants.messages import GALLERY_LIKE_TOGGLE_MSG
 from backend.utils import clear_cache_by_prefix
 
 # Initialize Services
@@ -36,7 +37,7 @@ def add_gallery_like_route():
 
         clear_cache_by_prefix("gallery_")
         return jsonify({
-            "message": "Gallery like toggled successfully",
+            "message": GALLERY_LIKE_TOGGLE_MSG,
             "data": result
         }), 200
 

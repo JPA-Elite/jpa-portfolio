@@ -14,6 +14,7 @@ from backend.constants.login_roles import ROLE_ADMIN
 from backend.Services.AuthService import AuthService
 from backend.Repositories.AuthRepository import AuthRepository
 from backend.Repositories.LoginAttemptRepository import LoginAttemptRepository
+from backend.constants.messages import CAPTCHA_VERIFICATION_ERROR, LOGOUT_SUCCESS_MSG, WELCOME_ADMIN_MSG
 from backend.utils import verify_hcaptcha
 
 # Initialize Services
@@ -35,7 +36,7 @@ def admin_login_route():
         ok, details = verify_hcaptcha(hcaptcha_token, remote_ip=client_ip)
         if not ok:
             current_app.logger.info("hCaptcha failed: %s", details)
-            flash(f"Captcha verification failed. Please try again. ${details}", "warning")
+            flash(f"${CAPTCHA_VERIFICATION_ERROR} ${details}", "warning")
             return render_template(ADMIN_LOGIN_PAGE)
 
         username = request.form.get("username")
@@ -59,7 +60,7 @@ def admin_login_route():
             else:
                 session.permanent = False
 
-            flash("Welcome back, Admin!", "success")
+            flash(WELCOME_ADMIN_MSG, "success")
             return redirect(url_for("pages.admin_dashboard"))
 
         # Invalid login
@@ -70,7 +71,7 @@ def admin_login_route():
 def admin_logout_route():
     """Logout admin and clear session."""
     session.clear()  # Remove all session data
-    flash("You have been logged out successfully.", "success")
+    flash(LOGOUT_SUCCESS_MSG, "success")
     return redirect(url_for("pages.admin_login"))
 
 def admin_dashboard_route():

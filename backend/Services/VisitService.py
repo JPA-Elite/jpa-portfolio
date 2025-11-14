@@ -2,6 +2,7 @@ from backend.Repositories.Interfaces.IVisitRepository import IVisitRepository
 from backend.Models.SystemInfo import SystemInfo
 from backend.configurations import SortOrder
 from bson import ObjectId
+from backend.constants.messages import DISPLAY_RECORDS_DELETE_MSG
 from backend.utils import delete_image_from_cloudinary
 
 class VisitService:
@@ -34,7 +35,7 @@ class VisitService:
                 if image_url:
                     delete_image_from_cloudinary(image_url)
 
-            return {"message": "Displayed records deleted successfully.", "status": "success"}
+            return {"message": DISPLAY_RECORDS_DELETE_MSG, "status": "success"}
 
         except Exception as e:
             return {"message": str(e), "status": "error"}

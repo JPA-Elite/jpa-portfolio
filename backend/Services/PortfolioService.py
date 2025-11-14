@@ -7,6 +7,8 @@ from datetime import datetime
 import pytz  # type: ignore
 import requests
 
+from backend.constants.messages import SYSTEM_INFO_ADD_MSG
+
 class PortfolioService:
     def __init__(self, repository: IPortfolioRepository):
         self.repository = repository
@@ -77,7 +79,7 @@ class PortfolioService:
             # Insert system information into the database
             result = self.repository.insert_system_info(system_info.to_dict())
             return {
-                "message": "System information added successfully",
+                "message": SYSTEM_INFO_ADD_MSG,
                 "status": "success",
                 "id": str(result.inserted_id),
             }

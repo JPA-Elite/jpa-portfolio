@@ -2,6 +2,7 @@ from flask import request, jsonify
 from backend.Services.MusicService import MusicService
 from backend.Repositories.MusicRepository import MusicRepository
 from backend.configurations import SortOrder, SortOrderStr
+from backend.constants.messages import MUSIC_ADD_MSG, MUSIC_DELETE_MSG, MUSIC_NOT_FOUND_ERROR, MUSIC_UPDATE_FAILED_ERROR, MUSIC_UPDATE_MSG
 from backend.utils import clear_cache_by_prefix, get_cache_data
 from backend.extensions import cache
 
@@ -46,7 +47,7 @@ def add_music_route():
     music_id = music_service.add_music(data)
 
     clear_cache_by_prefix("admin.api.music_list:")
-    return jsonify({"message": "Music added successfully", "music_id": music_id}), 201
+    return jsonify({"message": MUSIC_ADD_MSG, "music_id": music_id}), 201
 
 def update_music_route(music_id):
     title = request.form.get("title")
@@ -64,14 +65,14 @@ def update_music_route(music_id):
     success = music_service.update_music(music_id, update_data)
     if success:
         clear_cache_by_prefix("admin.api.music_list:")
-        return jsonify({"message": "Music updated successfully"}), 200
+        return jsonify({"message": MUSIC_UPDATE_MSG}), 200
     else:
-        return jsonify({"message": "Failed to update music"}), 400
+        return jsonify({"message": MUSIC_UPDATE_FAILED_ERROR}), 400
 
 def delete_music_route(music_id):
     success = music_service.delete_music(music_id)
     if success:
         clear_cache_by_prefix("admin.api.music_list:")
-        return jsonify({"message": "Music deleted successfully"}), 200
+        return jsonify({"message": MUSIC_DELETE_MSG}), 200
     else:
-        return jsonify({"message": "Music not found"}), 404
+        return jsonify({"message": MUSIC_NOT_FOUND_ERROR}), 404

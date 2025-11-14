@@ -31,7 +31,6 @@ def admin_login_route():
     if request.method == http.POST:
         # First check captcha
         hcaptcha_token = request.form.get("h-captcha-response", None)
-        print(hcaptcha_token)
         client_ip = request.headers.get('X-Forwarded-For', request.remote_addr)
         ok, details = verify_hcaptcha(hcaptcha_token, remote_ip=client_ip)
         if not ok:

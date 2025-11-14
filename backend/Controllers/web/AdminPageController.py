@@ -36,7 +36,7 @@ def admin_login_route():
         ok, details = verify_hcaptcha(hcaptcha_token, remote_ip=client_ip)
         if not ok:
             current_app.logger.info("hCaptcha failed: %s", details)
-            flash(f"${CAPTCHA_VERIFICATION_ERROR} ${details}", "warning")
+            flash(f"{CAPTCHA_VERIFICATION_ERROR} {details}", "warning")
             return render_template(ADMIN_LOGIN_PAGE)
 
         username = request.form.get("username")

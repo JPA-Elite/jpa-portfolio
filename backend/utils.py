@@ -314,7 +314,11 @@ def verify_hcaptcha(token: str, remote_ip: str = None):
         "secret": HCAPTCHA_SECRET,
         "response": token,
     }
+
     if remote_ip:
+        if "," in remote_ip:
+            remote_ip = remote_ip.split(",")[0].strip()
+
         data["remoteip"] = remote_ip
 
     try:

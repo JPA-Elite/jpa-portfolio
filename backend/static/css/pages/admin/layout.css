@@ -1,0 +1,21 @@
+/* Wrapper for horizontal scrolling */
+.table-responsive-wrapper {
+    width: 100%;
+    overflow-x: auto; /* horizontal scroll if needed */
+    -webkit-overflow-scrolling: touch; /* smooth scrolling on mobile */
+}
+
+/* Table styling */
+.table-responsive-wrapper table {
+    width: max-content; /* table width fits content */
+    min-width: 100%; /* always at least full container width */
+    border-collapse: collapse;
+}
+
+/* Ensure table cells break long text */
+.table-responsive-wrapper td,
+.table-responsive-wrapper th {
+    white-space: nowrap; /* prevents breaking unless necessary */
+    text-overflow: ellipsis; /* optional: shows ... if overflow */
+    overflow: hidden; /* prevents spill */
+}

@@ -31,11 +31,12 @@ def admin_login_route():
     if request.method == http.POST:
         # First check captcha
         hcaptcha_token = request.form.get("h-captcha-response", None)
+        print(hcaptcha_token)
         client_ip = request.headers.get('X-Forwarded-For', request.remote_addr)
         ok, details = verify_hcaptcha(hcaptcha_token, remote_ip=client_ip)
         if not ok:
             current_app.logger.info("hCaptcha failed: %s", details)
-            flash("Captcha verification failed. Please try again.", "warning")
+            flash(f"Captcha verification failed. Please try again. ${details}", "warning")
             return render_template(ADMIN_LOGIN_PAGE)
 
         username = request.form.get("username")

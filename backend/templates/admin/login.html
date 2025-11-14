@@ -10,12 +10,8 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css">
     <!-- AdminLTE -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/css/adminlte.min.css">
-
-    <style>
-        body {
-            background-color: #f4f6f9;
-        }
-    </style>
+    <script src="https://hcaptcha.com/1/api.js" async defer></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/pages/admin/login.css') }}" />
 </head>
 
 <body class="hold-transition login-page">
@@ -55,6 +51,13 @@
                         <input type="password" class="form-control" placeholder="Password" name="password" required>
                         <div class="input-group-append">
                             <div class="input-group-text"><span class="fas fa-lock"></span></div>
+                        </div>
+                    </div>
+
+                    <!-- hCaptcha widget -->
+                    <div class="form-group">
+                        <div class="captcha-wrapper">
+                            <div class="h-captcha" data-sitekey="{{ HCAPTCHA_SITE_KEY }}"></div>
                         </div>
                     </div>
 

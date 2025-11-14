@@ -1,4 +1,3 @@
-from enum import Enum
 import cloudinary.uploader
 from dotenv import load_dotenv
 import cv2
@@ -13,10 +12,13 @@ from PIL import Image, ImageOps
 import ffmpeg
 import sys
 import pathlib
+import requests
 
 load_dotenv()
 
-# utils.py
+HCAPTCHA_VERIFY_URL = "https://hcaptcha.com/siteverify"
+HCAPTCHA_SECRET = os.getenv("HCAPTCHA_SECRET_KEY")
+
 def paginate_data(data, page, items_per_page):
     total_items = len(data)
     total_pages = (total_items + items_per_page - 1) // items_per_page
@@ -302,3 +304,23 @@ def cleanup_uploaded_files(video_url=None, image_url=None, raw_url=None):
     for url, resource_type in resource_map.items():
         if url:
             delete_file_from_cloudinary(url, resource_type=resource_type)
+
+# HCAPTCHA CONFIGS
+def verify_hcaptcha(token: str, remote_ip: str = None):
+    if not token:
+        return False, {"error": "missing-token"}
+
+    data = {
+        "secret": HCAPTCHA_SECRET,
+        "response": token,
+    }
+    if remote_ip:
+        data["remoteip"] = remote_ip
+
+    try:
+        r = requests.post(HCAPTCHA_VERIFY_URL, data=data, timeout=5)
+        r.raise_for_status()
+        res = r.json()
+        return bool(res.get("success")), res
+    except requests.RequestException as e:
+        return False, {"error": "request-failed", "exception": str(e)}

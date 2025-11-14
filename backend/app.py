@@ -50,6 +50,10 @@ babel.init_app(app, locale_selector=get_locale)
 def inject_locale():
     return dict(get_locale=get_locale)
 
+@app.context_processor
+def inject_hcaptcha():
+    return dict(HCAPTCHA_SITE_KEY=os.getenv("HCAPTCHA_SITE_KEY"))
+
 
 # ************************** LOCALE CONTANTS ********************************
 

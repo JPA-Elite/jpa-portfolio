@@ -1,0 +1,14 @@
+body {
+    background-color: #f4f6f9;
+}
+
+.captcha-wrapper {
+    width: 100%;
+    display: flex !important;
+    justify-content: center;
+}
+
+.h-captcha {
+    text-align: center;
+    width: 100% !important;
+}

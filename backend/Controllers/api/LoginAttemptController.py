@@ -2,6 +2,7 @@ from flask import request, jsonify
 from backend.Services.LoginAttemptService import LoginAttemptService
 from backend.Repositories.LoginAttemptRepository import LoginAttemptRepository
 from backend.configurations import SortOrder, SortOrderStr
+from backend.constants.messages import LOGIN_ATTEMPT_DELETE_MSG, LOGIN_ATTEMPT_NOT_FOUND_ERROR
 from backend.utils import clear_cache_by_prefix, get_cache_data
 from backend.extensions import cache
 
@@ -34,6 +35,6 @@ def delete_login_attempt_route(login_attempt_id):
     success = login_attempt_service.delete_login_attempt(login_attempt_id)
     if success:
         clear_cache_by_prefix("admin.api.login_attempt_list:")
-        return jsonify({"message": "Login Attempt deleted successfully"}), 200
+        return jsonify({"message": LOGIN_ATTEMPT_DELETE_MSG}), 200
     else:
-        return jsonify({"message": "Login Attempt not found"}), 404
+        return jsonify({"message": LOGIN_ATTEMPT_NOT_FOUND_ERROR}), 404

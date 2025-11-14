@@ -2,6 +2,7 @@
 from flask import session, redirect, url_for, flash
 from functools import wraps
 from backend.constants.login_roles import ROLE_ADMIN
+from backend.constants.messages import LOGIN_ACCESS_ERROR, PERMISSION_ACCESS_PAGE_ERROR
 
 def admin_login_required(f):
     """Protect routes to require admin login."""
@@ -11,11 +12,11 @@ def admin_login_required(f):
         role = session.get("role")
 
         if not user_id:
-            flash("Please log in to access this page.", "warning")
+            flash(LOGIN_ACCESS_ERROR, "warning")
             return redirect(url_for("pages.admin_login"))
 
         if role != ROLE_ADMIN:
-            flash("You do not have permission to access this page.", "danger")
+            flash(PERMISSION_ACCESS_PAGE_ERROR, "danger")
             return redirect(url_for("pages.admin_login"))
 
         return f(*args, **kwargs)

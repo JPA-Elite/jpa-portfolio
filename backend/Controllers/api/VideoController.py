@@ -3,6 +3,7 @@ from backend.Services.VideoService import VideoService
 from backend.Repositories.VideoRepository import VideoRepository
 from backend.configurations import SortOrder, SortOrderStr
 import json
+from backend.constants.messages import VIDEO_ADD_MSG, VIDEO_DELETE_MSG, VIDEO_NOT_FOUND_ERROR, VIDEO_UPDATE_FAILED_ERROR, VIDEO_UPDATE_MSG
 from backend.utils import clear_cache_by_prefix, get_cache_data
 from backend.extensions import cache
 
@@ -46,7 +47,7 @@ def add_video_route():
     video_id = video_service.add_video(data)
     clear_cache_by_prefix("admin.api.video_list:")
     clear_cache_by_prefix("vlog_")
-    return jsonify({"message": "Video added successfully", "video_id": video_id}), 201
+    return jsonify({"message": VIDEO_ADD_MSG, "video_id": video_id}), 201
 
 def update_video_route(video_id):
     title = request.form.get("title")
@@ -65,15 +66,15 @@ def update_video_route(video_id):
     if success:
         clear_cache_by_prefix("admin.api.video_list:")
         clear_cache_by_prefix("vlog_")
-        return jsonify({"message": "Video updated successfully"}), 200
+        return jsonify({"message": VIDEO_UPDATE_MSG}), 200
     else:
-        return jsonify({"message": "Failed to update video"}), 400
+        return jsonify({"message": VIDEO_UPDATE_FAILED_ERROR}), 400
 
 def delete_video_route(video_id):
     success = video_service.delete_video(video_id)
     if success:
         clear_cache_by_prefix("admin.api.video_list:")
         clear_cache_by_prefix("vlog_")
-        return jsonify({"message": "Video deleted successfully"}), 200
+        return jsonify({"message": VIDEO_DELETE_MSG}), 200
     else:
-        return jsonify({"message": "Video not found"}), 404
+        return jsonify({"message": VIDEO_NOT_FOUND_ERROR}), 404

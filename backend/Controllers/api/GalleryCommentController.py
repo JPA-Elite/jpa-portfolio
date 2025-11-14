@@ -2,6 +2,7 @@ from flask import request, jsonify
 from backend.Services.GalleryCommentService import GalleryCommentService
 from backend.Repositories.GalleryCommentRepository import GalleryCommentRepository
 from backend.configurations import HTTPMethod as http
+from backend.constants.messages import COMMENT_NOT_FOUND_ERROR
 
 # Initialize Services
 gallery_comment_service = GalleryCommentService(repository=GalleryCommentRepository())
@@ -35,6 +36,6 @@ def like_comment_route():
     ip_address = request.headers.get('X-Forwarded-For', request.remote_addr)
     result = gallery_comment_service.toggle_like(comment_id, ip_address)
     if result is None:
-        return jsonify({"status": "error", "message": "Comment not found"}), 404
+        return jsonify({"status": "error", "message": COMMENT_NOT_FOUND_ERROR}), 404
 
     return jsonify({"status": "success", **result})

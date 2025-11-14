@@ -3,6 +3,7 @@ from backend.Services.GalleryService import GalleryService
 from backend.Repositories.GalleryRepository import GalleryRepository
 from backend.configurations import SortOrder, SortOrderStr
 import json
+from backend.constants.messages import GALLERY_ADD_MSG, GALLERY_DELETE_MSG, GALLERY_NOT_FOUND_ERROR, GALLERY_UPDATE_ERROR, GALLERY_UPDATE_MSG
 from backend.utils import clear_cache_by_prefix, get_cache_data
 from backend.extensions import cache
 
@@ -46,7 +47,7 @@ def add_gallery_route():
     gallery_id = gallery_service.add_gallery(data)
     clear_cache_by_prefix("admin.api.gallery_list:")
     clear_cache_by_prefix("gallery_")
-    return jsonify({"message": "Gallery added successfully", "gallery_id": gallery_id}), 201
+    return jsonify({"message": GALLERY_ADD_MSG, "gallery_id": gallery_id}), 201
 
 def update_gallery_route(gallery_id):
     title = request.form.get("title")
@@ -65,15 +66,15 @@ def update_gallery_route(gallery_id):
     if success:
         clear_cache_by_prefix("admin.api.gallery_list:")
         clear_cache_by_prefix("gallery_")
-        return jsonify({"message": "Gallery updated successfully"}), 200
+        return jsonify({"message": GALLERY_UPDATE_MSG}), 200
     else:
-        return jsonify({"message": "Failed to update gallery"}), 400
+        return jsonify({"message": GALLERY_UPDATE_ERROR}), 400
 
 def delete_gallery_route(gallery_id):
     success = gallery_service.delete_gallery(gallery_id)
     if success:
         clear_cache_by_prefix("admin.api.gallery_list:")
         clear_cache_by_prefix("gallery_")
-        return jsonify({"message": "Gallery deleted successfully"}), 200
+        return jsonify({"message": GALLERY_DELETE_MSG}), 200
     else:
-        return jsonify({"message": "Gallery not found"}), 404
+        return jsonify({"message": GALLERY_NOT_FOUND_ERROR}), 404

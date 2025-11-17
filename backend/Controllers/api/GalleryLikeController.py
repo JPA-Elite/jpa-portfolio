@@ -1,23 +1,30 @@
 from flask import request, jsonify
 from backend.Services.GalleryLikeService import GalleryLikeService
 from backend.Repositories.GalleryLikeRepository import GalleryLikeRepository
+from backend.Services.GalleryCommentService import GalleryCommentService
+from backend.Repositories.GalleryCommentRepository import GalleryCommentRepository
 import json
 from backend.constants.messages import GALLERY_LIKE_TOGGLE_MSG
 from backend.utils import clear_cache_by_prefix
 
 # Initialize Services
 gallery_like_service = GalleryLikeService(repository=GalleryLikeRepository())
+gallery_comment_service = GalleryCommentService(repository=GalleryCommentRepository())
 
 # Gallery Like Controller
 def get_gallery_likes_count_route():
     client_ip = request.headers.get('X-Forwarded-For', request.remote_addr)
     gallery_id = request.args.get("gallery_id", "")
-    like_count = gallery_like_service.get_gallery_likes_count_by_id(gallery_id)
+
+    print(gallery_id)
+    comment_counts = gallery_comment_service.count_comments_by_gallery(gallery_id)
+    like_counts = gallery_like_service.get_gallery_likes_count_by_id(gallery_id)
     like_doc = gallery_like_service.get_gallery_likes_by_id_and_ip(gallery_id, client_ip, {"like": 1})
     is_liked = like_doc.to_dict() if like_doc else False
 
     return jsonify({
-            "like_counts": like_count,
+            "comment_counts": comment_counts,
+            "like_counts": like_counts,
             "is_liked": is_liked['like'] if is_liked else False
         }), 200
 

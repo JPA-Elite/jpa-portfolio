@@ -11,11 +11,7 @@ if (!window.__modal_js_loaded__) {
     let currentGalleryId = null;
     let currentCommentPage = 1;
     const COMMENTS_PER_PAGE = 100;
-    const commentCount = document.getElementById("commentCount");
     const MAX_COMMENT_LENGTH = 1000;
-    const carouselIndicators = document.getElementById('carouselIndicators');
-    const carouselInner = document.getElementById('carouselInner');
-    const adminFloadtBtn = document.querySelector(".admin-float-btn");
 
     fetch("/static/json/project.json")
         .then(response => response.json())
@@ -29,6 +25,8 @@ if (!window.__modal_js_loaded__) {
 
 
     function updateCarousel() {
+        const carouselInner = document.getElementById('carouselInner');
+        const carouselIndicators = document.getElementById('carouselIndicators');
         carouselIndicators && (carouselIndicators.innerHTML = '');
         carouselInner && (carouselInner.innerHTML = '');
 
@@ -111,6 +109,7 @@ if (!window.__modal_js_loaded__) {
         var caption = document.getElementById("caption");
         var imageModal = document.getElementById("imageModal");
         imageModal.style.display = "flex";
+        const adminFloadtBtn = document.querySelector(".admin-float-btn");
 
         if (type == ModalType.BOX) {
             boxModalContainer.style.display = "block";
@@ -156,6 +155,7 @@ if (!window.__modal_js_loaded__) {
 
     // Function to close the modal
     function closeModal() {
+        const adminFloadtBtn = document.querySelector(".admin-float-btn");
         document.getElementById("imageModal").style.display = "none";
         document.querySelector(".box-modal-container").style.display = "none";
         adminFloadtBtn && (adminFloadtBtn.style.display = "flex");

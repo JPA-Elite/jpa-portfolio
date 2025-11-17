@@ -38,7 +38,7 @@ endblock %}
                         <span class="like-count">0</span>
                     </button>
                     <button class="action-btn comment-btn" onclick="openModal('{{ item.image_url if item.image_url is defined else image_path ~ item.image_name }}', `{{ item.title[get_locale()] | e }}`,  `{{ item.description[get_locale()] | e }}`, 'imageModal', true)">
-                        <ion-icon name="chatbubbles-outline"></ion-icon> Comment
+                        <ion-icon name="chatbubbles-outline"></ion-icon> Comment <span class="comment-count">0</span>
                     </button>
                 </div>
             </div>
@@ -48,6 +48,11 @@ endblock %}
         <!-- Include the pagination component and pass the base URL -->
         {% include 'components/pagination.html' %}
     </section>
-</div>
+
+{% block modal_script %}
+    <script>window.baseUrl = "gallery-comments";</script>
+    {{ super() }}
+{% endblock %}
+
 <script src="{{ url_for('static', filename='js/pages/gallery.js') }}"></script>
 {% endblock %}

@@ -276,6 +276,9 @@
         window.isProfessionalMode = "{{ request.args.get('mode') == 'professional' }}";
     </script>
     <script src="{{ url_for('static', filename='js/pages/base.js') }}"></script>
+    {% block modal_script %}
+        <script src="{{ url_for('static', filename='js/components/modal.js') }}"></script>
+    {% endblock %}
 </body>
 
 </html>

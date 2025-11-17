@@ -16,7 +16,6 @@ def get_gallery_likes_count_route():
     client_ip = request.headers.get('X-Forwarded-For', request.remote_addr)
     gallery_id = request.args.get("gallery_id", "")
 
-    print(gallery_id)
     comment_counts = gallery_comment_service.count_comments_by_gallery(gallery_id)
     like_counts = gallery_like_service.get_gallery_likes_count_by_id(gallery_id)
     like_doc = gallery_like_service.get_gallery_likes_by_id_and_ip(gallery_id, client_ip, {"like": 1})

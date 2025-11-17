@@ -6,7 +6,7 @@ class GalleryCommentService:
     def __init__(self, repository: IGalleryCommentRepository):
         self.repository = repository
 
-    def count_comments_by_gallery(self, gallery_id):
+    def count_comments_by_gallery(self, gallery_id: str):
         return self.repository.count_comments_by_gallery(gallery_id)
 
     def get_comments(self, gallery_id: str, ip_address: str = None, page: int = 1, limit: int = 10):

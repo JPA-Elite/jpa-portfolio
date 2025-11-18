@@ -16,6 +16,7 @@ from backend.Repositories.AuthRepository import AuthRepository
 from backend.Repositories.LoginAttemptRepository import LoginAttemptRepository
 from backend.constants.messages import CAPTCHA_VERIFICATION_ERROR, LOGOUT_SUCCESS_MSG, WELCOME_ADMIN_MSG
 from backend.utils import verify_hcaptcha
+from backend.forms.LoginForm import LoginForm
 
 # Initialize Services
 auth_service = AuthService(
@@ -29,7 +30,8 @@ def admin_login_route():
     if "user_id" in session and session.get("role") == ROLE_ADMIN:
         return redirect(url_for("pages.admin_dashboard"))
 
-    if request.method == http.POST:
+    form = LoginForm()
+    if form.validate_on_submit():
         # First check captcha
         hcaptcha_token = request.form.get("h-captcha-response", None)
         client_ip = request.headers.get('X-Forwarded-For', request.remote_addr)
@@ -37,17 +39,17 @@ def admin_login_route():
         if not ok:
             current_app.logger.info("hCaptcha failed: %s", details)
             flash(f"{CAPTCHA_VERIFICATION_ERROR} {details}", "warning")
-            return render_template(ADMIN_LOGIN_PAGE)
+            return render_template(ADMIN_LOGIN_PAGE, form=form)
 
-        username = request.form.get("username")
-        password = request.form.get("password")
-        remember = request.form.get("remember")
+        username = form.username.data
+        password = form.password.data
+        remember = form.remember.data
 
         user, message, locked = auth_service.authenticate_admin(username, password)
 
         if locked:
             flash(message, "danger")
-            return render_template(ADMIN_LOGIN_PAGE)
+            return render_template(ADMIN_LOGIN_PAGE, form=form)
 
         if user:
             session['username'] = username
@@ -66,7 +68,7 @@ def admin_login_route():
         # Invalid login
         flash(message, "warning")
 
-    return render_template(ADMIN_LOGIN_PAGE)
+    return render_template(ADMIN_LOGIN_PAGE, form=form)
 
 def admin_logout_route():
     """Logout admin and clear session."""

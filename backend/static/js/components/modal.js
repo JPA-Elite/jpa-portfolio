@@ -245,6 +245,11 @@ if (!window.__modal_js_loaded__) {
         }
     }
 
+    function escapeHTML(str) {
+        const div = document.createElement('div');
+        div.textContent = str;
+        return div.innerHTML;
+    }
 
     function renderComment(comment) {
         const div = document.createElement("div");
@@ -255,8 +260,8 @@ if (!window.__modal_js_loaded__) {
         div.innerHTML = `
             <img src="/static/images/user.webp" />
             <div class="comment-content">
-                <p class="comment-author">${comment.author_name}</p>
-                <p class="comment-text">${comment.text}</p>
+                <p class="comment-author">${escapeHTML(comment.author_name)}</p>
+                <p class="comment-text">${escapeHTML(comment.text)}</p>
                 <div class="comment-meta">
                     <u>${new Date(comment.created_at).toLocaleString()}</u>
                     <u class="like-btn ${likedClass}">Like</u>

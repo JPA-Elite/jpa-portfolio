@@ -46,7 +46,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 function selectFirstSong() {
     currentSongIndex = Math.floor(Math.random() * musicData.length); // Randomly select an index
     const song = musicData[currentSongIndex];
-    audioPlayer.src = `/api/proxy-audio?url=${encodeURIComponent(song.url)}`; // Set the audio source for the selected song
+    audioPlayer.src = isMobileDevice()
+        ? song.url : `/api/proxy-audio?url=${encodeURIComponent(song.url)}`; // Set the audio source for the selected song
     let nowPlaying = document.getElementById("nowPlaying");
     let coverImg = document.getElementById("coverImg");
     let playerNowPlaying = document.getElementById("playerNowPlaying");
@@ -86,7 +87,8 @@ function playSong(index) {
     }
 
     currentSongIndex = index;
-    audioPlayer.src = `/api/proxy-audio?url=${encodeURIComponent(song.url)}`;
+    audioPlayer.src = isMobileDevice()
+        ? song.url : `/api/proxy-audio?url=${encodeURIComponent(song.url)}`;
 
     document.getElementById("nowPlaying").textContent = `Now Playing: ${song.title}`;
     document.getElementById("coverImg").src = song.image;
@@ -100,7 +102,7 @@ function playSong(index) {
 
     coverImg.classList.add("spin");
     audioPlayer.play();
-    startVisualizer();
+    if (!isMobileDevice()) startVisualizer();
     playPauseBtn.textContent = "Pause";
 
     // ✅ Re-render the current page only
@@ -118,7 +120,7 @@ function togglePlay() {
             audioPlayer.pause();
             playPauseBtn.textContent = "Play";
         }
-        startVisualizer();
+        if (!isMobileDevice()) startVisualizer();
     }
 }
 
@@ -267,7 +269,7 @@ function updateVolume(value) {
 }
 
 function isMobileDevice() {
-    return (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i).test(navigator.userAgent);
+    return window.innerWidth <= 768;
 }
 
 document.addEventListener("fullscreenchange", () => {
@@ -464,7 +466,7 @@ audioPlayer.addEventListener("loadedmetadata", updateDuration);
 progressBar.addEventListener("click", (event) => seek(event));
 progressBar.addEventListener("mousedown", (event) => {
     isDragging = true;
-    stopVisualizer();
+    if (!isMobileDevice()) stopVisualizer();
     seek(event);
 });
 
@@ -477,13 +479,13 @@ document.addEventListener("mousemove", (event) => {
 
 document.addEventListener("mouseup", () => {
     isDragging = false;
-    startVisualizer();
+    if (!isMobileDevice()) startVisualizer();
 });
 
 // --- Mobile Touch Events ---
 progressBar.addEventListener("touchstart", (event) => {
     isDragging = true;
-    stopVisualizer();
+    if (!isMobileDevice()) stopVisualizer();
     seek(event.touches[0]); // First touch point
 });
 
@@ -495,7 +497,7 @@ document.addEventListener("touchmove", (event) => {
 
 document.addEventListener("touchend", () => {
     isDragging = false;
-    startVisualizer();
+    if (!isMobileDevice()) startVisualizer();
 });
 
 audioPlayer.addEventListener("ended", () => {

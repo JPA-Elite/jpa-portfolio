@@ -1,8 +1,11 @@
+# for render services
+# Use an official Python runtime as a base image
 FROM python:3.11-slim
 
+# Set the working directory to /app
 WORKDIR /app
 
-# Install required system packages including dependencies for OpenCV
+# Install required packages
 RUN apt-get update -qq \
       && apt-get install -y --no-install-recommends \
       build-essential \
@@ -13,15 +16,22 @@ RUN apt-get update -qq \
       && apt-get clean \
       && rm -rf /var/lib/apt/lists/*
 
-# Copy the current directory contents into the container
-COPY . /app
+# Create and activate virtual environment
+RUN python -m venv /app/.venv
+ENV PATH="/app/.venv/bin:$PATH"
 
-# Install the Python dependencies from the requirements.txt file
-COPY requirements.txt /app/
+# Copy only requirements first to leverage Docker cache
+COPY ./backend/requirements.txt /app/
+
+# Install dependencies inside the venv
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Expose the port that Flask will run on
+# Copy the rest of the app
+COPY . /app
+
+# Expose the port
 EXPOSE 5000
 
-# Command to run your app
-CMD ["python", "app.py"]
+# CMD ["python", "./backend/app.py"] #development server
+# Run with Gunicorn
+CMD ["gunicorn", "--bind", "0.0.0.0:5000", "backend.app:app", "--workers", "4"]

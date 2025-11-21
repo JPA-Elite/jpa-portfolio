@@ -356,7 +356,10 @@ async function renderTracks(tracks, activeSongId = null) {
 
         div.innerHTML = `
             <div class="left-content">
-                <img src="${track.image}" alt="${track.title}" />
+                <div class="image-wrapper ${isActive ? "active" : ""}">
+                    <img src="${track.image}" alt="${track.title}" />
+                    <ion-icon name="play-circle-outline" class="hover-play-icon"></ion-icon>
+                </div>
                 <div class="title-artist">
                     <span>${track.title}</span>
                     <span class="artist">${track.artist}</span>

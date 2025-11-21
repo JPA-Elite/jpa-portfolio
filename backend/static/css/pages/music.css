@@ -74,7 +74,8 @@ main {
     flex: 1;
     overflow-y: auto;
     max-height: calc(100% - 40px);
-    scrollbar-width: thin; /* for Firefox */
+    scrollbar-width: thin;
+    /* for Firefox */
     scrollbar-color: rgba(255, 255, 255, 0.6) transparent;
 }
 
@@ -84,11 +85,13 @@ main {
 }
 
 .music-list-items::-webkit-scrollbar-track {
-    background: transparent; /* transparent track */
+    background: transparent;
+    /* transparent track */
 }
 
 .music-list-items::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.4); /* semi-transparent thumb */
+    background: rgba(255, 255, 255, 0.4);
+    /* semi-transparent thumb */
     border-radius: 4px;
 }
 
@@ -563,7 +566,8 @@ main {
     color: #2962ff;
 }
 
-.social-icon__link ion-icon, .social-icon__link span {
+.social-icon__link ion-icon,
+.social-icon__link span {
     font-size: 14px;
 }
 
@@ -801,6 +805,48 @@ nav ul li.active {
     opacity: 0.2;
 }
 
+.image-wrapper {
+    position: relative;
+    width: 50px;
+    height: 50px;
+}
+
+.image-wrapper img {
+    width: 100%;
+    height: 100%;
+    border-radius: 6px;
+    object-fit: cover;
+}
+
+.hover-play-icon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 32px;
+    color: white;
+    opacity: 0;
+    transition: opacity 0.25s ease;
+    pointer-events: none;
+}
+
+/* Show when hovered */
+.music-item:hover .hover-play-icon {
+    opacity: 1;
+}
+
+/* Show when active (even without hover) */
+.music-item.active .hover-play-icon {
+    opacity: 1;
+}
+
+/* Optional: dim image when overlay visible */
+.music-item:hover img,
+.music-item.active img {
+    filter: brightness(0.6);
+    transition: filter 0.25s ease;
+}
+
 /* Mobile Navigation */
 @media only screen and (max-width: 768px) {
     .no-results {
@@ -810,6 +856,7 @@ nav ul li.active {
     .social-dropdown {
         display: none;
     }
+
     .social-dropdown-btn {
         width: 100%;
         justify-content: space-between;
@@ -885,6 +932,11 @@ nav ul li.active {
 
     .nav-toggle {
         display: block;
+    }
+
+    .image-wrapper {
+        width: auto;
+        height: auto;
     }
 }
 

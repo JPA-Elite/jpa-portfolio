@@ -38,6 +38,8 @@ VIDEO_UPDATE_MSG = "Video updated successfully"
 VIDEO_UPDATE_FAILED_ERROR = "Failed to update video"
 VIDEO_DELETE_MSG = "Video deleted successfully"
 VIDEO_NOT_FOUND_ERROR = "Video not found"
+VIDEO_LIKE_TOGGLE_MSG = "Video like toggled successfully"
+
 
 # Comment Messages
 COMMENT_NOT_FOUND_ERROR = "Comment not found"

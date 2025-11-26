@@ -82,9 +82,62 @@ p {
     background-color: #ccc;
 }
 
+.vlog-actions {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.action-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: transparent;
+    border: 1px solid var(--accent-color, #555);
+    color: var(--text-primary, #333);
+    padding: 6px 14px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 0.85rem;
+}
+
+.action-btn ion-icon {
+    font-size: 1.1rem;
+}
+
+.action-btn:hover {
+    background-color: var(--accent-color, #333);
+    color: #fff;
+}
+
+/* ❤️ Active Like State */
+.like-btn.liked {
+    color: #e63946;
+    border-color: #e63946;
+}
+
+.like-btn.liked ion-icon {
+    content: "\f443";
+    /* Heart filled icon */
+}
+
 /* Responsive styles for smaller screens */
 @media (max-width: 768px) {
     .video-container {
         overflow-x: auto;
+    }
+}
+
+@media only screen and (max-width: 480px) {
+    .gallery-actions {
+        flex-direction: row;
+        gap: 10px;
+    }
+
+    .action-btn {
+        font-size: 0.8rem;
+        padding: 6px 10px;
     }
 }

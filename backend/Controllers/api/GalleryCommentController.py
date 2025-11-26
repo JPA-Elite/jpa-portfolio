@@ -30,7 +30,7 @@ def gallery_comments_route():
     return jsonify({"status": "success", "comment_id": comment_id})
 
 
-def like_comment_route():
+def gallery_like_comment_route():
     data = request.json
     comment_id = data.get("comment_id")
     ip_address = request.headers.get('X-Forwarded-For', request.remote_addr)

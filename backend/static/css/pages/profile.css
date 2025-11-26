@@ -784,6 +784,12 @@ section>*+* {
     display: none;
 }
 
+.contact-header {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
 /* Responsive breakpoints */
 @media (max-width: 992px) {
     .certification-images {

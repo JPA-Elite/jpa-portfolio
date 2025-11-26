@@ -198,6 +198,7 @@ if (!window.__modal_js_loaded__) {
         document.getElementById("imageModal").style.display = "none";
         document.querySelector(".box-modal-container").style.display = "none";
         adminFloadtBtn && (adminFloadtBtn.style.display = "flex");
+        pauseAllVideos();
     }
 
     // ---------------- Comments ----------------

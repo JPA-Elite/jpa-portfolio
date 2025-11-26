@@ -11,5 +11,7 @@ class MongoCollections:
     USERS = "users"
     GALLERY = "gallery"
     GALLERY_LIKES = "gallery_likes"
+    VIDEO_LIKES = "video_likes"
     GALLERY_COMMENTS = "gallery_comments"
+    VIDEO_COMMENTS = "video_comments"
     LOGIN_ATTEMPTS = "login_attempts"

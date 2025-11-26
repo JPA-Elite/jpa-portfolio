@@ -1,4 +1,6 @@
 # pages.py
+from backend.Controllers.api.VlogCommentController import vlog_comments_route, vlog_like_comment_route
+from backend.Controllers.api.VlogLikeController import add_vlog_like_route, get_vlog_likes_count_route
 from backend.configurations import HTTPMethod as http
 from flask import Blueprint
 from backend.Controllers.api.BaseController import change_language_route, delete_page_system_info_route, download_song_route, get_client_ip_route, profile_config_route, proxy_audio_route
@@ -8,7 +10,7 @@ from backend.Controllers.api.GalleryController import add_gallery_route, delete_
 from backend.Controllers.api.GalleryLikeController import add_gallery_like_route, get_gallery_likes_count_route
 from backend.Controllers.api.DashboardController import visits_info_route
 from backend.Controllers.api.LoginAttemptController import login_attempt_list_route, delete_login_attempt_route
-from backend.Controllers.api.GalleryCommentController import gallery_comments_route, like_comment_route
+from backend.Controllers.api.GalleryCommentController import gallery_comments_route, gallery_like_comment_route
 from backend.auth.middleware import admin_login_required
 from backend.Controllers.api.AuthController import update_profile_route
 
@@ -40,6 +42,42 @@ def proxy_audio():
 @api_bp.route("/api/music-list", methods=[http.GET])
 def user_music_list():
     return music_list_route()
+
+# Gallery Likes API
+@api_bp.route("/api/gallery-like/counts", methods=[http.GET])
+def get_gallery_likes_count():
+    return get_gallery_likes_count_route()
+
+@api_bp.route("/api/gallery-like", methods=[http.POST])
+def add_gallery_like():
+    return add_gallery_like_route()
+
+# Vlog Likes API
+@api_bp.route("/api/vlog-like/counts", methods=[http.GET])
+def get_vlog_likes_count():
+    return get_vlog_likes_count_route()
+
+@api_bp.route("/api/vlog-like", methods=[http.POST])
+def add_vlog_like():
+    return add_vlog_like_route()
+
+# Gallery Comments API
+@api_bp.route("/api/gallery-comments", methods=[http.GET, http.POST])
+def gallery_comments():
+    return gallery_comments_route()
+
+@api_bp.route("/api/gallery-comments/like", methods=[http.POST])
+def like_comment():
+    return gallery_like_comment_route()
+
+# Vlog Comments API
+@api_bp.route("/api/vlog-comments", methods=[http.GET, http.POST])
+def vlog_comments():
+    return vlog_comments_route()
+
+@api_bp.route("/api/vlog-comments/like", methods=[http.POST])
+def vlog_like_comment():
+    return vlog_like_comment_route()
 
 
 # ************************** Administroller API ********************************
@@ -117,24 +155,6 @@ def update_profile():
 @admin_login_required
 def delete_video(video_id):
     return delete_video_route(video_id)
-
-# Gallery Likes API
-@api_bp.route("/api/gallery-like/counts", methods=[http.GET])
-def get_gallery_likes_count():
-    return get_gallery_likes_count_route()
-
-@api_bp.route("/api/gallery-like", methods=[http.POST])
-def add_gallery_like():
-    return add_gallery_like_route()
-
-# Gallery Comments API
-@api_bp.route("/api/gallery-comments", methods=[http.GET, http.POST])
-def gallery_comments():
-    return gallery_comments_route()
-
-@api_bp.route("/api/gallery-comments/like", methods=[http.POST])
-def like_comment():
-    return like_comment_route()
 
 # Login Attempt API
 @api_bp.route("/admin/api/login-attempts", methods=[http.GET])

@@ -36,6 +36,17 @@ endblock %}
                 {% endfor %}
             </div>
             {% endif %}
+            <!-- 💬 Like & Comment Buttons -->
+                <div class="vlog-actions">
+                    <button class="action-btn like-btn" onclick="toggleLike(this, '{{ vlog._id }}')">
+                        <ion-icon name="heart-outline"></ion-icon>
+                        <span class="like-text">Like</span>
+                        <span class="like-count">0</span>
+                    </button>
+                    <button class="action-btn comment-btn" onclick="openModal('{{ vlog.video_url if vlog.video_url is defined else None }}', `{{ vlog.title[get_locale()] | e }}`,  `{{ vlog.description[get_locale()] | e }}`, 'imageModal', true, `{{ vlog._id}}`)">
+                        <ion-icon name="chatbubbles-outline"></ion-icon> Comment <span class="comment-count">0</span>
+                    </button>
+                </div>
         </div>
         {% endfor %}
     </div>
@@ -43,6 +54,14 @@ endblock %}
     <!-- Include the pagination component and pass the base URL -->
     {% include 'components/pagination.html' %}
 </section>
+
+{% block modal_script %}
+    <script>
+        window.baseUrl = "vlog-comments";
+        window.idType = "vlog_id";
+    </script>
+    {{ super() }}
+{% endblock %}
 
 <!-- Initialize Plyr player for each video and pause others when one plays -->
 <script src="{{ url_for('static', filename='js/pages/vlog.js') }}"></script>

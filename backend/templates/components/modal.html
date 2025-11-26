@@ -6,6 +6,14 @@
     <div class="modal-content-container">
         <div class="close" onclick="closeModal()"><ion-icon name="close-circle"></ion-icon></div>
         <img class="modal-content" id="modalImage">
+        <video
+            class="player"
+            style="display: none;"
+            id="modalVideo"
+            autoplay
+            muted
+            playsinline
+        ></video>
         <div id="caption"></div>
         <div class="box-modal-container" style="display: none;">
             <div id="customCarousel" class="carousel">

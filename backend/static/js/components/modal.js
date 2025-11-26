@@ -7,8 +7,9 @@ if (!window.__modal_js_loaded__) {
     let currentSlide = 0;
     const currentLocale = "{{ get_locale() }}";
     const baseUrl = window.baseUrl;
+    const idType = window.idType;
     let slideData = [];
-    let currentGalleryId = null;
+    let currentSelectedId = null;
     let currentCommentPage = 1;
     const COMMENTS_PER_PAGE = 100;
     const MAX_COMMENT_LENGTH = 1000;
@@ -101,11 +102,35 @@ if (!window.__modal_js_loaded__) {
         updateCarousel();
     }
 
+    function isVideoFile(fileSrc) {
+        if (!fileSrc) return false;
+
+        // Common video file extensions
+        const videoExtensions = [
+            "mp4", "mov", "avi", "mkv", "webm",
+            "flv", "wmv", "mpeg", "mpg", "3gp"
+        ];
+
+        // Extract extension from URL or filename
+        const ext = fileSrc.split('.').pop().toLowerCase();
+
+        return videoExtensions.includes(ext);
+    }
+
+    function pauseAllVideos() {
+        const videos = document.querySelectorAll("video");
+        videos.forEach(v => {
+            v.pause();
+            v.currentTime = 0; // optional reset
+        });
+    }
+
     // Function to open the modal and show the image
-    function openModal(imageSrc, title = '', description = '', type = ModalType.IMAGE, enableComments = false, galleryId = null) {
-        currentGalleryId = galleryId;
+    function openModal(fileSrc, title = '', description = '', type = ModalType.IMAGE, enableComments = false, selectedId = null) {
+        currentSelectedId = selectedId;
         var boxModalContainer = document.querySelector(".box-modal-container");
         var modalImage = document.getElementById("modalImage");
+        var modalVideo = document.getElementById("modalVideo");
         var caption = document.getElementById("caption");
         var imageModal = document.getElementById("imageModal");
         imageModal.style.display = "flex";
@@ -114,25 +139,39 @@ if (!window.__modal_js_loaded__) {
         if (type == ModalType.BOX) {
             boxModalContainer.style.display = "block";
             modalImage.style.display = "none";
+            modalVideo.style.display = "none";
             caption.style.display = "none";
         } else {
             boxModalContainer.style.display = "none";
-            modalImage.style.display = "flex";
-            caption.style.display = "block";
-            document.getElementById("modalImage").src = imageSrc;
+            if (isVideoFile(fileSrc)) {
+                pauseAllVideos();
+                modalImage.style.display = "none";
+                modalVideo.style.display = "flex";
+                modalImage.src = "";
+                modalVideo.src = fileSrc;
 
-            // Create a caption element
-            const captionElement = document.getElementById("caption");
-
-            // Set title if available
-            captionElement.innerHTML = ""; // Clear previous content
-            if (title && title.trim() !== "") {
-                captionElement.innerHTML += "<h3>" + title + "</h3>";
+                // Force autoplay
+                modalVideo.muted = true;      // required for autoplay
+                modalVideo.autoplay = true;
+                modalVideo.play().catch(err => {
+                    console.warn("Autoplay failed:", err);
+                });
+            } else {
+                modalVideo.style.display = "none";
+                modalImage.style.display = "flex";
+                modalVideo.src = "";
+                modalImage.src = fileSrc;
             }
 
-            // Set description if available
+            caption.style.display = "block";
+
+            caption.innerHTML = "";
+            if (title && title.trim() !== "") {
+                caption.innerHTML += "<h3>" + title + "</h3>";
+            }
+
             if (description && description.trim() !== "") {
-                captionElement.innerHTML += "<p>" + description + "</p>";
+                caption.innerHTML += "<p>" + description + "</p>";
             }
         }
 
@@ -144,7 +183,7 @@ if (!window.__modal_js_loaded__) {
             commentSection.style.display = isMobile ? "block" : "flex";
             modalContentContainer.style.width = isMobile ? "100%" : "50%";
             currentCommentPage = 1;
-            loadComments(galleryId, currentCommentPage, false, true);
+            loadComments(selectedId, currentCommentPage, false, true);
         } else {
             commentSection.style.display = "none";
             modalContentContainer.style.width = "100%";
@@ -162,7 +201,7 @@ if (!window.__modal_js_loaded__) {
     }
 
     // ---------------- Comments ----------------
-    async function loadComments(galleryId, page = 1, prependOlder = false, initial = false) {
+    async function loadComments(selectedId, page = 1, prependOlder = false, initial = false) {
         const commentList = document.querySelector(".comment-list");
         const commentSection = document.querySelector(".comment-section");
 
@@ -190,7 +229,7 @@ if (!window.__modal_js_loaded__) {
             prevBtn.disabled = true;
             prevBtn.textContent = "Loading...";
 
-            const res = await fetch(`/api/${baseUrl}?gallery_id=${galleryId}&page=${page}&limit=${COMMENTS_PER_PAGE}`);
+            const res = await fetch(`/api/${baseUrl}?${idType}=${selectedId}&page=${page}&limit=${COMMENTS_PER_PAGE}`);
             const data = await res.json();
 
             const comments = data.comments || [];
@@ -223,7 +262,7 @@ if (!window.__modal_js_loaded__) {
             prevBtn.style.display = page < totalPages ? "block" : "none";
             prevBtn.onclick = () => {
                 currentCommentPage++;
-                loadComments(galleryId, currentCommentPage, true);
+                loadComments(selectedId, currentCommentPage, true);
             };
 
             if (prependOlder) {
@@ -281,7 +320,7 @@ if (!window.__modal_js_loaded__) {
         const commentBox = document.getElementById("commentBox");
         const text = commentBox.value.trim();
 
-        if (!text || !currentGalleryId) return;
+        if (!text || !currentSelectedId) return;
         if (text.length > MAX_COMMENT_LENGTH) {
             alert(`Comment cannot exceed ${MAX_COMMENT_LENGTH} characters.`);
             return;
@@ -290,10 +329,16 @@ if (!window.__modal_js_loaded__) {
         commentBox.disabled = true;
 
         try {
+            const bodyPayload = {
+                author_name: "You",
+                text
+            };
+            bodyPayload[window.idType] = currentSelectedId;
+
             const res = await fetch(`/api/${baseUrl}`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ gallery_id: currentGalleryId, author_name: "You", text }),
+                body: JSON.stringify(bodyPayload),
             });
 
             const data = await res.json();

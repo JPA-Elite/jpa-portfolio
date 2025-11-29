@@ -4,12 +4,17 @@ from backend.Services.PortfolioService import PortfolioService
 from backend.Services.VisitService import VisitService
 from backend.Repositories.PortfolioRepository import PortfolioRepository
 from backend.Repositories.VisitRepository import VisitRepository
+from backend.Services.MusicService import MusicService
+from backend.Repositories.MusicRepository import MusicRepository
 from flask_babel import gettext
 from urllib.parse import urlparse, parse_qs, urlencode, urlunparse
+
+from backend.utils import safe_filename_parts, stream_generator
 
 # Initialize Services
 portfolio_service = PortfolioService(repository=PortfolioRepository())
 visit_service = VisitService(repository=VisitRepository())
+music_service = MusicService(repository=MusicRepository())
 
 # ************************** API Controller ********************************
 
@@ -64,14 +69,43 @@ def profile_config_route():
 
 def download_song_route():
     url = request.args.get('url')
-    filename = url.split('/')[-1]
-    r = requests.get(url, stream=True)
+    if not url:
+        return {"error": "Missing URL"}, 400
+
+    music = music_service.get_music_by_url(url)
+
+    if music:
+        title = music.get("title", "Unknown")
+        artist = music.get("artist", "Unknown")
+    else:
+        title = "download"
+        artist = ""
+
+    fallback_base, utf8_quoted_base = safe_filename_parts(title, artist)
+    fallback_name = f"{fallback_base}.mp3"
+    utf8_name = f"{utf8_quoted_base}.mp3"
+
+    # Download remote file
+    r = requests.get(url, stream=True, timeout=30)
+    if r.status_code != 200:
+        return {"error": "Failed to download file"}, 500
+
+    content_type = r.headers.get("Content-Type", "application/octet-stream")
+
+    # Compose a single Content-Disposition header that includes an ASCII fallback
+    # and the UTF-8 encoded filename*
+    content_disposition = (
+        f'attachment; filename="{fallback_name}"; filename*=UTF-8\'\'{utf8_name}'
+    )
+
+    headers = {
+        "Content-Disposition": content_disposition,
+        "Content-Type": content_type,
+    }
+
     return Response(
-        r.iter_content(chunk_size=8192),
-        headers={
-            "Content-Disposition": f"attachment; filename={filename}",
-            "Content-Type": r.headers.get("Content-Type", "audio/mpeg")
-        }
+        stream_generator(r),
+        headers=headers
     )
 
 def get_client_ip_route():

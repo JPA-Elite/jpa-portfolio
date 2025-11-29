@@ -34,6 +34,9 @@ class MusicService:
     def get_music_by_id(self, music_id: str):
         return self.repository.get_music_by_id(music_id)
 
+    def get_music_by_url(self, music_url: str):
+        return self.repository.get_music_by_url(music_url)
+
     def get_paginated_music_list(self, page, per_page, order: SortOrder = SortOrder.DESC):
         data, total_data = self.repository.get_paginated_music_list(page, per_page, order)
         system_info_list = [Music.from_dict(music) for music in data]

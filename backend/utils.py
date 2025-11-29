@@ -13,6 +13,9 @@ import ffmpeg
 import sys
 import pathlib
 import requests
+import re
+import unicodedata
+from urllib.parse import quote
 
 load_dotenv()
 
@@ -328,3 +331,30 @@ def verify_hcaptcha(token: str, remote_ip: str = None):
         return bool(res.get("success")), res
     except requests.RequestException as e:
         return False, {"error": "request-failed", "exception": str(e)}
+
+def sanitize_filename(name):
+    # Remove invalid header-breaking characters
+    return re.sub(r'[\\/*?:"<>|;,]', '', name)
+
+def ascii_fallback(name: str) -> str:
+    normalized = unicodedata.normalize("NFKD", name)
+    ascii_bytes = normalized.encode("ascii", "ignore")  # drop non-ascii
+    s = ascii_bytes.decode("ascii", "ignore")
+    s = re.sub(r'[\\/*?:"<>|]', '', s)
+    s = re.sub(r'\s+', ' ', s).strip()
+    return s or "download"
+
+def safe_filename_parts(raw_title: str, raw_artist: str, ext: str = "mp3"):
+    """Return (fallback_filename, utf8_quoted_filename) without extension."""
+    # Build raw combined
+    combined = f"{raw_title} - {raw_artist}".strip()
+    # ascii fallback (no unicode)
+    fallback = ascii_fallback(combined)
+    # quoted utf-8 for filename* per RFC5987
+    utf8_quoted = quote(combined, safe='')
+    return fallback, utf8_quoted
+
+def stream_generator(resp, chunk_size=8192):
+    for chunk in resp.iter_content(chunk_size=chunk_size):
+        if chunk:
+            yield chunk

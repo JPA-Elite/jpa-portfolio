@@ -13,6 +13,10 @@ class MusicRepository(IMusicRepository, BaseRepository):
         """Fetch a music document by _id."""
         return self.collection.find_one({"_id": ObjectId(music_id)})
 
+    def get_music_by_url(self, music_url: str):
+        """Fetch a music document by its URL."""
+        return self.collection.find_one({"url": music_url})
+
     def get_paginated_music_list(self, page: int, per_page: int, order: SortOrder):
         # Mongo sort order by _id
         sort_order = -1 if order == SortOrder.DESC else 1

@@ -8,6 +8,10 @@ class IMusicRepository(ABC):
         pass
 
     @abstractmethod
+    def get_music_by_url(self, music_url: str):
+        pass
+
+    @abstractmethod
     def get_paginated_music_list(self, page, per_page, order: SortOrder):
         pass
 

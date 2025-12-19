@@ -176,7 +176,7 @@ if (!window.__modal_js_loaded__) {
         }
 
         // Show or hide comment section
-        const isMobile = window.innerWidth <= 900;
+        const isMobile = window.innerWidth <= 768;
         const commentSection = document.querySelector(".comment-section");
         const modalContentContainer = document.querySelector(".modal-content-container");
         if (enableComments) {

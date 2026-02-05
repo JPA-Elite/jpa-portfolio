@@ -9,10 +9,10 @@ class AuthRepository(IAuthRepository, BaseRepository):
 
     def find_by_username(self, username: str):
         """Find user by username"""
-        return self.collection.find_one({"username": username, "role": "admin"})
+        return self.get_document({"username": username, "role": "admin"})
 
     def find_by_id(self, id):
-        return self.collection.find_one({"_id": ObjectId(id)})
+        return self.get_document({"_id": ObjectId(id)})
 
     def update_user(self, id, data: dict):
-        return self.collection.update_one({"_id": ObjectId(id)}, {"$set": data})
+        return self.update_document_by_id(ObjectId(id), data)

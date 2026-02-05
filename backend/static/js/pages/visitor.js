@@ -1,4 +1,5 @@
-// Function to open the image in a modal
+import { SystemInfoService } from "../services/SystemInfoService.js";
+
 function previewImage(imageUrl) {
     const modal = document.getElementById("image-modal");
     const modalImg = document.getElementById("preview-image");
@@ -9,7 +10,6 @@ function previewImage(imageUrl) {
     modalImg.src = imageUrl;
 }
 
-// Function to close the modal
 function closePreview() {
     const modal = document.getElementById("image-modal");
     if (!modal) return;
@@ -17,9 +17,13 @@ function closePreview() {
     modal.style.display = "none";
 }
 
+window.previewImage = previewImage;
+window.closePreview = closePreview;
+
 document.addEventListener("DOMContentLoaded", () => {
     const clearBtn = document.getElementById("clear-page-btn");
     const tableBody = document.getElementById("table-body");
+    const systemInfoService = new SystemInfoService();
 
     function updateClearButtonState() {
         if (!clearBtn) return;
@@ -36,23 +40,11 @@ document.addEventListener("DOMContentLoaded", () => {
         clearBtn.innerText = isLoading ? "Clearing..." : "Clear Page";
     }
 
-    async function clearPageSystemInfo() {
-        const records = Array.from(document.querySelectorAll("#table-body tr")).map((row) => ({
+    function getRecordsToDelete() {
+        return Array.from(document.querySelectorAll("#table-body tr")).map((row) => ({
             _id: row.dataset.recordId,
             image_capture: row.querySelector(".capture_image")?.src || null,
         }));
-
-        const response = await fetch("/api/delete-page-system-info", {
-            method: "DELETE",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ records }),
-        });
-
-        if (!response.ok) {
-            throw new Error("Failed to clear page system info");
-        }
-
-        return response.json();
     }
 
     updateClearButtonState();
@@ -60,22 +52,19 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!clearBtn) return;
 
     clearBtn.addEventListener("click", async () => {
-        if (!confirm("Are you sure you want to clear all data on this page?")) {
-            return;
-        }
+        if (!confirm("Are you sure you want to clear all data on this page?")) return;
 
         showLoading();
         setClearButtonLoading(true);
 
         try {
-            const data = await clearPageSystemInfo();
+            const records = getRecordsToDelete();
+            const data = await systemInfoService.clearPageSystemInfo(records);
             alert(data.message);
 
             if (data.status === "success") {
                 location.reload();
             }
-        } catch (error) {
-            console.error("Error:", error);
         } finally {
             hideLoading();
             setClearButtonLoading(false);

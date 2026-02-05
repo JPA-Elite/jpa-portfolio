@@ -1,27 +1,83 @@
 # My Portfolio App
 
-Short Description: a project for my own portfolio
+A personal portfolio web app built with Flask.
 
-Languages: flask (python)
+## Tech Stack
 
-## CREATE A VIRTUAL ENVIRONMENT
+- Python / Flask
+- MongoDB
+- HTML / CSS / JavaScript
 
-1. run command: `python -m venv .venv`
-2. run command: `.\.venv\Scripts\activate.bat`
+## Setup
 
-## INSTALL PACKAGE
+### 1) Create a virtual environment
 
-- `cd backend && pip install -r requirements.txt` or run `make package-install`
+```bash
+python -m venv .venv
+```
 
-## LANGUAGE TRANSLATION COMMANDS
+### 2) Activate the virtual environment
 
-1. `pybabel extract -F babel.cfg -o messages.pot .`
-2. `pybabel init -i messages.pot -d translations -l ceb`
-3. `pybabel init -i messages.pot -d translations -l en`
-4. `pybabel compile -d translations`
+- **Windows (cmd):**
 
-## START UP
+```bat
+.\.venv\Scripts\activate.bat
+```
 
-1. cd fask
-2. run command: `cd backend && python -m backend.app`,
-   run command: `make start-local` or `make run-local`
+- **Linux / macOS (bash/zsh):**
+
+```bash
+source .venv/bin/activate
+```
+
+### 3) Install dependencies
+
+```bash
+cd backend && pip install -r requirements.txt
+```
+
+Or from the project root:
+
+```bash
+make package-install
+```
+
+## Run the app
+
+From the project root:
+
+```bash
+make start-local
+```
+
+Alternative:
+
+```bash
+cd backend && python -m backend.app
+```
+
+## Run tests
+
+From the project root:
+
+```bash
+pytest -q
+```
+
+Additional useful checks:
+
+```bash
+ruff check backend tests
+python -m compileall -q backend
+```
+
+## Language translation commands
+
+Run inside `backend/`:
+
+```bash
+pybabel extract -F babel.cfg -o messages.pot .
+pybabel init -i messages.pot -d translations -l ceb
+pybabel init -i messages.pot -d translations -l en
+pybabel compile -d translations
+```

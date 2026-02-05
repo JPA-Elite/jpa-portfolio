@@ -1,6 +1,8 @@
 from abc import ABC, abstractmethod
+
 from backend.configurations import SortOrder
-from backend.Models import Gallery
+from backend.Models.Gallery import Gallery
+
 
 class IGalleryRepository(ABC):
     @abstractmethod
@@ -24,7 +26,15 @@ class IGalleryRepository(ABC):
         pass
 
     @abstractmethod
-    def search_gallery_paginated(self, search_query: str = "", tags: list[str] = None, locale: str = "en", page: int = 1, per_page: int = 10, order: SortOrder = SortOrder.DESC):
+    def search_gallery_paginated(
+        self,
+        search_query: str = "",
+        tags: list[str] = None,
+        locale: str = "en",
+        page: int = 1,
+        per_page: int = 10,
+        order: SortOrder = SortOrder.DESC,
+    ):
         pass
 
     @abstractmethod

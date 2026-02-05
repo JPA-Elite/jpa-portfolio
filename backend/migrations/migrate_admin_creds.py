@@ -1,4 +1,3 @@
-import os
 from flask import current_app
 from pymongo import MongoClient
 from werkzeug.security import generate_password_hash

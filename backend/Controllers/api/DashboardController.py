@@ -1,6 +1,5 @@
 from flask import jsonify
 from backend.Services.VisitService import VisitService
-from backend.Services.VisitService import VisitService
 from backend.Repositories.VisitRepository import VisitRepository
 
 # Initialize Services

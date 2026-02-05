@@ -2,11 +2,11 @@ import uuid
 from backend.Repositories.Interfaces.IMusicRepository import IMusicRepository
 from backend.Models.Music import Music
 from backend.configurations import SortOrder
-import tempfile, os
+import os
+import tempfile
 from backend.constants.cloudinary import CloudinaryFolders, CloudinaryResourceType
 from backend.utils import cleanup_uploaded_files, convert_to_webp, upload_file_to_cloudinary
 from mutagen import File as MutagenFile
-import requests
 
 class MusicService:
     def __init__(self, repository: IMusicRepository):
@@ -16,7 +16,6 @@ class MusicService:
         try:
             duration_formatted = None
             audio = MutagenFile(temp_path)
-            print(audio)
             if audio and hasattr(audio, "info") and audio.info.length:
                 total_seconds = round(audio.info.length, 2)
                 minutes = int(total_seconds // 60)

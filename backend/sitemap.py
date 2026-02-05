@@ -1,4 +1,4 @@
-from flask import Blueprint, Response, request
+from flask import Blueprint, Response
 from datetime import datetime
 
 sitemap_bp = Blueprint("sitemap", __name__)

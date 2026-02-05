@@ -2,7 +2,8 @@ import uuid
 from backend.Repositories.Interfaces.IVideoRepository import IVideoRepository
 from backend.Models.Video import Video
 from backend.configurations import SortOrder
-import tempfile, os
+import os
+import tempfile
 from backend.constants.cloudinary import CloudinaryFolders, CloudinaryResourceType
 from backend.utils import cleanup_uploaded_files, upload_file_to_cloudinary
 

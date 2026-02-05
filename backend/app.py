@@ -17,6 +17,10 @@ import os
 from backend.extensions import cache
 from dotenv import load_dotenv
 
+
+def _is_truthy(value: str | None) -> bool:
+    return str(value).strip().lower() in {"1", "true", "yes", "on"}
+
 load_dotenv()
 
 app = Flask(__name__)
@@ -91,4 +95,5 @@ def truncate_text(text, length=120):
     return text
 
 if __name__ == "__main__":
-    app.run(debug=True, host="0.0.0.0")
+    debug = _is_truthy(os.getenv("FLASK_DEBUG", "1"))
+    app.run(host="0.0.0.0", debug=debug, use_reloader=debug)

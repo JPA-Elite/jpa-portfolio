@@ -50,10 +50,12 @@ From the project root:
 make start-local
 ```
 
-Alternative:
+`start-local` uses Flask debug reloader, so code changes auto-reload during development.
+
+Alternative (also supports auto-reload):
 
 ```bash
-cd backend && python -m backend.app
+FLASK_DEBUG=1 python -m backend.app
 ```
 
 ## Run tests

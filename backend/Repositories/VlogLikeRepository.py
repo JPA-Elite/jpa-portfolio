@@ -8,7 +8,7 @@ class VlogLikeRepository(IVlogLikeRepository, BaseRepository):
 
     def get_vlog_likes_count_by_id(self, vlog_id: str):
         """Return total number of likes for a specific vlog item."""
-        count = self.collection.count_documents({
+        count = self.count({
             "vlog_id": vlog_id,
             "like": True
         })
@@ -39,12 +39,12 @@ class VlogLikeRepository(IVlogLikeRepository, BaseRepository):
         query = {"$or": regex_conditions}
 
         # This will let MongoDB handle filtering efficiently
-        return self.collection.find_one(query, projection)
+        return self.get_document(query, projection)
 
 
     def add_vlog_like(self, vlog_like: VlogLike):
         """Insert a new vlog document into MongoDB."""
-        result = self.collection.insert_one(vlog_like.to_dict())
+        result = self.insert_document(vlog_like.to_dict())
         return str(result.inserted_id)
 
     def update_vlog_like(self, vlog_like: VlogLike):

@@ -26,11 +26,11 @@ class LoginAttemptRepository(ILoginAttemptRepository, BaseRepository):
     def get_attempt_info(self):
         """Retrieve attempt info based on client IP."""
         client_ip = self._get_client_ip()
-        data = self.collection.find_one({"_id": client_ip})
+        data = self.get_document({"_id": client_ip})
 
         if not data:
             data = {"_id": client_ip, "attempts": 0, "lockout_until": None}
-            self.collection.insert_one(data)
+            self.insert_document(data)
         return data
 
     def update_attempt(self, success=False):
@@ -65,7 +65,7 @@ class LoginAttemptRepository(ILoginAttemptRepository, BaseRepository):
         except bson_errors.InvalidId:
             query = {"_id": login_attempt_id}
 
-        return self.collection.find_one(query)
+        return self.get_document(query)
 
     def get_paginated_login_attempt_list(self, page: int, per_page: int, order: SortOrder):
         # Mongo sort order by _id
@@ -80,7 +80,7 @@ class LoginAttemptRepository(ILoginAttemptRepository, BaseRepository):
         )
 
         data = list(cursor)
-        total_data = self.collection.count_documents({})
+        total_data = self.count()
 
         return data, total_data
 
@@ -93,5 +93,5 @@ class LoginAttemptRepository(ILoginAttemptRepository, BaseRepository):
             print("Falling back to IP string for deletion")
             query = {"_id": login_attempt_id}
 
-        result = self.collection.delete_one(query)
+        result = self.delete_document(query)
         return result.deleted_count > 0

@@ -10,7 +10,7 @@ class VisitRepository(IVisitRepository, BaseRepository):
 
     def get_paginated_documents(self, page, per_page, order: SortOrder):
         # Fetch all documents and convert the timestamp to datetime
-        all_documents = list(self.collection.find())
+        all_documents = list(self.get_documents())
         for doc in all_documents:
             if isinstance(doc.get("timestamp"), str):
                 try:
@@ -40,7 +40,7 @@ class VisitRepository(IVisitRepository, BaseRepository):
         """
         Delete a system info record from the database using _id.
         """
-        self.collection.delete_one({"_id": object_id})
+        self.delete_document_by_id(object_id)
 
     def count_visits(self, where_condition: dict = None):
         """
@@ -64,13 +64,13 @@ class VisitRepository(IVisitRepository, BaseRepository):
         other_filter = {"$regex": "^other$", "$options": "i"}
 
         # Count where os is not 'Other' (case-insensitive)
-        visitor_total_count = self.collection.count_documents({
+        visitor_total_count = self.count({
             **where_condition,
             "os": {"$not": other_filter}
         })
 
         # Count where os IS 'Other' (case-insensitive)
-        bot_total_count = self.collection.count_documents({
+        bot_total_count = self.count({
             **where_condition,
             "os": other_filter
         })

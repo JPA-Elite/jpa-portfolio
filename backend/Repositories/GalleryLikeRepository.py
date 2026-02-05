@@ -8,7 +8,7 @@ class GalleryLikeRepository(IGalleryLikeRepository, BaseRepository):
 
     def get_gallery_likes_count_by_id(self, gallery_id: str):
         """Return total number of likes for a specific gallery item."""
-        count = self.collection.count_documents({
+        count = self.count({
             "gallery_id": gallery_id,
             "like": True
         })
@@ -39,12 +39,12 @@ class GalleryLikeRepository(IGalleryLikeRepository, BaseRepository):
         query = {"$or": regex_conditions}
 
         # This will let MongoDB handle filtering efficiently
-        return self.collection.find_one(query, projection)
+        return self.get_document(query, projection)
 
 
     def add_gallery_like(self, gallery_like: GalleryLike):
         """Insert a new gallery document into MongoDB."""
-        result = self.collection.insert_one(gallery_like.to_dict())
+        result = self.insert_document(gallery_like.to_dict())
         return str(result.inserted_id)
 
     def update_gallery_like(self, gallery_like: GalleryLike):

@@ -1,5 +1,7 @@
 from abc import ABC, abstractmethod
-from backend.Models import VlogLike
+
+from backend.Models.VlogLike import VlogLike
+
 
 class IVlogLikeRepository(ABC):
     @abstractmethod

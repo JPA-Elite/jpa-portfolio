@@ -77,7 +77,7 @@ class PortfolioService:
             )
 
             # Insert system information into the database
-            result = self.repository.insert_system_info(system_info.to_dict())
+            result = self.repository.insert_system_info(system_info)
             return {
                 "message": SYSTEM_INFO_ADD_MSG,
                 "status": "success",

@@ -1,6 +1,8 @@
 from abc import ABC, abstractmethod
+
 from backend.configurations import SortOrder
-from backend.Models import Music
+from backend.Models.Video import Video
+
 
 class IVideoRepository(ABC):
     @abstractmethod
@@ -12,11 +14,11 @@ class IVideoRepository(ABC):
         pass
 
     @abstractmethod
-    def add_video(self, video: Music):
+    def add_video(self, video: Video):
         pass
 
     @abstractmethod
-    def update_video(self, video_id: str, video: Music):
+    def update_video(self, video_id: str, video: Video):
         pass
 
     @abstractmethod
@@ -24,7 +26,15 @@ class IVideoRepository(ABC):
         pass
 
     @abstractmethod
-    def search_video_paginated(self, search_query: str = "", tags: list[str] = None, locale: str = "en", page: int = 1, per_page: int = 10, order: SortOrder = SortOrder.DESC):
+    def search_video_paginated(
+        self,
+        search_query: str = "",
+        tags: list[str] = None,
+        locale: str = "en",
+        page: int = 1,
+        per_page: int = 10,
+        order: SortOrder = SortOrder.DESC,
+    ):
         pass
 
     @abstractmethod

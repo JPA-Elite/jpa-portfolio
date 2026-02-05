@@ -16,6 +16,7 @@ from backend.sitemap import sitemap_bp  # Import the sitemap blueprint
 import os
 from backend.extensions import cache
 from backend.constants.app_defaults import SECURITY_HEADERS
+from backend.middleware import trusted_network_guard
 from dotenv import load_dotenv
 
 
@@ -54,6 +55,11 @@ babel.init_app(app, locale_selector=get_locale)
 @app.context_processor
 def inject_locale():
     return dict(get_locale=get_locale)
+
+
+@app.before_request
+def block_untrusted_networks():
+    return trusted_network_guard()
 
 @app.after_request
 def apply_security_headers(response):

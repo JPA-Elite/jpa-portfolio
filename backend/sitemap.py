@@ -1,11 +1,12 @@
 from flask import Blueprint, Response
 from datetime import datetime
+from backend.constants.app_defaults import SITEMAP_BASE_URL
 
 sitemap_bp = Blueprint("sitemap", __name__)
 
 def generate_sitemap():
     lastmod = datetime.today().strftime('%Y-%m-%d')
-    base_url = "https://jpa-portfolio.onrender.com"  # Get the current domain dynamically
+    base_url = SITEMAP_BASE_URL
 
     sitemap_xml = f"""<?xml version="1.0" encoding="UTF-8"?>
     <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">

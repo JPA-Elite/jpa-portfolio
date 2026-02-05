@@ -18,7 +18,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/pages/profile.css') }}" />
     <link rel="stylesheet" href="{{ url_for('static', filename='css/themes.css') }}" />
     <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='images/favicon.ico') }}">
-    <script src="{{ url_for('static', filename='js/utils.js') }}"></script>
+    <script defer src="{{ url_for('static', filename='js/utils.js') }}"></script>
 
     <!-- Set background image to default -->
     {% set background_image = 'images/background1.jpg' %}
@@ -275,9 +275,9 @@
         window.isForceLightMode = "{{ force_light_theme }}";
         window.isProfessionalMode = "{{ request.args.get('mode') == 'professional' }}";
     </script>
-    <script src="{{ url_for('static', filename='js/pages/base.js') }}"></script>
+    <script defer src="{{ url_for('static', filename='js/pages/base.js') }}"></script>
     {% block modal_script %}
-        <script src="{{ url_for('static', filename='js/components/modal.js') }}"></script>
+        <script defer src="{{ url_for('static', filename='js/components/modal.js') }}"></script>
     {% endblock %}
 </body>
 

@@ -51,7 +51,7 @@
                         {% endif %}
                     </td>
                     <td>
-                        <img class="capture_image" src="{{ document.image_capture }}" alt="captured image"
+                        <img class="capture_image" src="{{ document.image_capture }}" alt="captured image" loading="lazy" decoding="async"
                             onclick="previewImage('{{ document.image_capture }}')" />
                     </td>
                 </tr>

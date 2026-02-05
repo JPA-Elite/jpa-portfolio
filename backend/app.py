@@ -1,4 +1,4 @@
-from flask import Flask, render_template, send_from_directory # type: ignore
+from flask import Flask, render_template, request, send_from_directory # type: ignore
 from backend.configurations import (
     ERROR_404_PAGE,
     LANGUAGES,
@@ -15,6 +15,7 @@ from datetime import datetime, timedelta
 from backend.sitemap import sitemap_bp  # Import the sitemap blueprint
 import os
 from backend.extensions import cache
+from backend.constants.app_defaults import SECURITY_HEADERS
 from dotenv import load_dotenv
 
 
@@ -53,6 +54,18 @@ babel.init_app(app, locale_selector=get_locale)
 @app.context_processor
 def inject_locale():
     return dict(get_locale=get_locale)
+
+@app.after_request
+def apply_security_headers(response):
+    for header, value in SECURITY_HEADERS.items():
+        response.headers.setdefault(header, value)
+
+    # Cache static assets more aggressively in non-debug mode
+    if not app.debug and request.path.startswith("/static/"):
+        response.headers.setdefault("Cache-Control", "public, max-age=31536000, immutable")
+
+    return response
+
 
 @app.context_processor
 def inject_hcaptcha():

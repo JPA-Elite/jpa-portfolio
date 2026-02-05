@@ -2,9 +2,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add Portfolio</title>
+    {% set seo_title = "Add Portfolio" %}
+    {% set seo_description = "Add portfolio details and information." %}
+    {% set seo_keywords = "portfolio, form" %}
+    {% set seo_robots = "noindex,nofollow" %}
+    {% include 'components/seo_meta.html' %}
 </head>
 <body>
     <h1>Add Portfolio Entry</h1>

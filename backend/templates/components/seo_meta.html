@@ -1,0 +1,19 @@
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="google-site-verification" content="Oh3O1doyGDCEg_BxM-IBiktbmgU1qhk1KT8S6tsWNi8" />
+
+<title>{{ seo_title | default('My Portfolio') }}</title>
+<meta name="description" content="{{ seo_description | default('Welcome to my portfolio. Explore my projects and more.') }}" />
+<meta name="keywords" content="{{ seo_keywords | default('portfolio, projects, gallery, vlog') }}" />
+<meta name="author" content="{{ seo_author | default('Joshua Algadipe') }}" />
+<meta name="robots" content="{{ seo_robots | default('index,follow') }}" />
+
+<meta property="og:type" content="website" />
+<meta property="og:title" content="{{ seo_title | default('My Portfolio') }}" />
+<meta property="og:description" content="{{ seo_description | default('Welcome to my portfolio. Explore my projects and more.') }}" />
+<meta property="og:url" content="{{ request.url if request else '' }}" />
+<meta property="og:site_name" content="{{ seo_site_name | default('My Portfolio') }}" />
+
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content="{{ seo_title | default('My Portfolio') }}" />
+<meta name="twitter:description" content="{{ seo_description | default('Welcome to my portfolio. Explore my projects and more.') }}" />

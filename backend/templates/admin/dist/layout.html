@@ -2,8 +2,11 @@
 <html lang="en">
 
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>{% block title %}Admin{% endblock %}</title>
+    {% set seo_title %}{% block title %}Admin{% endblock %}{% endset %}
+    {% set seo_description = "Admin dashboard for site management." %}
+    {% set seo_keywords = "admin, dashboard" %}
+    {% set seo_robots = "noindex,nofollow" %}
+    {% include 'components/seo_meta.html' %}
     <!--begin::Accessibility Meta Tags-->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
     <!--end::Accessibility Meta Tags-->

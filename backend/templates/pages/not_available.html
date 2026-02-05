@@ -1,7 +1,11 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Site Not Available</title>
+    {% set seo_title = "Site Not Available" %}
+    {% set seo_description = "The requested page is currently not available." %}
+    {% set seo_keywords = "site unavailable" %}
+    {% set seo_robots = "noindex,nofollow" %}
+    {% include 'components/seo_meta.html' %}
     <link rel="stylesheet" href="{{ url_for('static', filename='css/pages/not_available.css') }}" />
     <link rel="stylesheet" href="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.css" />
 </head>

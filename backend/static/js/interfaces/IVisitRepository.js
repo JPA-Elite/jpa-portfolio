@@ -2,12 +2,12 @@
 
 /**
  * @interface IVisitRepository
- * Defines the methods for accessing visit data from the API.
+ * Defines methods for accessing visit data from the API.
  */
 export class IVisitRepository {
     /**
-     * Fetch total visit count from the server.
-     * @returns {Promise<any>} Resolves with the total visit count.
+     * Fetch total visit counts from the server.
+     * @returns {Promise<{visitor_total_count?: number, bot_total_count?: number}>}
      */
     async fetchVisitCount() {
         throw new Error("Method 'fetchVisitCount()' must be implemented.");

@@ -17,10 +17,10 @@ run:
 	docker run -d -p $(PORT):5000 --name $(APP_NAME) $(DOCKER_IMAGE)
 
 run-local:
-	python -m backend.app
+	FLASK_APP=backend.app FLASK_DEBUG=1 flask run --host=0.0.0.0 --port=$(PORT) --debug
 
 start-local:
-	python -m backend.app
+	FLASK_APP=backend.app FLASK_DEBUG=1 flask run --host=0.0.0.0 --port=$(PORT) --debug
 
 # Stop the Docker container
 stop:

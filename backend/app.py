@@ -1,4 +1,4 @@
-from flask import Flask, render_template, send_from_directory # type: ignore
+from flask import Flask, render_template, request, send_from_directory # type: ignore
 from backend.configurations import (
     ERROR_404_PAGE,
     LANGUAGES,
@@ -15,7 +15,13 @@ from datetime import datetime, timedelta
 from backend.sitemap import sitemap_bp  # Import the sitemap blueprint
 import os
 from backend.extensions import cache
+from backend.constants.app_defaults import SECURITY_HEADERS
+from backend.middleware import trusted_network_guard
 from dotenv import load_dotenv
+
+
+def _is_truthy(value: str | None) -> bool:
+    return str(value).strip().lower() in {"1", "true", "yes", "on"}
 
 load_dotenv()
 
@@ -49,6 +55,23 @@ babel.init_app(app, locale_selector=get_locale)
 @app.context_processor
 def inject_locale():
     return dict(get_locale=get_locale)
+
+
+@app.before_request
+def block_untrusted_networks():
+    return trusted_network_guard()
+
+@app.after_request
+def apply_security_headers(response):
+    for header, value in SECURITY_HEADERS.items():
+        response.headers.setdefault(header, value)
+
+    # Cache static assets more aggressively in non-debug mode
+    if not app.debug and request.path.startswith("/static/"):
+        response.headers.setdefault("Cache-Control", "public, max-age=31536000, immutable")
+
+    return response
+
 
 @app.context_processor
 def inject_hcaptcha():
@@ -91,4 +114,5 @@ def truncate_text(text, length=120):
     return text
 
 if __name__ == "__main__":
-    app.run(debug=True, host="0.0.0.0")
+    debug = _is_truthy(os.getenv("FLASK_DEBUG", "1"))
+    app.run(host="0.0.0.0", debug=debug, use_reloader=debug)

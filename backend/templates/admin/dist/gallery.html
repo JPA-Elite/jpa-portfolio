@@ -3,22 +3,9 @@
 {% block title %}Admin | Gallery{% endblock %}
 
 {% block content %}
-<div class="app-content-header">
-  <div class="container-fluid">
-    <div class="row">
-      <div class="col-sm-6">
-        <h3 class="mb-0">Gallery</h3>
-      </div>
-      <div class="col-sm-6">
-        <ol class="breadcrumb float-sm-end">
-          <li class="breadcrumb-item"><a href="/admin/dashboard">Home</a></li>
-          <li class="breadcrumb-item active" aria-current="page">Maintenance</li>
-          <li class="breadcrumb-item active" aria-current="page">Gallery</li>
-        </ol>
-      </div>
-    </div>
-  </div>
-</div>
+{% set header_title = "Gallery" %}
+{% set breadcrumbs = [{'label': 'Home', 'url': '/admin/dashboard'}, {'label': 'Maintenance', 'url': None}, {'label': 'Gallery', 'url': None}] %}
+{% include 'components/admin/page_header.html' %}
 <div class="app-content">
   <div class="container-fluid">
     <div class="row">
@@ -134,33 +121,12 @@
                 </div>
               </div>
             </div>
-            <div class="table-responsive-wrapper">
-              <table class="table table-bordered table-hover">
-                <thead class="table-light">
-                  <tr>
-                    <th>#</th>
-                    <th>Title</th>
-                    <th>Description</th>
-                    <th>Image</th>
-                    <th>Tags</th>
-                    <th>Actions</th>
-                  </tr>
-                </thead>
-                <tbody id="galleryTableBody">
-                  <!-- Default loading row -->
-                  <tr>
-                    <td colspan="6" class="text-center">Loading...</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
+            {% set headers = ['#', 'Image', 'Title', 'Description', 'Tags', 'Actions'] %}
+            {% set body_id = 'galleryTableBody' %}
+            {% set colspan = 6 %}
+            {% include 'components/admin/data_table.html' %}
 
-            <!-- ✅ Pagination Controls -->
-            <div class="d-flex justify-content-between align-items-center mt-3">
-              <button id="prevPage" class="btn btn-outline-secondary btn-sm">Prev</button>
-              <span id="pageInfo"></span>
-              <button id="nextPage" class="btn btn-outline-secondary btn-sm">Next</button>
-            </div>
+            {% include 'components/admin/pagination_controls.html' %}
 
             <div id="galleryModals"></div>
           </div>

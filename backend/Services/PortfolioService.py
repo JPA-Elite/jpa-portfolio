@@ -8,6 +8,13 @@ import pytz  # type: ignore
 import requests
 
 from backend.constants.messages import SYSTEM_INFO_ADD_MSG
+from backend.constants.app_defaults import (
+    CLIENT_IP_HEADER,
+    IPINFO_URL_TEMPLATE,
+    PH_TIMEZONE,
+    UNKNOWN_MODEL_VALUE,
+    UNKNOWN_VALUE,
+)
 
 class PortfolioService:
     def __init__(self, repository: IPortfolioRepository):
@@ -15,24 +22,24 @@ class PortfolioService:
 
     def get_client_ip(self):
         """Get the real client IP address (handling proxies)"""
-        ip = request.headers.get("X-Forwarded-For", request.remote_addr)
+        ip = request.headers.get(CLIENT_IP_HEADER, request.remote_addr)
         return ip.split(",")[0]  # Extract first IP if behind proxies
 
     def get_ip_location(self, ip):
         """Fetch location details using an IP Geolocation API"""
         try:
-            response = requests.get(f"https://ipinfo.io/{ip}/json")
+            response = requests.get(IPINFO_URL_TEMPLATE.format(ip=ip))
             data = response.json()
 
             return {
                 "ip": ip,
-                "city": data.get("city", "Unknown"),
-                "region": data.get("region", "Unknown"),
-                "country": data.get("country", "Unknown"),
-                "location": data.get("loc", "Unknown"),  # Latitude & Longitude
+                "city": data.get("city", UNKNOWN_VALUE),
+                "region": data.get("region", UNKNOWN_VALUE),
+                "country": data.get("country", UNKNOWN_VALUE),
+                "location": data.get("loc", UNKNOWN_VALUE),  # Latitude & Longitude
             }
         except Exception:
-            return {"ip": ip, "city": "Unknown", "region": "Unknown", "country": "Unknown", "location": "Unknown"}
+            return {"ip": ip, "city": UNKNOWN_VALUE, "region": UNKNOWN_VALUE, "country": UNKNOWN_VALUE, "location": UNKNOWN_VALUE}
 
     def add_system_info(self, cloudinary_url=None):
         """Capture and store system information in the database."""
@@ -46,7 +53,7 @@ class PortfolioService:
             location_info = self.get_ip_location(user_ip)
 
             # Get current date and time in Philippines timezone
-            tz = pytz.timezone("Asia/Manila")
+            tz = pytz.timezone(PH_TIMEZONE)
             current_time = datetime.now(tz)
             formatted_time = current_time.strftime("%m/%d/%Y - %I:%M %p")
 
@@ -61,7 +68,7 @@ class PortfolioService:
                 user_agent=user_agent_string,
                 device=user_agent.device.family,
                 brand=user_agent.device.brand,
-                model=getattr(user_agent.device, "model", "Unknown Model"),
+                model=getattr(user_agent.device, "model", UNKNOWN_MODEL_VALUE),
                 browser=user_agent.browser.family,
                 browser_version=user_agent.browser.version_string,
                 os=user_agent.os.family,
@@ -77,7 +84,7 @@ class PortfolioService:
             )
 
             # Insert system information into the database
-            result = self.repository.insert_system_info(system_info.to_dict())
+            result = self.repository.insert_system_info(system_info)
             return {
                 "message": SYSTEM_INFO_ADD_MSG,
                 "status": "success",

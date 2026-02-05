@@ -5,6 +5,7 @@ from backend.constants.db_collections import MongoCollections as mc
 from backend.Repositories.Interfaces.ILoginAttemptRepository import ILoginAttemptRepository
 from bson import ObjectId, errors as bson_errors
 from backend.configurations import SortOrder
+from backend.constants.app_defaults import CLIENT_IP_HEADER
 
 MAX_ATTEMPTS = 3
 LOCKOUT_HOURS = 1
@@ -15,9 +16,9 @@ class LoginAttemptRepository(ILoginAttemptRepository, BaseRepository):
 
     def _get_client_ip(self):
         """Get client IP address safely (supports proxy environments)."""
-        if request.headers.get("X-Forwarded-For"):
+        if request.headers.get(CLIENT_IP_HEADER):
             # If app is behind proxy (like Render), this header stores real client IP
-            ip = request.headers.get("X-Forwarded-For").split(",")[0].strip()
+            ip = request.headers.get(CLIENT_IP_HEADER).split(",")[0].strip()
         else:
             ip = request.remote_addr or "unknown_ip"
         return ip
@@ -25,11 +26,11 @@ class LoginAttemptRepository(ILoginAttemptRepository, BaseRepository):
     def get_attempt_info(self):
         """Retrieve attempt info based on client IP."""
         client_ip = self._get_client_ip()
-        data = self.collection.find_one({"_id": client_ip})
+        data = self.get_document({"_id": client_ip})
 
         if not data:
             data = {"_id": client_ip, "attempts": 0, "lockout_until": None}
-            self.collection.insert_one(data)
+            self.insert_document(data)
         return data
 
     def update_attempt(self, success=False):
@@ -64,7 +65,7 @@ class LoginAttemptRepository(ILoginAttemptRepository, BaseRepository):
         except bson_errors.InvalidId:
             query = {"_id": login_attempt_id}
 
-        return self.collection.find_one(query)
+        return self.get_document(query)
 
     def get_paginated_login_attempt_list(self, page: int, per_page: int, order: SortOrder):
         # Mongo sort order by _id
@@ -79,7 +80,7 @@ class LoginAttemptRepository(ILoginAttemptRepository, BaseRepository):
         )
 
         data = list(cursor)
-        total_data = self.collection.count_documents({})
+        total_data = self.count()
 
         return data, total_data
 
@@ -92,5 +93,5 @@ class LoginAttemptRepository(ILoginAttemptRepository, BaseRepository):
             print("Falling back to IP string for deletion")
             query = {"_id": login_attempt_id}
 
-        result = self.collection.delete_one(query)
+        result = self.delete_document(query)
         return result.deleted_count > 0

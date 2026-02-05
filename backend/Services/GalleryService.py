@@ -2,7 +2,8 @@ import uuid
 from backend.Repositories.Interfaces.IGalleryRepository import IGalleryRepository
 from backend.Models.Gallery import Gallery
 from backend.configurations import SortOrder
-import tempfile, os
+import os
+import tempfile
 from backend.constants.cloudinary import CloudinaryFolders, CloudinaryResourceType
 from backend.utils import cleanup_uploaded_files, convert_to_webp, upload_file_to_cloudinary
 

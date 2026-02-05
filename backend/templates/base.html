@@ -3,22 +3,17 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="google-site-verification" content="Oh3O1doyGDCEg_BxM-IBiktbmgU1qhk1KT8S6tsWNi8" />
-    <title>{% block title %}My Portfolio{% endblock %}</title>
-
-    <!-- SEO Meta Tags -->
-    <meta name="description"
-        content="{% block meta_description %}Welcome to my portfolio. Explore my projects and more.{% endblock %}">
-    <meta name="keywords" content="{% block meta_keywords %}portfolio, projects, gallery, vlog{% endblock %}">
-    <meta name="author" content="{% block meta_author %}Joshua Algadipe{% endblock %}">
+    {% set seo_title %}{% block title %}My Portfolio{% endblock %}{% endset %}
+    {% set seo_description %}{% block meta_description %}Welcome to my portfolio. Explore my projects and more.{% endblock %}{% endset %}
+    {% set seo_keywords %}{% block meta_keywords %}portfolio, projects, gallery, vlog{% endblock %}{% endset %}
+    {% set seo_author %}{% block meta_author %}Joshua Algadipe{% endblock %}{% endset %}
+    {% include 'components/seo_meta.html' %}
 
     <link rel="stylesheet" href="{{ url_for('static', filename='css/pages/styles.css') }}" />
     <link rel="stylesheet" href="{{ url_for('static', filename='css/pages/profile.css') }}" />
     <link rel="stylesheet" href="{{ url_for('static', filename='css/themes.css') }}" />
     <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='images/favicon.ico') }}">
-    <script src="{{ url_for('static', filename='js/utils.js') }}"></script>
+    <script defer src="{{ url_for('static', filename='js/utils.js') }}"></script>
 
     <!-- Set background image to default -->
     {% set background_image = 'images/background1.jpg' %}
@@ -275,9 +270,9 @@
         window.isForceLightMode = "{{ force_light_theme }}";
         window.isProfessionalMode = "{{ request.args.get('mode') == 'professional' }}";
     </script>
-    <script src="{{ url_for('static', filename='js/pages/base.js') }}"></script>
+    <script defer src="{{ url_for('static', filename='js/pages/base.js') }}"></script>
     {% block modal_script %}
-        <script src="{{ url_for('static', filename='js/components/modal.js') }}"></script>
+        <script defer src="{{ url_for('static', filename='js/components/modal.js') }}"></script>
     {% endblock %}
 </body>
 

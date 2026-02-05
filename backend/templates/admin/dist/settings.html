@@ -3,21 +3,9 @@
 {% block title %}Admin | Settings{% endblock %}
 
 {% block content %}
-<div class="app-content-header">
-  <div class="container-fluid">
-    <div class="row">
-      <div class="col-sm-6">
-        <h3 class="mb-0">Settings</h3>
-      </div>
-      <div class="col-sm-6">
-        <ol class="breadcrumb float-sm-end">
-          <li class="breadcrumb-item"><a href="/admin/dashboard">Home</a></li>
-          <li class="breadcrumb-item active" aria-current="page">Settings</li>
-        </ol>
-      </div>
-    </div>
-  </div>
-</div>
+{% set header_title = "Settings" %}
+{% set breadcrumbs = [{'label': 'Home', 'url': '/admin/dashboard'}, {'label': 'Settings', 'url': None}] %}
+{% include 'components/admin/page_header.html' %}
 <div class="app-content">
   <div class="container-fluid">
     <div class="row mt-4">

@@ -1,0 +1,16 @@
+<div class="table-responsive-wrapper">
+  <table class="{{ table_classes|default('table table-bordered table-hover') }}">
+    <thead class="table-light">
+      <tr>
+        {% for header in headers %}
+          <th>{{ header }}</th>
+        {% endfor %}
+      </tr>
+    </thead>
+    <tbody id="{{ body_id }}">
+      <tr>
+        <td colspan="{{ colspan }}" class="text-center">{{ loading_text|default('Loading...') }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

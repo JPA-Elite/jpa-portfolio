@@ -9,7 +9,6 @@ from backend.configurations import (
     ADMIN_SETTINGS_PAGE,
     ADMIN_VIDEO_PAGE,
 )
-from backend.configurations import HTTPMethod as http
 from backend.constants.login_roles import ROLE_ADMIN
 from backend.Services.AuthService import AuthService
 from backend.Repositories.AuthRepository import AuthRepository

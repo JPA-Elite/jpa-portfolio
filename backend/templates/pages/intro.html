@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="google-site-verification" content="Oh3O1doyGDCEg_BxM-IBiktbmgU1qhk1KT8S6tsWNi8" />
-    <title>System Loading...</title>
+    {% set seo_title = "System Loading..." %}
+    {% set seo_description = "Loading page for the portfolio website." %}
+    {% set seo_keywords = "portfolio, loading" %}
+    {% include 'components/seo_meta.html' %}
     <link rel="stylesheet" href="{{ url_for('static', filename='css/pages/intro.css') }}" />
 </head>
 <body>

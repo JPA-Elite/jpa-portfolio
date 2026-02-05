@@ -8,19 +8,16 @@ export class VisitRepository extends IVisitRepository {
     }
 
     /**
-     * Fetch total visits from API endpoint
-     * @returns {Promise<any>}
+     * Fetch total visits from API endpoint.
+     * @returns {Promise<{visitor_total_count?: number, bot_total_count?: number}>}
      */
     async fetchVisitCount() {
-        try {
-            const response = await fetch(`${this.baseUrl}/info`);
-            if (!response.ok) throw new Error("Failed to fetch visit count");
+        const response = await fetch(`${this.baseUrl}/info`);
 
-            const data = await response.json();
-            return data;
-        } catch (error) {
-            console.error("VisitRepository Error:", error);
-            throw error;
+        if (!response.ok) {
+            throw new Error("Failed to fetch visit count");
         }
+
+        return response.json();
     }
 }

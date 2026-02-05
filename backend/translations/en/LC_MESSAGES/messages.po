@@ -199,7 +199,7 @@ msgid "chat_title"
 msgstr "Chat with Me?"
 
 msgid "chat_help_message"
-msgstr "How can I help you?"
+msgstr "Ask me about the files."
 
 msgid "chat_clear_button"
 msgstr "Clear Chat"

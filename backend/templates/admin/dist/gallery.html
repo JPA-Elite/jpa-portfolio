@@ -121,26 +121,10 @@
                 </div>
               </div>
             </div>
-            <div class="table-responsive-wrapper">
-              <table class="table table-bordered table-hover">
-                <thead class="table-light">
-                  <tr>
-                    <th>#</th>
-                    <th>Title</th>
-                    <th>Description</th>
-                    <th>Image</th>
-                    <th>Tags</th>
-                    <th>Actions</th>
-                  </tr>
-                </thead>
-                <tbody id="galleryTableBody">
-                  <!-- Default loading row -->
-                  <tr>
-                    <td colspan="6" class="text-center">Loading...</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
+            {% set headers = ['#', 'Image', 'Title', 'Description', 'Tags', 'Actions'] %}
+            {% set body_id = 'galleryTableBody' %}
+            {% set colspan = 6 %}
+            {% include 'components/admin/data_table.html' %}
 
             {% include 'components/admin/pagination_controls.html' %}
 

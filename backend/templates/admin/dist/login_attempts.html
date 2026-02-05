@@ -24,25 +24,10 @@
                 <span>entries</span>
               </div>
             </div>
-            <div class="table-responsive-wrapper">
-              <table class="table table-bordered table-hover">
-                <thead class="table-light">
-                  <tr>
-                    <th>#</th>
-                    <th>IP Address</th>
-                    <th>Attempts</th>
-                    <th>Lockout Until</th>
-                    <th>Actions</th>
-                  </tr>
-                </thead>
-                <tbody id="loginAttemptsTableBody">
-                  <!-- Default loading row -->
-                  <tr>
-                    <td colspan="6" class="text-center">Loading...</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
+            {% set headers = ['#', 'IP Address', 'Attempts', 'Lockout Until', 'Actions'] %}
+            {% set body_id = 'loginAttemptsTableBody' %}
+            {% set colspan = 6 %}
+            {% include 'components/admin/data_table.html' %}
 
             {% include 'components/admin/pagination_controls.html' %}
 

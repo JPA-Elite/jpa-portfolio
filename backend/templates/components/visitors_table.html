@@ -1,0 +1,51 @@
+<div class="table-container">
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>{{ _('System') }}</th>
+        <th>{{ _('Device') }}</th>
+        <th>{{ _('Brand') }}</th>
+        <th>{{ _('Browser') }}</th>
+        <th>{{ _('OS') }}</th>
+        <th>{{ _('Page') }}</th>
+        <th>{{ _('Timestamp') }}</th>
+        <th>{{ _('IP Address') }}</th>
+        <th>{{ _('City') }}</th>
+        <th>{{ _('Region') }}</th>
+        <th>{{ _('Country') }}</th>
+        <th>{{ _('Coordinates') }}</th>
+        <th>{{ _('Capture') }}</th>
+      </tr>
+    </thead>
+    <tbody id="table-body">
+      {% for document in documents %}
+      <tr data-record-id="{{ document._id }}">
+        <td>{{ document.system }}</td>
+        <td>{{ document.device }}</td>
+        <td>{{ document.brand }}</td>
+        <td>{{ document.browser }}</td>
+        <td>{{ document.os }}</td>
+        <td>{{ document.page }}</td>
+        <td>{{ document.timestamp }}</td>
+        <td>{{ document.ip_address or 'Unknown' }}</td>
+        <td>{{ document.city or 'Unknown' }}</td>
+        <td>{{ document.region or 'Unknown' }}</td>
+        <td>{{ document.country or 'Unknown' }}</td>
+        <td>
+          {% if document.location %}
+          <a href="https://www.google.com/maps?q={{ document.location }}" target="_blank">
+            {{ document.location }}
+          </a>
+          {% else %}
+          {{ _('Unknown') }}
+          {% endif %}
+        </td>
+        <td>
+          <img class="capture_image" src="{{ document.image_capture }}" alt="captured image" loading="lazy" decoding="async"
+            onclick="previewImage('{{ document.image_capture }}')" />
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>

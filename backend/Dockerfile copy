@@ -21,7 +21,7 @@ RUN python -m venv /app/.venv
 ENV PATH="/app/.venv/bin:$PATH"
 
 # Copy only requirements first to leverage Docker cache
-COPY ./backend/requirements.txt /app/
+COPY requirements.txt /app/
 
 # Install dependencies inside the venv
 RUN pip install --no-cache-dir -r requirements.txt

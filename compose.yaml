@@ -3,7 +3,7 @@ services:
     restart: unless-stopped
     build:
       context: ./backend
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile copy
     deploy:
       resources:
         reservations:

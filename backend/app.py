@@ -45,6 +45,18 @@ cache.init_app(app)
 babel = Babel(app)
 babel.init_app(app, locale_selector=get_locale)
 
+@app.after_request
+def override_csp(response):
+    response.headers["Content-Security-Policy"] = (
+        "default-src 'self'; "
+        "img-src 'self' data: https:; "
+        "script-src 'self' https://cdn.jsdelivr.net https://unpkg.com https://hcaptcha.com https://*.hcaptcha.com 'unsafe-inline' 'unsafe-hashes'; "
+        "style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://unpkg.com https://fonts.googleapis.com; "
+        "font-src 'self' https://cdn.jsdelivr.net https://fonts.gstatic.com https://unpkg.com; "
+        "connect-src 'self' https://hcaptcha.com https://*.hcaptcha.com https://ipinfo.io https://unpkg.com; "
+        "frame-src https://hcaptcha.com https://*.hcaptcha.com;"
+    )
+    return response
 
 @app.context_processor
 def inject_locale():

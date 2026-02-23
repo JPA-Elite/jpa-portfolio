@@ -1862,3 +1862,570 @@ section>*+* {
         font-size: 1rem;
     }
 }
+
+/* Profile section surfaces (match Key Projects visual language) */
+#portfolio,
+#about,
+#resume,
+#certifications,
+#contact {
+    width: min(96%, 1280px);
+    margin: 48px auto 0;
+    padding: 26px 22px;
+    border-radius: 22px;
+    position: relative;
+    isolation: isolate;
+    background:
+        radial-gradient(120% 110% at 0% 0%, rgba(255, 255, 255, 0.02), transparent 55%),
+        radial-gradient(120% 110% at 100% 100%, rgba(255, 255, 255, 0.015), transparent 55%),
+        linear-gradient(180deg, rgba(10, 10, 12, 0.95), rgba(14, 14, 17, 0.94));
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.03),
+        0 18px 32px rgba(0, 0, 0, 0.28);
+}
+
+#portfolio::before,
+#about::before,
+#resume::before,
+#certifications::before,
+#contact::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    background:
+        linear-gradient(rgba(255, 255, 255, 0.012) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.012) 1px, transparent 1px);
+    background-size: 20px 20px;
+    opacity: 0.35;
+    z-index: 0;
+}
+
+#portfolio > *,
+#about > *,
+#resume > *,
+#certifications > *,
+#contact > * {
+    position: relative;
+    z-index: 1;
+}
+
+#about > h2,
+#resume > h2,
+#certifications > h2,
+#contact > h2 {
+    margin: 0 0 8px;
+    font-size: clamp(1.65rem, 2vw, 2.15rem);
+    color: var(--text-primary);
+    letter-spacing: -0.02em;
+}
+
+#about > p,
+#resume > p,
+#certifications > p,
+#contact > p {
+    margin: 0 0 16px;
+    color: var(--text-secondary, #9ca3af);
+    line-height: 1.6;
+}
+
+/* Summary / hero panel */
+#portfolio {
+    align-items: stretch;
+    gap: 22px;
+}
+
+#portfolio .project-image {
+    flex: 0 0 min(360px, 36%);
+    margin-right: 0;
+    padding: 16px;
+    border-radius: 18px;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    background:
+        radial-gradient(120% 110% at 0% 0%, rgba(255, 255, 255, 0.015), transparent 55%),
+        linear-gradient(180deg, rgba(16, 16, 20, 0.92), rgba(20, 20, 24, 0.9));
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.02),
+        0 10px 22px rgba(0, 0, 0, 0.22);
+}
+
+#portfolio .project-image img {
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 14px 26px rgba(0, 0, 0, 0.25);
+}
+
+#portfolio .project-image h1 {
+    margin: 14px 0 0;
+    font-size: 1.2rem;
+    color: var(--text-secondary, #cbd5e1);
+    letter-spacing: 0.02em;
+}
+
+#portfolio .project-details {
+    flex: 1 1 auto;
+    max-width: none;
+    padding: 16px 18px;
+    border-radius: 18px;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    background:
+        radial-gradient(120% 110% at 100% 0%, rgba(255, 255, 255, 0.015), transparent 55%),
+        linear-gradient(180deg, rgba(16, 16, 20, 0.9), rgba(20, 20, 24, 0.88));
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.02),
+        0 10px 22px rgba(0, 0, 0, 0.22);
+}
+
+#portfolio .project-details h3 {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0 0 10px;
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-size: 0.95rem;
+    letter-spacing: 0.02em;
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    background: linear-gradient(135deg, rgba(255, 86, 154, 0.14), rgba(56, 189, 248, 0.12));
+}
+
+#portfolio .project-details p {
+    line-height: 1.7;
+}
+
+/* About / Resume / Contact lists become cards */
+#about > ul,
+#resume > ul,
+#contact > ul {
+    display: grid;
+    gap: 12px;
+    margin: 14px 0 0;
+}
+
+#about > ul > li,
+#resume > ul > li,
+#contact > ul > li {
+    margin: 0;
+    padding: 14px 16px;
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    background:
+        radial-gradient(120% 110% at 0% 0%, rgba(255, 255, 255, 0.012), transparent 55%),
+        linear-gradient(180deg, rgba(16, 16, 20, 0.88), rgba(20, 20, 24, 0.86));
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.02),
+        0 10px 22px rgba(0, 0, 0, 0.18);
+}
+
+#about > ul > li:nth-child(odd) {
+    box-shadow: inset 3px 0 0 rgba(255, 86, 154, 0.22);
+}
+
+#about > ul > li:nth-child(even),
+#contact > ul > li {
+    box-shadow: inset 3px 0 0 rgba(56, 189, 248, 0.2);
+}
+
+#resume > ul > li {
+    box-shadow: inset 3px 0 0 rgba(250, 204, 21, 0.22);
+}
+
+#about > ul > li > b,
+#contact > ul > li b {
+    color: var(--text-primary);
+}
+
+#about > ul > li > ul,
+#resume > ul > li > ul,
+#contact > ul > li > ul {
+    margin-top: 8px;
+}
+
+#about > ul > li > ul > li,
+#resume > ul > li > ul > li,
+#contact > ul > li > ul > li {
+    line-height: 1.6;
+    color: var(--text-secondary, #cbd5e1);
+}
+
+#resume > ul > li {
+    color: var(--text-primary);
+    font-weight: 600;
+}
+
+#resume > ul > li > ul > li {
+    font-weight: 400;
+}
+
+#resume > p:last-of-type {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 12px;
+    padding: 12px 14px;
+    border-radius: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    background:
+        radial-gradient(120% 110% at 100% 0%, rgba(255, 255, 255, 0.012), transparent 55%),
+        linear-gradient(180deg, rgba(16, 16, 20, 0.88), rgba(20, 20, 24, 0.86));
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.02),
+        0 10px 22px rgba(0, 0, 0, 0.18);
+}
+
+#resume > p:last-of-type > a:first-child {
+    color: var(--text-secondary, #cbd5e1);
+}
+
+#resume .cta-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 8px 14px;
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: linear-gradient(135deg, rgba(255, 86, 154, 0.95), rgba(59, 130, 246, 0.95));
+    color: #fff;
+    text-decoration: none;
+    box-shadow: 0 8px 20px rgba(37, 99, 235, 0.18);
+}
+
+#resume .cta-button:hover {
+    filter: brightness(1.05);
+}
+
+/* Certifications */
+#certifications {
+    text-align: center;
+    padding-bottom: 28px;
+}
+
+#certifications > p {
+    max-width: 720px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.certification-images {
+    margin-top: 14px;
+    gap: 16px;
+}
+
+.certification-images img {
+    padding: 6px;
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    background:
+        radial-gradient(120% 110% at 0% 0%, rgba(255, 255, 255, 0.014), transparent 55%),
+        linear-gradient(180deg, rgba(16, 16, 20, 0.9), rgba(20, 20, 24, 0.88));
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.02),
+        0 10px 22px rgba(0, 0, 0, 0.22);
+}
+
+/* Contact */
+#contact .contact-header {
+    gap: 8px;
+    font-size: 1rem;
+}
+
+#contact .contact-header ion-icon {
+    font-size: 1.1rem;
+    color: #60a5fa;
+}
+
+#contact ul ul li a {
+    display: inline-block;
+    max-width: 100%;
+    padding: 7px 11px;
+    border-radius: 10px;
+    border: 1px solid rgba(56, 189, 248, 0.18);
+    background: rgba(56, 189, 248, 0.035);
+    color: #93c5fd;
+    word-break: break-word;
+    overflow-wrap: anywhere;
+}
+
+/* Light theme tuning for the same palette */
+[data-theme="light"] #portfolio,
+[data-theme="light"] #about,
+[data-theme="light"] #resume,
+[data-theme="light"] #certifications,
+[data-theme="light"] #contact {
+    background:
+        radial-gradient(130% 120% at 0% 0%, rgba(244, 63, 94, 0.085), transparent 58%),
+        radial-gradient(120% 110% at 100% 0%, rgba(236, 72, 153, 0.065), transparent 55%),
+        radial-gradient(130% 120% at 100% 100%, rgba(251, 113, 133, 0.05), transparent 58%),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.965), rgba(255, 248, 250, 0.955));
+    border-color: rgba(15, 23, 42, 0.08);
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.92),
+        0 18px 32px rgba(15, 23, 42, 0.08);
+}
+
+[data-theme="light"] #portfolio::before,
+[data-theme="light"] #about::before,
+[data-theme="light"] #resume::before,
+[data-theme="light"] #certifications::before,
+[data-theme="light"] #contact::before {
+    background:
+        linear-gradient(rgba(15, 23, 42, 0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(15, 23, 42, 0.025) 1px, transparent 1px);
+    opacity: 0.55;
+}
+
+[data-theme="light"] #portfolio .project-image,
+[data-theme="light"] #portfolio .project-details,
+[data-theme="light"] #about > ul > li,
+[data-theme="light"] #resume > ul > li,
+[data-theme="light"] #contact > ul > li,
+[data-theme="light"] #resume > p:last-of-type,
+[data-theme="light"] .certification-images img {
+    background:
+        radial-gradient(130% 120% at 0% 0%, rgba(244, 114, 182, 0.05), transparent 62%),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.95), rgba(255, 248, 251, 0.94));
+    border-color: rgba(15, 23, 42, 0.08);
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.88),
+        0 10px 20px rgba(15, 23, 42, 0.06);
+}
+
+[data-theme="light"] #portfolio .project-image h1,
+[data-theme="light"] #about > p,
+[data-theme="light"] #resume > p,
+[data-theme="light"] #certifications > p,
+[data-theme="light"] #contact > p,
+[data-theme="light"] #portfolio .project-details p,
+[data-theme="light"] #about > ul > li > ul > li,
+[data-theme="light"] #resume > ul > li > ul > li,
+[data-theme="light"] #contact > ul > li > ul > li,
+[data-theme="light"] #resume > p:last-of-type > a:first-child {
+    color: #4b5563;
+}
+
+[data-theme="light"] #portfolio .project-details h3 {
+    color: #1f2937;
+    border-color: rgba(15, 23, 42, 0.08);
+    background: linear-gradient(135deg, rgba(236, 72, 153, 0.11), rgba(59, 130, 246, 0.11));
+}
+
+[data-theme="light"] #contact .contact-header ion-icon {
+    color: #2563eb;
+}
+
+[data-theme="light"] #contact ul ul li a {
+    color: #1d4ed8;
+    border-color: rgba(59, 130, 246, 0.18);
+    background: rgba(59, 130, 246, 0.06);
+}
+
+[data-theme="light"] #resume .cta-button {
+    color: #fff !important;
+    background: linear-gradient(135deg, #ec4899, #3b82f6) !important;
+    border-color: rgba(255, 255, 255, 0.45);
+    text-decoration: none;
+}
+
+@media only screen and (max-width: 768px) {
+    #portfolio,
+    #about,
+    #resume,
+    #certifications,
+    #contact {
+        width: 100%;
+        margin-top: 28px;
+        padding: 16px 12px;
+        border-radius: 16px;
+    }
+
+    #portfolio {
+        gap: 14px;
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    #portfolio .project-image,
+    #portfolio .project-details {
+        width: 100%;
+        padding: 12px;
+        border-radius: 14px;
+    }
+
+    #portfolio .project-details h3 {
+        margin-bottom: 8px;
+        font-size: 0.9rem;
+        padding: 5px 10px;
+    }
+
+    #about > ul,
+    #resume > ul,
+    #contact > ul {
+        gap: 10px;
+    }
+
+    #about > ul > li,
+    #resume > ul > li,
+    #contact > ul > li {
+        padding: 12px;
+        border-radius: 14px;
+    }
+
+    #resume > p:last-of-type {
+        align-items: flex-start;
+        padding: 10px 12px;
+        border-radius: 12px;
+    }
+
+    #resume .cta-button {
+        padding: 8px 12px;
+        border-radius: 10px;
+        background: linear-gradient(135deg, #ec4899, #3b82f6) !important;
+        color: #fff !important;
+        text-decoration: none;
+    }
+
+    #contact ul ul li a {
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    #about > h2,
+    #resume > h2,
+    #certifications > h2,
+    #contact > h2 {
+        font-size: 1.5rem;
+    }
+
+    #portfolio .project-details h3 {
+        display: inline-flex;
+        max-width: 100%;
+    }
+
+    .certification-images {
+        gap: 12px;
+    }
+}
+
+/* Skills section: neutral dark surface (avoid bluish cast) */
+[data-theme="dark"] #portfolio,
+[data-theme="dark"] #about,
+[data-theme="dark"] #resume,
+[data-theme="dark"] #contact {
+    background:
+        radial-gradient(120% 120% at 0% 0%, rgba(236, 72, 153, 0.12), transparent 52%),
+        radial-gradient(110% 120% at 100% 0%, rgba(59, 130, 246, 0.1), transparent 50%),
+        radial-gradient(130% 120% at 100% 100%, rgba(34, 211, 238, 0.12), transparent 54%),
+        radial-gradient(110% 120% at 8% 92%, rgba(244, 114, 182, 0.08), transparent 48%),
+        linear-gradient(180deg, rgba(14, 15, 19, 0.96), rgba(17, 18, 23, 0.95));
+    border-color: rgba(255, 255, 255, 0.07);
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.03),
+        0 18px 32px rgba(0, 0, 0, 0.3);
+}
+
+[data-theme="dark"] #portfolio::before,
+[data-theme="dark"] #about::before,
+[data-theme="dark"] #resume::before,
+[data-theme="dark"] #contact::before {
+    background:
+        linear-gradient(rgba(255, 255, 255, 0.014) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.014) 1px, transparent 1px);
+    opacity: 0.38;
+}
+
+[data-theme="dark"] #portfolio .project-image,
+[data-theme="dark"] #portfolio .project-details,
+[data-theme="dark"] #about > ul > li,
+[data-theme="dark"] #resume > ul > li,
+[data-theme="dark"] #contact > ul > li,
+[data-theme="dark"] #resume > p:last-of-type {
+    background:
+        radial-gradient(120% 110% at 0% 0%, rgba(59, 130, 246, 0.04), transparent 60%),
+        radial-gradient(120% 110% at 100% 100%, rgba(236, 72, 153, 0.04), transparent 60%),
+        linear-gradient(180deg, rgba(16, 16, 20, 0.92), rgba(20, 20, 24, 0.9));
+    border-color: rgba(255, 255, 255, 0.08);
+}
+
+[data-theme="dark"] #certifications {
+    background:
+        radial-gradient(120% 120% at 0% 0%, rgba(236, 72, 153, 0.12), transparent 52%),
+        radial-gradient(110% 120% at 100% 0%, rgba(59, 130, 246, 0.1), transparent 50%),
+        radial-gradient(130% 120% at 100% 100%, rgba(34, 211, 238, 0.12), transparent 54%),
+        radial-gradient(110% 120% at 8% 92%, rgba(244, 114, 182, 0.08), transparent 48%),
+        linear-gradient(180deg, rgba(14, 15, 19, 0.96), rgba(17, 18, 23, 0.95));
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.03),
+        0 18px 32px rgba(0, 0, 0, 0.3);
+}
+
+[data-theme="dark"] #certifications::before {
+    background:
+        linear-gradient(rgba(255, 255, 255, 0.014) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.014) 1px, transparent 1px);
+    opacity: 0.38;
+}
+
+[data-theme="dark"] .certification-images img {
+    background:
+        radial-gradient(120% 110% at 0% 0%, rgba(59, 130, 246, 0.04), transparent 60%),
+        radial-gradient(120% 110% at 100% 100%, rgba(236, 72, 153, 0.04), transparent 60%),
+        linear-gradient(180deg, rgba(16, 16, 20, 0.92), rgba(20, 20, 24, 0.9));
+    border-color: rgba(255, 255, 255, 0.08);
+}
+
+[data-theme="dark"] #skills {
+    background:
+        radial-gradient(120% 120% at 0% 0%, rgba(236, 72, 153, 0.12), transparent 52%),
+        radial-gradient(110% 120% at 100% 0%, rgba(59, 130, 246, 0.1), transparent 50%),
+        radial-gradient(130% 120% at 100% 100%, rgba(34, 211, 238, 0.12), transparent 54%),
+        radial-gradient(110% 120% at 8% 92%, rgba(244, 114, 182, 0.08), transparent 48%),
+        linear-gradient(180deg, rgba(14, 15, 19, 0.96), rgba(17, 18, 23, 0.95));
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.03),
+        0 18px 32px rgba(0, 0, 0, 0.28);
+}
+
+[data-theme="dark"] .skills-tabs .tab {
+    background: rgba(18, 18, 22, 0.92);
+    border-color: rgba(255, 255, 255, 0.12);
+    color: rgba(255, 255, 255, 0.92);
+}
+
+[data-theme="dark"] .skills-tabs .tab:hover {
+    border-color: rgba(255, 255, 255, 0.2);
+    background: rgba(22, 22, 26, 0.96);
+}
+
+[data-theme="dark"] .skills-tabs .tab.active {
+    border: 1px solid rgba(59, 130, 246, 0.35);
+    box-shadow: 0 8px 20px rgba(37, 99, 235, 0.2);
+}
+
+[data-theme="dark"] .skills-card {
+    background:
+        linear-gradient(180deg, rgba(16, 16, 20, 0.96), rgba(20, 20, 24, 0.94));
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.02),
+        0 10px 22px rgba(0, 0, 0, 0.22);
+}
+
+[data-theme="dark"] .skills-card:hover {
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.03),
+        0 14px 28px rgba(0, 0, 0, 0.26);
+}
+
+[data-theme="dark"] .progress {
+    background: rgba(255, 255, 255, 0.12);
+}
+
+[data-theme="dark"] .percent {
+    color: rgba(255, 255, 255, 0.7);
+}

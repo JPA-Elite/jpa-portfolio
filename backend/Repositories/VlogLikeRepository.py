@@ -1,3 +1,4 @@
+import re
 from backend.Repositories.Interfaces.IVlogLikeRepository import IVlogLikeRepository
 from backend.Repositories.BaseRepository import BaseRepository
 from backend.constants.db_collections import MongoCollections as mc
@@ -14,32 +15,100 @@ class VlogLikeRepository(IVlogLikeRepository, BaseRepository):
         })
         return count
 
+    def get_vlog_likes_counts_by_ids(self, vlog_ids: list[str]):
+        if not vlog_ids:
+            return {}
+
+        pipeline = [
+            {
+                "$match": {
+                    "vlog_id": {"$in": vlog_ids},
+                    "like": True
+                }
+            },
+            {
+                "$group": {
+                    "_id": "$vlog_id",
+                    "count": {"$sum": 1}
+                }
+            }
+        ]
+
+        return {
+            str(item["_id"]): int(item.get("count", 0))
+            for item in self.collection.aggregate(pipeline)
+        }
+
+    def get_vlog_liked_states_by_ids_and_ip(self, vlog_ids: list[str], ip_address: str):
+        if not vlog_ids:
+            return {}
+
+        regex_conditions = self._build_ip_regex_conditions(ip_address, vlog_ids=vlog_ids)
+        if not regex_conditions:
+            return {}
+
+        pipeline = [
+            {
+                "$match": {
+                    "$or": regex_conditions
+                }
+            },
+            {
+                "$group": {
+                    "_id": "$vlog_id",
+                    "is_liked": {
+                        "$max": {
+                            "$cond": ["$like", 1, 0]
+                        }
+                    }
+                }
+            }
+        ]
+
+        return {
+            str(item["_id"]): bool(item.get("is_liked"))
+            for item in self.collection.aggregate(pipeline)
+        }
 
     def get_vlog_likes_by_id_and_ip(self, vlog_id: str, ip_address: str, fields: dict = None):
         projection = fields or None
 
-        # Normalize incoming IP list
-        input_ips = [ip.strip() for ip in ip_address.replace(",", " ").split() if ip.strip()]
-        if not input_ips:
+        regex_conditions = self._build_ip_regex_conditions(ip_address, vlog_id=vlog_id)
+        if not regex_conditions:
             return None
-
-        # Build regex patterns that match any of the given IPs
-        regex_conditions = [
-            {
-                "vlog_id": vlog_id,
-                "ip_address": {
-                    "$regex": fr"(^|[,\s]+){ip}([,\s]+|$)",
-                    "$options": "i"
-                }
-            }
-            for ip in input_ips
-        ]
 
         # Combine with $or for MongoDB to check any match
         query = {"$or": regex_conditions}
 
         # This will let MongoDB handle filtering efficiently
         return self.collection.find_one(query, projection)
+
+    def _build_ip_regex_conditions(self, ip_address: str, vlog_id: str = None, vlog_ids: list[str] = None):
+        if not ip_address:
+            return []
+
+        input_ips = [ip.strip() for ip in ip_address.replace(",", " ").split() if ip.strip()]
+        if not input_ips:
+            return []
+
+        conditions = []
+        for ip in input_ips:
+            escaped_ip = re.escape(ip)
+            base_condition = {
+                "ip_address": {
+                    "$regex": fr"(^|[,\s]+){escaped_ip}([,\s]+|$)",
+                    "$options": "i"
+                }
+            }
+
+            if vlog_id is not None:
+                base_condition["vlog_id"] = vlog_id
+            elif vlog_ids is not None:
+                base_condition["vlog_id"] = {"$in": vlog_ids}
+
+            conditions.append(base_condition)
+
+        return conditions
 
 
     def add_vlog_like(self, vlog_like: VlogLike):

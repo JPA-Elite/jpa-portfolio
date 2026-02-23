@@ -1,6 +1,10 @@
 # pages.py
 from backend.Controllers.api.VlogCommentController import vlog_comments_route, vlog_like_comment_route
-from backend.Controllers.api.VlogLikeController import add_vlog_like_route, get_vlog_likes_count_route
+from backend.Controllers.api.VlogLikeController import (
+    add_vlog_like_route,
+    get_vlog_likes_count_route,
+    get_vlog_likes_counts_batch_route,
+)
 from backend.configurations import HTTPMethod as http
 from flask import Blueprint
 from backend.Controllers.api.BaseController import change_language_route, delete_page_system_info_route, download_song_route, get_client_ip_route, profile_config_route, proxy_audio_route
@@ -64,6 +68,10 @@ def add_gallery_like():
 @api_bp.route("/api/vlog-like/counts", methods=[http.GET])
 def get_vlog_likes_count():
     return get_vlog_likes_count_route()
+
+@api_bp.route("/api/vlog-like/counts/batch", methods=[http.GET])
+def get_vlog_likes_count_batch():
+    return get_vlog_likes_counts_batch_route()
 
 @api_bp.route("/api/vlog-like", methods=[http.POST])
 def add_vlog_like():

@@ -27,6 +27,36 @@ def get_vlog_likes_count_route():
             "is_liked": is_liked['like'] if is_liked else False
         }), 200
 
+def get_vlog_likes_counts_batch_route():
+    client_ip = request.headers.get('X-Forwarded-For', request.remote_addr)
+    raw_vlog_ids = request.args.get("vlog_ids", "")
+
+    vlog_ids = []
+    for vlog_id in raw_vlog_ids.split(","):
+        normalized = vlog_id.strip()
+        if normalized and normalized not in vlog_ids:
+            vlog_ids.append(normalized)
+
+    if not vlog_ids:
+        return jsonify({"items": {}}), 200
+
+    # Guardrail to avoid abuse and overly large payloads
+    vlog_ids = vlog_ids[:50]
+
+    comment_counts_by_vlog = vlog_comment_service.count_comments_by_vlog_ids(vlog_ids)
+    like_counts_by_vlog = vlog_like_service.get_vlog_likes_counts_by_ids(vlog_ids)
+    liked_states_by_vlog = vlog_like_service.get_vlog_liked_states_by_ids_and_ip(vlog_ids, client_ip)
+
+    items = {}
+    for vlog_id in vlog_ids:
+        items[vlog_id] = {
+            "comment_counts": comment_counts_by_vlog.get(vlog_id, 0),
+            "like_counts": like_counts_by_vlog.get(vlog_id, 0),
+            "is_liked": liked_states_by_vlog.get(vlog_id, False)
+        }
+
+    return jsonify({"items": items}), 200
+
 def add_vlog_like_route():
     vlog_id = request.form.get("vlog_id")
     client_ip = request.headers.get('X-Forwarded-For', request.remote_addr)

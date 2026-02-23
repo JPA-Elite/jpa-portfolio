@@ -9,6 +9,9 @@ class VlogCommentService:
     def count_comments_by_vlog(self, vlog_id: str):
         return self.repository.count_comments_by_vlog(vlog_id)
 
+    def count_comments_by_vlog_ids(self, vlog_ids: list[str]):
+        return self.repository.count_comments_by_vlog_ids(vlog_ids)
+
     def get_comments(self, vlog_id: str, ip_address: str = None, page: int = 1, limit: int = 10):
         comments_data = self.repository.find__paginate_comments_by_vlog(vlog_id, page, limit)
         total = self.repository.count_comments_by_vlog(vlog_id)

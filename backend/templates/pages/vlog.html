@@ -18,14 +18,10 @@ endblock %}
 <section id="vlog">
     <div class="video-container">
         {% for vlog in vlogs %}
-        <div class="video-item">
-            <!-- Video Player HTML -->
-            <video class="player" playsinline controls>
-                {% set video_src = url_for('static', filename=vlog.file) if vlog.file else vlog.video_url %}
-                <video class="player" playsinline controls>
-                    <source src="{{ video_src }}" type="video/mp4" size="720">
-                    <source src="{{ video_src }}" type="video/mp4" size="480">
-                </video>
+        <div class="video-item" data-vlog-id="{{ vlog._id }}">
+            {% set video_src = url_for('static', filename=vlog.file) if vlog.file else vlog.video_url %}
+            <video class="player" playsinline controls preload="{% if loop.first %}metadata{% else %}none{% endif %}">
+                <source src="{{ video_src }}" type="video/mp4">
             </video>
             <h3>{{ vlog.title[get_locale()] }}</h3>
             <p>{{ vlog.description[get_locale()] }}</p>
@@ -36,17 +32,16 @@ endblock %}
                 {% endfor %}
             </div>
             {% endif %}
-            <!-- 💬 Like & Comment Buttons -->
-                <div class="vlog-actions">
-                    <button class="action-btn like-btn" onclick="toggleLike(this, '{{ vlog._id }}')">
-                        <ion-icon name="heart-outline"></ion-icon>
-                        <span class="like-text">Like</span>
-                        <span class="like-count">0</span>
-                    </button>
-                    <button class="action-btn comment-btn" onclick="openModal('{{ vlog.video_url if vlog.video_url is defined else None }}', `{{ vlog.title[get_locale()] | e }}`,  `{{ vlog.description[get_locale()] | e }}`, 'imageModal', true, `{{ vlog._id}}`)">
-                        <ion-icon name="chatbubbles-outline"></ion-icon> Comment <span class="comment-count">0</span>
-                    </button>
-                </div>
+            <div class="vlog-actions">
+                <button class="action-btn like-btn" data-vlog-id="{{ vlog._id }}" onclick="toggleLike(this, '{{ vlog._id }}')">
+                    <ion-icon name="heart-outline"></ion-icon>
+                    <span class="like-text">Like</span>
+                    <span class="like-count" data-raw="0">0</span>
+                </button>
+                <button class="action-btn comment-btn" onclick="openModal('{{ vlog.video_url if vlog.video_url is defined else None }}', `{{ vlog.title[get_locale()] | e }}`,  `{{ vlog.description[get_locale()] | e }}`, 'imageModal', true, `{{ vlog._id}}`)">
+                    <ion-icon name="chatbubbles-outline"></ion-icon> Comment <span class="comment-count" data-raw="0">0</span>
+                </button>
+            </div>
         </div>
         {% endfor %}
     </div>
@@ -63,6 +58,5 @@ endblock %}
     {{ super() }}
 {% endblock %}
 
-<!-- Initialize Plyr player for each video and pause others when one plays -->
 <script src="{{ url_for('static', filename='js/pages/vlog.js') }}"></script>
 {% endblock %}

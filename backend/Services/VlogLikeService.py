@@ -10,6 +10,14 @@ class VlogLikeService:
     def get_vlog_likes_count_by_id(self, vlog_id: str):
         return self.repository.get_vlog_likes_count_by_id(vlog_id)
 
+    def get_vlog_likes_counts_by_ids(self, vlog_ids: list[str]):
+        return self.repository.get_vlog_likes_counts_by_ids(vlog_ids)
+
+    def get_vlog_liked_states_by_ids_and_ip(self, vlog_ids: list[str], ip_address: str):
+        if ip_address and "," in ip_address:
+            ip_address = ip_address.split(",")[0].strip()
+
+        return self.repository.get_vlog_liked_states_by_ids_and_ip(vlog_ids, ip_address)
 
     def get_vlog_likes_by_id_and_ip(self, vlog_id: str, ip_address: str, fields: dict = None):
         if ip_address and "," in ip_address:

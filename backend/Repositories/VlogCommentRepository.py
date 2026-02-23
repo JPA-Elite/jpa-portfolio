@@ -17,6 +17,29 @@ class VlogCommentRepository(BaseRepository):
     def count_comments_by_vlog(self, vlog_id: str):
         return self.collection.count_documents({"vlog_id": vlog_id})
 
+    def count_comments_by_vlog_ids(self, vlog_ids: list[str]):
+        if not vlog_ids:
+            return {}
+
+        pipeline = [
+            {
+                "$match": {
+                    "vlog_id": {"$in": vlog_ids}
+                }
+            },
+            {
+                "$group": {
+                    "_id": "$vlog_id",
+                    "count": {"$sum": 1}
+                }
+            }
+        ]
+
+        return {
+            str(item["_id"]): int(item.get("count", 0))
+            for item in self.collection.aggregate(pipeline)
+        }
+
     def add_comment(self, comment: VlogComment):
         result = self.collection.insert_one(comment.to_dict())
         return str(result.inserted_id)

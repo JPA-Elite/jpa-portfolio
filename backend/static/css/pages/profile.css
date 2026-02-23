@@ -339,9 +339,10 @@
     }
 }
 
-/* Enable animation */
-.enable-animation .marquee__content {
-    animation: scroll 10s linear infinite;
+/* Enable animation only when the marquee section is visible */
+.enable-animation.is-animating .marquee__content {
+    animation: scroll 14s linear infinite;
+    will-change: transform;
 }
 
 /* Reverse animation */
@@ -402,6 +403,16 @@ section {
 
 section>*+* {
     margin-block-start: 0.5rem;
+}
+
+/* Reduce initial render work for lower sections on long profile pages */
+#about,
+#resume,
+#key-projects,
+#certifications,
+#contact {
+    content-visibility: auto;
+    contain-intrinsic-size: 1px 700px;
 }
 
 /* Mobile responsiveness */

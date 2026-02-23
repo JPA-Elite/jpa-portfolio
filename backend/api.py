@@ -7,7 +7,11 @@ from backend.Controllers.api.BaseController import change_language_route, delete
 from backend.Controllers.api.MusicController import add_music_route, delete_music_route, music_list_route, update_music_route
 from backend.Controllers.api.VideoController import add_video_route, delete_video_route, update_video_route, video_list_route
 from backend.Controllers.api.GalleryController import add_gallery_route, delete_gallery_route, gallery_list_route, update_gallery_route
-from backend.Controllers.api.GalleryLikeController import add_gallery_like_route, get_gallery_likes_count_route
+from backend.Controllers.api.GalleryLikeController import (
+    add_gallery_like_route,
+    get_gallery_likes_count_route,
+    get_gallery_likes_counts_batch_route,
+)
 from backend.Controllers.api.DashboardController import visits_info_route
 from backend.Controllers.api.LoginAttemptController import login_attempt_list_route, delete_login_attempt_route
 from backend.Controllers.api.GalleryCommentController import gallery_comments_route, gallery_like_comment_route
@@ -47,6 +51,10 @@ def user_music_list():
 @api_bp.route("/api/gallery-like/counts", methods=[http.GET])
 def get_gallery_likes_count():
     return get_gallery_likes_count_route()
+
+@api_bp.route("/api/gallery-like/counts/batch", methods=[http.GET])
+def get_gallery_likes_count_batch():
+    return get_gallery_likes_counts_batch_route()
 
 @api_bp.route("/api/gallery-like", methods=[http.POST])
 def add_gallery_like():

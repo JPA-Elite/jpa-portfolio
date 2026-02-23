@@ -36,47 +36,216 @@ window.addEventListener('resize', handleScroll);
 // Initial check
 window.addEventListener('load', handleScroll);
 
+function syncChatViewportHeight() {
+    const vh = window.visualViewport?.height || window.innerHeight;
+    document.documentElement.style.setProperty('--chat-viewport-height', `${Math.round(vh)}px`);
+}
+
+window.addEventListener('resize', syncChatViewportHeight);
+window.addEventListener('orientationchange', syncChatViewportHeight);
+window.visualViewport?.addEventListener('resize', syncChatViewportHeight);
+window.visualViewport?.addEventListener('scroll', syncChatViewportHeight);
+
 const cacheMessage = 'chatMessagesCache';
 const cacheChatboxVisible = 'chatboxVisible';
+const cacheChatOptionsCollapsed = 'chatOptionsCollapsed';
+const BOT_TYPING_DELAY_MS = 320;
+let chatQaDataCache = [];
+let typingIndicatorRow = null;
+
+function scrollChatToBottom(behavior = "smooth") {
+    const chatMessages = document.getElementById("chatMessages");
+    if (!chatMessages) return;
+
+    chatMessages.scrollTo({
+        top: chatMessages.scrollHeight,
+        behavior,
+    });
+}
+
+function formatChatTime(timestamp = Date.now()) {
+    try {
+        return new Date(timestamp).toLocaleTimeString([], {
+            hour: "numeric",
+            minute: "2-digit",
+        });
+    } catch {
+        return "";
+    }
+}
+
+function getRoleLabel(role = "bot") {
+    return role === "user" ? "You" : "AI Assistant";
+}
+
+function createMessageRow(role = "bot", timestamp = Date.now()) {
+    const row = document.createElement("div");
+    row.className = `chat-message-row ${role === "user" ? "is-user" : "is-bot"}`;
+    row.dataset.role = role;
+
+    const meta = document.createElement("div");
+    meta.className = "chat-message-meta";
+
+    const name = document.createElement("span");
+    name.className = "chat-message-meta__name";
+    name.textContent = getRoleLabel(role);
+
+    const dot = document.createElement("span");
+    dot.className = "chat-message-meta__dot";
+    dot.textContent = "•";
+
+    const time = document.createElement("span");
+    time.className = "chat-message-meta__time";
+    time.textContent = formatChatTime(timestamp);
+
+    meta.appendChild(name);
+    meta.appendChild(dot);
+    meta.appendChild(time);
+
+    const bubble = document.createElement("div");
+    bubble.classList.add("chat-message");
+    bubble.classList.add(role === "user" ? "chat-message-header" : "chat-message-answer");
+
+    row.appendChild(meta);
+    row.appendChild(bubble);
+
+    return { row, bubble };
+}
+
+function setChatOptionsCollapsed(collapsed, persist = true) {
+    const panel = document.getElementById("chatOptionsPanel");
+    const toggle = document.getElementById("chatOptionsToggle");
+    if (!panel || !toggle) return;
+
+    panel.classList.toggle("is-collapsed", Boolean(collapsed));
+    toggle.setAttribute("aria-expanded", String(!collapsed));
+
+    if (persist) {
+        localStorage.setItem(cacheChatOptionsCollapsed, String(Boolean(collapsed)));
+    }
+}
+
+function toggleChatOptions() {
+    const panel = document.getElementById("chatOptionsPanel");
+    if (!panel) return;
+    const collapsed = panel.classList.contains("is-collapsed");
+    setChatOptionsCollapsed(!collapsed, true);
+}
+
+function updateChatOptionsCount(count = 0) {
+    const countEl = document.getElementById("chatOptionsCount");
+    if (countEl) {
+        countEl.textContent = String(count);
+    }
+}
+
+function showTypingIndicator() {
+    const chatMessages = document.getElementById("chatMessages");
+    if (!chatMessages || typingIndicatorRow) return;
+
+    const { row, bubble } = createMessageRow("bot", Date.now());
+    row.classList.add("chat-message-row--typing");
+    bubble.innerHTML = `
+        <span class="chat-typing-indicator" aria-label="Typing">
+            <span class="chat-typing-indicator__dot"></span>
+            <span class="chat-typing-indicator__dot"></span>
+            <span class="chat-typing-indicator__dot"></span>
+        </span>
+    `;
+
+    typingIndicatorRow = row;
+    chatMessages.appendChild(row);
+    scrollChatToBottom("smooth");
+}
+
+function removeTypingIndicator() {
+    if (typingIndicatorRow?.parentElement) {
+        typingIndicatorRow.parentElement.removeChild(typingIndicatorRow);
+    }
+    typingIndicatorRow = null;
+}
+
+function wait(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
 
 function initializeChatOptions(qaArray = []) {
     const chatOptions = document.getElementById("chatOptions");
+    if (!chatOptions) return;
+
+    chatOptions.innerHTML = "";
     qaArray.forEach(item => {
         const button = document.createElement("button");
         button.textContent = item.question;
         button.onclick = () => sendPredefinedMessage(item.question, qaArray);
-        chatOptions?.appendChild(button);
+        chatOptions.appendChild(button);
     });
+
+    updateChatOptionsCount(qaArray.length);
 }
 
 function toggleChatbox() {
     const modal = document.getElementById("chatboxModal");
 
     if (modal) {
-        const isVisible = modal.style.display === "block";
-        modal.style.display = isVisible ? "none" : "block";
+        const isVisible = modal.style.display === "flex";
+        modal.style.display = isVisible ? "none" : "flex";
         localStorage.setItem(cacheChatboxVisible, !isVisible);
     }
 }
 
-function sendMessage() {
+async function sendMessage() {
     const input = document.getElementById("chatInput");
+    if (!input) return;
+
     const message = input.value.trim();
     if (message) {
-        displayMessage(message, "", "black");
+        setChatOptionsCollapsed(true, true);
+
+        const userTimestamp = Date.now();
+        displayMessage(message, "transparent", "black", true, { role: "user", timestamp: userTimestamp });
+        cacheMessages(message, "user", userTimestamp);
         input.value = "";
-        cacheMessages(message);
+
+        const answer = getAutomaticAnswerSmart(message, chatQaDataCache);
+        if (answer) {
+            showTypingIndicator();
+            await wait(BOT_TYPING_DELAY_MS);
+            removeTypingIndicator();
+            const botTimestamp = Date.now();
+            displayMessage(answer, "", "black", true, { role: "bot", timestamp: botTimestamp });
+            cacheMessages(answer, "bot", botTimestamp);
+        }
+
         updateClearChatButtonVisibility();
     }
 }
 
-function sendPredefinedMessage(question, data = []) {
-    displayMessage(question, "transparent", "black");
+async function sendPredefinedMessage(question, data = []) {
+    setChatOptionsCollapsed(true, true);
+
+    const userTimestamp = Date.now();
+    displayMessage(question, "transparent", "black", true, { role: "user", timestamp: userTimestamp });
     const answer = getAutomaticAnswer(question, data);
-    displayMessage(answer, "", "black");
-    cacheMessages(question);
-    cacheMessages(answer);
+    cacheMessages(question, "user", userTimestamp);
+
+    showTypingIndicator();
+    await wait(BOT_TYPING_DELAY_MS);
+    removeTypingIndicator();
+
+    const botTimestamp = Date.now();
+    displayMessage(answer, "", "black", true, { role: "bot", timestamp: botTimestamp });
+    cacheMessages(answer, "bot", botTimestamp);
     updateClearChatButtonVisibility();
+}
+
+function handleChatInputKeydown(event) {
+    if (!event) return;
+
+    if (event.key === "Enter" && !event.shiftKey) {
+        event.preventDefault();
+        sendMessage();
+    }
 }
 
 function getAutomaticAnswer(question, qaArray = []) {
@@ -92,19 +261,60 @@ function getAutomaticAnswer(question, qaArray = []) {
     return null;
 }
 
-function displayMessage(message, backgroundColor = '', color = '', typeEffect = true) {
-    const chatMessages = document.getElementById("chatMessages");
-    const messageElement = document.createElement("div");
-    messageElement.classList.add("chat-message");
+function getAutomaticAnswerSmart(question, qaArray = []) {
+    const exact = getAutomaticAnswer(question, qaArray);
+    if (exact) return exact;
 
-    if (backgroundColor !== 'transparent') {
-        messageElement.classList.add("chat-message-answer");
-        chatMessages.appendChild(messageElement);
+    const normalized = (question || "").trim().toLowerCase();
+    if (!normalized) return null;
+
+    const greetingPatterns = [
+        /\bhi\b/,
+        /\bhello\b/,
+        /\bhey\b/,
+        /\bhola\b/,
+        /\bkumusta\b/,
+        /\bgood\s*morning\b/,
+        /\bgood\s*afternoon\b/,
+        /\bgood\s*evening\b/,
+        /\bgood\s*day\b/,
+    ];
+
+    const isGreeting = greetingPatterns.some(pattern => pattern.test(normalized));
+    if (isGreeting) {
+        return "Hi! Welcome to my portfolio chat. You can ask me something directly or use the quick questions below.";
+    }
+
+    const partial = qaArray.find(item => {
+        const q = (item?.question || "").toLowerCase();
+        return q.includes(normalized) || normalized.includes(q);
+    });
+
+    if (partial?.answer) {
+        let answer = partial.answer;
+        if (answer.includes("{age}")) {
+            answer = answer.replace("{age}", calculateAge());
+        }
+        return answer;
+    }
+
+    return "I can answer the suggested questions below. Try selecting one of the quick options.";
+}
+
+function displayMessage(message, backgroundColor = '', color = '', typeEffect = true, options = {}) {
+    const chatMessages = document.getElementById("chatMessages");
+    if (!chatMessages) return;
+    const role = options.role || (backgroundColor === "transparent" ? "user" : "bot");
+    const timestamp = options.timestamp || Date.now();
+    const { row, bubble: messageElement } = createMessageRow(role, timestamp);
+
+    chatMessages.appendChild(row);
+
+    if (role !== "user") {
         addTypingEffect(messageElement, message, typeEffect);
     } else {
-        messageElement.classList.add("chat-message-header");
         messageElement.textContent = 'Q: ' + message;
-        chatMessages.appendChild(messageElement);
+        scrollChatToBottom("smooth");
     }
 
     if (backgroundColor) {
@@ -114,6 +324,8 @@ function displayMessage(message, backgroundColor = '', color = '', typeEffect = 
     if (color) {
         messageElement.style.color = color;
     }
+
+    scrollChatToBottom("smooth");
 }
 
 function addTypingEffect(element, text, typeEffect = true) {
@@ -123,40 +335,62 @@ function addTypingEffect(element, text, typeEffect = true) {
         if (index < text.length) {
             element.textContent += text.charAt(index);
             index++;
+            const chatMessages = document.getElementById("chatMessages");
+            if (chatMessages) {
+                scrollChatToBottom("auto");
+            }
             setTimeout(typeNextCharacter, 50); // Adjust speed as needed
         }
     }
 
     if (!typeEffect) {
         element.textContent = text;
+        scrollChatToBottom("auto");
     } else {
         typeNextCharacter();
     }
 }
 
-function cacheMessages(message) {
+function cacheMessages(message, role = "bot", timestamp = Date.now()) {
     let cachedMessages = JSON.parse(localStorage.getItem(cacheMessage)) || [];
-    cachedMessages.push(message);
+    cachedMessages.push({ text: message, role, timestamp });
     localStorage.setItem(cacheMessage, JSON.stringify(cachedMessages));
 }
 
 function loadCachedChat(qaArray = []) {
     const cachedMessages = JSON.parse(localStorage.getItem(cacheMessage)) || [];
-    cachedMessages.forEach(message => displayMessage(message, qaArray.find(item => item.question == message) ? 'transparent' : '', "black", false));
+    cachedMessages.forEach(entry => {
+        if (typeof entry === "string") {
+            displayMessage(entry, qaArray.find(item => item.question == entry) ? 'transparent' : '', "black", false);
+            return;
+        }
+
+        if (!entry || typeof entry !== "object") return;
+        const text = entry.text ?? "";
+        const role = entry.role ?? "bot";
+        const timestamp = entry.timestamp ?? Date.now();
+        displayMessage(text, role === "user" ? "transparent" : "", "black", false, { role, timestamp });
+    });
 
     const chatboxVisible = localStorage.getItem(cacheChatboxVisible) === 'true';
     const modal = document.getElementById("chatboxModal");
     if (modal) {
-        modal.style.display = chatboxVisible ? "block" : "none";
+        modal.style.display = chatboxVisible ? "flex" : "none";
     }
+
+    const isCollapsed = localStorage.getItem(cacheChatOptionsCollapsed) === "true";
+    setChatOptionsCollapsed(isCollapsed, false);
 
     updateClearChatButtonVisibility();
 }
 
 function clearChat() {
     localStorage.removeItem(cacheMessage);
+    removeTypingIndicator();
     const chatMessages = document.getElementById("chatMessages");
-    chatMessages.innerHTML = '';
+    if (chatMessages) {
+        chatMessages.innerHTML = '';
+    }
     updateClearChatButtonVisibility();
 }
 
@@ -169,15 +403,18 @@ function updateClearChatButtonVisibility() {
 }
 
 window.onload = async () => {
+    syncChatViewportHeight();
+
     const chatBoxHeader = document.querySelector('.chatbox-header');
     const chatBoxBody = document.querySelector('.chatbox-body');
     chatBoxHeader.style.display = 'none';
     chatBoxBody.style.display = 'none'
     showTripleLoading?.();
     const chatData = await initChat();
+    chatQaDataCache = chatData;
     initializeChatOptions(chatData);
     loadCachedChat(chatData);
     hideTripleLoading?.();
     chatBoxHeader.style.display = 'flex';
-    chatBoxBody.style.display = 'flex'
+    chatBoxBody.style.display = 'flex';
 };

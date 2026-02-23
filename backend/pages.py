@@ -16,7 +16,7 @@ def index():
     return index_route()
 
 @pages_bp.route("/profile", methods=[http.GET])
-@cache.cached(key_prefix=lambda: f"profile_{get_locale()}_{request.query_string.decode()}")
+@cache.cached(key_prefix=lambda: f"profile_ui_v4_{get_locale()}_{request.query_string.decode()}")
 def profile():
     return profile_route()
 

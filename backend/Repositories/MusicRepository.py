@@ -4,6 +4,7 @@ from backend.configurations import SortOrder
 from backend.constants.db_collections import MongoCollections as mc
 from bson import ObjectId
 from backend.Models.Music import Music
+import re
 
 class MusicRepository(IMusicRepository, BaseRepository):
     def __init__(self):
@@ -17,20 +18,30 @@ class MusicRepository(IMusicRepository, BaseRepository):
         """Fetch a music document by its URL."""
         return self.collection.find_one({"url": music_url})
 
-    def get_paginated_music_list(self, page: int, per_page: int, order: SortOrder):
+    def get_paginated_music_list(self, page: int, per_page: int, order: SortOrder, search_query: str = ""):
         # Mongo sort order by _id
         sort_order = -1 if order == SortOrder.DESC else 1
+        query = {}
+
+        if search_query:
+            escaped = re.escape(search_query.strip())
+            query = {
+                "$or": [
+                    {"title": {"$regex": escaped, "$options": "i"}},
+                    {"artist": {"$regex": escaped, "$options": "i"}},
+                ]
+            }
 
         # Use MongoDB skip + limit for pagination
         cursor = (
-            self.collection.find()
+            self.collection.find(query)
             .sort("_id", sort_order)
             .skip((page - 1) * per_page)
             .limit(per_page)
         )
 
         data = list(cursor)
-        total_data = self.collection.count_documents({})
+        total_data = self.collection.count_documents(query)
 
         return data, total_data
 

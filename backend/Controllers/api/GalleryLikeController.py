@@ -27,6 +27,41 @@ def get_gallery_likes_count_route():
             "is_liked": is_liked['like'] if is_liked else False
         }), 200
 
+def get_gallery_likes_counts_batch_route():
+    client_ip = request.headers.get('X-Forwarded-For', request.remote_addr)
+    raw_gallery_ids = request.args.get("gallery_ids", "")
+
+    gallery_ids = []
+    for gallery_id in raw_gallery_ids.split(","):
+        normalized = gallery_id.strip()
+        if normalized and normalized not in gallery_ids:
+            gallery_ids.append(normalized)
+
+    if not gallery_ids:
+        return jsonify({"items": {}}), 200
+
+    # Guardrail to avoid abuse and overly large payloads
+    gallery_ids = gallery_ids[:50]
+
+    items = {}
+    for gallery_id in gallery_ids:
+        comment_counts = gallery_comment_service.count_comments_by_gallery(gallery_id)
+        like_counts = gallery_like_service.get_gallery_likes_count_by_id(gallery_id)
+        like_doc = gallery_like_service.get_gallery_likes_by_id_and_ip(
+            gallery_id,
+            client_ip,
+            {"like": 1}
+        )
+        is_liked = like_doc.to_dict() if like_doc else False
+
+        items[gallery_id] = {
+            "comment_counts": comment_counts,
+            "like_counts": like_counts,
+            "is_liked": is_liked['like'] if is_liked else False
+        }
+
+    return jsonify({"items": items}), 200
+
 def add_gallery_like_route():
     gallery_id = request.form.get("gallery_id")
     client_ip = request.headers.get('X-Forwarded-For', request.remote_addr)

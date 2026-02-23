@@ -13,6 +13,8 @@
     width: 30%;
     margin-bottom: 20px;
     text-align: center;
+    content-visibility: auto;
+    contain-intrinsic-size: 300px 420px;
 }
 
 .gallery-item .gallery-image {
@@ -24,11 +26,16 @@
     transition: all 0.3s ease;
     clip-path: polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%,
             70% 100%, 30% 100%, 0% 70%, 0% 30%);
+    will-change: transform;
 }
 
 .gallery-item .gallery-image:hover {
     filter: grayscale(40%);
     scale: 1.05;
+}
+
+.gallery-item:not(.is-visible) .gallery-image {
+    transform: translateY(6px);
 }
 
 .gallery-item .description {

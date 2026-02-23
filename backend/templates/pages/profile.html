@@ -11,7 +11,7 @@ endblock %}
 {% block content %}
 <section id="portfolio" class="project-intro">
     <div class="project-image">
-        <img src="{{ profile_image }}" alt="Profile Image" onclick="openModal(`{{ profile_image }}`, 
+        <img src="{{ profile_image }}" alt="Profile Image" width="300" height="300" fetchpriority="high" decoding="async" onclick="openModal(`{{ profile_image }}`, 
                     `{{ profile_name | e }}`,
                     `{{ profile_desc | e }}`.replace('{age}', calculateAge()))" data-original="{{ profile_image }}"
             data-gif="{{ profile_image_gif }}" />
@@ -135,44 +135,44 @@ endblock %}
                     <div class="carousel-card" onclick="openModal('', '', '', 'boxModal')">
                         <div>
                             <p>JAOM-CONNECT (Angular & Laravel)</p>
-                            <img src="{{ project_jaom }}">
+                            <img src="{{ project_jaom }}" loading="lazy" decoding="async">
                         </div>
                     </div>
                     <div class="carousel-card" onclick="javascript:void(0)" style="opacity: 0.5;">
                         <div>
                             <p>AI Voice Recognition (Python)</p>
-                            <img src="{{ no_project }}">
+                            <img src="{{ no_project }}" loading="lazy" decoding="async">
                         </div>
                     </div>
                     <div class="carousel-card" onclick="javascript:void(0)" style="opacity: 0.5;">
                         <div>
                             <p>BillingSolution-G-Pay (Laravel)</p>
-                            <img src="{{ no_project }}">
+                            <img src="{{ no_project }}" loading="lazy" decoding="async">
                         </div>
                     </div>
                     <div class="carousel-card" onclick="javascript:void(0)" style="opacity: 0.5;">
                         <div>
                             <p>TouristSpot Booking System (Laravel)</p>
-                            <img src="{{ no_project }}">
+                            <img src="{{ no_project }}" loading="lazy" decoding="async">
                         </div>
                     </div>
                     <div class="carousel-card" onclick="javascript:void(0)" style="opacity: 0.5;">
                         <div>
                             <p>Technician Booking System (Angular & Laravel)</p>
-                            <img src="{{ no_project }}">
+                            <img src="{{ no_project }}" loading="lazy" decoding="async">
                         </div>
                     </div>
                     <div class="carousel-card" onclick="javascript:void(0)" style="opacity: 0.5;">
                         <div>
                             <p>Socio-Fanline (HTML & CSS)</p>
-                            <img src="{{ no_project }}">
+                            <img src="{{ no_project }}" loading="lazy" decoding="async">
                         </div>
                     </div>
                 </div>
             </div>
             <button id="carousel-next" class="carousel-button">{{ _('Next') }} →</button>
         </div>
-        <section class="enable-animation">
+        <section class="enable-animation" id="profile-marquee-section">
             <div class="marquee">
                 <ul class="marquee__content">
                     <li><img src="{{ url_for('static', filename='images/javascript.png') }}" alt="javascript-logo"></li>
@@ -418,21 +418,21 @@ endblock %}
     <p>{{ _('Certifications_Description') }}</p>
     <div class="certification-images">
         <img onclick="openModal(`{{ url_for('static', filename='images/cert1.jpg') }}`, 'Angular Basic Certificate')"
-            src="{{ url_for('static', filename='images/cert1.jpg') }}" alt="Certification 1">
+            src="{{ url_for('static', filename='images/cert1.jpg') }}" alt="Certification 1" loading="lazy" decoding="async">
         <img onclick="openModal(`{{ url_for('static', filename='images/cert2.jpg') }}`, 'Java Basic Certificate')"
-            src="{{ url_for('static', filename='images/cert2.jpg') }}" alt="Certification 2">
+            src="{{ url_for('static', filename='images/cert2.jpg') }}" alt="Certification 2" loading="lazy" decoding="async">
         <img onclick="openModal(`{{ url_for('static', filename='images/cert3.jpg') }}`, 'Javascript Basic Certificate')"
-            src="{{ url_for('static', filename='images/cert3.jpg') }}" alt="Certification 3">
+            src="{{ url_for('static', filename='images/cert3.jpg') }}" alt="Certification 3" loading="lazy" decoding="async">
         <img onclick="openModal(`{{ url_for('static', filename='images/cert4.jpg') }}`, 'SQL Basic Certificate')"
-            src="{{ url_for('static', filename='images/cert4.jpg') }}" alt="Certification 4">
+            src="{{ url_for('static', filename='images/cert4.jpg') }}" alt="Certification 4" loading="lazy" decoding="async">
         <img onclick="openModal(`{{ url_for('static', filename='images/cert5.jpg') }}`, 'Analyze Data with Python Certificate')"
-            src="{{ url_for('static', filename='images/cert5.jpg') }}" alt="Certification 5">
+            src="{{ url_for('static', filename='images/cert5.jpg') }}" alt="Certification 5" loading="lazy" decoding="async">
         <img onclick="openModal(`{{ url_for('static', filename='images/cert6.jpg') }}`, 'Learn Basic Statistics with Python Certificate')"
-            src="{{ url_for('static', filename='images/cert6.jpg') }}" alt="Certification 6">
+            src="{{ url_for('static', filename='images/cert6.jpg') }}" alt="Certification 6" loading="lazy" decoding="async">
         <img onclick="openModal(`{{ url_for('static', filename='images/cert7.jpg') }}`, 'Using HTML and CSS to Design a Website Certificate')"
-            src="{{ url_for('static', filename='images/cert7.jpg') }}" alt="Certification 7">
+            src="{{ url_for('static', filename='images/cert7.jpg') }}" alt="Certification 7" loading="lazy" decoding="async">
         <img onclick="openModal(`{{ url_for('static', filename='images/cert8.jpg') }}`, 'Build Python Web Apps with Flask Certificate')"
-            src="{{ url_for('static', filename='images/cert8.jpg') }}" alt="Certification 8">
+            src="{{ url_for('static', filename='images/cert8.jpg') }}" alt="Certification 8" loading="lazy" decoding="async">
     </div>
 </section>
 

@@ -32,6 +32,7 @@ ADMIN_DASHBOARD_PAGE = "admin/dist/dashboard.html"
 ADMIN_MUSIC_PAGE = "admin/dist/music.html"
 ADMIN_GALLERY_PAGE = "admin/dist/gallery.html"
 ADMIN_VIDEO_PAGE = "admin/dist/video.html"
+ADMIN_KEY_PROJECTS_PAGE = "admin/dist/key_projects.html"
 ADMIN_SETTINGS_PAGE = "admin/dist/settings.html"
 ADMIN_LOGIN_ATTEMPTS_PAGE = "admin/dist/login_attempts.html"
 

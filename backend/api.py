@@ -9,6 +9,12 @@ from backend.configurations import HTTPMethod as http
 from flask import Blueprint
 from backend.Controllers.api.BaseController import change_language_route, delete_page_system_info_route, download_song_route, get_client_ip_route, profile_config_route, proxy_audio_route
 from backend.Controllers.api.MusicController import add_music_route, delete_music_route, music_list_route, update_music_route
+from backend.Controllers.api.KeyProjectController import (
+    add_key_project_route,
+    delete_key_project_route,
+    key_project_list_route,
+    update_key_project_route,
+)
 from backend.Controllers.api.VideoController import add_video_route, delete_video_route, update_video_route, video_list_route
 from backend.Controllers.api.GalleryController import add_gallery_route, delete_gallery_route, gallery_list_route, update_gallery_route
 from backend.Controllers.api.GalleryLikeController import (
@@ -124,6 +130,27 @@ def update_music(music_id):
 @admin_login_required
 def delete_music(music_id):
     return delete_music_route(music_id)
+
+# Key Projects API
+@api_bp.route("/admin/api/key-project-list", methods=[http.GET])
+@admin_login_required
+def key_project_list():
+    return key_project_list_route()
+
+@api_bp.route("/admin/api/add-key-project", methods=[http.POST])
+@admin_login_required
+def add_key_project():
+    return add_key_project_route()
+
+@api_bp.route("/admin/api/update-key-project/<project_id>", methods=[http.PUT])
+@admin_login_required
+def update_key_project(project_id):
+    return update_key_project_route(project_id)
+
+@api_bp.route("/admin/api/delete-key-project/<project_id>", methods=[http.DELETE])
+@admin_login_required
+def delete_key_project(project_id):
+    return delete_key_project_route(project_id)
 
 # Gallery API
 @api_bp.route("/admin/api/gallery-list", methods=[http.GET])

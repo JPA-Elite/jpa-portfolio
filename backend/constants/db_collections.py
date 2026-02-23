@@ -10,6 +10,7 @@ class MongoCollections:
     VISITORS = "visitors"
     USERS = "users"
     GALLERY = "gallery"
+    KEY_PROJECTS = "key_projects"
     GALLERY_LIKES = "gallery_likes"
     VIDEO_LIKES = "video_likes"
     GALLERY_COMMENTS = "gallery_comments"

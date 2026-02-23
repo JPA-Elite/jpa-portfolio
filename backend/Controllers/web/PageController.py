@@ -8,6 +8,8 @@ from backend.Services.VideoService import VideoService
 from backend.Repositories.VideoRepository import VideoRepository
 from backend.Services.GalleryService import GalleryService
 from backend.Repositories.GalleryRepository import GalleryRepository
+from backend.Services.KeyProjectService import KeyProjectService
+from backend.Repositories.KeyProjectRepository import KeyProjectRepository
 from backend.Services.GalleryLikeService import GalleryLikeService
 from backend.Repositories.GalleryLikeRepository import GalleryLikeRepository
 from backend.utils import capture_image, get_random_tags
@@ -39,6 +41,7 @@ portfolio_service = PortfolioService(repository=PortfolioRepository())
 visit_service = VisitService(repository=VisitRepository())
 gallery_service = GalleryService(repository=GalleryRepository())
 video_service = VideoService(repository=VideoRepository())
+key_project_service = KeyProjectService(repository=KeyProjectRepository())
 gallery_like_service = GalleryLikeService(repository=GalleryLikeRepository())
 
 # ************************** PAGES ********************************
@@ -56,9 +59,58 @@ def profile_route():
     profile_goals = gettext("profile_goals")
     profile_desc = f"{escape(profile_intro)} {escape(profile_age)}<br>{escape(profile_introvert)}<br>{escape(profile_job)} {escape(profile_goals)}"
 
-    project_jaom = url_for("static", filename="images/jaom.png", _external=True)
-    no_project = url_for("static", filename="images/no-project.png", _external=True)
     voice_icon = url_for("static", filename="images/voice.png", _external=True)
+
+    try:
+        key_project_service.seed_default_projects_if_empty()
+    except Exception as exc:
+        # Keep the profile page resilient if Cloudinary/network is unavailable during first seed.
+        print(f"Key project default seed failed: {exc}")
+
+    locale = get_locale()
+    key_projects = [project.to_dict() for project in key_project_service.get_active_key_projects()]
+    key_project_columns = {
+        "shipped": [],
+        "building": [],
+        "planned": [],
+    }
+
+    for project in key_projects:
+        title_map = project.get("title") or {}
+        description_map = project.get("description") or {}
+        modal_slides = []
+
+        cover_url = project.get("image_url")
+        if cover_url:
+            modal_slides.append({
+                "src": cover_url,
+                "titles": title_map or {"en": "Project Preview"},
+                "descriptions": description_map or {"en": ""},
+            })
+
+        for slide in project.get("slides", []) or []:
+            slide = slide or {}
+            slide_title = slide.get("title") or {}
+            slide_description = slide.get("description") or {}
+            slide_url = slide.get("image_url")
+            if not slide_url:
+                continue
+            modal_slides.append({
+                "src": slide_url,
+                "titles": slide_title or title_map or {"en": "Project Slide"},
+                "descriptions": slide_description or description_map or {"en": ""},
+            })
+
+        display_project = {
+            **project,
+            "display_title": title_map.get(locale) or title_map.get("en") or "Untitled Project",
+            "display_description": description_map.get(locale) or description_map.get("en") or "",
+            "modal_slides": modal_slides,
+        }
+        status = display_project.get("status") or "planned"
+        if status not in key_project_columns:
+            status = "planned"
+        key_project_columns[status].append(display_project)
 
     return handle_log_parameter() or render_template(
         PROFILE_PAGE,
@@ -68,8 +120,7 @@ def profile_route():
         title="My Portfolio",
         profile_name=profile_name,
         profile_desc=profile_desc,
-        project_jaom=project_jaom,
-        no_project=no_project,
+        key_project_columns=key_project_columns,
         voice_icon=voice_icon,
     )
 

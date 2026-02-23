@@ -9,6 +9,8 @@
     margin: auto;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     position: relative;
+    z-index: 20;
+    isolation: isolate;
 }
 
 .search-bar {
@@ -72,7 +74,7 @@
     top: calc(100% + 5px);
     left: 0;
     width: 100%;
-    z-index: 5;
+    z-index: 30;
     height: auto;
     margin-top: 0;
     transition: opacity 0.2s ease, transform 0.2s ease;
@@ -84,6 +86,9 @@
     padding: 20px;
     width: 100%;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    max-height: min(42vh, 300px);
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
 }
 
 .tags-modal.show {
@@ -197,6 +202,7 @@
 
     .tags-modal-content {
         padding: 15px;
+        max-height: min(36vh, 240px);
     }
 
     .tag-button {

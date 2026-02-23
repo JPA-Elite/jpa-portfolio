@@ -250,7 +250,7 @@ if (!window.__modal_js_loaded__) {
             if (isVideoFile(fileSrc)) {
                 pauseAllVideos();
                 modalImage.style.display = "none";
-                modalVideo.style.display = "flex";
+                modalVideo.style.display = "block";
                 modalImage.src = "";
                 modalVideo.src = fileSrc;
 
@@ -262,7 +262,7 @@ if (!window.__modal_js_loaded__) {
                 });
             } else {
                 modalVideo.style.display = "none";
-                modalImage.style.display = "flex";
+                modalImage.style.display = "block";
                 modalVideo.src = "";
                 modalImage.src = fileSrc;
             }

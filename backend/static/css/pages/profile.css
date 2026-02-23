@@ -2429,3 +2429,95 @@ section>*+* {
 [data-theme="dark"] .percent {
     color: rgba(255, 255, 255, 0.7);
 }
+
+/* Final mobile width normalization for profile sections */
+@media only screen and (max-width: 768px) {
+    #portfolio,
+    #about,
+    #resume,
+    #key-projects,
+    #certifications,
+    #contact,
+    #profile-marquee-section,
+    .key-projects-main,
+    #skills {
+        width: 100%;
+        max-width: none;
+        box-sizing: border-box;
+    }
+
+    #profile-marquee-section,
+    .key-projects-main,
+    #skills {
+        border-radius: 16px;
+        overflow: hidden;
+    }
+
+    #skills {
+        margin: 28px auto 0;
+        padding: 16px 12px;
+    }
+
+    .skills-container {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .skills-card {
+        width: 100%;
+        max-width: none;
+        min-width: 0;
+        box-sizing: border-box;
+    }
+
+    #portfolio .project-image,
+    #portfolio .project-details {
+        box-sizing: border-box;
+        min-width: 0;
+    }
+
+    #contact > ul > li,
+    #contact > ul > li > ul,
+    #contact > ul > li > ul > li {
+        min-width: 0;
+    }
+
+    #contact > ul > li > ul {
+        padding-left: 0;
+        margin-left: 0;
+        list-style: none;
+    }
+
+    #contact > ul > li > ul > li {
+        list-style: none;
+        margin-left: 0;
+        padding-left: 0;
+    }
+
+    #contact ul ul li a {
+        display: block;
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+        line-height: 1.45;
+    }
+}
+
+@media only screen and (max-width: 480px) {
+    #profile-marquee-section,
+    .key-projects-main,
+    #skills,
+    #portfolio,
+    #about,
+    #resume,
+    #certifications,
+    #contact {
+        border-radius: 14px;
+    }
+
+    #portfolio .project-image img {
+        width: 100%;
+        max-width: 100%;
+        height: auto;
+    }
+}

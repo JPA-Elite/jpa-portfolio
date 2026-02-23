@@ -17,12 +17,48 @@ if (!window.__modal_js_loaded__) {
     fetch("/static/json/project.json")
         .then(response => response.json())
         .then(data => {
-            slideData = data;
+            slideData = normalizeSlides(data);
             updateCarousel();
         })
         .catch(error => {
             console.error('Error fetching slide data:', error);
         });
+
+    function normalizeLocaleMap(value, fallback = "") {
+        if (value && typeof value === "object") {
+            return {
+                en: value.en || fallback || "",
+                ceb: value.ceb || value.en || fallback || "",
+                fr: value.fr || value.en || fallback || "",
+                fil_PH: value.fil_PH || value.en || fallback || "",
+            };
+        }
+
+        const text = typeof value === "string" ? value : (fallback || "");
+        return {
+            en: text,
+            ceb: text,
+            fr: text,
+            fil_PH: text,
+        };
+    }
+
+    function normalizeSlides(slides) {
+        if (!Array.isArray(slides)) return [];
+
+        return slides
+            .map((slide) => {
+                if (!slide) return null;
+                const src = slide.src || slide.image_url || "";
+                if (!src) return null;
+                return {
+                    src,
+                    titles: normalizeLocaleMap(slide.titles || slide.title, "Project Preview"),
+                    descriptions: normalizeLocaleMap(slide.descriptions || slide.description, ""),
+                };
+            })
+            .filter(Boolean);
+    }
 
 
     function updateCarousel() {
@@ -30,6 +66,12 @@ if (!window.__modal_js_loaded__) {
         const carouselIndicators = document.getElementById('carouselIndicators');
         carouselIndicators && (carouselIndicators.innerHTML = '');
         carouselInner && (carouselInner.innerHTML = '');
+
+        if (!slideData.length) {
+            const boxContainer = document.querySelector(".box-modal-container");
+            boxContainer && (boxContainer.style.display = "none");
+            return;
+        }
 
         slideData.forEach((slide, index) => {
             // Create indicator
@@ -98,6 +140,7 @@ if (!window.__modal_js_loaded__) {
     }
 
     function moveSlide(direction) {
+        if (!slideData.length) return;
         currentSlide = (currentSlide + direction + slideData.length) % slideData.length;
         updateCarousel();
     }
@@ -124,6 +167,18 @@ if (!window.__modal_js_loaded__) {
             v.currentTime = 0; // optional reset
         });
     }
+
+    window.openProjectSlidesModal = function (slides, startIndex = 0) {
+        const normalized = normalizeSlides(slides);
+        if (!normalized.length) {
+            return;
+        }
+
+        slideData = normalized;
+        currentSlide = Math.max(0, Math.min(Number(startIndex) || 0, slideData.length - 1));
+        updateCarousel();
+        openModal("", "", "", ModalType.BOX);
+    };
 
     // Function to open the modal and show the image
     function openModal(fileSrc, title = '', description = '', type = ModalType.IMAGE, enableComments = false, selectedId = null) {

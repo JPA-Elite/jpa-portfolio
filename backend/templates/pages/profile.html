@@ -124,54 +124,81 @@ endblock %}
     {% endif %}
 </section>
 
-<!-- Projects Carousel -->
+<!-- Key Projects -->
 <section id="key-projects">
-    <div class="carousel-main">
+    <div class="key-projects-main">
         <h3>{{ _('Key_Projects') }}</h3>
-        <div class="project-carousel">
-            <button id="carousel-prev" class="carousel-button">← {{ _('Prev') }}</button>
-            <div class="carousel-track-wrapper">
-                <div class="carousel-track">
-                    <div class="carousel-card" onclick="openModal('', '', '', 'boxModal')">
+        <div class="key-projects-board">
+            <div class="key-projects-kanban">
+                {% set kanban_meta = [
+                    ('shipped', 'Shipped', 'rocket-outline', 'Completed or deployed projects.'),
+                    ('building', 'Building', 'construct-outline', 'Projects currently in progress.'),
+                    ('planned', 'Planned', 'bulb-outline', 'Upcoming ideas and concepts.')
+                ] %}
+                {% for column_key, column_title, icon_name, column_desc in kanban_meta %}
+                <section class="kanban-column kanban-column--{{ column_key }}">
+                    <div class="kanban-column__header">
                         <div>
-                            <p>JAOM-CONNECT (Angular & Laravel)</p>
-                            <img src="{{ project_jaom }}" loading="lazy" decoding="async">
+                            <span class="kanban-column__eyebrow">
+                                <ion-icon name="{{ icon_name }}"></ion-icon>
+                                {{ column_title }}
+                            </span>
+                            <p>{{ column_desc }}</p>
                         </div>
+                        <span class="kanban-column__count">{{ key_project_columns.get(column_key, [])|length }}</span>
                     </div>
-                    <div class="carousel-card" onclick="javascript:void(0)" style="opacity: 0.5;">
-                        <div>
-                            <p>AI Voice Recognition (Python)</p>
-                            <img src="{{ no_project }}" loading="lazy" decoding="async">
+                    <div class="kanban-column__cards">
+                        {% for project in key_project_columns.get(column_key, []) %}
+                        <article class="kanban-project-card">
+                            <button type="button" class="kanban-project-card__media"
+                                onclick='openProjectSlidesModal({{ (project.modal_slides or []) | tojson }})'
+                                aria-label="Preview {{ project.display_title }}">
+                                {% if project.image_url %}
+                                <img src="{{ project.image_url }}" alt="{{ project.display_title }}" loading="lazy" decoding="async">
+                                {% else %}
+                                <div class="kanban-project-card__placeholder"><ion-icon name="image-outline"></ion-icon></div>
+                                {% endif %}
+                            </button>
+                            <div class="kanban-project-card__body">
+                                <h4 title="{{ project.display_title }}">{{ project.display_title }}</h4>
+                                {% if project.stack %}
+                                <div class="kanban-project-card__stack">{{ project.stack }}</div>
+                                {% endif %}
+                                <p title="{{ project.display_description }}">{{ project.display_description }}</p>
+                                <div class="kanban-project-card__actions">
+                                    {% if project.demo_url %}
+                                    <a href="{{ project.demo_url }}" target="_blank" rel="noopener noreferrer" class="kanban-action-link">
+                                        <ion-icon name="open-outline"></ion-icon> Demo
+                                    </a>
+                                    {% endif %}
+                                    {% if project.repo_url %}
+                                    <a href="{{ project.repo_url }}" target="_blank" rel="noopener noreferrer" class="kanban-action-link kanban-action-link--secondary">
+                                        <ion-icon name="logo-github"></ion-icon> Repo
+                                    </a>
+                                    {% endif %}
+                                    {% if not project.demo_url and not project.repo_url %}
+                                    <button type="button" class="kanban-action-link kanban-action-link--ghost"
+                                        onclick='openProjectSlidesModal({{ (project.modal_slides or []) | tojson }})'>
+                                        <ion-icon name="expand-outline"></ion-icon> Preview
+                                    </button>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </article>
+                        {% else %}
+                        <div class="kanban-project-card kanban-project-card--empty">
+                            <div class="kanban-project-card__body">
+                                <h4>No projects yet</h4>
+                                <p>Add projects in the admin panel to populate this column.</p>
+                            </div>
                         </div>
+                        {% endfor %}
                     </div>
-                    <div class="carousel-card" onclick="javascript:void(0)" style="opacity: 0.5;">
-                        <div>
-                            <p>BillingSolution-G-Pay (Laravel)</p>
-                            <img src="{{ no_project }}" loading="lazy" decoding="async">
-                        </div>
-                    </div>
-                    <div class="carousel-card" onclick="javascript:void(0)" style="opacity: 0.5;">
-                        <div>
-                            <p>TouristSpot Booking System (Laravel)</p>
-                            <img src="{{ no_project }}" loading="lazy" decoding="async">
-                        </div>
-                    </div>
-                    <div class="carousel-card" onclick="javascript:void(0)" style="opacity: 0.5;">
-                        <div>
-                            <p>Technician Booking System (Angular & Laravel)</p>
-                            <img src="{{ no_project }}" loading="lazy" decoding="async">
-                        </div>
-                    </div>
-                    <div class="carousel-card" onclick="javascript:void(0)" style="opacity: 0.5;">
-                        <div>
-                            <p>Socio-Fanline (HTML & CSS)</p>
-                            <img src="{{ no_project }}" loading="lazy" decoding="async">
-                        </div>
-                    </div>
-                </div>
+                </section>
+                {% endfor %}
             </div>
-            <button id="carousel-next" class="carousel-button">{{ _('Next') }} →</button>
         </div>
+
         <section class="enable-animation" id="profile-marquee-section">
             <div class="tech-stack-showcase">
                 <div class="tech-stack-showcase__header">

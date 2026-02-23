@@ -26,7 +26,7 @@ def gallery():
     return gallery_route()
 
 @pages_bp.route("/vlog", methods=[http.GET])
-@cache.cached(key_prefix=lambda: f"vlog_{get_locale()}_{request.query_string.decode()}")
+@cache.cached(key_prefix=lambda: f"vlog_ui_v5_{get_locale()}_{request.query_string.decode()}")
 def vlog():
     return vlog_route()
 

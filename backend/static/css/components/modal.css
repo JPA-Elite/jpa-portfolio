@@ -55,6 +55,19 @@
     border-radius: 8px;
 }
 
+#modalVideo {
+    flex: 1;
+    margin: auto;
+    display: block;
+    width: 100%;
+    max-width: 50%;
+    height: auto;
+    max-height: 100%;
+    object-fit: contain;
+    border-radius: 8px;
+    background: #000;
+}
+
 .close {
     position: fixed;
     top: 10px;
@@ -487,6 +500,17 @@
         max-height: 40vh;
         overflow-y: auto;
         flex-basis: 40%;
+    }
+
+    #modalVideo {
+        max-width: 100%;
+        width: 100%;
+        max-height: 40vh;
+        height: auto;
+        flex-basis: 40%;
+        border-radius: 0;
+        overflow: hidden;
+        object-fit: contain;
     }
 
     .comment-section {

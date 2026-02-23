@@ -3,7 +3,7 @@
     padding-top: 8px;
     width: min(100%, 1200px);
     position: relative;
-    z-index: 0;
+    z-index: 10;
 }
 
 .vlog-search-shell form {
@@ -14,6 +14,8 @@
     max-width: 520px;
     padding-top: 12px;
     padding-bottom: 12px;
+    width: min(100%, 520px);
+    box-sizing: border-box;
 }
 
 #vlog {
@@ -24,11 +26,13 @@
     --vlog-card-border: rgba(255, 255, 255, 0.14);
     padding: clamp(16px, 2vw, 28px);
     background: transparent;
+    min-width: 0;
 }
 
 #vlog .vlog-shell {
     display: grid;
     gap: 18px;
+    min-width: 0;
 }
 
 #vlog .vlog-header {
@@ -206,9 +210,13 @@
     object-fit: contain;
 }
 
+#vlog .video-frame .plyr__controls {
+    display: none !important;
+}
+
 #vlog .video-frame__overlay {
     position: absolute;
-    inset: 10px 10px auto 10px;
+    inset: 10px;
     display: flex;
     align-items: flex-start;
     gap: 8px;
@@ -242,7 +250,9 @@
 }
 
 #vlog .video-count-badges {
-    margin-left: auto;
+    position: absolute;
+    right: 0;
+    bottom: 0;
     display: inline-flex;
     align-items: center;
     gap: 6px;
@@ -517,25 +527,51 @@
 }
 
 @media (max-width: 680px) {
+    .vlog-search-shell {
+        margin: 16px auto 12px;
+        padding-top: 4px;
+        z-index: 10;
+        width: calc(100% - 24px);
+        max-width: none;
+        box-sizing: border-box;
+    }
+
     .vlog-search-shell .search-container {
-        max-width: 95%;
+        max-width: 100%;
+        width: 100%;
         padding-top: 11px;
         padding-bottom: 11px;
     }
 
+    #vlog {
+        padding: 12px;
+    }
+
     #vlog .video-container {
         grid-template-columns: 1fr;
-        row-gap: 24px;
+        row-gap: 30px;
+        min-width: 0;
     }
 
     #vlog .video-item {
         padding: 10px;
         border-radius: 16px;
+        min-width: 0;
+        position: relative;
+        margin-bottom: 0;
+    }
+
+    #vlog .video-item:not(:last-child) {
+        margin-bottom: 14px;
     }
 
     #vlog .vlog-header {
         padding: 14px;
         border-radius: 16px;
+    }
+
+    #vlog .video-frame__overlay {
+        inset: 8px;
     }
 
     #vlog .vlog-actions {
@@ -544,6 +580,36 @@
 
     #vlog .pagination {
         margin-top: 24px;
+    }
+}
+
+@media (max-width: 420px) {
+    .vlog-search-shell {
+        width: calc(100% - 20px);
+        margin-top: 12px;
+    }
+
+    #vlog {
+        padding: 10px;
+    }
+
+    #vlog .vlog-header {
+        gap: 12px;
+        padding: 12px;
+    }
+
+    #vlog .vlog-header__subtitle {
+        font-size: 0.86rem;
+        -webkit-line-clamp: 3;
+    }
+
+    #vlog .vlog-stat-card {
+        min-height: 66px;
+        padding: 8px 10px;
+    }
+
+    #vlog .vlog-stat-card__value {
+        font-size: 1rem;
     }
 }
 

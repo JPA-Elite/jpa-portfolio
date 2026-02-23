@@ -366,7 +366,7 @@ function isMobileDevice() {
 }
 
 document.addEventListener("fullscreenchange", () => {
-    if (!document.fullscreenElement) {
+    if (!document.fullscreenElement && !document.body.classList.contains("music-mobile-fullscreen")) {
         document.getElementById("albumSection").classList.remove("fullscreen");
         document.getElementById("fullscreenBtn").textContent = "⛶";
     }
@@ -375,6 +375,20 @@ document.addEventListener("fullscreenchange", () => {
 function toggleFullscreen() {
     const albumSection = document.getElementById("albumSection");
     const fullscreenBtn = document.getElementById("fullscreenBtn");
+
+    if (isMobileDevice()) {
+        const body = document.body;
+        const entering = !body.classList.contains("music-mobile-fullscreen");
+
+        body.classList.toggle("music-mobile-fullscreen", entering);
+        albumSection.classList.toggle("fullscreen-mobile", entering);
+        fullscreenBtn.textContent = entering ? "⮌" : "⛶";
+
+        if (entering) {
+            window.scrollTo({ top: 0, behavior: "auto" });
+        }
+        return;
+    }
 
     if (!document.fullscreenElement) {
         albumSection.classList.add("fullscreen");

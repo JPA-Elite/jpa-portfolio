@@ -420,6 +420,48 @@ main {
     overflow: auto;
 }
 
+body.music-mobile-fullscreen {
+    overflow: hidden;
+}
+
+body.music-mobile-fullscreen .navbar {
+    display: none;
+}
+
+body.music-mobile-fullscreen main {
+    display: block;
+    height: 100vh;
+    min-height: 100vh;
+    overflow: hidden;
+}
+
+body.music-mobile-fullscreen .music-list {
+    display: none;
+}
+
+body.music-mobile-fullscreen .album-section.fullscreen-mobile {
+    display: flex !important;
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100dvh;
+    min-height: 100dvh;
+    z-index: 9998;
+    padding: 16px 12px 120px;
+    margin: 0;
+    overflow: auto;
+    background-size: cover;
+    background-position: center;
+}
+
+body.music-mobile-fullscreen .player {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 10000;
+}
+
 .pagination-controls {
     display: flex;
     justify-content: center;

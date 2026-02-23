@@ -3,7 +3,7 @@
     padding-top: 8px;
     width: min(100%, 1200px);
     position: relative;
-    z-index: 2;
+    z-index: 0;
 }
 
 .vlog-search-shell form {
@@ -130,7 +130,8 @@
 #vlog .video-container {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-    gap: 18px;
+    column-gap: 18px;
+    row-gap: 42px;
     align-items: stretch;
 }
 
@@ -345,6 +346,7 @@
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 8px;
     margin-top: auto;
+    padding-top: 4px;
 }
 
 #vlog .action-btn {
@@ -523,7 +525,7 @@
 
     #vlog .video-container {
         grid-template-columns: 1fr;
-        gap: 14px;
+        row-gap: 24px;
     }
 
     #vlog .video-item {

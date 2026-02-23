@@ -10,6 +10,13 @@ let autoplayEnabled = true;
 let isDragging = false;
 const durationCache = JSON.parse(localStorage.getItem('audioDurationCache') || '{}');
 let filteredResults = null;
+let musicDataLoaded = false;
+const durationPromiseCache = new Map();
+const MUSIC_DATA_CACHE_KEY = "musicPageDataCacheV2";
+const MUSIC_DATA_CACHE_TTL_MS = 5 * 60 * 1000;
+let activeSearchQuery = "";
+let totalMusicCount = 0;
+let totalPagesCount = 1;
 musicList = document.getElementById("musicList");
 audioPlayer = document.getElementById("audioPlayer");
 const nowPlaying = document.getElementById("nowPlaying");
@@ -24,24 +31,91 @@ playPauseBtn = document.getElementById("playPauseBtn");
 const canvas = document.getElementById("beatVisualizer");
 const ctx = canvas.getContext("2d");
 let audioContext, analyser, source, dataArray, bufferLength, visualizerRunning;
+const prevPageBtn = document.querySelector(".page-btn[onclick='prevPage()']");
+const nextPageBtn = document.querySelector(".page-btn[onclick='nextPage()']");
 
 document.addEventListener("DOMContentLoaded", async () => {
     const root = document.documentElement;
     root.setAttribute("data-theme", "dark");
+    showTripleLoading?.();
     try {
-        const response = await fetch("/api/music-list?per_page=999999");
-        const result = await response.json();
-
-        musicData = result?.music || [];
-        if (musicData.length > 0) {
-            selectFirstSong(); // Select the first song in the list
-        }
-
-        renderList(); // Render the music list
+        await loadAndRenderMusicPage({ resetSelection: true });
+        musicDataLoaded = true;
     } catch (err) {
         console.error("Failed to load music data:", err);
+        musicList.innerHTML = `<p class="no-results">Failed to load songs.</p>`;
+    } finally {
+        hideTripleLoading?.();
     }
 });
+
+async function loadMusicData() {
+    const cacheKey = `${MUSIC_DATA_CACHE_KEY}:${currentPage}:${itemsPerPage}:${activeSearchQuery}`;
+    try {
+        const cachedRaw = sessionStorage.getItem(cacheKey);
+        if (cachedRaw) {
+            const cached = JSON.parse(cachedRaw);
+            if (
+                cached &&
+                Array.isArray(cached.music) &&
+                typeof cached.savedAt === "number" &&
+                Date.now() - cached.savedAt < MUSIC_DATA_CACHE_TTL_MS
+            ) {
+                totalMusicCount = Number(cached.totalMusic || cached.music.length || 0);
+                totalPagesCount = Math.max(1, Number(cached.totalPages || 1));
+                currentPage = Math.max(1, Number(cached.page || currentPage));
+                return cached.music;
+            }
+        }
+    } catch (error) {
+        console.warn("Music cache read failed:", error);
+    }
+
+    const params = new URLSearchParams();
+    params.set("page", String(currentPage));
+    params.set("per_page", String(itemsPerPage));
+    if (activeSearchQuery) {
+        params.set("search", activeSearchQuery);
+    }
+
+    const response = await fetch(`/api/music-list?${params.toString()}`);
+    if (!response.ok) {
+        throw new Error(`Failed to fetch music list: ${response.status}`);
+    }
+
+    const result = await response.json();
+    const items = result?.music || [];
+    totalMusicCount = Number(result?.total_music || 0);
+    totalPagesCount = Math.max(1, Number(result?.total_pages || 1));
+    currentPage = Math.max(1, Number(result?.page || currentPage));
+
+    try {
+        sessionStorage.setItem(
+            cacheKey,
+            JSON.stringify({
+                savedAt: Date.now(),
+                music: items,
+                totalMusic: totalMusicCount,
+                totalPages: totalPagesCount,
+                page: currentPage,
+            })
+        );
+    } catch (error) {
+        console.warn("Music cache write failed:", error);
+    }
+
+    return items;
+}
+
+async function loadAndRenderMusicPage({ resetSelection = false, activeSongId = null } = {}) {
+    musicData = await loadMusicData();
+
+    if (resetSelection && musicData.length > 0) {
+        selectFirstSong();
+    }
+
+    renderList(activeSongId);
+}
 
 function selectFirstSong() {
     currentSongIndex = Math.floor(Math.random() * musicData.length); // Randomly select an index
@@ -125,42 +199,41 @@ function togglePlay() {
 }
 
 function prevSong() {
-    currentSongIndex =
-        (currentSongIndex - 1 + musicData.length) % musicData.length;
+    const source = musicData || [];
+    if (!source.length) return;
+    currentSongIndex = (currentSongIndex - 1 + source.length) % source.length;
     playSong(currentSongIndex);
 }
 
 function nextSong() {
-    currentSongIndex = (currentSongIndex + 1) % musicData.length;
+    const source = musicData || [];
+    if (!source.length) return;
+    currentSongIndex = (currentSongIndex + 1) % source.length;
     playSong(currentSongIndex);
 }
 
-function playNextSongOrNextPage() {
-    const startIndex = (currentPage - 1) * itemsPerPage;
-    const endIndex = startIndex + itemsPerPage - 1;
-    const totalPages = Math.ceil(musicData.length / itemsPerPage);
+async function playNextSongOrNextPage() {
+    const source = musicData || [];
+    if (!source.length) return;
 
-    if (currentSongIndex === Math.min(endIndex, musicData.length - 1)) {
-        if (currentPage < totalPages) {
+    if (currentSongIndex >= source.length - 1) {
+        if (currentPage < totalPagesCount) {
             currentPage++;
             showTripleLoading?.();
-            renderList();
-            setTimeout(() => {
-                hideTripleLoading?.();
+            await loadAndRenderMusicPage();
+            hideTripleLoading?.();
 
-                const musicListContainer = document.getElementById("musicList");
-                if (musicListContainer) {
-                    musicListContainer.scrollTo({
-                        top: 0,
-                        behavior: "smooth",
-                    });
-                }
+            const musicListContainer = document.getElementById("musicList");
+            if (musicListContainer) {
+                musicListContainer.scrollTo({
+                    top: 0,
+                    behavior: "smooth",
+                });
+            }
 
-                const nextSongIndex = (currentPage - 1) * itemsPerPage;
-                playSong(nextSongIndex);
+            playSong(0);
 
-                scrollToActiveSong();
-            }, 500);
+            scrollToActiveSong();
         }
     } else {
         nextSong();
@@ -251,16 +324,36 @@ async function getDuration(url) {
         return durationCache[url];
     }
 
-    return new Promise((resolve) => {
+    if (durationPromiseCache.has(url)) {
+        return durationPromiseCache.get(url);
+    }
+
+    const durationPromise = new Promise((resolve) => {
         const audio = new Audio(url);
+        audio.preload = "metadata";
+
+        let settled = false;
+        const finish = (value) => {
+            if (settled) return;
+            settled = true;
+            durationPromiseCache.delete(url);
+            resolve(value);
+            audio.removeAttribute("src");
+            audio.load?.();
+        };
+
         audio.addEventListener("loadedmetadata", () => {
             durationCache[url] = audio.duration;
             localStorage.setItem('audioDurationCache', JSON.stringify(durationCache));
-            resolve(audio.duration);
+            finish(audio.duration);
         });
 
-        audio.addEventListener("error", () => resolve(0));
+        audio.addEventListener("error", () => finish(0));
+        setTimeout(() => finish(0), 5000);
     });
+
+    durationPromiseCache.set(url, durationPromise);
+    return durationPromise;
 }
 
 function updateVolume(value) {
@@ -295,8 +388,7 @@ function toggleFullscreen() {
 }
 
 function updatePagination(source = null) {
-    const dataSource = source || (filteredResults && filteredResults.length > 0 ? filteredResults : musicData);
-    const totalPages = Math.ceil(dataSource.length / itemsPerPage);
+    const totalPages = Math.max(1, totalPagesCount || 1);
     const current = Math.min(currentPage, totalPages) || 1;
 
     const pageInfo = document.getElementById("pageInfo");
@@ -304,38 +396,38 @@ function updatePagination(source = null) {
         pageInfo.textContent = `Page ${current} of ${totalPages || 1}`;
     }
 
-    document.querySelector(".page-btn[onclick='prevPage()']").disabled = currentPage <= 1;
-    document.querySelector(".page-btn[onclick='nextPage()']").disabled = currentPage >= totalPages;
+    if (prevPageBtn) prevPageBtn.disabled = current <= 1;
+    if (nextPageBtn) nextPageBtn.disabled = current >= totalPages;
 }
 
-function prevPage() {
+async function prevPage() {
     if (currentPage > 1) {
         currentPage--;
         showTripleLoading?.();
-        renderList();
-        setTimeout(() => hideTripleLoading?.(), 500);
+        await loadAndRenderMusicPage();
+        hideTripleLoading?.();
     }
 }
 
-function nextPage() {
-    const source = filteredResults && filteredResults.length > 0 ? filteredResults : musicData;
-    const totalPages = Math.ceil(source.length / itemsPerPage);
-
-    if (currentPage < totalPages) {
+async function nextPage() {
+    if (currentPage < totalPagesCount) {
         currentPage++;
         showTripleLoading?.();
-        renderList();
-        setTimeout(() => hideTripleLoading?.(), 500);
+        await loadAndRenderMusicPage();
+        hideTripleLoading?.();
     }
 }
 
-async function renderTracks(tracks, activeSongId = null) {
+function renderTracks(tracks, activeSongId = null) {
     musicList.innerHTML = "";
 
     if (tracks.length === 0) {
         musicList.innerHTML = `<p class="no-results">No songs found.</p>`;
         return;
     }
+
+    const fragment = document.createDocumentFragment();
+    const durationTargets = [];
 
     for (let i = 0; i < tracks.length; i++) {
         const track = tracks[i];
@@ -350,14 +442,12 @@ async function renderTracks(tracks, activeSongId = null) {
         const div = document.createElement("div");
         div.className = "music-item" + (isActive ? " active" : "");
 
-        if (!track.duration) {
-            track.duration = await getDuration(track.url);
-        }
+        const cachedDuration = track.duration || durationCache[track.url] || 0;
 
         div.innerHTML = `
             <div class="left-content">
                 <div class="image-wrapper ${isActive ? "active" : ""}">
-                    <img src="${track.image}" alt="${track.title}" />
+                    <img src="${track.image}" alt="${track.title}" loading="lazy" decoding="async" />
                     <ion-icon name="play-circle-outline" class="hover-play-icon"></ion-icon>
                 </div>
                 <div class="title-artist">
@@ -366,14 +456,13 @@ async function renderTracks(tracks, activeSongId = null) {
                 </div>
             </div>
             <div class="share-section">
-                <span class="duration">${formatTime(track.duration)}</span>
+                <span class="duration">${cachedDuration ? formatTime(cachedDuration) : "--:--"}</span>
                 <button class="copy-btn"><ion-icon name="copy-outline"></ion-icon></button>
             </div>
         `;
 
         div.addEventListener("click", () => {
-            const index = (currentPage - 1) * itemsPerPage + i;
-            playSong(index);
+            playSong(i);
         });
 
         const copyBtn = div.querySelector(".copy-btn");
@@ -382,29 +471,55 @@ async function renderTracks(tracks, activeSongId = null) {
             copyLink(track.url);
         });
 
-        musicList.appendChild(div);
+        const durationEl = div.querySelector(".duration");
+        if (durationEl && !cachedDuration) {
+            durationTargets.push({ track, el: durationEl });
+        }
+
+        fragment.appendChild(div);
     }
+
+    musicList.appendChild(fragment);
+    hydrateTrackDurations(durationTargets);
 }
 
-async function renderList(activeSongId = null) {
-    const source = filteredResults !== null ? filteredResults : musicData;
+function renderList(activeSongId = null) {
+    const source = musicData || [];
 
     if (!source || source.length === 0) {
         musicList.innerHTML = `<p class="no-results">No songs found.</p>`;
-        updatePagination([]);
+        updatePagination();
         updateMusicHeader();
         return;
     }
 
-    const start = (currentPage - 1) * itemsPerPage;
-    const end = start + itemsPerPage;
-    const pageItems = source.slice(start, end);
+    renderTracks(source, activeSongId);
 
-    await renderTracks(pageItems, activeSongId);
-
-    updatePagination(source);
+    updatePagination();
     scrollToActiveSong();
     updateMusicHeader();
+}
+
+function hydrateTrackDurations(targets = []) {
+    if (!targets.length) return;
+
+    const run = async () => {
+        for (const { track, el } of targets) {
+            if (!track?.url || !el?.isConnected) continue;
+            if (!track.duration) {
+                track.duration = await getDuration(track.url);
+            }
+            if (el.isConnected) {
+                el.textContent = formatTime(track.duration);
+            }
+        }
+    };
+
+    if (typeof window.requestIdleCallback === "function") {
+        window.requestIdleCallback(() => run().catch(console.error), { timeout: 1200 });
+    } else {
+        setTimeout(() => run().catch(console.error), 0);
+    }
 }
 
 function updateProgress() {
@@ -544,46 +659,27 @@ if (autoplayBtn) {
     autoplayBtn.title = `Autoplay: ${autoplayEnabled ? "On" : "Off"}`;
 }
 
-showTripleLoading?.();
-renderList();
-setTimeout(() => {
-    hideTripleLoading?.();
-}, 500);
-
-function handleSearch(query) {
+async function handleSearch(query) {
+    if (!musicDataLoaded) return;
     query = query.trim().toLowerCase();
 
-    if (!query) {
-        filteredResults = null;
-        currentPage = 1;
-        renderList();
-        updateMusicHeader();
-        return;
-    }
-
-    filteredResults = musicData.filter(track =>
-        track.title.toLowerCase().includes(query) ||
-        track.artist.toLowerCase().includes(query)
-    );
-
+    activeSearchQuery = query;
+    filteredResults = null; // server-side filtering now
     currentPage = 1;
-
-    if (filteredResults.length === 0) {
-        musicList.innerHTML = `<p class="no-results">No songs found.</p>`;
-        updatePagination([]);
-        updateMusicHeader();
-    } else {
-        renderList();
-        updateMusicHeader();
-    }
+    showTripleLoading?.();
+    await loadAndRenderMusicPage();
+    hideTripleLoading?.();
 }
 
-function clearSearch() {
+async function clearSearch() {
     const input = document.getElementById('navbarSearch');
     input.value = '';
     filteredResults = null;
+    activeSearchQuery = "";
     currentPage = 1;
-    renderList();
+    showTripleLoading?.();
+    await loadAndRenderMusicPage();
+    hideTripleLoading?.();
 }
 
 const dropdownBtn = document.querySelector('.social-dropdown-btn');
@@ -603,9 +699,7 @@ function updateMusicHeader() {
     const header = document.getElementById("music-header");
     if (!header) return;
 
-    const total = filteredResults
-        ? filteredResults.length
-        : musicData.length;
+    const total = Number(totalMusicCount || 0);
 
     header.textContent = `My Music List (${total} ${total === 1 ? "song" : "songs"})`;
 }

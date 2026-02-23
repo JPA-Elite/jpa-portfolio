@@ -12,7 +12,7 @@ class IMusicRepository(ABC):
         pass
 
     @abstractmethod
-    def get_paginated_music_list(self, page, per_page, order: SortOrder):
+    def get_paginated_music_list(self, page, per_page, order: SortOrder, search_query: str = ""):
         pass
 
     @abstractmethod

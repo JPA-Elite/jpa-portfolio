@@ -59,6 +59,16 @@ endblock %}
                             {{ item.tags|length }} tags
                         </span>
                         {% endif %}
+                        <div class="gallery-count-badges" aria-label="Gallery engagement">
+                            <span class="gallery-count-badge gallery-count-badge--like">
+                                <ion-icon name="heart-outline"></ion-icon>
+                                <span class="like-count" data-raw="0">0</span>
+                            </span>
+                            <span class="gallery-count-badge">
+                                <ion-icon name="chatbubble-outline"></ion-icon>
+                                <span class="comment-count" data-raw="0">0</span>
+                            </span>
+                        </div>
                     </div>
                 </div>
 
@@ -76,10 +86,19 @@ endblock %}
                         <button class="action-btn like-btn" data-gallery-id="{{ item._id }}" onclick="toggleLike(this, '{{ item._id }}')">
                             <ion-icon name="heart-outline"></ion-icon>
                             <span class="like-text">Like</span>
-                            <span class="like-count" data-raw="0">0</span>
                         </button>
                         <button class="action-btn comment-btn" onclick="openModal('{{ item.image_url if item.image_url is defined else image_path ~ item.image_name }}', `{{ item.title[get_locale()] | e }}`,  `{{ item.description[get_locale()] | e }}`, 'imageModal', true, `{{ item._id}}`)">
-                            <ion-icon name="chatbubbles-outline"></ion-icon> Comment <span class="comment-count" data-raw="0">0</span>
+                            <ion-icon name="chatbubbles-outline"></ion-icon> Comment
+                        </button>
+                        <button
+                            class="action-btn share-btn"
+                            type="button"
+                            data-share-title="{{ item.title[get_locale()] | e }}"
+                            data-share-text="{{ item.description[get_locale()] | e }}"
+                            data-share-url="{{ (item.image_url if item.image_url is defined else image_path ~ item.image_name) | e }}"
+                            onclick="shareGalleryItem(this)">
+                            <ion-icon name="share-social-outline"></ion-icon>
+                            <span class="share-label">Share</span>
                         </button>
                     </div>
                 </div>

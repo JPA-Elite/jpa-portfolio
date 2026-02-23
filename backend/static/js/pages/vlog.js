@@ -8,13 +8,62 @@ function formatNumber(num) {
     return num.toString();
 }
 
+function normalizeShareUrl(rawUrl) {
+    if (!rawUrl) return window.location.href;
+
+    try {
+        return new URL(rawUrl, window.location.origin).href;
+    } catch {
+        return window.location.href;
+    }
+}
+
+function setShareButtonState(button, labelText) {
+    const label = button?.querySelector(".share-label");
+    if (label) {
+        label.textContent = labelText;
+    }
+}
+
+async function shareVlogItem(button) {
+    if (!button) return;
+
+    const title = button.getAttribute("data-share-title") || "Vlog";
+    const text = button.getAttribute("data-share-text") || "Check out this vlog.";
+    const url = normalizeShareUrl(button.getAttribute("data-share-url"));
+
+    try {
+        if (navigator.share) {
+            await navigator.share({ title, text, url });
+            setShareButtonState(button, "Shared");
+            setTimeout(() => setShareButtonState(button, "Share"), 1200);
+            return;
+        }
+
+        if (navigator.clipboard?.writeText) {
+            await navigator.clipboard.writeText(url);
+            setShareButtonState(button, "Copied");
+            setTimeout(() => setShareButtonState(button, "Share"), 1200);
+            return;
+        }
+
+        window.prompt("Copy this link:", url);
+    } catch (error) {
+        if (error?.name === "AbortError") return;
+        console.error("Share failed:", error);
+        setShareButtonState(button, "Error");
+        setTimeout(() => setShareButtonState(button, "Share"), 1200);
+    }
+}
+
 function updateCountUI(buttonElement, data) {
     if (!buttonElement || !data) return;
 
-    const likeCountEl = buttonElement.querySelector(".like-count");
+    const cardRoot = buttonElement.closest(".video-item");
+    const likeCountEl = cardRoot?.querySelector(".video-count-badge .like-count");
     const icon = buttonElement.querySelector("ion-icon");
-    const commentBtn = buttonElement.parentElement?.querySelector(".comment-btn");
-    const commentCountEl = commentBtn?.querySelector(".comment-count");
+    const commentCountEl = cardRoot?.querySelector(".video-count-badge .comment-count");
+    const likeBadge = cardRoot?.querySelector(".video-count-badge--like");
 
     if (likeCountEl) {
         likeCountEl.setAttribute("data-raw", data.like_counts ?? 0);
@@ -27,6 +76,9 @@ function updateCountUI(buttonElement, data) {
     }
 
     buttonElement.classList.toggle("liked", Boolean(data.is_liked));
+    if (likeBadge) {
+        likeBadge.classList.toggle("is-active", Boolean(data.is_liked));
+    }
     if (icon) {
         icon.setAttribute("name", data.is_liked ? "heart" : "heart-outline");
     }
@@ -34,14 +86,19 @@ function updateCountUI(buttonElement, data) {
 
 async function toggleLike(button, vlogId) {
     const icon = button.querySelector("ion-icon");
-    const countElement = button.querySelector(".like-count");
+    const cardRoot = button.closest(".video-item");
+    const countElement = cardRoot?.querySelector(".video-count-badge .like-count");
     const count = parseInt(countElement?.getAttribute("data-raw") || "0", 10);
 
     const wasLiked = button.classList.contains("liked");
     const isLiked = !wasLiked;
     const optimisticCount = isLiked ? count + 1 : Math.max(0, count - 1);
+    const likeBadge = cardRoot?.querySelector(".video-count-badge--like");
 
     button.classList.toggle("liked", isLiked);
+    if (likeBadge) {
+        likeBadge.classList.toggle("is-active", isLiked);
+    }
 
     if (countElement) {
         countElement.setAttribute("data-raw", optimisticCount);
@@ -70,6 +127,9 @@ async function toggleLike(button, vlogId) {
         const finalCount = liked ? count + 1 : Math.max(0, count - 1);
 
         button.classList.toggle("liked", liked);
+        if (likeBadge) {
+            likeBadge.classList.toggle("is-active", liked);
+        }
 
         if (countElement) {
             countElement.setAttribute("data-raw", finalCount);
@@ -83,6 +143,9 @@ async function toggleLike(button, vlogId) {
         console.error("Toggle failed:", error);
 
         button.classList.toggle("liked", wasLiked);
+        if (likeBadge) {
+            likeBadge.classList.toggle("is-active", wasLiked);
+        }
 
         if (countElement) {
             countElement.setAttribute("data-raw", count);

@@ -3,20 +3,61 @@
 
 <div class="chatbox-container">
     <div class="chatbox-icon" onclick="toggleChatbox()">
-        <img src="{{ url_for('static', filename='images/chat.png') }}" alt="{{ _('chat_icon_alt') }}" />
+        <button type="button" class="chatbox-launch-btn" aria-label="{{ _('chat_icon_alt') }}">
+            <ion-icon class="chatbox-launch-icon" name="chatbubbles-outline" aria-hidden="true"></ion-icon>
+        </button>
     </div>
     <div id="chatboxModal" class="chatbox-modal">
         {% include 'spinners/triple_loading.html' %}
         <div class="chatbox-header">
-            <span class="chatbox-title">{{ _('chat_title') }}</span>
-            <span class="chatbox-close" onclick="toggleChatbox()">&times;</span>
+            <div class="chatbox-header-meta">
+                <span class="chatbox-avatar" aria-hidden="true">J</span>
+                <div class="chatbox-header-text">
+                    <span class="chatbox-title">{{ _('chat_title') }}</span>
+                    <span class="chatbox-status">
+                        <span class="chatbox-status-dot" aria-hidden="true"></span>
+                        Online
+                    </span>
+                </div>
+            </div>
+            <button class="chatbox-close" type="button" onclick="toggleChatbox()" aria-label="{{ _('chat_title') }} close">&times;</button>
         </div>
         <div class="chatbox-body">
-            <p class="chatbox-help">{{ _('chat_help_message') }}</p>
+            <div class="chatbox-help-card">
+                <p class="chatbox-help">{{ _('chat_help_message') }}</p>
+            </div>
             <div id="chatMessages" class="chat-messages"></div>
-            <div class="chat-options grid" id="chatOptions"></div>
+            <div id="chatOptionsPanel" class="chat-options-panel">
+                <button
+                    id="chatOptionsToggle"
+                    class="chat-options-toggle"
+                    type="button"
+                    onclick="toggleChatOptions()"
+                    aria-controls="chatOptions"
+                    aria-expanded="true">
+                    <span class="chat-options-toggle__label">Quick Questions</span>
+                    <span id="chatOptionsCount" class="chat-options-toggle__count">0</span>
+                    <ion-icon class="chat-options-toggle__icon" name="chevron-down-outline"></ion-icon>
+                </button>
+                <div class="chat-options grid" id="chatOptions"></div>
+            </div>
         </div>
-        <button id="clearChat" onclick="clearChat()" style="display: none;">{{ _('chat_clear_button') }}</button>
+        <div class="chatbox-footer">
+            <div class="chatbox-composer">
+                <input
+                    id="chatInput"
+                    class="chatbox-input"
+                    type="text"
+                    placeholder="Ask me something..."
+                    onkeydown="handleChatInputKeydown(event)"
+                    autocomplete="off" />
+                <button id="sendChat" class="chatbox-send" type="button" onclick="sendMessage()">
+                    <ion-icon name="paper-plane-outline" aria-hidden="true"></ion-icon>
+                    <span>Send</span>
+                </button>
+            </div>
+            <button id="clearChat" onclick="clearChat()" style="display: none;">{{ _('chat_clear_button') }}</button>
+        </div>
     </div>
 </div>
 <script src="{{ url_for('static', filename='js/components/chatbox.js') }}"></script>

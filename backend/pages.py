@@ -21,7 +21,7 @@ def profile():
     return profile_route()
 
 @pages_bp.route("/gallery", methods=[http.GET])
-@cache.cached(key_prefix=lambda: f"gallery_{get_locale()}_{request.query_string.decode()}")
+@cache.cached(key_prefix=lambda: f"gallery_ui_v2_{get_locale()}_{request.query_string.decode()}")
 def gallery():
     return gallery_route()
 

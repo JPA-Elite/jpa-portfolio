@@ -277,33 +277,109 @@
 
 /* Input box */
 .comment-input {
-    display: flex;
-    align-items: center;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: end;
     margin-top: 15px;
     gap: 10px;
     border-top: 1px solid rgba(255, 255, 255, 0.15);
-    padding-top: 10px;
+    padding-top: 12px;
 }
 
 .comment-input img {
     border-radius: 50%;
     height: 40px;
     width: 40px;
+    align-self: center;
+}
+
+.comment-input-field {
+    position: relative;
+    min-width: 0;
 }
 
 .comment-input input {
+    width: 100%;
     background: rgba(255, 255, 255, 0.1);
     border: none;
     border-radius: 20px;
-    padding: 8px 14px;
+    padding: 12px 44px 12px 16px;
     color: #fff;
-    font-size: 0.9rem;
+    font-size: 0.98rem;
+    min-height: 46px;
+    line-height: 1.2;
     outline: none;
-    transition: background 0.3s;
+    box-sizing: border-box;
+    transition: background 0.3s, box-shadow 0.2s ease;
 }
 
 .comment-input input:focus {
     background: rgba(255, 255, 255, 0.2);
+    box-shadow: 0 0 0 2px rgba(30, 136, 229, 0.25);
+}
+
+.comment-input input::placeholder {
+    color: rgba(255, 255, 255, 0.65);
+}
+
+.comment-emoji-btn {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 30px;
+    height: 30px;
+    display: inline-grid;
+    place-items: center;
+    border: none;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.12);
+    color: #fff;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.comment-emoji-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.comment-emoji-btn ion-icon {
+    font-size: 17px;
+}
+
+.comment-emoji-picker {
+    position: absolute;
+    right: 0;
+    bottom: calc(100% + 8px);
+    width: min(260px, calc(100vw - 120px));
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 6px;
+    padding: 8px;
+    border-radius: 12px;
+    background: rgba(20, 20, 20, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow: 0 12px 26px rgba(0, 0, 0, 0.35);
+    z-index: 20;
+}
+
+.comment-emoji-picker[hidden] {
+    display: none !important;
+}
+
+.comment-emoji-picker button {
+    border: none;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.06);
+    color: #fff;
+    height: 34px;
+    font-size: 18px;
+    cursor: pointer;
+    line-height: 1;
+}
+
+.comment-emoji-picker button:hover {
+    background: rgba(255, 255, 255, 0.14);
 }
 
 /* ✉️ Send button styling */
@@ -311,11 +387,14 @@
     background: #1e88e5;
     color: #fff;
     border: none;
-    padding: 8px 16px;
+    padding: 11px 16px;
     border-radius: 20px;
-    font-size: 0.9rem;
+    font-size: 0.92rem;
+    min-height: 46px;
+    min-width: 76px;
     cursor: pointer;
     transition: background 0.3s ease, transform 0.2s ease;
+    align-self: stretch;
 }
 
 .send-btn:hover {
@@ -483,9 +562,11 @@
     }
 
     .comment-input {
-        display: flex;
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr) auto;
         padding: 10px;
         gap: 8px;
+        align-items: end;
     }
 
     .comment-input img {
@@ -494,18 +575,38 @@
         align-self: center;
     }
 
+    .comment-input-field {
+        min-width: 0;
+    }
+
     .comment-input input {
-        width: 80% !important;
-        border-radius: 10px;
-        font-size: 0.85rem;
-        padding: 10px 12px;
-        height: 30px;
+        width: 100% !important;
+        border-radius: 12px;
+        font-size: 0.95rem;
+        padding: 12px 42px 12px 12px;
+        min-height: 44px;
+        height: auto;
+    }
+
+    .comment-emoji-btn {
+        width: 28px;
+        height: 28px;
+        right: 7px;
+    }
+
+    .comment-emoji-picker {
+        width: min(220px, calc(100vw - 90px));
+        grid-template-columns: repeat(5, 1fr);
+        gap: 5px;
+        padding: 7px;
     }
 
     .send-btn {
-        padding: 10px;
-        border-radius: 10px;
-        font-size: 0.85rem;
+        padding: 10px 12px;
+        border-radius: 12px;
+        font-size: 0.88rem;
+        min-height: 44px;
+        min-width: 70px;
     }
 
     .prev-comments-btn {
@@ -521,13 +622,41 @@
 }
 
 @media only screen and (max-width: 400px) {
-    .comment-input input {
-        font-size: 0.8rem;
-        padding: 8px 10px;
+    .comment-input {
+        grid-template-columns: auto 1fr;
+        grid-template-areas:
+            "avatar field"
+            "send send";
+        align-items: center;
+    }
+
+    .comment-input img {
+        grid-area: avatar;
+    }
+
+    .comment-input-field {
+        grid-area: field;
     }
 
     .send-btn {
-        font-size: 0.8rem;
-        padding: 8px 10px;
+        grid-area: send;
+        width: 100%;
+        justify-content: center;
+    }
+
+    .comment-input input {
+        font-size: 0.9rem;
+        padding: 10px 40px 10px 10px;
+        min-height: 42px;
+    }
+
+    .comment-emoji-picker {
+        width: min(210px, calc(100vw - 70px));
+        grid-template-columns: repeat(4, 1fr);
+    }
+
+    .send-btn {
+        font-size: 0.9rem;
+        padding: 10px 12px;
     }
 }

@@ -168,6 +168,55 @@ if (!window.__modal_js_loaded__) {
         });
     }
 
+    function getCommentComposerElements() {
+        return {
+            commentBox: document.getElementById("commentBox"),
+            emojiPicker: document.getElementById("commentEmojiPicker"),
+            emojiToggle: document.getElementById("commentEmojiToggle"),
+        };
+    }
+
+    function closeCommentEmojiPicker() {
+        const { emojiPicker, emojiToggle } = getCommentComposerElements();
+        if (emojiPicker) emojiPicker.hidden = true;
+        if (emojiToggle) emojiToggle.setAttribute("aria-expanded", "false");
+    }
+
+    function toggleCommentEmojiPicker(event) {
+        event?.preventDefault?.();
+        event?.stopPropagation?.();
+
+        const { emojiPicker, emojiToggle } = getCommentComposerElements();
+        if (!emojiPicker) return;
+
+        const willOpen = emojiPicker.hidden;
+        emojiPicker.hidden = !willOpen;
+        if (emojiToggle) emojiToggle.setAttribute("aria-expanded", willOpen ? "true" : "false");
+    }
+
+    function insertCommentEmoji(emoji) {
+        const { commentBox } = getCommentComposerElements();
+        if (!commentBox) return;
+
+        const value = commentBox.value || "";
+        const start = Number.isInteger(commentBox.selectionStart) ? commentBox.selectionStart : value.length;
+        const end = Number.isInteger(commentBox.selectionEnd) ? commentBox.selectionEnd : value.length;
+        const nextValue = value.slice(0, start) + emoji + value.slice(end);
+
+        commentBox.value = nextValue;
+        commentBox.dispatchEvent(new Event("input", { bubbles: true }));
+
+        const nextPos = start + emoji.length;
+        try {
+            commentBox.setSelectionRange(nextPos, nextPos);
+        } catch (_) {
+            // Ignore if browser/input type doesn't support selection range.
+        }
+
+        commentBox.focus();
+        closeCommentEmojiPicker();
+    }
+
     window.openProjectSlidesModal = function (slides, startIndex = 0) {
         const normalized = normalizeSlides(slides);
         if (!normalized.length) {
@@ -245,6 +294,7 @@ if (!window.__modal_js_loaded__) {
         }
 
         adminFloadtBtn && (adminFloadtBtn.style.display = "none");
+        closeCommentEmojiPicker();
     }
 
     // Function to close the modal
@@ -254,6 +304,7 @@ if (!window.__modal_js_loaded__) {
         document.querySelector(".box-modal-container").style.display = "none";
         adminFloadtBtn && (adminFloadtBtn.style.display = "flex");
         pauseAllVideos();
+        closeCommentEmojiPicker();
     }
 
     // ---------------- Comments ----------------
@@ -451,6 +502,11 @@ if (!window.__modal_js_loaded__) {
     function initCommentBox() {
         const commentBox = document.getElementById("commentBox");
         if (!commentBox) return;
+        if (commentBox.dataset.initialized === "true") return;
+        commentBox.dataset.initialized = "true";
+
+        const emojiToggle = document.getElementById("commentEmojiToggle");
+        const emojiPicker = document.getElementById("commentEmojiPicker");
 
         commentBox.addEventListener("input", () => {
             if (commentBox.value.length > MAX_COMMENT_LENGTH) {
@@ -463,10 +519,26 @@ if (!window.__modal_js_loaded__) {
                 await submitComment();
             }
         });
+
+        emojiToggle?.addEventListener("click", toggleCommentEmojiPicker);
+        emojiPicker?.addEventListener("click", (event) => {
+            event.stopPropagation();
+        });
+
+        document.addEventListener("click", (event) => {
+            const target = event.target;
+            if (!(target instanceof Element)) return;
+            if (target.closest(".comment-input-field")) return;
+            closeCommentEmojiPicker();
+        });
     }
 
-    // Call after DOM is ready
-    document.addEventListener("DOMContentLoaded", initCommentBox);
+    // Call after DOM is ready (or immediately if already ready)
+    if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", initCommentBox);
+    } else {
+        initCommentBox();
+    }
 
 
     // expose needed functions globally
@@ -476,5 +548,7 @@ if (!window.__modal_js_loaded__) {
     window.toggleCommentLike = toggleCommentLike;
     window.moveSlide = moveSlide;
     window.loadComments = loadComments;
+    window.toggleCommentEmojiPicker = toggleCommentEmojiPicker;
+    window.insertCommentEmoji = insertCommentEmoji;
 }
 

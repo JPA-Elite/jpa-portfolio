@@ -182,9 +182,20 @@
         </div>
         <div class="right">
             <div class="controls">
-                <button onclick="prevSong()">Prev</button>
-                <button onclick="togglePlay()" id="playPauseBtn">Play</button>
-                <button onclick="nextSong()">Next</button>
+                <button onclick="prevSong()" class="icon-btn" title="Previous" aria-label="Previous track">
+                    <ion-icon name="play-skip-back-outline"></ion-icon>
+                </button>
+                <button onclick="togglePlay()" id="playPauseBtn" class="icon-btn play-btn" title="Play"
+                    aria-label="Play">
+                    <ion-icon name="play-outline"></ion-icon>
+                </button>
+                <button onclick="nextSong()" class="icon-btn" title="Next" aria-label="Next track">
+                    <ion-icon name="play-skip-forward-outline"></ion-icon>
+                </button>
+                <button onclick="toggleShuffle()" id="shuffleBtn" class="icon-btn" title="Shuffle: Off"
+                    aria-label="Toggle shuffle">
+                    <ion-icon name="shuffle-outline"></ion-icon>
+                </button>
                 <div class="volume-container">
                     <input type="range" class="volume-slider" min="0" max="100" value="100" id="volumeSlider">
                     <span class="volume-percentage" id="volumePercentage">100%</span>

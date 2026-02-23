@@ -264,6 +264,42 @@ main {
     cursor: pointer;
 }
 
+.player .controls .icon-btn {
+    width: 36px;
+    min-width: 36px;
+    height: 36px;
+    padding: 0;
+    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+}
+
+.player .controls .play-btn {
+    width: 40px;
+    min-width: 40px;
+    height: 40px;
+}
+
+.player .controls button ion-icon {
+    font-size: 18px;
+    pointer-events: none;
+}
+
+.player .controls .play-btn ion-icon {
+    font-size: 20px;
+}
+
+.player .controls .icon-btn.is-off {
+    background: rgba(255, 255, 255, 0.14);
+    color: rgba(255, 255, 255, 0.82);
+}
+
+.player .controls .icon-btn.is-on {
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.18) inset, 0 6px 18px rgba(41, 98, 255, 0.32);
+}
+
 .cover-section {
     display: flex;
     align-items: center;
@@ -1062,6 +1098,23 @@ nav ul li.active {
         font-size: 10px;
     }
 
+    .player .controls .icon-btn {
+        width: 34px;
+        min-width: 34px;
+        height: 34px;
+        padding: 0;
+    }
+
+    .player .controls .play-btn {
+        width: 38px;
+        min-width: 38px;
+        height: 38px;
+    }
+
+    .player .controls button ion-icon {
+        font-size: 16px;
+    }
+
     .player .title-artist .title {
         font-size: 12px;
         max-width: 150px;
@@ -1154,6 +1207,19 @@ nav ul li.active {
         padding: 6px 10px;
         font-size: 10px;
     }
+
+    .player .controls .icon-btn {
+        width: 34px;
+        min-width: 34px;
+        height: 34px;
+        padding: 0;
+    }
+
+    .player .controls .play-btn {
+        width: 38px;
+        min-width: 38px;
+        height: 38px;
+    }
 }
 
 @media (max-width: 360px) {
@@ -1201,5 +1267,18 @@ nav ul li.active {
     .player .controls button {
         padding: 4px 8px;
         font-size: 8px;
+    }
+
+    .player .controls .icon-btn {
+        width: 30px;
+        min-width: 30px;
+        height: 30px;
+        padding: 0;
+    }
+
+    .player .controls .play-btn {
+        width: 34px;
+        min-width: 34px;
+        height: 34px;
     }
 }

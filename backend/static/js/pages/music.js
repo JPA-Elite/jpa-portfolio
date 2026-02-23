@@ -7,6 +7,10 @@ const itemsPerPage = 10;
 let musicList;
 let musicData = [];
 let autoplayEnabled = true;
+let shuffleEnabled = false;
+let shuffleQueueGlobal = [];
+let shuffleQueueContextKey = "";
+let shuffleHistoryGlobal = [];
 let isDragging = false;
 const durationCache = JSON.parse(localStorage.getItem('audioDurationCache') || '{}');
 let filteredResults = null;
@@ -34,6 +38,67 @@ let audioContext, analyser, source, dataArray, bufferLength, visualizerRunning;
 const prevPageBtn = document.querySelector(".page-btn[onclick='prevPage()']");
 const nextPageBtn = document.querySelector(".page-btn[onclick='nextPage()']");
 
+function setControlButtonIcon(button, iconName, label) {
+    if (!button) return;
+    button.innerHTML = `<ion-icon name="${iconName}"></ion-icon>`;
+    if (label) {
+        button.title = label;
+        button.setAttribute("aria-label", label);
+    }
+}
+
+function syncPlayPauseButton() {
+    const isPlaying = !!audioPlayer?.src && !audioPlayer.paused;
+    setControlButtonIcon(
+        playPauseBtn,
+        isPlaying ? "pause-outline" : "play-outline",
+        isPlaying ? "Pause" : "Play"
+    );
+}
+
+function syncAutoplayButton() {
+    const btn = document.getElementById("autoplayBtn");
+    if (!btn) return;
+    btn.classList.add("icon-btn");
+    setControlButtonIcon(
+        btn,
+        autoplayEnabled ? "repeat" : "repeat-outline",
+        `Autoplay: ${autoplayEnabled ? "On" : "Off"}`
+    );
+    btn.classList.toggle("is-off", !autoplayEnabled);
+    btn.setAttribute("aria-pressed", String(autoplayEnabled));
+}
+
+function syncShuffleButton() {
+    const btn = document.getElementById("shuffleBtn");
+    if (!btn) return;
+    btn.classList.add("icon-btn");
+    setControlButtonIcon(
+        btn,
+        shuffleEnabled ? "shuffle" : "shuffle-outline",
+        `Shuffle: ${shuffleEnabled ? "On" : "Off"}`
+    );
+    btn.classList.toggle("is-off", !shuffleEnabled);
+    btn.classList.toggle("is-on", shuffleEnabled);
+    btn.setAttribute("aria-pressed", String(shuffleEnabled));
+}
+
+function syncFullscreenButton(isExpanded) {
+    const btn = document.getElementById("fullscreenBtn");
+    if (!btn) return;
+    btn.classList.add("icon-btn");
+    setControlButtonIcon(
+        btn,
+        isExpanded ? "contract-outline" : "expand-outline",
+        isExpanded ? "Exit fullscreen" : "Enter fullscreen"
+    );
+    btn.setAttribute("aria-pressed", String(!!isExpanded));
+}
+
+syncPlayPauseButton();
+syncShuffleButton();
+syncFullscreenButton(false);
+
 document.addEventListener("DOMContentLoaded", async () => {
     const root = document.documentElement;
     root.setAttribute("data-theme", "dark");
@@ -47,7 +112,106 @@ document.addEventListener("DOMContentLoaded", async () => {
     } finally {
         hideTripleLoading?.();
     }
+    syncPlayPauseButton();
+    markGlobalSongAsPlayed(getCurrentGlobalSongIndex());
+    syncAutoplayButton();
+    syncShuffleButton();
+    syncFullscreenButton(false);
 });
+
+function getRandomTrackIndex(source = [], excludeIndex = -1) {
+    const count = Array.isArray(source) ? source.length : 0;
+    if (count <= 1) return 0;
+
+    let nextIndex = excludeIndex;
+    let safety = 0;
+    while (nextIndex === excludeIndex && safety < 12) {
+        nextIndex = Math.floor(Math.random() * count);
+        safety++;
+    }
+    return nextIndex === excludeIndex ? (excludeIndex + 1) % count : nextIndex;
+}
+
+function getShuffleContextKey() {
+    return `${activeSearchQuery}::${Number(totalMusicCount || 0)}`;
+}
+
+function getCurrentGlobalSongIndex() {
+    if (!Array.isArray(musicData) || !musicData.length || currentSongIndex < 0) return -1;
+    return ((Math.max(1, currentPage) - 1) * itemsPerPage) + currentSongIndex;
+}
+
+function resetShuffleQueue(excludeGlobalIndex = -1) {
+    const total = Number(totalMusicCount || 0);
+    shuffleQueueContextKey = getShuffleContextKey();
+    shuffleQueueGlobal = [];
+    if (total <= 0) return;
+
+    for (let i = 0; i < total; i++) {
+        if (i !== excludeGlobalIndex) {
+            shuffleQueueGlobal.push(i);
+        }
+    }
+
+    for (let i = shuffleQueueGlobal.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffleQueueGlobal[i], shuffleQueueGlobal[j]] = [shuffleQueueGlobal[j], shuffleQueueGlobal[i]];
+    }
+}
+
+function ensureShuffleQueue(excludeGlobalIndex = -1) {
+    if (shuffleQueueContextKey !== getShuffleContextKey()) {
+        shuffleHistoryGlobal = [];
+    }
+    if (shuffleQueueContextKey !== getShuffleContextKey() || !shuffleQueueGlobal.length) {
+        resetShuffleQueue(excludeGlobalIndex);
+    }
+}
+
+function markGlobalSongAsPlayed(globalIndex) {
+    if (globalIndex < 0) return;
+    if (shuffleQueueContextKey !== getShuffleContextKey()) return;
+    if (!shuffleQueueGlobal.length) return;
+    shuffleQueueGlobal = shuffleQueueGlobal.filter((idx) => idx !== globalIndex);
+}
+
+function getNextShuffleGlobalIndex() {
+    const currentGlobalIndex = getCurrentGlobalSongIndex();
+    ensureShuffleQueue(currentGlobalIndex);
+    if (!shuffleQueueGlobal.length) return currentGlobalIndex;
+    return shuffleQueueGlobal.shift();
+}
+
+async function playSongByGlobalIndex(globalIndex, { recordShuffleHistory = false } = {}) {
+    const total = Number(totalMusicCount || 0);
+    if (globalIndex < 0 || globalIndex >= total) return;
+
+    if (recordShuffleHistory && shuffleEnabled) {
+        const currentGlobalIndex = getCurrentGlobalSongIndex();
+        if (currentGlobalIndex >= 0 && currentGlobalIndex !== globalIndex) {
+            const lastHistory = shuffleHistoryGlobal[shuffleHistoryGlobal.length - 1];
+            if (lastHistory !== currentGlobalIndex) {
+                shuffleHistoryGlobal.push(currentGlobalIndex);
+            }
+        }
+    }
+
+    const targetPage = Math.floor(globalIndex / itemsPerPage) + 1;
+    const targetLocalIndex = globalIndex % itemsPerPage;
+
+    if (targetPage !== currentPage) {
+        currentPage = targetPage;
+        showTripleLoading?.();
+        try {
+            await loadAndRenderMusicPage();
+        } finally {
+            hideTripleLoading?.();
+        }
+    }
+
+    if (!Array.isArray(musicData) || !musicData.length) return;
+    playSong(Math.min(targetLocalIndex, musicData.length - 1));
+}
 
 async function loadMusicData() {
     const cacheKey = `${MUSIC_DATA_CACHE_KEY}:${currentPage}:${itemsPerPage}:${activeSearchQuery}`;
@@ -177,7 +341,8 @@ function playSong(index) {
     coverImg.classList.add("spin");
     audioPlayer.play();
     if (!isMobileDevice()) startVisualizer();
-    playPauseBtn.textContent = "Pause";
+    syncPlayPauseButton();
+    markGlobalSongAsPlayed(getCurrentGlobalSongIndex());
 
     // ✅ Re-render the current page only
     renderList(song.id);
@@ -188,33 +353,62 @@ function togglePlay() {
         if (audioPlayer.paused) {
             coverImg.classList.add("spin");
             audioPlayer.play();
-            playPauseBtn.textContent = "Pause";
+            syncPlayPauseButton();
         } else {
             coverImg.classList.remove("spin");
             audioPlayer.pause();
-            playPauseBtn.textContent = "Play";
+            syncPlayPauseButton();
         }
         if (!isMobileDevice()) startVisualizer();
     }
 }
 
-function prevSong() {
+async function prevSong() {
     const source = musicData || [];
     if (!source.length) return;
-    currentSongIndex = (currentSongIndex - 1 + source.length) % source.length;
-    playSong(currentSongIndex);
+
+    if (shuffleEnabled) {
+        const previousGlobalIndex = shuffleHistoryGlobal.pop();
+        if (typeof previousGlobalIndex === "number" && previousGlobalIndex >= 0) {
+            await playSongByGlobalIndex(previousGlobalIndex, { recordShuffleHistory: false });
+            scrollToActiveSong();
+        }
+        return;
+    }
+
+    const total = Number(totalMusicCount || 0);
+    if (total <= 0) return;
+    const currentGlobalIndex = getCurrentGlobalSongIndex();
+    const prevGlobalIndex = currentGlobalIndex <= 0 ? total - 1 : currentGlobalIndex - 1;
+    await playSongByGlobalIndex(prevGlobalIndex, { recordShuffleHistory: false });
+    scrollToActiveSong();
 }
 
-function nextSong() {
+async function nextSong() {
     const source = musicData || [];
     if (!source.length) return;
-    currentSongIndex = (currentSongIndex + 1) % source.length;
-    playSong(currentSongIndex);
+    if (shuffleEnabled) {
+        await playSongByGlobalIndex(getNextShuffleGlobalIndex(), { recordShuffleHistory: true });
+        scrollToActiveSong();
+        return;
+    }
+    const total = Number(totalMusicCount || 0);
+    if (total <= 0) return;
+    const currentGlobalIndex = getCurrentGlobalSongIndex();
+    const nextGlobalIndex = currentGlobalIndex >= total - 1 ? 0 : currentGlobalIndex + 1;
+    await playSongByGlobalIndex(nextGlobalIndex, { recordShuffleHistory: false });
+    scrollToActiveSong();
 }
 
 async function playNextSongOrNextPage() {
     const source = musicData || [];
     if (!source.length) return;
+
+    if (shuffleEnabled) {
+        await playSongByGlobalIndex(getNextShuffleGlobalIndex(), { recordShuffleHistory: true });
+        scrollToActiveSong();
+        return;
+    }
 
     if (currentSongIndex >= source.length - 1) {
         if (currentPage < totalPagesCount) {
@@ -372,6 +566,11 @@ document.addEventListener("fullscreenchange", () => {
     }
 });
 
+document.addEventListener("fullscreenchange", () => {
+    const isExpanded = !!document.fullscreenElement || document.body.classList.contains("music-mobile-fullscreen");
+    syncFullscreenButton(isExpanded);
+});
+
 function toggleFullscreen() {
     const albumSection = document.getElementById("albumSection");
     const fullscreenBtn = document.getElementById("fullscreenBtn");
@@ -387,6 +586,7 @@ function toggleFullscreen() {
         if (entering) {
             window.scrollTo({ top: 0, behavior: "auto" });
         }
+        syncFullscreenButton(entering);
         return;
     }
 
@@ -396,6 +596,7 @@ function toggleFullscreen() {
         albumSection.requestFullscreen().catch((err) => {
             console.error("Fullscreen failed:", err);
         });
+        syncFullscreenButton(true);
     } else {
         document.exitFullscreen();
     }
@@ -590,11 +791,27 @@ function toggleAutoplay() {
     const btn = document.getElementById("autoplayBtn");
     btn.textContent = autoplayEnabled ? "♬" : "⏹️";
     btn.title = `Autoplay: ${autoplayEnabled ? "On" : "Off"}`;
+    syncAutoplayButton();
     localStorage.setItem("autoplay", autoplayEnabled);
+}
+
+function toggleShuffle() {
+    shuffleEnabled = !shuffleEnabled;
+    shuffleHistoryGlobal = [];
+    if (shuffleEnabled) {
+        resetShuffleQueue(getCurrentGlobalSongIndex());
+    } else {
+        shuffleQueueGlobal = [];
+        shuffleQueueContextKey = "";
+    }
+    syncShuffleButton();
+    localStorage.setItem("musicShuffle", shuffleEnabled);
 }
 
 audioPlayer.addEventListener("timeupdate", updateProgress);
 audioPlayer.addEventListener("loadedmetadata", updateDuration);
+audioPlayer.addEventListener("play", syncPlayPauseButton);
+audioPlayer.addEventListener("pause", syncPlayPauseButton);
 progressBar.addEventListener("click", (event) => seek(event));
 progressBar.addEventListener("mousedown", (event) => {
     isDragging = true;
@@ -667,11 +884,14 @@ document.addEventListener("click", function (e) {
 
 // Initialize autoplay from localStorage
 autoplayEnabled = localStorage.getItem("autoplay") !== "false";
+shuffleEnabled = localStorage.getItem("musicShuffle") === "true";
 const autoplayBtn = document.getElementById("autoplayBtn");
 if (autoplayBtn) {
     autoplayBtn.textContent = autoplayEnabled ? "♬" : "⏹️";
     autoplayBtn.title = `Autoplay: ${autoplayEnabled ? "On" : "Off"}`;
+    syncAutoplayButton();
 }
+syncShuffleButton();
 
 async function handleSearch(query) {
     if (!musicDataLoaded) return;

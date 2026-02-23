@@ -36,7 +36,27 @@
 
         <div class="comment-input">
             <img src="/static/images/user.webp" alt="Your profile picture" />
-            <input type="text" id="commentBox" placeholder="Write a comment..." />
+            <div class="comment-input-field">
+                <input type="text" id="commentBox" placeholder="Write a comment..." />
+                <button type="button" class="comment-emoji-btn" id="commentEmojiToggle"
+                    aria-label="Insert emoji" aria-expanded="false">
+                    <ion-icon name="happy-outline"></ion-icon>
+                </button>
+                <div class="comment-emoji-picker" id="commentEmojiPicker" hidden>
+                    <button type="button" onclick="insertCommentEmoji('😀')">😀</button>
+                    <button type="button" onclick="insertCommentEmoji('😂')">😂</button>
+                    <button type="button" onclick="insertCommentEmoji('😍')">😍</button>
+                    <button type="button" onclick="insertCommentEmoji('😎')">😎</button>
+                    <button type="button" onclick="insertCommentEmoji('🥹')">🥹</button>
+                    <button type="button" onclick="insertCommentEmoji('🔥')">🔥</button>
+                    <button type="button" onclick="insertCommentEmoji('✨')">✨</button>
+                    <button type="button" onclick="insertCommentEmoji('👏')">👏</button>
+                    <button type="button" onclick="insertCommentEmoji('❤️')">❤️</button>
+                    <button type="button" onclick="insertCommentEmoji('👍')">👍</button>
+                    <button type="button" onclick="insertCommentEmoji('🙏')">🙏</button>
+                    <button type="button" onclick="insertCommentEmoji('🎉')">🎉</button>
+                </div>
+            </div>
             <button class="send-btn" onclick="submitComment()">Send</button>
         </div>
     </div>

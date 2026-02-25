@@ -56,6 +56,37 @@ function getCurrentSong() {
     return source[currentSongIndex] || null;
 }
 
+function renderLyricsContent(text = "", { isEmptyState = false } = {}) {
+    if (!lyricsModalContentEl) return;
+
+    lyricsModalContentEl.innerHTML = "";
+    lyricsModalContentEl.classList.toggle("is-empty", Boolean(isEmptyState));
+
+    if (isEmptyState) {
+        const emptyLine = document.createElement("div");
+        emptyLine.className = "lyrics-modal__line lyrics-modal__line--empty-state";
+        emptyLine.textContent = text || "No lyrics available.";
+        lyricsModalContentEl.appendChild(emptyLine);
+        return;
+    }
+
+    const lines = String(text).replace(/\r\n/g, "\n").replace(/\r/g, "\n").split("\n");
+
+    lines.forEach((lineText) => {
+        const lineEl = document.createElement("div");
+        lineEl.className = "lyrics-modal__line";
+
+        if (!lineText.trim()) {
+            lineEl.classList.add("lyrics-modal__line--blank");
+            lineEl.innerHTML = "&nbsp;";
+        } else {
+            lineEl.textContent = lineText;
+        }
+
+        lyricsModalContentEl.appendChild(lineEl);
+    });
+}
+
 function syncLyricsPanel(song = getCurrentSong()) {
     if (lyricsBtn) {
         const disabled = !song;
@@ -70,16 +101,19 @@ function syncLyricsPanel(song = getCurrentSong()) {
     if (!song) {
         lyricsModalTitleEl.textContent = "Select a song";
         lyricsModalArtistEl.textContent = "";
-        lyricsModalContentEl.classList.add("is-empty");
-        lyricsModalContentEl.textContent = "Select a song to view lyrics.";
+        renderLyricsContent("Select a song to view lyrics.", { isEmptyState: true });
         return;
     }
 
     const lyrics = typeof song.lyrics === "string" ? song.lyrics.trim() : "";
     lyricsModalTitleEl.textContent = song.title || "Lyrics";
     lyricsModalArtistEl.textContent = song.artist || "";
-    lyricsModalContentEl.classList.toggle("is-empty", !lyrics);
-    lyricsModalContentEl.textContent = lyrics || "No lyrics added for this song yet.";
+    if (!lyrics) {
+        renderLyricsContent("No lyrics added for this song yet.", { isEmptyState: true });
+        return;
+    }
+
+    renderLyricsContent(lyrics, { isEmptyState: false });
 }
 
 function openLyricsModal() {

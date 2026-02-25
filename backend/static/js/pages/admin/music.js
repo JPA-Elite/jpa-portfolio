@@ -3,6 +3,15 @@ let currentAudio = null;
 let currentButton = null;
 let perPage = 10;
 
+function escapeHtml(value = "") {
+    return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+}
+
 function setButtonLoading(button, isLoading) {
     if (!button) return;
 
@@ -127,13 +136,16 @@ async function loadMusic(page = 1) {
         data.music.forEach((music, index) => {
             const modalIdEdit = `editModal${page}_${index}`;
             const modalIdDelete = `deleteModal${page}_${index}`;
+            const safeTitle = escapeHtml(music.title || "");
+            const safeArtist = escapeHtml(music.artist || "");
+            const safeLyrics = escapeHtml(music.lyrics || "");
 
             // ✅ Add table row
             tbody.innerHTML += `
         <tr>
             <td>${(page - 1) * perPage + (index + 1)}</td>
-            <td>${music.title}</td>
-            <td>${music.artist}</td>
+            <td>${safeTitle}</td>
+            <td>${safeArtist}</td>
             <td>
                 <button
                 id="previewBtn_${music._id}"
@@ -147,7 +159,7 @@ async function loadMusic(page = 1) {
             </td>
             <td>
                 <img src="${music.image}" onclick="playMusicPreview('${music.image}')" alt="${
-                music.title}" style="cursor: pointer; width: 60px; height: auto; border-radius:4px;">
+                safeTitle}" style="cursor: pointer; width: 60px; height: auto; border-radius:4px;">
             </td>
             <td>
                 <button class="btn btn-sm btn-primary me-1" data-bs-toggle="modal" data-bs-target="#${modalIdEdit}">
@@ -173,11 +185,15 @@ async function loadMusic(page = 1) {
                     <form id="editForm${page}_${index}">
                     <div class="mb-3">
                         <label for="editTitle${page}_${index}" class="form-label">Title <span class="text-danger">*</label>
-                        <input type="text" class="form-control" id="editTitle${page}_${index}" value="${music.title}">
+                        <input type="text" class="form-control" id="editTitle${page}_${index}" value="${safeTitle}">
                     </div>
                     <div class="mb-3">
                         <label for="editArtist${page}_${index}" class="form-label">Artist <span class="text-danger">*</label>
-                        <input type="text" class="form-control" id="editArtist${page}_${index}" value="${music.artist}">
+                        <input type="text" class="form-control" id="editArtist${page}_${index}" value="${safeArtist}">
+                    </div>
+                    <div class="mb-3">
+                        <label for="editLyrics${page}_${index}" class="form-label">Lyrics</label>
+                        <textarea class="form-control" id="editLyrics${page}_${index}" rows="6" placeholder="Enter song lyrics (optional)">${safeLyrics}</textarea>
                     </div>
                     <div class="mb-3">
                     <label class="form-label">Music File (leave blank to keep current)</label>
@@ -223,7 +239,7 @@ async function loadMusic(page = 1) {
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    Are you sure you want to delete <strong>${music.title}</strong> by <em>${music.artist}</em>?
+                    Are you sure you want to delete <strong>${safeTitle}</strong> by <em>${safeArtist}</em>?
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
@@ -288,6 +304,7 @@ async function addMusic() {
 
     const title = document.getElementById("addTitle").value.trim();
     const artist = document.getElementById("addArtist").value.trim();
+    const lyrics = document.getElementById("addLyrics").value;
     const musicFile = document.getElementById("addMusicFile").files[0];
     const imageFileDesktop = document.getElementById("addImageFile").files[0];
     const imageFileMobile =
@@ -316,6 +333,7 @@ async function addMusic() {
     const formData = new FormData();
     formData.append("title", title);
     formData.append("artist", artist);
+    formData.append("lyrics", lyrics);
     formData.append("music_file", musicFile);
     formData.append("image_file", imageFile);
 
@@ -354,6 +372,9 @@ async function updateMusic(musicId, formId) {
     const artist = form
         .querySelector(`#${formId} input[id^='editArtist']`)
         .value.trim();
+    const lyrics = form
+        .querySelector(`#${formId} textarea[id^='editLyrics']`)
+        .value;
     const musicFile = form.querySelector(`#${formId} input[id^='editMusicFile']`)
         .files[0];
     const imageFileDesktop = form.querySelector(
@@ -386,6 +407,7 @@ async function updateMusic(musicId, formId) {
     const formData = new FormData();
     formData.append("title", title);
     formData.append("artist", artist);
+    formData.append("lyrics", lyrics);
     if (musicFile) formData.append("music_file", musicFile);
     if (imageFile) formData.append("image_file", imageFile);
 

@@ -16,11 +16,12 @@ const durationCache = JSON.parse(localStorage.getItem('audioDurationCache') || '
 let filteredResults = null;
 let musicDataLoaded = false;
 const durationPromiseCache = new Map();
-const MUSIC_DATA_CACHE_KEY = "musicPageDataCacheV2";
+const MUSIC_DATA_CACHE_KEY = "musicPageDataCacheV3";
 const MUSIC_DATA_CACHE_TTL_MS = 5 * 60 * 1000;
 let activeSearchQuery = "";
 let totalMusicCount = 0;
 let totalPagesCount = 1;
+let currentSongData = null;
 musicList = document.getElementById("musicList");
 audioPlayer = document.getElementById("audioPlayer");
 const nowPlaying = document.getElementById("nowPlaying");
@@ -32,11 +33,81 @@ const progress = document.getElementById("progress");
 const currentTimeEl = document.getElementById("currentTime");
 const totalDurationEl = document.getElementById("totalDuration");
 playPauseBtn = document.getElementById("playPauseBtn");
+const lyricsBtn = document.getElementById("lyricsBtn");
+const lyricsModal = document.getElementById("lyricsModal");
+const lyricsModalTitleEl = document.getElementById("lyricsModalTitle");
+const lyricsModalArtistEl = document.getElementById("lyricsModalArtist");
+const lyricsModalContentEl = document.getElementById("lyricsModalContent");
+const lyricsCloseBtn = document.getElementById("lyricsCloseBtn");
 const canvas = document.getElementById("beatVisualizer");
 const ctx = canvas.getContext("2d");
 let audioContext, analyser, source, dataArray, bufferLength, visualizerRunning;
 const prevPageBtn = document.querySelector(".page-btn[onclick='prevPage()']");
 const nextPageBtn = document.querySelector(".page-btn[onclick='nextPage()']");
+
+function getCurrentSong() {
+    if (currentSongData && typeof currentSongData === "object") {
+        return currentSongData;
+    }
+
+    const source = filteredResults !== null ? filteredResults : musicData;
+    if (!Array.isArray(source) || !source.length) return null;
+    if (currentSongIndex < 0 || currentSongIndex >= source.length) return null;
+    return source[currentSongIndex] || null;
+}
+
+function syncLyricsPanel(song = getCurrentSong()) {
+    if (lyricsBtn) {
+        const disabled = !song;
+        lyricsBtn.disabled = disabled;
+        lyricsBtn.classList.toggle("is-disabled", disabled);
+        lyricsBtn.setAttribute("aria-disabled", String(disabled));
+        lyricsBtn.title = disabled ? "Lyrics unavailable" : "Lyrics";
+    }
+
+    if (!lyricsModalTitleEl || !lyricsModalArtistEl || !lyricsModalContentEl) return;
+
+    if (!song) {
+        lyricsModalTitleEl.textContent = "Select a song";
+        lyricsModalArtistEl.textContent = "";
+        lyricsModalContentEl.classList.add("is-empty");
+        lyricsModalContentEl.textContent = "Select a song to view lyrics.";
+        return;
+    }
+
+    const lyrics = typeof song.lyrics === "string" ? song.lyrics.trim() : "";
+    lyricsModalTitleEl.textContent = song.title || "Lyrics";
+    lyricsModalArtistEl.textContent = song.artist || "";
+    lyricsModalContentEl.classList.toggle("is-empty", !lyrics);
+    lyricsModalContentEl.textContent = lyrics || "No lyrics added for this song yet.";
+}
+
+function openLyricsModal() {
+    if (!lyricsModal) return;
+    const song = getCurrentSong();
+    if (!song) return;
+
+    syncLyricsPanel(song);
+    lyricsModal.classList.add("is-open");
+    lyricsModal.setAttribute("aria-hidden", "false");
+    document.body.classList.add("lyrics-modal-open");
+}
+
+function closeLyricsModal() {
+    if (!lyricsModal) return;
+    lyricsModal.classList.remove("is-open");
+    lyricsModal.setAttribute("aria-hidden", "true");
+    document.body.classList.remove("lyrics-modal-open");
+}
+
+function toggleLyricsModal() {
+    if (!lyricsModal) return;
+    if (lyricsModal.classList.contains("is-open")) {
+        closeLyricsModal();
+    } else {
+        openLyricsModal();
+    }
+}
 
 function setControlButtonIcon(button, iconName, label) {
     if (!button) return;
@@ -102,6 +173,21 @@ syncFullscreenButton(false);
 document.addEventListener("DOMContentLoaded", async () => {
     const root = document.documentElement;
     root.setAttribute("data-theme", "dark");
+
+    if (lyricsBtn) {
+        lyricsBtn.addEventListener("click", toggleLyricsModal);
+    }
+    if (lyricsCloseBtn) {
+        lyricsCloseBtn.addEventListener("click", closeLyricsModal);
+    }
+    if (lyricsModal) {
+        lyricsModal.addEventListener("click", (event) => {
+            if (event.target === lyricsModal || event.target.closest("[data-lyrics-close]")) {
+                closeLyricsModal();
+            }
+        });
+    }
+
     showTripleLoading?.();
     try {
         await loadAndRenderMusicPage({ resetSelection: true });
@@ -117,6 +203,13 @@ document.addEventListener("DOMContentLoaded", async () => {
     syncAutoplayButton();
     syncShuffleButton();
     syncFullscreenButton(false);
+    syncLyricsPanel();
+});
+
+document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && lyricsModal?.classList.contains("is-open")) {
+        closeLyricsModal();
+    }
 });
 
 function getRandomTrackIndex(source = [], excludeIndex = -1) {
@@ -282,8 +375,15 @@ async function loadAndRenderMusicPage({ resetSelection = false, activeSongId = n
 }
 
 function selectFirstSong() {
+    if (!Array.isArray(musicData) || !musicData.length) {
+        currentSongData = null;
+        syncLyricsPanel(null);
+        return;
+    }
+
     currentSongIndex = Math.floor(Math.random() * musicData.length); // Randomly select an index
     const song = musicData[currentSongIndex];
+    currentSongData = song;
     audioPlayer.src = isMobileDevice()
         ? song.url : `/api/proxy-audio?url=${encodeURIComponent(song.url)}`; // Set the audio source for the selected song
     let nowPlaying = document.getElementById("nowPlaying");
@@ -312,6 +412,7 @@ function selectFirstSong() {
     if (albumSection) {
         albumSection.style.backgroundImage = `url('${song.image}')`;
     }
+    syncLyricsPanel(song);
 }
 
 function playSong(index) {
@@ -325,6 +426,7 @@ function playSong(index) {
     }
 
     currentSongIndex = index;
+    currentSongData = song;
     audioPlayer.src = isMobileDevice()
         ? song.url : `/api/proxy-audio?url=${encodeURIComponent(song.url)}`;
 
@@ -337,6 +439,7 @@ function playSong(index) {
         </div>`;
     document.getElementById("playerCoverImg").src = song.image;
     document.getElementById("albumSection").style.backgroundImage = `url('${song.image}')`;
+    syncLyricsPanel(song);
 
     coverImg.classList.add("spin");
     audioPlayer.play();
@@ -755,6 +858,9 @@ function renderList(activeSongId = null) {
 
     if (!source || source.length === 0) {
         musicList.innerHTML = `<p class="no-results">No songs found.</p>`;
+        currentSongData = null;
+        syncLyricsPanel(null);
+        closeLyricsModal();
         updatePagination();
         updateMusicHeader();
         return;

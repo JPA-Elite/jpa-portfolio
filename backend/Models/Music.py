@@ -1,5 +1,5 @@
 class Music:
-    def __init__(self, id, title, artist, url, image, duration, _id=None):
+    def __init__(self, id, title, artist, url, image, duration, lyrics="", _id=None):
         self._id = _id
         self.id = id
         self.title = title
@@ -7,6 +7,7 @@ class Music:
         self.url = url
         self.image = image
         self.duration = duration
+        self.lyrics = lyrics or ""
 
     def to_dict(self):
         """Convert the Music object to a dictionary for database storage."""
@@ -17,6 +18,7 @@ class Music:
             "url": self.url,
             "image": self.image,
             "duration": self.duration,
+            "lyrics": self.lyrics,
         }
 
         if self._id is not None:
@@ -34,5 +36,6 @@ class Music:
             artist=data.get("artist"),
             url=data.get("url"),
             image=data.get("image"),
-            duration=data.get("duration")
+            duration=data.get("duration"),
+            lyrics=data.get("lyrics", "")
         )

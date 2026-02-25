@@ -45,6 +45,7 @@ class MusicService:
     def add_music(self, data: dict):
         if "id" not in data or not data["id"]:
             data["id"] = str(uuid.uuid4())
+        data["lyrics"] = data.get("lyrics") if isinstance(data.get("lyrics"), str) else ""
 
         music_url, image_url = None, None
         duration = None
@@ -101,6 +102,7 @@ class MusicService:
         update_data = {
             "title": data.get("title") or existing_music["title"],
             "artist": data.get("artist") or existing_music["artist"],
+            "lyrics": data["lyrics"] if data.get("lyrics") is not None else existing_music.get("lyrics", ""),
         }
 
         new_music_url, new_image_url = None, None

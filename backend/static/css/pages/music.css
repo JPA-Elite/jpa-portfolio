@@ -1850,9 +1850,9 @@ body.lyrics-modal-open {
 
 .lyrics-modal__content {
     margin: 0;
-    white-space: pre-wrap;
-    word-break: break-word;
-    line-height: 1.65;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
     color: rgba(255, 255, 255, 0.93);
     font-size: 14px;
     font-family: inherit;
@@ -1861,6 +1861,39 @@ body.lyrics-modal-open {
 .lyrics-modal__content.is-empty {
     color: rgba(255, 255, 255, 0.65);
     font-style: italic;
+}
+
+.lyrics-modal__line {
+    margin: 0;
+    padding: 6px 10px;
+    border-radius: 10px;
+    line-height: 1.65;
+    white-space: pre-wrap;
+    word-break: break-word;
+    cursor: default;
+    transition: background-color 0.18s ease;
+}
+
+.lyrics-modal__line:hover,
+.lyrics-modal__line:active {
+    background: rgba(255, 255, 255, 0.06);
+}
+
+.lyrics-modal__line--blank {
+    min-height: 14px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    opacity: 0.42;
+}
+
+.lyrics-modal__line--blank:hover,
+.lyrics-modal__line--blank:active {
+    background: transparent;
+}
+
+.lyrics-modal__line--empty-state {
+    padding: 0;
+    background: transparent;
 }
 
 @media (max-width: 768px) {

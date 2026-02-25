@@ -252,21 +252,32 @@ window.addEventListener("scroll", function () {
 
 const sections = document.querySelectorAll("section");
 
-const observer = new IntersectionObserver(
-    (entries, observer) => {
-        entries.forEach((entry) => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add("visible");
-                observer.unobserve(entry.target);
-            }
-        });
-    },
-    { threshold: 0.2 }
-);
+if ("IntersectionObserver" in window) {
+    const observer = new IntersectionObserver(
+        (entries, observer) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add("visible");
+                    observer.unobserve(entry.target);
+                }
+            });
+        },
+        {
+            // Use a low threshold so tall sections (e.g. gallery on mobile)
+            // still become visible even when only a small part is in view.
+            threshold: 0.01,
+        }
+    );
 
-sections.forEach((section) => {
-    observer.observe(section);
-});
+    sections.forEach((section) => {
+        observer.observe(section);
+    });
+} else {
+    // Fallback for older/mobile browsers without IntersectionObserver.
+    sections.forEach((section) => {
+        section.classList.add("visible");
+    });
+}
 
 // Theme switching functionality
 const themeToggle = document.getElementById("themeToggle");

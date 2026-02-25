@@ -1282,3 +1282,310 @@ nav ul li.active {
         height: 34px;
     }
 }
+
+/* Mobile responsiveness fixes */
+@media (max-width: 768px) {
+    body {
+        height: auto;
+        min-height: 100dvh;
+        overflow-x: hidden;
+        overflow-y: auto;
+    }
+
+    .navbar {
+        padding: 10px 12px;
+        gap: 8px;
+    }
+
+    .navbarMenu2 {
+        flex: 1;
+        min-width: 0;
+        justify-content: flex-end;
+        gap: 8px;
+    }
+
+    .searchbar-container {
+        width: 100%;
+        max-width: none;
+        min-width: 0;
+        flex: 1;
+        padding: 8px 12px;
+    }
+
+    main {
+        height: auto;
+        min-height: 0;
+        overflow: visible;
+    }
+
+    .music-list {
+        height: auto;
+        overflow: visible;
+        padding: 14px 12px 10px;
+    }
+
+    .music-list-items {
+        max-height: none;
+        overflow: visible;
+    }
+
+    .music-item {
+        min-width: 0;
+        align-items: center;
+        padding: 10px;
+    }
+
+    .music-item .left-content {
+        flex: 1;
+        min-width: 0;
+        gap: 10px;
+    }
+
+    .music-item .left-content .title-artist {
+        min-width: 0;
+    }
+
+    .music-item .left-content .title-artist > span:first-child {
+        display: block;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 100%;
+    }
+
+    .music-item .left-content .title-artist .artist {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .music-item .share-section {
+        flex-shrink: 0;
+        gap: 8px;
+    }
+
+    .music-item .share-section button {
+        padding: 2px 5px;
+    }
+
+    .pagination-controls {
+        display: grid;
+        grid-template-columns: auto 1fr auto;
+        align-items: center;
+        gap: 8px;
+        padding: 12px 0 4px;
+    }
+
+    .page-btn {
+        padding: 8px 12px;
+        white-space: nowrap;
+    }
+
+    .page-info {
+        min-width: 0;
+        text-align: center;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .player {
+        padding: 10px 12px calc(10px + env(safe-area-inset-bottom));
+        gap: 4px;
+    }
+
+    .player .left,
+    .player .center,
+    .player .right {
+        min-width: 0;
+        width: 100%;
+        padding: 6px 0;
+    }
+
+    .player .left {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 8px;
+    }
+
+    .cover-section {
+        width: 100%;
+        min-width: 0;
+        justify-content: center;
+    }
+
+    .player .now-playing {
+        min-width: 0;
+        max-width: min(100%, 260px);
+        padding: 0;
+        font-size: 14px;
+    }
+
+    .player .title-artist {
+        min-width: 0;
+    }
+
+    .player .title-artist .title,
+    .player .title-artist .artist {
+        max-width: 100%;
+    }
+
+    .player .share-section {
+        gap: 10px;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .player .progress-container {
+        max-width: none;
+        width: 100%;
+        gap: 8px;
+    }
+
+    .player .time {
+        min-width: 28px;
+        text-align: center;
+    }
+
+    .player .right {
+        justify-content: center;
+    }
+
+    .player .controls {
+        flex-wrap: wrap;
+        gap: 6px;
+        row-gap: 8px;
+        width: 100%;
+    }
+
+    .player .controls button {
+        flex: 0 0 auto;
+    }
+
+    .player .volume-container {
+        order: 10;
+        flex: 1 1 100%;
+        justify-content: center;
+        gap: 8px;
+        margin-right: 0;
+    }
+
+    .player .volume-slider {
+        width: min(180px, 55vw);
+    }
+
+    body.music-mobile-fullscreen .album-section.fullscreen-mobile {
+        padding: 16px 12px calc(220px + env(safe-area-inset-bottom));
+    }
+
+    body.music-mobile-fullscreen .player {
+        max-height: 45dvh;
+        overflow-y: auto;
+        padding-bottom: calc(10px + env(safe-area-inset-bottom));
+    }
+}
+
+@media (max-width: 480px) {
+    .navbar {
+        padding: 8px 10px;
+    }
+
+    .navbarMenu2 {
+        gap: 6px;
+    }
+
+    .searchbar-container {
+        padding: 8px 10px;
+    }
+
+    #navbarSearch::placeholder {
+        font-size: 11px;
+    }
+
+    .music-item {
+        gap: 8px;
+        padding: 9px;
+    }
+
+    .music-item .share-section {
+        gap: 6px;
+    }
+
+    .pagination-controls {
+        gap: 6px;
+    }
+
+    .page-info {
+        width: auto;
+        font-size: 13px;
+    }
+
+    .page-btn {
+        padding: 7px 10px;
+        font-size: 12px;
+        border-radius: 12px;
+    }
+
+    .player {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+
+    .player .controls {
+        gap: 5px;
+    }
+
+    .player .volume-slider {
+        width: min(140px, 48vw);
+    }
+
+    .volume-percentage {
+        min-width: 0;
+        font-size: 9px;
+    }
+
+    body.music-mobile-fullscreen .album-section.fullscreen-mobile {
+        padding-bottom: calc(240px + env(safe-area-inset-bottom));
+    }
+}
+
+@media (max-width: 360px) {
+    .pagination-controls {
+        grid-template-columns: 1fr 1fr;
+        row-gap: 6px;
+    }
+
+    .page-info {
+        grid-column: 1 / -1;
+        order: 3;
+        font-size: 12px;
+        white-space: normal;
+    }
+
+    .page-btn {
+        width: 100%;
+        text-align: center;
+    }
+
+    .cover-section {
+        gap: 4px;
+    }
+
+    .player .cover-img {
+        width: 42px;
+        height: 42px;
+    }
+
+    .player .now-playing {
+        max-width: min(100%, 190px);
+        font-size: 13px;
+    }
+
+    .player .volume-container {
+        gap: 6px;
+    }
+
+    .volume-percentage {
+        display: none;
+    }
+}

@@ -42,15 +42,23 @@
                 <form method="POST">
                     <!-- CSRF token -->
                     {{ form.csrf_token }}
+                    <input type="hidden" name="_admin_login_nonce" value="{{ admin_login_nonce or '' }}">
+                    <!-- Honeypot field: should stay empty (anti-bot) -->
+                    <div style="position:absolute; left:-9999px; width:1px; height:1px; overflow:hidden;" aria-hidden="true">
+                        <label for="{{ admin_login_honeypot_field or 'company_website' }}">Company website</label>
+                        <input type="text" id="{{ admin_login_honeypot_field or 'company_website' }}"
+                            name="{{ admin_login_honeypot_field or 'company_website' }}" tabindex="-1"
+                            autocomplete="off">
+                    </div>
                     <div class="input-group mb-3">
-                        {{ form.username(class="form-control", placeholder="Username") }}
+                        {{ form.username(class="form-control", placeholder="Username", autocomplete="username", autocapitalize="none", spellcheck="false") }}
                         <div class="input-group-append">
                             <div class="input-group-text"><span class="fas fa-user"></span></div>
                         </div>
                     </div>
 
                     <div class="input-group mb-3">
-                        {{ form.password(class="form-control", placeholder="Password") }}
+                        {{ form.password(class="form-control", placeholder="Password", autocomplete="current-password") }}
                         <div class="input-group-append">
                             <div class="input-group-text"><span class="fas fa-lock"></span></div>
                         </div>

@@ -147,7 +147,7 @@ endblock %}
                         </div>
                         <span class="kanban-column__count">{{ key_project_columns.get(column_key, [])|length }}</span>
                     </div>
-                    <div class="kanban-column__cards">
+                    <div class="kanban-column__cards" data-mobile-slider data-mobile-slider-label="{{ column_title }}">
                         {% for project in key_project_columns.get(column_key, []) %}
                         <article class="kanban-project-card">
                             <button type="button" class="kanban-project-card__media"
@@ -467,7 +467,7 @@ endblock %}
 <section id="certifications">
     <h2>{{ _('Certifications') }}</h2>
     <p>{{ _('Certifications_Description') }}</p>
-    <div class="certification-images">
+    <div class="certification-images" data-mobile-slider data-mobile-slider-label="Certifications">
         <img onclick="openModal(`{{ url_for('static', filename='images/cert1.jpg') }}`, 'Angular Basic Certificate')"
             src="{{ url_for('static', filename='images/cert1.jpg') }}" alt="Certification 1" loading="lazy" decoding="async">
         <img onclick="openModal(`{{ url_for('static', filename='images/cert2.jpg') }}`, 'Java Basic Certificate')"

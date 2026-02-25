@@ -19,7 +19,7 @@ function normalizeShareUrl(rawUrl) {
 }
 
 function setShareButtonState(button, labelText) {
-    const label = button?.querySelector(".share-label");
+    const label = button?.querySelector(".action-state-label");
     if (label) {
         label.textContent = labelText;
     }

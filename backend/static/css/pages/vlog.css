@@ -387,7 +387,7 @@
 }
 
 #vlog .like-text,
-#vlog .share-label {
+#vlog .action-state-label {
     min-width: 0;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -442,7 +442,7 @@
     border-color: rgba(0, 161, 214, 0.28);
 }
 
-#vlog .share-btn:hover {
+#vlog .relay-btn:hover {
     border-color: rgba(251, 114, 153, 0.28);
 }
 

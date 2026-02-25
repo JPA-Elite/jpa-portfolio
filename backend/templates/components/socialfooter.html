@@ -1,40 +1,71 @@
 <!-- Link to the external CSS file -->
 <link rel="stylesheet" href="{{ url_for('static', filename='css/components/socialfooter.css') }}" />
 
-<footer class="footer">
-    <div class="theme-switch">
-        <button id="themeToggle" class="theme-toggle">
-            <ion-icon name="sunny-outline" class="light-icon"></ion-icon>
-            <ion-icon name="moon-outline" class="dark-icon"></ion-icon>
-        </button>
+<div class="social-footer" role="group" aria-label="Footer links and collaboration info">
+    <div class="social-footer__header">
+        <div class="social-footer__intro">
+            <p class="social-footer__eyebrow">Connect & Collaborate</p>
+            <h3 class="social-footer__title">Let&apos;s build something useful</h3>
+            <p class="social-footer__subtitle">Quick links, theme switch, and collaborator credit.</p>
+        </div>
+        <div class="theme-switch social-footer__theme-switch">
+            <span class="social-footer__theme-label">Theme</span>
+            <button id="themeToggle" class="theme-toggle" type="button" aria-label="Toggle theme">
+                <ion-icon name="sunny-outline" class="light-icon"></ion-icon>
+                <ion-icon name="moon-outline" class="dark-icon"></ion-icon>
+            </button>
+        </div>
     </div>
-    <ul class="social-icon">
+
+    <ul class="social-icon" aria-label="Social and contact links">
         <li class="social-icon__item">
-            <a class="social-icon__link"
-                href="https://www.facebook.com/profile.php?id=100017724583212" target="_blank">
+            <a class="social-icon__link" href="https://www.facebook.com/profile.php?id=100017724583212" target="_blank"
+                rel="noopener noreferrer" aria-label="Facebook">
                 <ion-icon name="logo-facebook"></ion-icon>
+                <span class="social-icon__label">Facebook</span>
             </a>
         </li>
         <li class="social-icon__item">
-            <a class="social-icon__link"
-                href="https://www.linkedin.com/in/joshua-algadipe-53933924b/" target="_blank">
+            <a class="social-icon__link" href="https://www.linkedin.com/in/joshua-algadipe-53933924b/" target="_blank"
+                rel="noopener noreferrer" aria-label="LinkedIn">
                 <ion-icon name="logo-linkedin"></ion-icon>
+                <span class="social-icon__label">LinkedIn</span>
             </a>
         </li>
-        <li class="social-icon__item"><a class="social-icon__link" href="https://github.com/JPA-Elite" target="_blank">
+        <li class="social-icon__item">
+            <a class="social-icon__link" href="https://github.com/JPA-Elite" target="_blank" rel="noopener noreferrer"
+                aria-label="GitHub">
                 <ion-icon name="logo-github"></ion-icon>
-            </a></li>
-        <li class="social-icon__item">
-            <a class="social-icon__link" href="mailto:algadipej962@gmail.com" target="_blank">
-                <ion-icon name="mail-outline"></ion-icon>
+                <span class="social-icon__label">GitHub</span>
             </a>
         </li>
         <li class="social-icon__item">
-            <a class="social-icon__link" href="tel:+639319127640" target="_blank">
+            <a class="social-icon__link" href="mailto:algadipej962@gmail.com" aria-label="Email">
+                <ion-icon name="mail-outline"></ion-icon>
+                <span class="social-icon__label">Email</span>
+            </a>
+        </li>
+        <li class="social-icon__item">
+            <a class="social-icon__link" href="tel:+639319127640" aria-label="Call">
                 <ion-icon name="call-outline"></ion-icon>
+                <span class="social-icon__label">Call</span>
             </a>
         </li>
     </ul>
-</footer>
+
+    <a class="social-footer__collab" href="https://j-aldev.com/" target="_blank" rel="noopener noreferrer">
+        <span class="social-footer__collab-icon" aria-hidden="true">
+            <ion-icon name="code-slash-outline"></ion-icon>
+        </span>
+        <span class="social-footer__collab-copy">
+            <span class="social-footer__collab-label">Co-developer</span>
+            <span class="social-footer__collab-name">J-ALDev</span>
+            <span class="social-footer__collab-url">j-aldev.com</span>
+        </span>
+        <span class="social-footer__collab-action" aria-hidden="true">
+            <ion-icon name="open-outline"></ion-icon>
+        </span>
+    </a>
+</div>
 <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
 <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>

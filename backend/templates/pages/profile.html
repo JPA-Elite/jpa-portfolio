@@ -37,7 +37,8 @@ endblock %}
     <img src="{{ voice_icon }}" alt="Voice Image" class="voice-icon" onclick="speak(
         document.querySelector('#project-details').textContent,
         getVoiceLocale('{{ get_locale() }}'),
-        this
+        this,
+        '#project-details'
     )" />
     {% endif %}
 </section>
@@ -73,7 +74,8 @@ endblock %}
     <img src="{{ voice_icon }}" alt="Voice Image" class="voice-icon" onclick="speak(
         document.querySelector('#about').textContent,
         getVoiceLocale('{{ get_locale() }}'),
-        this
+        this,
+        '#about'
     )" />
     {% endif %}
 
@@ -119,7 +121,8 @@ endblock %}
     <img src="{{ voice_icon }}" alt="Voice Image" class="voice-icon" onclick="speak(
         document.querySelector('#resume').textContent,
         getVoiceLocale('{{ get_locale() }}'),
-        this
+        this,
+        '#resume'
     )" />
     {% endif %}
 </section>
@@ -548,7 +551,8 @@ endblock %}
     <img src="{{ voice_icon }}" alt="Voice Image" class="voice-icon" onclick="speak(
         document.querySelector('#contact').textContent,
         getVoiceLocale('{{ get_locale() }}'),
-        this
+        this,
+        '#contact'
     )" />
     {% endif %}
 </section>

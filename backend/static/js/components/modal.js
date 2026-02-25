@@ -5,7 +5,18 @@ if (!window.__modal_js_loaded__) {
         BOX: 'boxModal'
     };
     let currentSlide = 0;
-    const currentLocale = "{{ get_locale() }}";
+    const currentLocale = window.pageLocale || "en";
+    const modalI18n = window.modalI18n || {};
+    const tm = (key, fallback, vars = {}) => {
+        let text = modalI18n[key] || fallback;
+        Object.entries(vars).forEach(([name, value]) => {
+            const safe = String(value);
+            text = text
+                .replaceAll(`{${name}}`, safe)
+                .replaceAll(`%(${name})s`, safe);
+        });
+        return text;
+    };
     const baseUrl = window.baseUrl;
     const idType = window.idType;
     let slideData = [];
@@ -53,7 +64,10 @@ if (!window.__modal_js_loaded__) {
                 if (!src) return null;
                 return {
                     src,
-                    titles: normalizeLocaleMap(slide.titles || slide.title, "Project Preview"),
+                    titles: normalizeLocaleMap(
+                        slide.titles || slide.title,
+                        tm("modalProjectPreview", "Project Preview")
+                    ),
                     descriptions: normalizeLocaleMap(slide.descriptions || slide.description, ""),
                 };
             })
@@ -327,14 +341,14 @@ if (!window.__modal_js_loaded__) {
         if (!prevBtn) {
             prevBtn = document.createElement("button");
             prevBtn.id = "prevCommentsBtn";
-            prevBtn.textContent = "Previous";
+            prevBtn.textContent = tm("loadPrevious", "Previous");
             prevBtn.classList.add("prev-comments-btn");
             commentSection.insertBefore(prevBtn, commentList);
         }
 
         try {
             prevBtn.disabled = true;
-            prevBtn.textContent = "Loading...";
+            prevBtn.textContent = tm("loading", "Loading...");
 
             const res = await fetch(`/api/${baseUrl}?${idType}=${selectedId}&page=${page}&limit=${COMMENTS_PER_PAGE}`);
             const data = await res.json();
@@ -346,7 +360,7 @@ if (!window.__modal_js_loaded__) {
             if (!prependOlder && comments.length === 0) {
                 const emptyDiv = document.createElement("div");
                 emptyDiv.classList.add("no-comments");
-                emptyDiv.textContent = "No comments yet.";
+                emptyDiv.textContent = tm("noCommentsYet", "No comments yet.");
                 commentList.appendChild(emptyDiv);
                 document.getElementById("commentCount").textContent = 0;
                 prevBtn.style.display = "none";
@@ -382,12 +396,15 @@ if (!window.__modal_js_loaded__) {
             console.error(err);
             const emptyDiv = document.createElement("div");
             emptyDiv.classList.add("no-comments");
-            emptyDiv.textContent = "Failed to load comments.";
+            emptyDiv.textContent = tm(
+                "failedToLoadComments",
+                "Failed to load comments."
+            );
             commentList.appendChild(emptyDiv);
         } finally {
             // spinner.style.display = "none";
             prevBtn.disabled = false;
-            prevBtn.textContent = "Previous";
+            prevBtn.textContent = tm("loadPrevious", "Previous");
         }
     }
 
@@ -410,7 +427,7 @@ if (!window.__modal_js_loaded__) {
                 <p class="comment-text">${escapeHTML(comment.text)}</p>
                 <div class="comment-meta">
                     <u>${new Date(comment.created_at).toLocaleString()}</u>
-                    <u class="like-btn ${likedClass}">Like</u>
+                    <u class="like-btn ${likedClass}">${tm("commentLike", "Like")}</u>
                     <span class="like-count">${comment.liked_ips ? comment.liked_ips.length : 0}</span>
                 </div>
             </div>
@@ -429,7 +446,13 @@ if (!window.__modal_js_loaded__) {
 
         if (!text || !currentSelectedId) return;
         if (text.length > MAX_COMMENT_LENGTH) {
-            alert(`Comment cannot exceed ${MAX_COMMENT_LENGTH} characters.`);
+            alert(
+                tm(
+                    "commentTooLong",
+                    "Comment cannot exceed {max} characters.",
+                    { max: MAX_COMMENT_LENGTH }
+                )
+            );
             return;
         }
 
@@ -437,7 +460,7 @@ if (!window.__modal_js_loaded__) {
 
         try {
             const bodyPayload = {
-                author_name: "You",
+                author_name: tm("commentAuthorYou", "You"),
                 text
             };
             bodyPayload[window.idType] = currentSelectedId;
@@ -455,7 +478,7 @@ if (!window.__modal_js_loaded__) {
             // Create and append the new comment directly at the bottom
             const newComment = {
                 _id: data.comment_id,
-                author_name: "You",
+                author_name: tm("commentAuthorYou", "You"),
                 text,
                 liked_ips: [],
                 created_at: new Date(),

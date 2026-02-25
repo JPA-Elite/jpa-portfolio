@@ -198,6 +198,39 @@ msgstr "Comment puis-je vous aider ?"
 msgid "chat_clear_button"
 msgstr "Effacer le chat"
 
+msgid "chat_status_online"
+msgstr "En ligne"
+
+msgid "chat_close_aria"
+msgstr "Fermer le chat"
+
+msgid "chat_quick_questions"
+msgstr "Questions rapides"
+
+msgid "chat_input_placeholder"
+msgstr "Posez-moi une question..."
+
+msgid "chat_send_button"
+msgstr "Envoyer"
+
+msgid "chat_role_you"
+msgstr "Vous"
+
+msgid "chat_role_bot"
+msgstr "Assistant IA"
+
+msgid "chat_typing_aria"
+msgstr "Saisie en cours"
+
+msgid "chat_greeting_fallback"
+msgstr "Bonjour ! Bienvenue dans le chat de mon portfolio. Vous pouvez poser une question directement ou utiliser les questions rapides ci-dessous."
+
+msgid "chat_unknown_fallback"
+msgstr "Je peux repondre aux questions suggerees ci-dessous. Essayez de selectionner une option rapide."
+
+msgid "chat_question_prefix"
+msgstr "Q : "
+
 msgid "qa_name"
 msgstr "Quel est votre nom ?"
 
@@ -293,3 +326,109 @@ msgstr "Don"
 
 msgid "donation_message"
 msgstr "Pourriez-vous envisager d'offrir un cadeau qui vient du cœur ? Votre geste, aussi petit soit-il, aurait une immense valeur pour moi. Vous pouvez facilement apporter votre soutien en scannant le code QR GCash fourni. Quel que soit le montant que vous choisissez de donner, il sera profondément apprécié et considéré comme un symbole de votre gentillesse et de votre générosité. Je vous remercie sincèrement d'avoir envisagé cet acte attentionné—cela réchauffe vraiment mon cœur."
+
+
+msgid "Pages_Label"
+msgstr "Pages"
+
+msgid "Tags_Label"
+msgstr "tags"
+
+msgid "Action_Like"
+msgstr "Like"
+
+msgid "Action_Comment"
+msgstr "Comment"
+
+msgid "Action_Share"
+msgstr "Share"
+
+msgid "Email"
+msgstr "Email"
+
+msgid "Share_State_Shared"
+msgstr "Shared"
+
+msgid "Share_State_Copied"
+msgstr "Copied"
+
+msgid "Share_State_Error"
+msgstr "Error"
+
+msgid "Share_Copy_Link_Prompt"
+msgstr "Copy this link:"
+
+msgid "Gallery_Channel_Badge"
+msgstr "Gallery Channel"
+
+msgid "Gallery_Header_Subtitle"
+msgstr "Browse snapshots, highlights, and creative moments from my collection. Tap any image to open the full view and leave a comment."
+
+msgid "Gallery_Stats_Aria"
+msgstr "Gallery page stats"
+
+msgid "Gallery_Badge_Label"
+msgstr "GALLERY"
+
+msgid "Gallery_Engagement_Aria"
+msgstr "Gallery engagement"
+
+msgid "Gallery_Share_Default_Title"
+msgstr "Gallery"
+
+msgid "Gallery_Share_Default_Text"
+msgstr "Check out this gallery item."
+
+msgid "Vlog_Channel_Badge"
+msgstr "Vlog Channel"
+
+msgid "Vlog_Header_Subtitle"
+msgstr "Welcome to my vlog space. Feel free to explore the videos here and enjoy the stories, moments, and experiences I share."
+
+msgid "Vlog_Stats_Aria"
+msgstr "Vlog page stats"
+
+msgid "Vlog_Badge_Label"
+msgstr "VLOG"
+
+msgid "Vlog_Engagement_Aria"
+msgstr "Vlog engagement"
+
+msgid "Vlog_Share_Default_Title"
+msgstr "Vlog"
+
+msgid "Vlog_Share_Default_Text"
+msgstr "Check out this vlog."
+
+msgid "Modal_Comments_Label"
+msgstr "Comments"
+
+msgid "Modal_Comment_Placeholder"
+msgstr "Write a comment..."
+
+msgid "Modal_Insert_Emoji"
+msgstr "Insert emoji"
+
+msgid "Modal_Send"
+msgstr "Send"
+
+msgid "Modal_Load_Previous"
+msgstr "Previous"
+
+msgid "Modal_Loading"
+msgstr "Loading..."
+
+msgid "Modal_No_Comments"
+msgstr "No comments yet."
+
+msgid "Modal_Failed_To_Load_Comments"
+msgstr "Failed to load comments."
+
+msgid "Modal_Comment_Too_Long"
+msgstr "Comment cannot exceed {max} characters."
+
+msgid "Modal_Author_You"
+msgstr "You"
+
+msgid "Modal_Project_Preview"
+msgstr "Project Preview"

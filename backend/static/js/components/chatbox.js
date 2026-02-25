@@ -50,8 +50,14 @@ const cacheMessage = 'chatMessagesCache';
 const cacheChatboxVisible = 'chatboxVisible';
 const cacheChatOptionsCollapsed = 'chatOptionsCollapsed';
 const BOT_TYPING_DELAY_MS = 320;
+const chatboxI18n = window.chatboxI18n || {};
 let chatQaDataCache = [];
 let typingIndicatorRow = null;
+
+function tChat(key, fallback = "") {
+    const value = chatboxI18n[key];
+    return typeof value === "string" && value.length ? value : fallback;
+}
 
 function scrollChatToBottom(behavior = "smooth") {
     const chatMessages = document.getElementById("chatMessages");
@@ -75,7 +81,9 @@ function formatChatTime(timestamp = Date.now()) {
 }
 
 function getRoleLabel(role = "bot") {
-    return role === "user" ? "You" : "AI Assistant";
+    return role === "user"
+        ? tChat("roleYou", "You")
+        : tChat("roleBot", "AI Assistant");
 }
 
 function createMessageRow(role = "bot", timestamp = Date.now()) {
@@ -146,7 +154,7 @@ function showTypingIndicator() {
     const { row, bubble } = createMessageRow("bot", Date.now());
     row.classList.add("chat-message-row--typing");
     bubble.innerHTML = `
-        <span class="chat-typing-indicator" aria-label="Typing">
+        <span class="chat-typing-indicator" aria-label="${tChat("typingAria", "Typing")}">
             <span class="chat-typing-indicator__dot"></span>
             <span class="chat-typing-indicator__dot"></span>
             <span class="chat-typing-indicator__dot"></span>
@@ -282,7 +290,10 @@ function getAutomaticAnswerSmart(question, qaArray = []) {
 
     const isGreeting = greetingPatterns.some(pattern => pattern.test(normalized));
     if (isGreeting) {
-        return "Hi! Welcome to my portfolio chat. You can ask me something directly or use the quick questions below.";
+        return tChat(
+            "greetingFallback",
+            "Hi! Welcome to my portfolio chat. You can ask me something directly or use the quick questions below."
+        );
     }
 
     const partial = qaArray.find(item => {
@@ -298,7 +309,10 @@ function getAutomaticAnswerSmart(question, qaArray = []) {
         return answer;
     }
 
-    return "I can answer the suggested questions below. Try selecting one of the quick options.";
+    return tChat(
+        "unknownFallback",
+        "I can answer the suggested questions below. Try selecting one of the quick options."
+    );
 }
 
 function displayMessage(message, backgroundColor = '', color = '', typeEffect = true, options = {}) {
@@ -313,7 +327,7 @@ function displayMessage(message, backgroundColor = '', color = '', typeEffect = 
     if (role !== "user") {
         addTypingEffect(messageElement, message, typeEffect);
     } else {
-        messageElement.textContent = 'Q: ' + message;
+        messageElement.textContent = tChat("questionPrefix", "Q: ") + message;
         scrollChatToBottom("smooth");
     }
 

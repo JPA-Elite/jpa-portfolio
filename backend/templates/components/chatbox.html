@@ -16,11 +16,11 @@
                     <span class="chatbox-title">{{ _('chat_title') }}</span>
                     <span class="chatbox-status">
                         <span class="chatbox-status-dot" aria-hidden="true"></span>
-                        Online
+                        {{ _('chat_status_online') }}
                     </span>
                 </div>
             </div>
-            <button class="chatbox-close" type="button" onclick="toggleChatbox()" aria-label="{{ _('chat_title') }} close">&times;</button>
+            <button class="chatbox-close" type="button" onclick="toggleChatbox()" aria-label="{{ _('chat_close_aria') }}">&times;</button>
         </div>
         <div class="chatbox-body">
             <div class="chatbox-help-card">
@@ -35,7 +35,7 @@
                     onclick="toggleChatOptions()"
                     aria-controls="chatOptions"
                     aria-expanded="true">
-                    <span class="chat-options-toggle__label">Quick Questions</span>
+                    <span class="chat-options-toggle__label">{{ _('chat_quick_questions') }}</span>
                     <span id="chatOptionsCount" class="chat-options-toggle__count">0</span>
                     <ion-icon class="chat-options-toggle__icon" name="chevron-down-outline"></ion-icon>
                 </button>
@@ -48,16 +48,26 @@
                     id="chatInput"
                     class="chatbox-input"
                     type="text"
-                    placeholder="Ask me something..."
+                    placeholder="{{ _('chat_input_placeholder') }}"
                     onkeydown="handleChatInputKeydown(event)"
                     autocomplete="off" />
                 <button id="sendChat" class="chatbox-send" type="button" onclick="sendMessage()">
                     <ion-icon name="paper-plane-outline" aria-hidden="true"></ion-icon>
-                    <span>Send</span>
+                    <span>{{ _('chat_send_button') }}</span>
                 </button>
             </div>
             <button id="clearChat" onclick="clearChat()" style="display: none;">{{ _('chat_clear_button') }}</button>
         </div>
     </div>
 </div>
+<script>
+    window.chatboxI18n = {
+        roleYou: {{ _('chat_role_you') | tojson }},
+        roleBot: {{ _('chat_role_bot') | tojson }},
+        typingAria: {{ _('chat_typing_aria') | tojson }},
+        greetingFallback: {{ _('chat_greeting_fallback') | tojson }},
+        unknownFallback: {{ _('chat_unknown_fallback') | tojson }},
+        questionPrefix: {{ _('chat_question_prefix') | tojson }},
+    };
+</script>
 <script src="{{ url_for('static', filename='js/components/chatbox.js') }}"></script>

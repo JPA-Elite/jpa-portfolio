@@ -20,46 +20,48 @@ endblock %}
             <div class="gallery-header__copy">
                 <span class="gallery-header__badge">
                     <ion-icon name="images-outline"></ion-icon>
-                    Gallery Channel
+                    {{ _('Gallery_Channel_Badge') }}
                 </span>
                 <p class="gallery-header__subtitle">
-                    Browse snapshots, highlights, and creative moments from my collection. Tap any image to open the full view and leave a comment.
+                    {{ _('Gallery_Header_Subtitle') }}
                 </p>
             </div>
-            <div class="gallery-header__stats" aria-label="Gallery page stats">
+            <div class="gallery-header__stats" aria-label="{{ _('Gallery_Stats_Aria') }}">
                 <div class="gallery-stat-card">
                     <span class="gallery-stat-card__value">{{ current_page }}</span>
-                    <span class="gallery-stat-card__label">Page</span>
+                    <span class="gallery-stat-card__label">{{ _('pagination_page') }}</span>
                 </div>
                 <div class="gallery-stat-card">
                     <span class="gallery-stat-card__value">{{ total_pages }}</span>
-                    <span class="gallery-stat-card__label">Pages</span>
+                    <span class="gallery-stat-card__label">{{ _('Pages_Label') }}</span>
                 </div>
             </div>
         </div>
 
         <div class="gallery-container">
             {% for item in gallery_data %}
+            {% set item_title = item.title.get(get_locale(), item.title.get('en', '')) %}
+            {% set item_description = item.description.get(get_locale(), item.description.get('en', '')) %}
             <article class="gallery-item" data-gallery-id="{{ item._id }}">
                 <div class="gallery-frame">
-                    <img src="{{ item.image_url if item.image_url is defined else image_path ~ item.image_name }}" alt="{{ item.title[get_locale()] }}"
+                    <img src="{{ item.image_url if item.image_url is defined else image_path ~ item.image_name }}" alt="{{ item_title }}"
                         class="gallery-image"
                         loading="{% if loop.index <= 3 %}eager{% else %}lazy{% endif %}"
                         fetchpriority="{% if loop.first %}high{% else %}auto{% endif %}"
                         decoding="async"
-                        onclick="openModal('{{ item.image_url if item.image_url is defined else image_path ~ item.image_name }}', `{{ item.title[get_locale()] | e }}`,  `{{ item.description[get_locale()] | e }}`, 'imageModal', true, `{{ item._id}}`)" />
+                        onclick="openModal('{{ item.image_url if item.image_url is defined else image_path ~ item.image_name }}', `{{ item_title | e }}`,  `{{ item_description | e }}`, 'imageModal', true, `{{ item._id}}`)" />
                     <div class="gallery-frame__overlay">
                         <span class="gallery-pill gallery-pill--accent">
                             <ion-icon name="image-outline"></ion-icon>
-                            GALLERY
+                            {{ _('Gallery_Badge_Label') }}
                         </span>
                         {% if item.tags is defined and item.tags %}
                         <span class="gallery-pill">
                             <ion-icon name="pricetags-outline"></ion-icon>
-                            {{ item.tags|length }} tags
+                            {{ item.tags|length }} {{ _('Tags_Label') }}
                         </span>
                         {% endif %}
-                        <div class="gallery-count-badges" aria-label="Gallery engagement">
+                        <div class="gallery-count-badges" aria-label="{{ _('Gallery_Engagement_Aria') }}">
                             <span class="gallery-count-badge gallery-count-badge--like">
                                 <ion-icon name="heart-outline"></ion-icon>
                                 <span class="like-count" data-raw="0">0</span>
@@ -73,8 +75,8 @@ endblock %}
                 </div>
 
                 <div class="gallery-content">
-                    <h3 class="gallery-title">{{ item.title[get_locale()] }}</h3>
-                    <p class="description">{{ item.description[get_locale()] | truncate_text(120) }}</p>
+                    <h3 class="gallery-title">{{ item_title }}</h3>
+                    <p class="description">{{ item_description | truncate_text(120) }}</p>
                     {% if item.tags is defined and item.tags %}
                     <div class="tags">
                         {% for tag in item.tags %}
@@ -85,20 +87,20 @@ endblock %}
                     <div class="gallery-actions">
                         <button class="action-btn like-btn" data-gallery-id="{{ item._id }}" onclick="toggleLike(this, '{{ item._id }}')">
                             <ion-icon name="heart-outline"></ion-icon>
-                            <span class="like-text">Like</span>
+                            <span class="like-text">{{ _('Action_Like') }}</span>
                         </button>
-                        <button class="action-btn comment-btn" onclick="openModal('{{ item.image_url if item.image_url is defined else image_path ~ item.image_name }}', `{{ item.title[get_locale()] | e }}`,  `{{ item.description[get_locale()] | e }}`, 'imageModal', true, `{{ item._id}}`)">
-                            <ion-icon name="chatbubbles-outline"></ion-icon> Comment
+                        <button class="action-btn comment-btn" onclick="openModal('{{ item.image_url if item.image_url is defined else image_path ~ item.image_name }}', `{{ item_title | e }}`,  `{{ item_description | e }}`, 'imageModal', true, `{{ item._id}}`)">
+                            <ion-icon name="chatbubbles-outline"></ion-icon> {{ _('Action_Comment') }}
                         </button>
                         <button
                             class="action-btn relay-btn"
                             type="button"
-                            data-share-title="{{ item.title[get_locale()] | e }}"
-                            data-share-text="{{ item.description[get_locale()] | e }}"
+                            data-share-title="{{ item_title | e }}"
+                            data-share-text="{{ item_description | e }}"
                             data-share-url="{{ (item.image_url if item.image_url is defined else image_path ~ item.image_name) | e }}"
                             onclick="shareGalleryItem(this)">
                             <ion-icon name="share-social-outline"></ion-icon>
-                            <span class="action-state-label">Share</span>
+                            <span class="action-state-label">{{ _('Action_Share') }}</span>
                         </button>
                     </div>
                 </div>
@@ -114,6 +116,15 @@ endblock %}
     <script>
         window.baseUrl = "gallery-comments";
         window.idType = "gallery_id";
+        window.galleryPageI18n = {
+            shareDefaultTitle: {{ _('Gallery_Share_Default_Title') | tojson }},
+            shareDefaultText: {{ _('Gallery_Share_Default_Text') | tojson }},
+            shareStateShared: {{ _('Share_State_Shared') | tojson }},
+            shareStateShare: {{ _('Action_Share') | tojson }},
+            shareStateCopied: {{ _('Share_State_Copied') | tojson }},
+            shareStateError: {{ _('Share_State_Error') | tojson }},
+            sharePromptCopyLink: {{ _('Share_Copy_Link_Prompt') | tojson }},
+        };
     </script>
     {{ super() }}
 {% endblock %}

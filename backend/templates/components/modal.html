@@ -28,18 +28,18 @@
             </div>
         </div>
     </div>
-    <div class="comment-section">
+        <div class="comment-section">
         <div class="comment-header">
-            <span>Comments (<span id="commentCount">0</span>)</span>
+            <span>{{ _('Modal_Comments_Label') }} (<span id="commentCount">0</span>)</span>
         </div>
         <div class="comment-list"></div>
 
         <div class="comment-input">
             <img src="/static/images/user.webp" alt="Your profile picture" />
             <div class="comment-input-field">
-                <input type="text" id="commentBox" placeholder="Write a comment..." />
+                <input type="text" id="commentBox" placeholder="{{ _('Modal_Comment_Placeholder') }}" />
                 <button type="button" class="comment-emoji-btn" id="commentEmojiToggle"
-                    aria-label="Insert emoji" aria-expanded="false">
+                    aria-label="{{ _('Modal_Insert_Emoji') }}" aria-expanded="false">
                     <ion-icon name="happy-outline"></ion-icon>
                 </button>
                 <div class="comment-emoji-picker" id="commentEmojiPicker" hidden>
@@ -57,7 +57,23 @@
                     <button type="button" onclick="insertCommentEmoji('🎉')">🎉</button>
                 </div>
             </div>
-            <button class="send-btn" onclick="submitComment()">Send</button>
+            <button class="send-btn" onclick="submitComment()">{{ _('Modal_Send') }}</button>
         </div>
     </div>
 </div>
+<script>
+    window.modalI18n = {
+        commentsLabel: {{ _('Modal_Comments_Label') | tojson }},
+        commentPlaceholder: {{ _('Modal_Comment_Placeholder') | tojson }},
+        insertEmoji: {{ _('Modal_Insert_Emoji') | tojson }},
+        send: {{ _('Modal_Send') | tojson }},
+        loadPrevious: {{ _('Modal_Load_Previous') | tojson }},
+        loading: {{ _('Modal_Loading') | tojson }},
+        noCommentsYet: {{ _('Modal_No_Comments') | tojson }},
+        failedToLoadComments: {{ _('Modal_Failed_To_Load_Comments') | tojson }},
+        commentLike: {{ _('Action_Like') | tojson }},
+        commentTooLong: {{ _('Modal_Comment_Too_Long') | tojson }},
+        commentAuthorYou: {{ _('Modal_Author_You') | tojson }},
+        modalProjectPreview: {{ _('Modal_Project_Preview') | tojson }},
+    };
+</script>

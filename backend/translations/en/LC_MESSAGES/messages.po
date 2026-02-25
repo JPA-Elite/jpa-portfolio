@@ -204,6 +204,39 @@ msgstr "How can I help you?"
 msgid "chat_clear_button"
 msgstr "Clear Chat"
 
+msgid "chat_status_online"
+msgstr "Online"
+
+msgid "chat_close_aria"
+msgstr "Close chat"
+
+msgid "chat_quick_questions"
+msgstr "Quick Questions"
+
+msgid "chat_input_placeholder"
+msgstr "Ask me something..."
+
+msgid "chat_send_button"
+msgstr "Send"
+
+msgid "chat_role_you"
+msgstr "You"
+
+msgid "chat_role_bot"
+msgstr "AI Assistant"
+
+msgid "chat_typing_aria"
+msgstr "Typing"
+
+msgid "chat_greeting_fallback"
+msgstr "Hi! Welcome to my portfolio chat. You can ask me something directly or use the quick questions below."
+
+msgid "chat_unknown_fallback"
+msgstr "I can answer the suggested questions below. Try selecting one of the quick options."
+
+msgid "chat_question_prefix"
+msgstr "Q: "
+
 msgid "qa_name"
 msgstr "What is your name?"
 
@@ -396,3 +429,109 @@ msgstr "Go to image {index}"
 
 msgid "Slider_Default_Label"
 msgstr "Image"
+
+
+msgid "Pages_Label"
+msgstr "Pages"
+
+msgid "Tags_Label"
+msgstr "tags"
+
+msgid "Action_Like"
+msgstr "Like"
+
+msgid "Action_Comment"
+msgstr "Comment"
+
+msgid "Action_Share"
+msgstr "Share"
+
+msgid "Email"
+msgstr "Email"
+
+msgid "Share_State_Shared"
+msgstr "Shared"
+
+msgid "Share_State_Copied"
+msgstr "Copied"
+
+msgid "Share_State_Error"
+msgstr "Error"
+
+msgid "Share_Copy_Link_Prompt"
+msgstr "Copy this link:"
+
+msgid "Gallery_Channel_Badge"
+msgstr "Gallery Channel"
+
+msgid "Gallery_Header_Subtitle"
+msgstr "Browse snapshots, highlights, and creative moments from my collection. Tap any image to open the full view and leave a comment."
+
+msgid "Gallery_Stats_Aria"
+msgstr "Gallery page stats"
+
+msgid "Gallery_Badge_Label"
+msgstr "GALLERY"
+
+msgid "Gallery_Engagement_Aria"
+msgstr "Gallery engagement"
+
+msgid "Gallery_Share_Default_Title"
+msgstr "Gallery"
+
+msgid "Gallery_Share_Default_Text"
+msgstr "Check out this gallery item."
+
+msgid "Vlog_Channel_Badge"
+msgstr "Vlog Channel"
+
+msgid "Vlog_Header_Subtitle"
+msgstr "Welcome to my vlog space. Feel free to explore the videos here and enjoy the stories, moments, and experiences I share."
+
+msgid "Vlog_Stats_Aria"
+msgstr "Vlog page stats"
+
+msgid "Vlog_Badge_Label"
+msgstr "VLOG"
+
+msgid "Vlog_Engagement_Aria"
+msgstr "Vlog engagement"
+
+msgid "Vlog_Share_Default_Title"
+msgstr "Vlog"
+
+msgid "Vlog_Share_Default_Text"
+msgstr "Check out this vlog."
+
+msgid "Modal_Comments_Label"
+msgstr "Comments"
+
+msgid "Modal_Comment_Placeholder"
+msgstr "Write a comment..."
+
+msgid "Modal_Insert_Emoji"
+msgstr "Insert emoji"
+
+msgid "Modal_Send"
+msgstr "Send"
+
+msgid "Modal_Load_Previous"
+msgstr "Previous"
+
+msgid "Modal_Loading"
+msgstr "Loading..."
+
+msgid "Modal_No_Comments"
+msgstr "No comments yet."
+
+msgid "Modal_Failed_To_Load_Comments"
+msgstr "Failed to load comments."
+
+msgid "Modal_Comment_Too_Long"
+msgstr "Comment cannot exceed {max} characters."
+
+msgid "Modal_Author_You"
+msgstr "You"
+
+msgid "Modal_Project_Preview"
+msgstr "Project Preview"

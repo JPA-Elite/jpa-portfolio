@@ -23,26 +23,28 @@ endblock %}
             <div class="vlog-header__copy">
                 <span class="vlog-header__badge">
                     <ion-icon name="play-circle-outline"></ion-icon>
-                    Vlog Channel
+                    {{ _('Vlog_Channel_Badge') }}
                 </span>
                 <p class="vlog-header__subtitle">
-                    Welcome to my vlog space. Feel free to explore the videos here and enjoy the stories, moments, and experiences I share.
+                    {{ _('Vlog_Header_Subtitle') }}
                 </p>
             </div>
-            <div class="vlog-header__stats" aria-label="Vlog page stats">
+            <div class="vlog-header__stats" aria-label="{{ _('Vlog_Stats_Aria') }}">
                 <div class="vlog-stat-card">
                     <span class="vlog-stat-card__value">{{ current_page }}</span>
-                    <span class="vlog-stat-card__label">Page</span>
+                    <span class="vlog-stat-card__label">{{ _('pagination_page') }}</span>
                 </div>
                 <div class="vlog-stat-card">
                     <span class="vlog-stat-card__value">{{ total_pages }}</span>
-                    <span class="vlog-stat-card__label">Pages</span>
+                    <span class="vlog-stat-card__label">{{ _('Pages_Label') }}</span>
                 </div>
             </div>
         </div>
 
         <div class="video-container">
         {% for vlog in vlogs %}
+        {% set vlog_title = vlog.title.get(get_locale(), vlog.title.get('en', '')) %}
+        {% set vlog_description = vlog.description.get(get_locale(), vlog.description.get('en', '')) %}
         <article class="video-item" data-vlog-id="{{ vlog._id }}">
             {% set video_src = url_for('static', filename=vlog.file) if vlog.file else vlog.video_url %}
             <div class="video-frame">
@@ -52,15 +54,15 @@ endblock %}
                 <div class="video-frame__overlay">
                     <span class="video-pill video-pill--accent">
                         <ion-icon name="tv-outline"></ion-icon>
-                        VLOG
+                        {{ _('Vlog_Badge_Label') }}
                     </span>
                     {% if vlog.tags is defined and vlog.tags %}
                     <span class="video-pill">
                         <ion-icon name="pricetags-outline"></ion-icon>
-                        {{ vlog.tags|length }} tags
+                        {{ vlog.tags|length }} {{ _('Tags_Label') }}
                     </span>
                     {% endif %}
-                    <div class="video-count-badges" aria-label="Vlog engagement">
+                    <div class="video-count-badges" aria-label="{{ _('Vlog_Engagement_Aria') }}">
                         <span class="video-count-badge video-count-badge--like">
                             <ion-icon name="heart-outline"></ion-icon>
                             <span class="like-count" data-raw="0">0</span>
@@ -74,8 +76,8 @@ endblock %}
             </div>
 
             <div class="video-content">
-                <h3 class="video-title">{{ vlog.title[get_locale()] }}</h3>
-                <p class="video-description">{{ vlog.description[get_locale()] }}</p>
+                <h3 class="video-title">{{ vlog_title }}</h3>
+                <p class="video-description">{{ vlog_description }}</p>
             {% if vlog.tags is defined and vlog.tags %}
             <div class="tags">
                 {% for tag in vlog.tags %}
@@ -86,20 +88,20 @@ endblock %}
             <div class="vlog-actions">
                 <button class="action-btn like-btn" data-vlog-id="{{ vlog._id }}" onclick="toggleLike(this, '{{ vlog._id }}')">
                     <ion-icon name="heart-outline"></ion-icon>
-                    <span class="like-text">Like</span>
+                    <span class="like-text">{{ _('Action_Like') }}</span>
                 </button>
-                <button class="action-btn comment-btn" onclick="openModal('{{ vlog.video_url if vlog.video_url is defined else None }}', `{{ vlog.title[get_locale()] | e }}`,  `{{ vlog.description[get_locale()] | e }}`, 'imageModal', true, `{{ vlog._id}}`)">
-                    <ion-icon name="chatbubbles-outline"></ion-icon> Comment
+                <button class="action-btn comment-btn" onclick="openModal('{{ vlog.video_url if vlog.video_url is defined else None }}', `{{ vlog_title | e }}`,  `{{ vlog_description | e }}`, 'imageModal', true, `{{ vlog._id}}`)">
+                    <ion-icon name="chatbubbles-outline"></ion-icon> {{ _('Action_Comment') }}
                 </button>
                     <button
                         class="action-btn relay-btn"
                         type="button"
-                        data-share-title="{{ vlog.title[get_locale()] | e }}"
-                        data-share-text="{{ vlog.description[get_locale()] | e }}"
+                        data-share-title="{{ vlog_title | e }}"
+                        data-share-text="{{ vlog_description | e }}"
                         data-share-url="{{ video_src | e }}"
                         onclick="shareVlogItem(this)">
                         <ion-icon name="share-social-outline"></ion-icon>
-                        <span class="action-state-label">Share</span>
+                        <span class="action-state-label">{{ _('Action_Share') }}</span>
                     </button>
                 </div>
             </div>
@@ -116,6 +118,15 @@ endblock %}
     <script>
         window.baseUrl = "vlog-comments";
         window.idType = "vlog_id";
+        window.vlogPageI18n = {
+            shareDefaultTitle: {{ _('Vlog_Share_Default_Title') | tojson }},
+            shareDefaultText: {{ _('Vlog_Share_Default_Text') | tojson }},
+            shareStateShared: {{ _('Share_State_Shared') | tojson }},
+            shareStateShare: {{ _('Action_Share') | tojson }},
+            shareStateCopied: {{ _('Share_State_Copied') | tojson }},
+            shareStateError: {{ _('Share_State_Error') | tojson }},
+            sharePromptCopyLink: {{ _('Share_Copy_Link_Prompt') | tojson }},
+        };
     </script>
     {{ super() }}
 {% endblock %}

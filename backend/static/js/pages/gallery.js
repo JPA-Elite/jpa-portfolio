@@ -1,4 +1,7 @@
 // Format large numbers (1k+, 1.2M+, etc.)
+const galleryPageI18n = window.galleryPageI18n || {};
+const tg = (key, fallback) => galleryPageI18n[key] || fallback;
+
 function formatNumber(num) {
     if (num >= 1_000_000) {
         return (num / 1_000_000).toFixed(1).replace(/\.0$/, "") + "M+";
@@ -29,31 +32,44 @@ function setShareButtonState(button, labelText) {
 async function shareGalleryItem(button) {
     if (!button) return;
 
-    const title = button.getAttribute("data-share-title") || "Gallery";
-    const text = button.getAttribute("data-share-text") || "Check out this gallery item.";
+    const title =
+        button.getAttribute("data-share-title") ||
+        tg("shareDefaultTitle", "Gallery");
+    const text =
+        button.getAttribute("data-share-text") ||
+        tg("shareDefaultText", "Check out this gallery item.");
     const url = normalizeShareUrl(button.getAttribute("data-share-url"));
 
     try {
         if (navigator.share) {
             await navigator.share({ title, text, url });
-            setShareButtonState(button, "Shared");
-            setTimeout(() => setShareButtonState(button, "Share"), 1200);
+            setShareButtonState(button, tg("shareStateShared", "Shared"));
+            setTimeout(
+                () => setShareButtonState(button, tg("shareStateShare", "Share")),
+                1200
+            );
             return;
         }
 
         if (navigator.clipboard?.writeText) {
             await navigator.clipboard.writeText(url);
-            setShareButtonState(button, "Copied");
-            setTimeout(() => setShareButtonState(button, "Share"), 1200);
+            setShareButtonState(button, tg("shareStateCopied", "Copied"));
+            setTimeout(
+                () => setShareButtonState(button, tg("shareStateShare", "Share")),
+                1200
+            );
             return;
         }
 
-        window.prompt("Copy this link:", url);
+        window.prompt(tg("sharePromptCopyLink", "Copy this link:"), url);
     } catch (error) {
         if (error?.name === "AbortError") return;
         console.error("Share failed:", error);
-        setShareButtonState(button, "Error");
-        setTimeout(() => setShareButtonState(button, "Share"), 1200);
+        setShareButtonState(button, tg("shareStateError", "Error"));
+        setTimeout(
+            () => setShareButtonState(button, tg("shareStateShare", "Share")),
+            1200
+        );
     }
 }
 

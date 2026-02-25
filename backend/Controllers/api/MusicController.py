@@ -37,6 +37,7 @@ def music_list_route():
 def add_music_route():
     title = request.form.get("title")
     artist = request.form.get("artist")
+    lyrics = request.form.get("lyrics", "")
     music_file = request.files.get("music_file")
     image_file = request.files.get("image_file")
 
@@ -44,6 +45,7 @@ def add_music_route():
     data = {
         "title": title,
         "artist": artist,
+        "lyrics": lyrics,
         "music_file": music_file,
         "image_file": image_file,
     }
@@ -56,12 +58,14 @@ def add_music_route():
 def update_music_route(music_id):
     title = request.form.get("title")
     artist = request.form.get("artist")
+    lyrics = request.form.get("lyrics")
     music_file = request.files.get("music_file")
     image_file = request.files.get("image_file")
 
     update_data = {
         "title": title,
         "artist": artist,
+        "lyrics": lyrics,
         "music_file": music_file,
         "image_file": image_file,
     }

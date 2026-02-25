@@ -163,6 +163,9 @@
                 <div class="now-playing" id="playerNowPlaying">Select a song</div>
             </div>
             <div class="share-section">
+                <button id="lyricsBtn" type="button" title="Lyrics" aria-label="Open lyrics">
+                    <ion-icon name="document-text-outline"></ion-icon>
+                </button>
                 <button id="downloadBtn" onclick="downloadSong()" title="Download Song">
                     <ion-icon name="download-outline"></ion-icon>
                 </button>
@@ -207,6 +210,25 @@
         <audio id="audioPlayer"></audio>
     </footer>
     <div id="copyPopup">Copied to clipboard!</div>
+    <div id="lyricsModal" class="lyrics-modal" aria-hidden="true">
+        <div class="lyrics-modal__backdrop" data-lyrics-close></div>
+        <aside class="lyrics-modal__panel" role="dialog" aria-modal="true" aria-labelledby="lyricsModalTitle"
+            aria-describedby="lyricsModalContent">
+            <div class="lyrics-modal__header">
+                <div class="lyrics-modal__heading">
+                    <span class="lyrics-modal__eyebrow">Lyrics</span>
+                    <h3 id="lyricsModalTitle">Select a song</h3>
+                    <p id="lyricsModalArtist"></p>
+                </div>
+                <button id="lyricsCloseBtn" class="lyrics-modal__close" type="button" aria-label="Close lyrics panel">
+                    <ion-icon name="close-outline"></ion-icon>
+                </button>
+            </div>
+            <div class="lyrics-modal__body">
+                <pre id="lyricsModalContent" class="lyrics-modal__content">No lyrics available.</pre>
+            </div>
+        </aside>
+    </div>
     <script src="{{ url_for('static', filename='js/pages/music.js') }}"></script>
 </body>
 

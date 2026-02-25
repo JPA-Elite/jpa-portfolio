@@ -1725,3 +1725,155 @@ nav ul li.active {
         display: none;
     }
 }
+
+/* Lyrics drawer */
+.player .share-section button.is-disabled,
+.player .share-section button:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+
+body.lyrics-modal-open {
+    overflow: hidden;
+}
+
+.lyrics-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 12000;
+    pointer-events: none;
+}
+
+.lyrics-modal__backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    opacity: 0;
+    transition: opacity 0.22s ease;
+}
+
+.lyrics-modal__panel {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: min(420px, 100vw);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    background: linear-gradient(180deg, rgba(17, 22, 35, 0.98), rgba(8, 10, 16, 0.98));
+    border-left: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: -18px 0 48px rgba(0, 0, 0, 0.45);
+    transform: translateX(100%);
+    transition: transform 0.28s ease;
+    backdrop-filter: blur(10px);
+}
+
+.lyrics-modal.is-open {
+    pointer-events: auto;
+}
+
+.lyrics-modal.is-open .lyrics-modal__backdrop {
+    opacity: 1;
+}
+
+.lyrics-modal.is-open .lyrics-modal__panel {
+    transform: translateX(0);
+}
+
+.lyrics-modal__header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 18px 16px 14px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(255, 255, 255, 0.02);
+}
+
+.lyrics-modal__heading {
+    min-width: 0;
+}
+
+.lyrics-modal__eyebrow {
+    display: inline-block;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.65);
+    margin-bottom: 6px;
+}
+
+.lyrics-modal__heading h3 {
+    margin: 0;
+    font-size: 18px;
+    line-height: 1.25;
+    color: #fff;
+    word-break: break-word;
+}
+
+.lyrics-modal__heading p {
+    margin: 4px 0 0;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 13px;
+    word-break: break-word;
+}
+
+.lyrics-modal__close {
+    border: none;
+    width: 36px;
+    min-width: 36px;
+    height: 36px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.08);
+    color: #fff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.18s ease;
+}
+
+.lyrics-modal__close:hover {
+    background: rgba(41, 98, 255, 0.9);
+}
+
+.lyrics-modal__close ion-icon {
+    font-size: 20px;
+}
+
+.lyrics-modal__body {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    padding: 16px;
+}
+
+.lyrics-modal__content {
+    margin: 0;
+    white-space: pre-wrap;
+    word-break: break-word;
+    line-height: 1.65;
+    color: rgba(255, 255, 255, 0.93);
+    font-size: 14px;
+    font-family: inherit;
+}
+
+.lyrics-modal__content.is-empty {
+    color: rgba(255, 255, 255, 0.65);
+    font-style: italic;
+}
+
+@media (max-width: 768px) {
+    .lyrics-modal__panel {
+        width: min(100vw, 420px);
+        padding-bottom: env(safe-area-inset-bottom);
+    }
+
+    .lyrics-modal__header {
+        padding: 14px 12px;
+    }
+
+    .lyrics-modal__body {
+        padding: 12px;
+    }
+}

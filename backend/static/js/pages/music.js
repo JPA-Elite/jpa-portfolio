@@ -559,6 +559,33 @@ function isMobileDevice() {
     return window.innerWidth <= 768;
 }
 
+const MUSIC_MOBILE_FULLSCREEN_STATE_KEY = "__musicMobileFullscreen";
+
+function isMusicMobileFullscreenHistoryState(state = window.history.state) {
+    return Boolean(
+        state &&
+        typeof state === "object" &&
+        state[MUSIC_MOBILE_FULLSCREEN_STATE_KEY] === true
+    );
+}
+
+function setMusicMobileFullscreenMode(isActive) {
+    const albumSection = document.getElementById("albumSection");
+    const fullscreenBtn = document.getElementById("fullscreenBtn");
+
+    document.body.classList.toggle("music-mobile-fullscreen", Boolean(isActive));
+    if (albumSection) {
+        albumSection.classList.toggle("fullscreen-mobile", Boolean(isActive));
+    }
+
+    if (fullscreenBtn) {
+        // Legacy text fallback; syncFullscreenButton will render icon markup.
+        fullscreenBtn.textContent = isActive ? "â®Œ" : "â›¶";
+    }
+
+    syncFullscreenButton(Boolean(isActive));
+}
+
 document.addEventListener("fullscreenchange", () => {
     if (!document.fullscreenElement && !document.body.classList.contains("music-mobile-fullscreen")) {
         document.getElementById("albumSection").classList.remove("fullscreen");
@@ -571,22 +598,47 @@ document.addEventListener("fullscreenchange", () => {
     syncFullscreenButton(isExpanded);
 });
 
+window.addEventListener("popstate", () => {
+    if (document.body.classList.contains("music-mobile-fullscreen")) {
+        setMusicMobileFullscreenMode(false);
+    }
+});
+
 function toggleFullscreen() {
     const albumSection = document.getElementById("albumSection");
     const fullscreenBtn = document.getElementById("fullscreenBtn");
-
     if (isMobileDevice()) {
-        const body = document.body;
-        const entering = !body.classList.contains("music-mobile-fullscreen");
+        const entering = !document.body.classList.contains("music-mobile-fullscreen");
 
-        body.classList.toggle("music-mobile-fullscreen", entering);
-        albumSection.classList.toggle("fullscreen-mobile", entering);
-        fullscreenBtn.textContent = entering ? "⮌" : "⛶";
+        if (entering) {
+            setMusicMobileFullscreenMode(true);
+
+            if (!isMusicMobileFullscreenHistoryState()) {
+                const currentState =
+                    window.history.state && typeof window.history.state === "object"
+                        ? window.history.state
+                        : {};
+
+                window.history.pushState(
+                    {
+                        ...currentState,
+                        [MUSIC_MOBILE_FULLSCREEN_STATE_KEY]: true,
+                    },
+                    "",
+                    window.location.href
+                );
+            }
+        } else {
+            setMusicMobileFullscreenMode(false);
+
+            if (isMusicMobileFullscreenHistoryState()) {
+                window.history.back();
+            }
+        }
 
         if (entering) {
             window.scrollTo({ top: 0, behavior: "auto" });
         }
-        syncFullscreenButton(entering);
         return;
     }
 
@@ -1020,3 +1072,4 @@ function stopVisualizer() {
     // 🚫 Do NOT touch audio context or source, only pause animation
     visualizerRunning = false;
 }
+

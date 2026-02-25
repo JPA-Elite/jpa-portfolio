@@ -15,6 +15,7 @@ from datetime import datetime, timedelta
 from backend.sitemap import sitemap_bp  # Import the sitemap blueprint
 import os
 from backend.extensions import cache
+from backend.security import init_ddos_guard
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -30,8 +31,19 @@ app.config["SESSION_PERMANENT"] = True
 app.config["PERMANENT_SESSION_LIFETIME"] = timedelta(days=30)
 
 # ✅ Configure cache globally
-app.config["CACHE_TYPE"] = "simple"
-app.config["CACHE_DEFAULT_TIMEOUT"] = 86400
+app.config["CACHE_TYPE"] = os.getenv("CACHE_TYPE", "simple")
+try:
+    app.config["CACHE_DEFAULT_TIMEOUT"] = int(os.getenv("CACHE_DEFAULT_TIMEOUT", "86400"))
+except (TypeError, ValueError):
+    app.config["CACHE_DEFAULT_TIMEOUT"] = 86400
+
+cache_redis_url = os.getenv("CACHE_REDIS_URL")
+if cache_redis_url:
+    app.config["CACHE_REDIS_URL"] = cache_redis_url
+
+cache_key_prefix = os.getenv("CACHE_KEY_PREFIX")
+if cache_key_prefix:
+    app.config["CACHE_KEY_PREFIX"] = cache_key_prefix
 
 app.register_blueprint(pages_bp)
 app.register_blueprint(sitemap_bp)
@@ -40,6 +52,9 @@ app.register_blueprint(api_bp)
 
 # ✅ Initialize cache
 cache.init_app(app)
+
+# ✅ App-level abuse throttling / basic DDoS guard (best-effort; edge protection still required)
+init_ddos_guard(app)
 
 # ✅ Initialize Babel
 babel = Babel(app)

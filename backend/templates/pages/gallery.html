@@ -10,7 +10,7 @@ endblock %}
 
 {% block content %}
 <!-- Link to the external CSS file for the gallery -->
-<link rel="stylesheet" href="{{ url_for('static', filename='css/pages/gallery.css', v='sharefix1') }}" />
+<link rel="stylesheet" href="{{ url_for('static', filename='css/pages/gallery.css', v='sharefix2') }}" />
 <div class="gallery-search-shell">
     {% include 'components/searchbar.html' %}
 </div>
@@ -91,14 +91,14 @@ endblock %}
                             <ion-icon name="chatbubbles-outline"></ion-icon> Comment
                         </button>
                         <button
-                            class="action-btn share-btn"
+                            class="action-btn relay-btn"
                             type="button"
                             data-share-title="{{ item.title[get_locale()] | e }}"
                             data-share-text="{{ item.description[get_locale()] | e }}"
                             data-share-url="{{ (item.image_url if item.image_url is defined else image_path ~ item.image_name) | e }}"
                             onclick="shareGalleryItem(this)">
                             <ion-icon name="share-social-outline"></ion-icon>
-                            <span class="share-label">Share</span>
+                            <span class="action-state-label">Share</span>
                         </button>
                     </div>
                 </div>
@@ -118,5 +118,5 @@ endblock %}
     {{ super() }}
 {% endblock %}
 
-<script src="{{ url_for('static', filename='js/pages/gallery.js', v='sharefix1') }}"></script>
+<script src="{{ url_for('static', filename='js/pages/gallery.js', v='sharefix2') }}"></script>
 {% endblock %}

@@ -28,7 +28,7 @@ Languages: flask (python)
 
 ## DDoS / Abuse Protection (Render + Cloudflare)
 
-This project now includes an app-level request guard (`backend/security.py`) for:
+This project now includes an app-level request guard (`backend/security/ddos_guard.py`) for:
 - per-IP rate limits (global + sensitive endpoints)
 - admin login throttling
 - comment/like spam throttling

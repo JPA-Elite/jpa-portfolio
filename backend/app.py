@@ -22,6 +22,13 @@ load_dotenv()
 
 app = Flask(__name__)
 
+
+def _env_bool(name: str, default: bool) -> bool:
+    raw = os.getenv(name)
+    if raw is None:
+        return default
+    return raw.strip().lower() in {"1", "true", "yes", "on"}
+
 app.config["SECRET_KEY"] = os.getenv('SECRET_KEY')
 app.config["LANGUAGES"] = LANGUAGES
 app.config["BABEL_DEFAULT_LOCALE"] = BABEL_DEFAULT_LOCALE
@@ -29,6 +36,12 @@ app.config["BABEL_DEFAULT_LOCALE"] = BABEL_DEFAULT_LOCALE
 app.config["SESSION_TYPE"] = "filesystem"
 app.config["SESSION_PERMANENT"] = True
 app.config["PERMANENT_SESSION_LIFETIME"] = timedelta(days=30)
+app.config["SESSION_COOKIE_HTTPONLY"] = True
+app.config["SESSION_COOKIE_SAMESITE"] = os.getenv("SESSION_COOKIE_SAMESITE", "Lax")
+app.config["SESSION_COOKIE_SECURE"] = _env_bool(
+    "SESSION_COOKIE_SECURE",
+    os.getenv("FLASK_ENV", "production").lower() != "development",
+)
 
 # ✅ Configure cache globally
 app.config["CACHE_TYPE"] = os.getenv("CACHE_TYPE", "simple")

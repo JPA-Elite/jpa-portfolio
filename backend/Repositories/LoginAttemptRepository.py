@@ -5,6 +5,7 @@ from backend.constants.db_collections import MongoCollections as mc
 from backend.Repositories.Interfaces.ILoginAttemptRepository import ILoginAttemptRepository
 from bson import ObjectId, errors as bson_errors
 from backend.configurations import SortOrder
+from backend.security import get_request_ip
 
 MAX_ATTEMPTS = 3
 LOCKOUT_HOURS = 1
@@ -15,12 +16,7 @@ class LoginAttemptRepository(ILoginAttemptRepository, BaseRepository):
 
     def _get_client_ip(self):
         """Get client IP address safely (supports proxy environments)."""
-        if request.headers.get("X-Forwarded-For"):
-            # If app is behind proxy (like Render), this header stores real client IP
-            ip = request.headers.get("X-Forwarded-For").split(",")[0].strip()
-        else:
-            ip = request.remote_addr or "unknown_ip"
-        return ip
+        return get_request_ip() or (request.remote_addr or "unknown_ip")
 
     def get_attempt_info(self):
         """Retrieve attempt info based on client IP."""

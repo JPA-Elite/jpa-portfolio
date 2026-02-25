@@ -276,6 +276,7 @@
         window.backgroundImageUrl = "{{ url_for('static', filename=background_image) }}";
         window.isForceLightMode = "{{ force_light_theme }}";
         window.isProfessionalMode = "{{ request.args.get('mode') == 'professional' }}";
+        window.pageLocale = {{ get_locale() | tojson }};
     </script>
     <script src="{{ url_for('static', filename='js/pages/base.js') }}"></script>
     {% block modal_script %}

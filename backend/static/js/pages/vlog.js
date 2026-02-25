@@ -1,3 +1,6 @@
+const vlogPageI18n = window.vlogPageI18n || {};
+const tv = (key, fallback) => vlogPageI18n[key] || fallback;
+
 function formatNumber(num) {
     if (num >= 1_000_000) {
         return (num / 1_000_000).toFixed(1).replace(/\.0$/, "") + "M+";
@@ -28,31 +31,44 @@ function setShareButtonState(button, labelText) {
 async function shareVlogItem(button) {
     if (!button) return;
 
-    const title = button.getAttribute("data-share-title") || "Vlog";
-    const text = button.getAttribute("data-share-text") || "Check out this vlog.";
+    const title =
+        button.getAttribute("data-share-title") ||
+        tv("shareDefaultTitle", "Vlog");
+    const text =
+        button.getAttribute("data-share-text") ||
+        tv("shareDefaultText", "Check out this vlog.");
     const url = normalizeShareUrl(button.getAttribute("data-share-url"));
 
     try {
         if (navigator.share) {
             await navigator.share({ title, text, url });
-            setShareButtonState(button, "Shared");
-            setTimeout(() => setShareButtonState(button, "Share"), 1200);
+            setShareButtonState(button, tv("shareStateShared", "Shared"));
+            setTimeout(
+                () => setShareButtonState(button, tv("shareStateShare", "Share")),
+                1200
+            );
             return;
         }
 
         if (navigator.clipboard?.writeText) {
             await navigator.clipboard.writeText(url);
-            setShareButtonState(button, "Copied");
-            setTimeout(() => setShareButtonState(button, "Share"), 1200);
+            setShareButtonState(button, tv("shareStateCopied", "Copied"));
+            setTimeout(
+                () => setShareButtonState(button, tv("shareStateShare", "Share")),
+                1200
+            );
             return;
         }
 
-        window.prompt("Copy this link:", url);
+        window.prompt(tv("sharePromptCopyLink", "Copy this link:"), url);
     } catch (error) {
         if (error?.name === "AbortError") return;
         console.error("Share failed:", error);
-        setShareButtonState(button, "Error");
-        setTimeout(() => setShareButtonState(button, "Share"), 1200);
+        setShareButtonState(button, tv("shareStateError", "Error"));
+        setTimeout(
+            () => setShareButtonState(button, tv("shareStateShare", "Share")),
+            1200
+        );
     }
 }
 

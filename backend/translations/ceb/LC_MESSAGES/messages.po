@@ -204,6 +204,39 @@ msgstr "Unsaon nako pagtabang kanimo?"
 msgid "chat_clear_button"
 msgstr "Limpyohi ang Chat"
 
+msgid "chat_status_online"
+msgstr "Online"
+
+msgid "chat_close_aria"
+msgstr "Isira ang chat"
+
+msgid "chat_quick_questions"
+msgstr "Paspas nga mga Pangutana"
+
+msgid "chat_input_placeholder"
+msgstr "Pangutan-a ko..."
+
+msgid "chat_send_button"
+msgstr "Ipadala"
+
+msgid "chat_role_you"
+msgstr "Ikaw"
+
+msgid "chat_role_bot"
+msgstr "AI Assistant"
+
+msgid "chat_typing_aria"
+msgstr "Nagatype"
+
+msgid "chat_greeting_fallback"
+msgstr "Hi! Welcome sa akong portfolio chat. Pwede ka mangutana diretso o mopili sa paspas nga mga pangutana sa ubos."
+
+msgid "chat_unknown_fallback"
+msgstr "Makatubag ko sa mga gisugyot nga pangutana sa ubos. Sulayi og pili sa usa sa paspas nga kapilian."
+
+msgid "chat_question_prefix"
+msgstr "P: "
+
 msgid "qa_name"
 msgstr "Unsa imong ngalan?"
 
@@ -396,3 +429,109 @@ msgstr "Adto sa hulagway {index}"
 
 msgid "Slider_Default_Label"
 msgstr "Hulagway"
+
+
+msgid "Pages_Label"
+msgstr "Mga Panid"
+
+msgid "Tags_Label"
+msgstr "tags"
+
+msgid "Action_Like"
+msgstr "Like"
+
+msgid "Action_Comment"
+msgstr "Comment"
+
+msgid "Action_Share"
+msgstr "Share"
+
+msgid "Email"
+msgstr "Email"
+
+msgid "Share_State_Shared"
+msgstr "Na-share"
+
+msgid "Share_State_Copied"
+msgstr "Nakopya"
+
+msgid "Share_State_Error"
+msgstr "Sayop"
+
+msgid "Share_Copy_Link_Prompt"
+msgstr "Kopyaha kining link:"
+
+msgid "Gallery_Channel_Badge"
+msgstr "Gallery Channel"
+
+msgid "Gallery_Header_Subtitle"
+msgstr "Tan-awa ang mga snapshots, highlights, ug creative moments sa akong koleksyon. Pislita ang hulagway aron maablihan ang full view ug makabilin og comment."
+
+msgid "Gallery_Stats_Aria"
+msgstr "Stats sa gallery page"
+
+msgid "Gallery_Badge_Label"
+msgstr "GALLERY"
+
+msgid "Gallery_Engagement_Aria"
+msgstr "Gallery engagement"
+
+msgid "Gallery_Share_Default_Title"
+msgstr "Gallery"
+
+msgid "Gallery_Share_Default_Text"
+msgstr "Tan-awa kining gallery item."
+
+msgid "Vlog_Channel_Badge"
+msgstr "Vlog Channel"
+
+msgid "Vlog_Header_Subtitle"
+msgstr "Welcome sa akong vlog space. Feel free nga tan-awon ang mga video dinhi ug lingawi ang mga storya, higayon, ug kasinatian nga akong gipaambit."
+
+msgid "Vlog_Stats_Aria"
+msgstr "Stats sa vlog page"
+
+msgid "Vlog_Badge_Label"
+msgstr "VLOG"
+
+msgid "Vlog_Engagement_Aria"
+msgstr "Vlog engagement"
+
+msgid "Vlog_Share_Default_Title"
+msgstr "Vlog"
+
+msgid "Vlog_Share_Default_Text"
+msgstr "Tan-awa kining vlog."
+
+msgid "Modal_Comments_Label"
+msgstr "Mga Comment"
+
+msgid "Modal_Comment_Placeholder"
+msgstr "Pagsulat og comment..."
+
+msgid "Modal_Insert_Emoji"
+msgstr "Ibutang ang emoji"
+
+msgid "Modal_Send"
+msgstr "Ipadala"
+
+msgid "Modal_Load_Previous"
+msgstr "Previous"
+
+msgid "Modal_Loading"
+msgstr "Nag-load..."
+
+msgid "Modal_No_Comments"
+msgstr "Wala pay comments."
+
+msgid "Modal_Failed_To_Load_Comments"
+msgstr "Napakyas ang pag-load sa comments."
+
+msgid "Modal_Comment_Too_Long"
+msgstr "Ang comment dili puede molapas sa {max} ka karakter."
+
+msgid "Modal_Author_You"
+msgstr "Ikaw"
+
+msgid "Modal_Project_Preview"
+msgstr "Project Preview"

@@ -204,6 +204,39 @@ msgstr "Paano kita matutulungan?"
 msgid "chat_clear_button"
 msgstr "I-clear ang Chat"
 
+msgid "chat_status_online"
+msgstr "Online"
+
+msgid "chat_close_aria"
+msgstr "Isara ang chat"
+
+msgid "chat_quick_questions"
+msgstr "Mabilis na mga Tanong"
+
+msgid "chat_input_placeholder"
+msgstr "Magtanong ka..."
+
+msgid "chat_send_button"
+msgstr "Ipadala"
+
+msgid "chat_role_you"
+msgstr "Ikaw"
+
+msgid "chat_role_bot"
+msgstr "AI Assistant"
+
+msgid "chat_typing_aria"
+msgstr "Nagta-type"
+
+msgid "chat_greeting_fallback"
+msgstr "Hi! Welcome sa portfolio chat ko. Pwede kang magtanong diretso o pumili sa mga mabilis na tanong sa ibaba."
+
+msgid "chat_unknown_fallback"
+msgstr "Nasasagot ko ang mga mungkahing tanong sa ibaba. Subukan mong pumili ng isa sa mga quick options."
+
+msgid "chat_question_prefix"
+msgstr "T: "
+
 msgid "qa_name"
 msgstr "Ano ang pangalan mo?"
 
@@ -396,3 +429,109 @@ msgstr "Pumunta sa larawan {index}"
 
 msgid "Slider_Default_Label"
 msgstr "Larawan"
+
+
+msgid "Pages_Label"
+msgstr "Mga Pahina"
+
+msgid "Tags_Label"
+msgstr "tags"
+
+msgid "Action_Like"
+msgstr "Like"
+
+msgid "Action_Comment"
+msgstr "Comment"
+
+msgid "Action_Share"
+msgstr "Share"
+
+msgid "Email"
+msgstr "Email"
+
+msgid "Share_State_Shared"
+msgstr "Na-share"
+
+msgid "Share_State_Copied"
+msgstr "Nakopya"
+
+msgid "Share_State_Error"
+msgstr "Error"
+
+msgid "Share_Copy_Link_Prompt"
+msgstr "Kopyahin ang link na ito:"
+
+msgid "Gallery_Channel_Badge"
+msgstr "Gallery Channel"
+
+msgid "Gallery_Header_Subtitle"
+msgstr "I-browse ang mga snapshots, highlights, at creative moments mula sa koleksyon ko. I-tap ang anumang image para buksan ang full view at mag-iwan ng comment."
+
+msgid "Gallery_Stats_Aria"
+msgstr "Stats ng gallery page"
+
+msgid "Gallery_Badge_Label"
+msgstr "GALLERY"
+
+msgid "Gallery_Engagement_Aria"
+msgstr "Gallery engagement"
+
+msgid "Gallery_Share_Default_Title"
+msgstr "Gallery"
+
+msgid "Gallery_Share_Default_Text"
+msgstr "Tingnan ang gallery item na ito."
+
+msgid "Vlog_Channel_Badge"
+msgstr "Vlog Channel"
+
+msgid "Vlog_Header_Subtitle"
+msgstr "Welcome sa vlog space ko. Feel free na i-explore ang mga video dito at i-enjoy ang mga kuwento, moments, at experiences na shine-share ko."
+
+msgid "Vlog_Stats_Aria"
+msgstr "Stats ng vlog page"
+
+msgid "Vlog_Badge_Label"
+msgstr "VLOG"
+
+msgid "Vlog_Engagement_Aria"
+msgstr "Vlog engagement"
+
+msgid "Vlog_Share_Default_Title"
+msgstr "Vlog"
+
+msgid "Vlog_Share_Default_Text"
+msgstr "Tingnan ang vlog na ito."
+
+msgid "Modal_Comments_Label"
+msgstr "Mga Comment"
+
+msgid "Modal_Comment_Placeholder"
+msgstr "Mag-type ng comment..."
+
+msgid "Modal_Insert_Emoji"
+msgstr "Maglagay ng emoji"
+
+msgid "Modal_Send"
+msgstr "Ipadala"
+
+msgid "Modal_Load_Previous"
+msgstr "Previous"
+
+msgid "Modal_Loading"
+msgstr "Naglo-load..."
+
+msgid "Modal_No_Comments"
+msgstr "Wala pang comments."
+
+msgid "Modal_Failed_To_Load_Comments"
+msgstr "Hindi ma-load ang comments."
+
+msgid "Modal_Comment_Too_Long"
+msgstr "Hindi puwedeng lumampas sa {max} characters ang comment."
+
+msgid "Modal_Author_You"
+msgstr "Ikaw"
+
+msgid "Modal_Project_Preview"
+msgstr "Project Preview"

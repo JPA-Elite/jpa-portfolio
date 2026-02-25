@@ -10,7 +10,7 @@ endblock %}
 
 {% block content %}
 <!-- Link to the external CSS file for the gallery -->
-<link rel="stylesheet" href="{{ url_for('static', filename='css/pages/gallery.css') }}" />
+<link rel="stylesheet" href="{{ url_for('static', filename='css/pages/gallery.css', v='sharefix1') }}" />
 <div class="gallery-search-shell">
     {% include 'components/searchbar.html' %}
 </div>
@@ -118,5 +118,5 @@ endblock %}
     {{ super() }}
 {% endblock %}
 
-<script src="{{ url_for('static', filename='js/pages/gallery.js') }}"></script>
+<script src="{{ url_for('static', filename='js/pages/gallery.js', v='sharefix1') }}"></script>
 {% endblock %}

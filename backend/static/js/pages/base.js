@@ -100,9 +100,14 @@ let isSpeaking = false; // Track if speech is playing
 let currentSpeech = null; // Track the current speech instance
 let currentButton = null; // Track the current button being clicked
 const currentYear = new Date().getFullYear();
-document.getElementById(
-    "copyright"
-).innerHTML = `&copy; ${currentYear} Joshua Algadipe. All Rights Reserved.`;
+const copyrightEl = document.getElementById("copyright");
+if (copyrightEl) {
+    const ownerName =
+        copyrightEl.dataset.copyrightOwner || "Joshua Algadipe";
+    const rightsText =
+        copyrightEl.dataset.copyrightRights || "All Rights Reserved.";
+    copyrightEl.innerHTML = `&copy; ${currentYear} ${ownerName}. ${rightsText}`;
+}
 
 function changeLanguage(url) {
     if (typeof window !== "undefined") {

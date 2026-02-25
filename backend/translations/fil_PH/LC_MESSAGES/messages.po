@@ -302,3 +302,97 @@ msgstr "Donasyon"
 
 msgid "donation_message"
 msgstr "Maaari mo bang pag-isipan ang pagbibigay ng isang regalo na mula sa iyong puso? Ang iyong mabuting gawa, gaano man kaliit, ay napakalaking halaga para sa akin. Maaari mong ipadala ang iyong suporta sa pamamagitan ng pag-scan sa GCash QR code na ibinigay. Anumang halaga na iyong maibigay ay taos-pusong pasasalamatan at ituturing na simbolo ng iyong kabutihan at pagkabukas-palad. Maraming salamat sa pagsasaalang-alang sa makataong gawaing ito—tunay itong nagbibigay-init sa aking puso."
+
+
+msgid "KP_Column_Shipped"
+msgstr "Nailunsad"
+
+msgid "KP_Column_Building"
+msgstr "Ginagawa"
+
+msgid "KP_Column_Planned"
+msgstr "Plano"
+
+msgid "KP_Desc_Shipped"
+msgstr "Mga natapos o na-deploy na proyekto."
+
+msgid "KP_Desc_Building"
+msgstr "Mga proyektong kasalukuyang ginagawa."
+
+msgid "KP_Desc_Planned"
+msgstr "Mga paparating na ideya at konsepto."
+
+msgid "KP_Action_Demo"
+msgstr "Demo"
+
+msgid "KP_Action_Repo"
+msgstr "Repo"
+
+msgid "KP_Action_Preview"
+msgstr "Preview"
+
+msgid "KP_Empty_Title"
+msgstr "Wala pang proyekto"
+
+msgid "KP_Empty_Description"
+msgstr "Magdagdag ng mga proyekto sa admin panel para mapunan ang column na ito."
+
+msgid "KP_Preview_Aria"
+msgstr "I-preview ang %(title)s"
+
+msgid "Tech_Stack_Eyebrow"
+msgstr "Tech Stack"
+
+msgid "Tech_Stack_Heading"
+msgstr "Mga Wika at Framework na Ginagamit Ko"
+
+msgid "Tech_Stack_Description"
+msgstr "Mabilis na tingin sa mga tool na gamit ko sa mga proyektong binubuo ko."
+
+msgid "Languages"
+msgstr "Mga Wika"
+
+msgid "Frameworks"
+msgstr "Mga Framework"
+
+msgid "Footer_Eyebrow"
+msgstr "Kumonekta at Makipagtulungan"
+
+msgid "Footer_Title"
+msgstr "Gumawa tayo ng kapaki-pakinabang"
+
+msgid "Footer_Subtitle"
+msgstr "Mga quick link, theme switch, at credit sa co-developer."
+
+msgid "Footer_Theme_Label"
+msgstr "Tema"
+
+msgid "Footer_Call_Label"
+msgstr "Tawag"
+
+msgid "Footer_Co_Developer"
+msgstr "Co-developer"
+
+msgid "Footer_All_Rights_Reserved"
+msgstr "Lahat ng karapatan ay nakalaan."
+
+msgid "Slider_Prev"
+msgstr "Balik"
+
+msgid "Slider_Next"
+msgstr "Susunod"
+
+msgid "Slider_Previous_Image"
+msgstr "Nakaraang larawan"
+
+msgid "Slider_Next_Image"
+msgstr "Susunod na larawan"
+
+msgid "Slider_Navigation_Label"
+msgstr "Navigation ng slider ng {label}"
+
+msgid "Slider_Go_To_Image"
+msgstr "Pumunta sa larawan {index}"
+
+msgid "Slider_Default_Label"
+msgstr "Larawan"

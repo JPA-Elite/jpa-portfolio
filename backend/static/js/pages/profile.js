@@ -173,6 +173,17 @@ function setupMobileImageSliders() {
     if (!sliderTracks.length) return;
 
     const mobileQuery = window.matchMedia("(max-width: 768px)");
+    const sliderI18n = window.profileI18n || {};
+    const t = (key, fallback, vars = {}) => {
+        let text = sliderI18n[key] || fallback;
+        Object.entries(vars).forEach(([name, value]) => {
+            const safeValue = String(value);
+            text = text
+                .replaceAll(`{${name}}`, safeValue)
+                .replaceAll(`%(${name})s`, safeValue);
+        });
+        return text;
+    };
 
     sliderTracks.forEach((track) => {
         if (track.dataset.mobileSliderReady === "true") return;
@@ -204,8 +215,11 @@ function setupMobileImageSliders() {
         const prevButton = document.createElement("button");
         prevButton.type = "button";
         prevButton.className = "mobile-image-slider__btn";
-        prevButton.setAttribute("aria-label", "Previous image");
-        prevButton.textContent = "Prev";
+        prevButton.setAttribute(
+            "aria-label",
+            t("sliderPreviousImageAria", "Previous image")
+        );
+        prevButton.textContent = t("sliderPrev", "Prev");
 
         const counter = document.createElement("div");
         counter.className = "mobile-image-slider__counter";
@@ -214,8 +228,11 @@ function setupMobileImageSliders() {
         const nextButton = document.createElement("button");
         nextButton.type = "button";
         nextButton.className = "mobile-image-slider__btn";
-        nextButton.setAttribute("aria-label", "Next image");
-        nextButton.textContent = "Next";
+        nextButton.setAttribute(
+            "aria-label",
+            t("sliderNextImageAria", "Next image")
+        );
+        nextButton.textContent = t("sliderNext", "Next");
 
         controls.appendChild(prevButton);
         controls.appendChild(counter);
@@ -226,7 +243,11 @@ function setupMobileImageSliders() {
         dots.setAttribute("role", "tablist");
         dots.setAttribute(
             "aria-label",
-            `${track.dataset.mobileSliderLabel || "Image"} slider navigation`
+            t("sliderNavigationLabel", "{label} slider navigation", {
+                label:
+                    track.dataset.mobileSliderLabel ||
+                    t("sliderDefaultLabel", "Image"),
+            })
         );
 
         const dotButtons = slides.map((_, index) => {
@@ -234,7 +255,12 @@ function setupMobileImageSliders() {
             dot.type = "button";
             dot.className = "mobile-image-slider__dot";
             dot.setAttribute("role", "tab");
-            dot.setAttribute("aria-label", `Go to image ${index + 1}`);
+            dot.setAttribute(
+                "aria-label",
+                t("sliderGoToImage", "Go to image {index}", {
+                    index: index + 1,
+                })
+            );
             dots.appendChild(dot);
             return dot;
         });

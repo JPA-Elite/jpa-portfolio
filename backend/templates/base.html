@@ -254,7 +254,9 @@
         <!-- Include the socialfooter component -->
         {% include 'components/socialfooter.html' %}
         <footer class="site-legal-footer">
-            <p id="copyright"></p>
+            <p id="copyright"
+                data-copyright-owner="Joshua Algadipe"
+                data-copyright-rights="{{ _('Footer_All_Rights_Reserved') }}"></p>
         </footer>
     </div>
     {% if request.args.get('mode') != 'professional' %}

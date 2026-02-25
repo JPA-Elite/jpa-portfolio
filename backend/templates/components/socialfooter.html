@@ -4,12 +4,12 @@
 <div class="social-footer" role="group" aria-label="Footer links and collaboration info">
     <div class="social-footer__header">
         <div class="social-footer__intro">
-            <p class="social-footer__eyebrow">Connect & Collaborate</p>
-            <h3 class="social-footer__title">Let&apos;s build something useful</h3>
-            <p class="social-footer__subtitle">Quick links, theme switch, and collaborator credit.</p>
+            <p class="social-footer__eyebrow">{{ _('Footer_Eyebrow') }}</p>
+            <h3 class="social-footer__title">{{ _('Footer_Title') }}</h3>
+            <p class="social-footer__subtitle">{{ _('Footer_Subtitle') }}</p>
         </div>
         <div class="theme-switch social-footer__theme-switch">
-            <span class="social-footer__theme-label">Theme</span>
+            <span class="social-footer__theme-label">{{ _('Footer_Theme_Label') }}</span>
             <button id="themeToggle" class="theme-toggle" type="button" aria-label="Toggle theme">
                 <ion-icon name="sunny-outline" class="light-icon"></ion-icon>
                 <ion-icon name="moon-outline" class="dark-icon"></ion-icon>
@@ -42,13 +42,13 @@
         <li class="social-icon__item">
             <a class="social-icon__link" href="mailto:algadipej962@gmail.com" aria-label="Email">
                 <ion-icon name="mail-outline"></ion-icon>
-                <span class="social-icon__label">Email</span>
+                <span class="social-icon__label">{{ _('Email') }}</span>
             </a>
         </li>
         <li class="social-icon__item">
             <a class="social-icon__link" href="tel:+639319127640" aria-label="Call">
                 <ion-icon name="call-outline"></ion-icon>
-                <span class="social-icon__label">Call</span>
+                <span class="social-icon__label">{{ _('Footer_Call_Label') }}</span>
             </a>
         </li>
     </ul>
@@ -58,7 +58,7 @@
             <ion-icon name="code-slash-outline"></ion-icon>
         </span>
         <span class="social-footer__collab-copy">
-            <span class="social-footer__collab-label">Co-developer</span>
+            <span class="social-footer__collab-label">{{ _('Footer_Co_Developer') }}</span>
             <span class="social-footer__collab-name">J-ALDev</span>
             <span class="social-footer__collab-url">j-aldev.com</span>
         </span>

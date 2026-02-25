@@ -302,3 +302,97 @@ msgstr "Donation"
 
 msgid "donation_message"
 msgstr "Could you kindly consider sending me a heartfelt gift? Your gesture, no matter how small, would mean the world to me. You can conveniently send your support by scanning the GCash QR code provided. Any amount you choose to give will be deeply appreciated and cherished as a token of your kindness and generosity. Thank you so much for considering this thoughtful act—it truly warms my heart."
+
+
+msgid "KP_Column_Shipped"
+msgstr "Shipped"
+
+msgid "KP_Column_Building"
+msgstr "Building"
+
+msgid "KP_Column_Planned"
+msgstr "Planned"
+
+msgid "KP_Desc_Shipped"
+msgstr "Completed or deployed projects."
+
+msgid "KP_Desc_Building"
+msgstr "Projects currently in progress."
+
+msgid "KP_Desc_Planned"
+msgstr "Upcoming ideas and concepts."
+
+msgid "KP_Action_Demo"
+msgstr "Demo"
+
+msgid "KP_Action_Repo"
+msgstr "Repo"
+
+msgid "KP_Action_Preview"
+msgstr "Preview"
+
+msgid "KP_Empty_Title"
+msgstr "No projects yet"
+
+msgid "KP_Empty_Description"
+msgstr "Add projects in the admin panel to populate this column."
+
+msgid "KP_Preview_Aria"
+msgstr "Preview %(title)s"
+
+msgid "Tech_Stack_Eyebrow"
+msgstr "Tech Stack"
+
+msgid "Tech_Stack_Heading"
+msgstr "Languages & Frameworks I Use"
+
+msgid "Tech_Stack_Description"
+msgstr "A quick look at the tools behind the projects I build."
+
+msgid "Languages"
+msgstr "Languages"
+
+msgid "Frameworks"
+msgstr "Frameworks"
+
+msgid "Footer_Eyebrow"
+msgstr "Connect & Collaborate"
+
+msgid "Footer_Title"
+msgstr "Let's build something useful"
+
+msgid "Footer_Subtitle"
+msgstr "Quick links, theme switch, and collaborator credit."
+
+msgid "Footer_Theme_Label"
+msgstr "Theme"
+
+msgid "Footer_Call_Label"
+msgstr "Call"
+
+msgid "Footer_Co_Developer"
+msgstr "Co-developer"
+
+msgid "Footer_All_Rights_Reserved"
+msgstr "All Rights Reserved."
+
+msgid "Slider_Prev"
+msgstr "Prev"
+
+msgid "Slider_Next"
+msgstr "Next"
+
+msgid "Slider_Previous_Image"
+msgstr "Previous image"
+
+msgid "Slider_Next_Image"
+msgstr "Next image"
+
+msgid "Slider_Navigation_Label"
+msgstr "{label} slider navigation"
+
+msgid "Slider_Go_To_Image"
+msgstr "Go to image {index}"
+
+msgid "Slider_Default_Label"
+msgstr "Image"

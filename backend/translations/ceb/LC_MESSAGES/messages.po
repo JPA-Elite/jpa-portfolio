@@ -302,3 +302,97 @@ msgstr "Donasyon"
 
 msgid "donation_message"
 msgstr "Mahimo ba nimo nga hunahunaon ang paghatag og usa ka halad nga gikan sa kasingkasing? Ang imong buhat, bisan unsa ka gamay, dako kaayo kini ug bili alang kanako. Mahimo nimo mapadala ang imong suporta pinaagi sa pag-scan sa GCash QR code nga gihatag. Bisan unsang kantidad nga imong mahatag pagadawaton ug pagapasalamatan gayud isip simbolo sa imong kaayo ug pagkamanggihatagon. Daghang salamat kaayo sa pagtagad sa kini nga buhat nga puno sa kalooy—kini gayud magapainit sa akong kasingkasing."
+
+
+msgid "KP_Column_Shipped"
+msgstr "Nahuman"
+
+msgid "KP_Column_Building"
+msgstr "Ginabuhat"
+
+msgid "KP_Column_Planned"
+msgstr "Plano"
+
+msgid "KP_Desc_Shipped"
+msgstr "Mga proyekto nga nahuman o na-deploy na."
+
+msgid "KP_Desc_Building"
+msgstr "Mga proyekto nga karon ginahimo."
+
+msgid "KP_Desc_Planned"
+msgstr "Umaabot nga mga ideya ug konsepto."
+
+msgid "KP_Action_Demo"
+msgstr "Demo"
+
+msgid "KP_Action_Repo"
+msgstr "Repo"
+
+msgid "KP_Action_Preview"
+msgstr "Tan-awa"
+
+msgid "KP_Empty_Title"
+msgstr "Wala pay proyekto"
+
+msgid "KP_Empty_Description"
+msgstr "Idugang ang mga proyekto sa admin panel aron mapuno kini nga kolum."
+
+msgid "KP_Preview_Aria"
+msgstr "Tan-awa ang %(title)s"
+
+msgid "Tech_Stack_Eyebrow"
+msgstr "Tech Stack"
+
+msgid "Tech_Stack_Heading"
+msgstr "Mga Pinulongan ug Frameworks nga Akong Gigamit"
+
+msgid "Tech_Stack_Description"
+msgstr "Mubo nga tan-aw sa mga himan sa akong mga proyektong gihimo."
+
+msgid "Languages"
+msgstr "Mga Pinulongan"
+
+msgid "Frameworks"
+msgstr "Mga Framework"
+
+msgid "Footer_Eyebrow"
+msgstr "Konekta ug Kolaborasyon"
+
+msgid "Footer_Title"
+msgstr "Maghimo ta og mapuslanong butang"
+
+msgid "Footer_Subtitle"
+msgstr "Mga quick link, theme switch, ug credit sa kauban nga developer."
+
+msgid "Footer_Theme_Label"
+msgstr "Tema"
+
+msgid "Footer_Call_Label"
+msgstr "Tawag"
+
+msgid "Footer_Co_Developer"
+msgstr "Kauban nga Developer"
+
+msgid "Footer_All_Rights_Reserved"
+msgstr "Tanang katungod gitagana."
+
+msgid "Slider_Prev"
+msgstr "Balik"
+
+msgid "Slider_Next"
+msgstr "Sunod"
+
+msgid "Slider_Previous_Image"
+msgstr "Miaging hulagway"
+
+msgid "Slider_Next_Image"
+msgstr "Sunod nga hulagway"
+
+msgid "Slider_Navigation_Label"
+msgstr "Paglayag sa slider sa {label}"
+
+msgid "Slider_Go_To_Image"
+msgstr "Adto sa hulagway {index}"
+
+msgid "Slider_Default_Label"
+msgstr "Hulagway"

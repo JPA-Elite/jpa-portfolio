@@ -11,7 +11,7 @@ endblock %}
 
 {% block content %}
 <!-- Link to the external CSS file for the vlog -->
-<link rel="stylesheet" href="{{ url_for('static', filename='css/pages/vlog.css') }}" />
+<link rel="stylesheet" href="{{ url_for('static', filename='css/pages/vlog.css', v='sharefix1') }}" />
 <link rel="stylesheet" href="{{ url_for('static', filename='css/plyr/plyr.css') }}" />
 <script src="{{ url_for('static', filename='js/plyr/plyr.js') }}"></script>
 <div class="vlog-search-shell">
@@ -120,5 +120,5 @@ endblock %}
     {{ super() }}
 {% endblock %}
 
-<script src="{{ url_for('static', filename='js/pages/vlog.js') }}"></script>
+<script src="{{ url_for('static', filename='js/pages/vlog.js', v='sharefix1') }}"></script>
 {% endblock %}

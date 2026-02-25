@@ -168,9 +168,171 @@ function setupMarqueeVisibility() {
     observer.observe(marqueeSection);
 }
 
+function setupMobileImageSliders() {
+    const sliderTracks = document.querySelectorAll("[data-mobile-slider]");
+    if (!sliderTracks.length) return;
+
+    const mobileQuery = window.matchMedia("(max-width: 768px)");
+
+    sliderTracks.forEach((track) => {
+        if (track.dataset.mobileSliderReady === "true") return;
+
+        const slides = Array.from(track.children).filter(
+            (node) => node.nodeType === Node.ELEMENT_NODE
+        );
+
+        if (!slides.length || !track.parentNode) return;
+
+        track.dataset.mobileSliderReady = "true";
+        track.classList.add("mobile-image-slider__track");
+        slides.forEach((slide) => slide.classList.add("mobile-image-slider__slide"));
+
+        // Keep single-item tracks full-width on mobile, but skip controls/dots.
+        if (slides.length < 2) {
+            return;
+        }
+
+        const shell = document.createElement("div");
+        shell.className = "mobile-image-slider";
+
+        track.parentNode.insertBefore(shell, track);
+        shell.appendChild(track);
+
+        const controls = document.createElement("div");
+        controls.className = "mobile-image-slider__controls";
+
+        const prevButton = document.createElement("button");
+        prevButton.type = "button";
+        prevButton.className = "mobile-image-slider__btn";
+        prevButton.setAttribute("aria-label", "Previous image");
+        prevButton.textContent = "Prev";
+
+        const counter = document.createElement("div");
+        counter.className = "mobile-image-slider__counter";
+        counter.setAttribute("aria-live", "polite");
+
+        const nextButton = document.createElement("button");
+        nextButton.type = "button";
+        nextButton.className = "mobile-image-slider__btn";
+        nextButton.setAttribute("aria-label", "Next image");
+        nextButton.textContent = "Next";
+
+        controls.appendChild(prevButton);
+        controls.appendChild(counter);
+        controls.appendChild(nextButton);
+
+        const dots = document.createElement("div");
+        dots.className = "mobile-image-slider__dots";
+        dots.setAttribute("role", "tablist");
+        dots.setAttribute(
+            "aria-label",
+            `${track.dataset.mobileSliderLabel || "Image"} slider navigation`
+        );
+
+        const dotButtons = slides.map((_, index) => {
+            const dot = document.createElement("button");
+            dot.type = "button";
+            dot.className = "mobile-image-slider__dot";
+            dot.setAttribute("role", "tab");
+            dot.setAttribute("aria-label", `Go to image ${index + 1}`);
+            dots.appendChild(dot);
+            return dot;
+        });
+
+        shell.appendChild(controls);
+        shell.appendChild(dots);
+
+        let activeIndex = 0;
+        let scrollTicking = false;
+
+        const clampIndex = (index) => Math.max(0, Math.min(index, slides.length - 1));
+
+        const getSlideLeft = (index) => {
+            const slide = slides[index];
+            if (!slide) return 0;
+            return Math.max(0, slide.offsetLeft - track.offsetLeft);
+        };
+
+        const findClosestIndex = () => {
+            const scrollLeft = track.scrollLeft;
+            let closestIndex = 0;
+            let closestDistance = Number.POSITIVE_INFINITY;
+
+            slides.forEach((slide, index) => {
+                const distance = Math.abs(scrollLeft - (slide.offsetLeft - track.offsetLeft));
+                if (distance < closestDistance) {
+                    closestDistance = distance;
+                    closestIndex = index;
+                }
+            });
+
+            return closestIndex;
+        };
+
+        const updateUi = () => {
+            activeIndex = clampIndex(findClosestIndex());
+            counter.textContent = `${activeIndex + 1} / ${slides.length}`;
+            prevButton.disabled = activeIndex === 0;
+            nextButton.disabled = activeIndex === slides.length - 1;
+
+            dotButtons.forEach((dot, index) => {
+                const isActive = index === activeIndex;
+                dot.classList.toggle("is-active", isActive);
+                dot.setAttribute("aria-selected", isActive ? "true" : "false");
+                dot.setAttribute("tabindex", isActive ? "0" : "-1");
+            });
+        };
+
+        const scrollToIndex = (index, behavior = "smooth") => {
+            const nextIndex = clampIndex(index);
+            track.scrollTo({
+                left: getSlideLeft(nextIndex),
+                behavior,
+            });
+            activeIndex = nextIndex;
+            updateUi();
+        };
+
+        prevButton.addEventListener("click", () => scrollToIndex(activeIndex - 1));
+        nextButton.addEventListener("click", () => scrollToIndex(activeIndex + 1));
+
+        dotButtons.forEach((dot, index) => {
+            dot.addEventListener("click", () => scrollToIndex(index));
+        });
+
+        track.addEventListener(
+            "scroll",
+            () => {
+                if (scrollTicking) return;
+                scrollTicking = true;
+                requestAnimationFrame(() => {
+                    updateUi();
+                    scrollTicking = false;
+                });
+            },
+            { passive: true }
+        );
+
+        const handleResize = () => {
+            if (mobileQuery.matches) {
+                track.scrollTo({
+                    left: getSlideLeft(activeIndex),
+                    behavior: "auto",
+                });
+            }
+            updateUi();
+        };
+
+        window.addEventListener("resize", handleResize, { passive: true });
+
+        updateUi();
+    });
+}
+
 document.addEventListener("DOMContentLoaded", () => {
     setupCarousel();
     setupProfileGifHover();
     setupSkillsTabs();
     setupMarqueeVisibility();
+    setupMobileImageSliders();
 });

@@ -99,6 +99,8 @@ function handleBrainTheme(theme) {
 let isSpeaking = false; // Track if speech is playing
 let currentSpeech = null; // Track the current speech instance
 let currentButton = null; // Track the current button being clicked
+let currentSpeechHighlight = null; // Track active word highlight state
+let speechSessionId = 0; // Ignore stale speech events after switching sections
 const currentYear = new Date().getFullYear();
 const copyrightEl = document.getElementById("copyright");
 if (copyrightEl) {
@@ -174,27 +176,190 @@ function getVoiceLocale(locale) {
 // Automatically stop speech when navigating to another page
 window.addEventListener("beforeunload", () => {
     window.speechSynthesis.cancel();
+    clearSpeechWordHighlight();
 });
 
+function clearSpeechWordHighlight() {
+    if (!currentSpeechHighlight) return;
+
+    const { container, tokens = [], activeIndex = -1 } = currentSpeechHighlight;
+    if (activeIndex >= 0 && tokens[activeIndex]?.el) {
+        tokens[activeIndex].el.classList.remove("is-speaking");
+    }
+
+    for (let i = tokens.length - 1; i >= 0; i--) {
+        const token = tokens[i];
+        if (!token?.el || !token.el.parentNode) continue;
+        token.el.replaceWith(document.createTextNode(token.el.textContent || ""));
+    }
+
+    if (container?.normalize) {
+        container.normalize();
+    }
+
+    currentSpeechHighlight = null;
+}
+
+function createSpeechWordHighlight(container) {
+    if (!container) return null;
+
+    clearSpeechWordHighlight();
+
+    const walker = document.createTreeWalker(
+        container,
+        NodeFilter.SHOW_TEXT,
+        {
+            acceptNode(node) {
+                if (!node || !node.nodeValue) return NodeFilter.FILTER_REJECT;
+                if (!node.parentElement) return NodeFilter.FILTER_REJECT;
+
+                const parentTag = node.parentElement.tagName;
+                if (parentTag === "SCRIPT" || parentTag === "STYLE") {
+                    return NodeFilter.FILTER_REJECT;
+                }
+
+                return NodeFilter.FILTER_ACCEPT;
+            },
+        }
+    );
+
+    const textNodes = [];
+    let walkerNode = walker.nextNode();
+    while (walkerNode) {
+        textNodes.push(walkerNode);
+        walkerNode = walker.nextNode();
+    }
+
+    const tokens = [];
+    let globalOffset = 0;
+
+    textNodes.forEach((textNode) => {
+        const textValue = textNode.nodeValue || "";
+        const wordPattern = /\S+/g;
+        let match = wordPattern.exec(textValue);
+
+        if (!match) {
+            globalOffset += textValue.length;
+            return;
+        }
+
+        const fragment = document.createDocumentFragment();
+        let lastIndex = 0;
+
+        while (match) {
+            const [word] = match;
+            const localStart = match.index;
+            const localEnd = localStart + word.length;
+
+            if (localStart > lastIndex) {
+                fragment.appendChild(document.createTextNode(textValue.slice(lastIndex, localStart)));
+            }
+
+            const span = document.createElement("span");
+            span.className = "speech-word";
+            span.textContent = word;
+            fragment.appendChild(span);
+
+            tokens.push({
+                el: span,
+                start: globalOffset + localStart,
+                end: globalOffset + localEnd,
+            });
+
+            lastIndex = localEnd;
+            match = wordPattern.exec(textValue);
+        }
+
+        if (lastIndex < textValue.length) {
+            fragment.appendChild(document.createTextNode(textValue.slice(lastIndex)));
+        }
+
+        textNode.parentNode.replaceChild(fragment, textNode);
+        globalOffset += textValue.length;
+    });
+
+    if (!tokens.length) return null;
+
+    currentSpeechHighlight = {
+        container,
+        tokens,
+        activeIndex: -1,
+    };
+
+    return currentSpeechHighlight;
+}
+
+function updateSpeechWordHighlight(charIndex) {
+    if (!currentSpeechHighlight || !Number.isFinite(charIndex)) return;
+
+    const { tokens } = currentSpeechHighlight;
+    if (!Array.isArray(tokens) || !tokens.length) return;
+
+    let nextIndex = -1;
+
+    for (let i = 0; i < tokens.length; i++) {
+        const token = tokens[i];
+        if (charIndex < token.end) {
+            nextIndex = i;
+            break;
+        }
+    }
+
+    if (nextIndex < 0) {
+        nextIndex = tokens.length - 1;
+    }
+
+    if (currentSpeechHighlight.activeIndex === nextIndex) return;
+
+    if (currentSpeechHighlight.activeIndex >= 0) {
+        tokens[currentSpeechHighlight.activeIndex]?.el?.classList.remove("is-speaking");
+    }
+
+    tokens[nextIndex]?.el?.classList.add("is-speaking");
+    currentSpeechHighlight.activeIndex = nextIndex;
+}
+
 // Handle speech toggle per section
-function speak(text, language, button) {
+function speak(text, language, button, highlightTarget = null) {
     // If speech is already playing and the same button is clicked, STOP it
     if (currentSpeech && currentButton === button) {
+        speechSessionId++;
+        currentSpeech.onend = null;
+        currentSpeech.onerror = null;
+        currentSpeech.onboundary = null;
         window.speechSynthesis.cancel();
         currentSpeech = null;
         isSpeaking = false;
         button.classList.remove("active"); // Reset button state
+        clearSpeechWordHighlight();
         return;
     }
 
     // If another button is clicked, stop the current speech
     if (currentSpeech && currentButton !== button) {
+        speechSessionId++;
+        currentSpeech.onend = null;
+        currentSpeech.onerror = null;
+        currentSpeech.onboundary = null;
         window.speechSynthesis.cancel();
         currentButton.classList.remove("active");
+        clearSpeechWordHighlight();
+    }
+
+    const highlightContainer =
+        typeof highlightTarget === "string"
+            ? document.querySelector(highlightTarget)
+            : highlightTarget;
+
+    if (highlightContainer) {
+        createSpeechWordHighlight(highlightContainer);
+    } else {
+        clearSpeechWordHighlight();
     }
 
     // Create a new speech instance
     const speech = new SpeechSynthesisUtterance(text);
+    const activeSpeechSessionId = ++speechSessionId;
     const voices = window.speechSynthesis.getVoices();
 
     // Find a male voice based on language
@@ -224,9 +389,25 @@ function speak(text, language, button) {
 
     // Automatically detect when the speech ends
     speech.onend = () => {
+        if (currentSpeech !== speech || speechSessionId !== activeSpeechSessionId) return;
         isSpeaking = false;
         currentSpeech = null;
         button.classList.remove("active"); // Reset button state
+        clearSpeechWordHighlight();
+    };
+
+    speech.onerror = () => {
+        if (currentSpeech !== speech || speechSessionId !== activeSpeechSessionId) return;
+        isSpeaking = false;
+        currentSpeech = null;
+        button.classList.remove("active");
+        clearSpeechWordHighlight();
+    };
+
+    speech.onboundary = (event) => {
+        if (currentSpeech !== speech || speechSessionId !== activeSpeechSessionId) return;
+        if (typeof event?.charIndex !== "number") return;
+        updateSpeechWordHighlight(event.charIndex);
     };
 
     // Automatically stop speech if the user leaves the page
@@ -235,6 +416,7 @@ function speak(text, language, button) {
         isSpeaking = false;
         currentSpeech = null;
         if (currentButton) currentButton.classList.remove("active");
+        clearSpeechWordHighlight();
     });
 
     // Start the speech immediately

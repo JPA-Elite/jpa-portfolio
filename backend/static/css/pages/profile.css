@@ -1947,6 +1947,26 @@ section>*+* {
     border-color: rgba(59, 130, 246, 0.28);
 }
 
+/* Word-level highlight while summary speech is playing */
+#project-details .speech-word,
+#about .speech-word,
+#resume .speech-word,
+#contact .speech-word {
+    transition: color 0.12s ease, font-weight 0.12s ease;
+}
+
+#project-details .speech-word.is-speaking,
+#about .speech-word.is-speaking,
+#resume .speech-word.is-speaking,
+#contact .speech-word.is-speaking {
+    color: #2962ff;
+    font-weight: 700;
+    text-decoration: underline;
+    text-decoration-color: #2962ff;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 0.12em;
+}
+
 @media only screen and (max-width: 768px) {
     #portfolio .voice-icon,
     #about .voice-icon,

@@ -199,12 +199,14 @@ async function loadKeyProjects(page = 1) {
                     <td>${Number(project.sort_order || 0)}</td>
                     <td>${project.is_active === false ? '<span class="badge text-bg-secondary">No</span>' : '<span class="badge text-bg-success">Yes</span>'}</td>
                     <td>
-                        <button class="btn btn-sm btn-primary me-1" data-bs-toggle="modal" data-bs-target="#${editModalId}">
-                            <i class="bi bi-pencil"></i> Edit
-                        </button>
-                        <button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#${deleteModalId}">
-                            <i class="bi bi-trash"></i> Delete
-                        </button>
+                        <div class="kp-admin-actions">
+                            <button class="btn btn-sm btn-primary me-1" data-bs-toggle="modal" data-bs-target="#${editModalId}">
+                                <i class="bi bi-pencil"></i> Edit
+                            </button>
+                            <button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#${deleteModalId}">
+                                <i class="bi bi-trash"></i> Delete
+                            </button>
+                        </div>
                     </td>
                 </tr>
             `);

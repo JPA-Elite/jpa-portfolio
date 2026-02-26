@@ -7,6 +7,7 @@ from backend.configurations import (
     ADMIN_LOGIN_PAGE,
     ADMIN_MUSIC_PAGE,
     ADMIN_KEY_PROJECTS_PAGE,
+    ADMIN_COMPANY_ROADMAPS_PAGE,
     ADMIN_SETTINGS_PAGE,
     ADMIN_VIDEO_PAGE,
 )
@@ -130,6 +131,9 @@ def admin_music_route():
 
 def admin_key_projects_route():
     return render_template(ADMIN_KEY_PROJECTS_PAGE, title="Admin Key Projects")
+
+def admin_company_roadmaps_route():
+    return render_template(ADMIN_COMPANY_ROADMAPS_PAGE, title="Admin Company Roadmaps")
 
 def admin_settings_route():
     return render_template(ADMIN_SETTINGS_PAGE, title="Admin Settings")

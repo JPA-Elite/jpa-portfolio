@@ -1,12 +1,13 @@
 from bson import ObjectId
 
+from backend.Repositories.Interfaces.IKeyProjectRepository import IKeyProjectRepository
 from backend.Repositories.BaseRepository import BaseRepository
 from backend.constants.db_collections import MongoCollections as mc
 from backend.configurations import SortOrder
 from backend.Models.KeyProject import KeyProject
 
 
-class KeyProjectRepository(BaseRepository):
+class KeyProjectRepository(IKeyProjectRepository, BaseRepository):
     def __init__(self):
         super().__init__(mc.KEY_PROJECTS)
 

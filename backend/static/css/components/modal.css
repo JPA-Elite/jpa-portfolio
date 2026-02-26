@@ -563,7 +563,7 @@
         width: 100%;
         height: auto;
         overflow: visible;
-        padding: 0;
+        padding: 0 0 calc(74px + env(safe-area-inset-bottom)) 0;
     }
 
     .modal-content {
@@ -605,9 +605,20 @@
     }
 
     .image-modal-nav {
+        top: auto;
+        bottom: max(52px, calc(env(safe-area-inset-bottom) + 40px));
+        transform: none;
         width: 46px;
         height: 46px;
         border-radius: 14px;
+    }
+
+    .image-modal-nav:hover {
+        transform: scale(1.03);
+    }
+
+    .image-modal-nav:active {
+        transform: scale(0.98);
     }
 
     .image-modal-nav ion-icon {
@@ -624,6 +635,7 @@
 
     #caption {
         font-size: 16px;
+        padding: 10px 14px 76px;
     }
 
     .box-modal-container {
@@ -732,6 +744,7 @@
 
 @media only screen and (max-width: 480px) {
     .image-modal-nav {
+        bottom: max(46px, calc(env(safe-area-inset-bottom) + 34px));
         width: 42px;
         height: 42px;
         border-radius: 12px;
@@ -746,6 +759,7 @@
 
     #caption {
         font-size: 14px;
+        padding: 8px 10px 70px;
     }
 }
 

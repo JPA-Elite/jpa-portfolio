@@ -308,11 +308,12 @@ if (!window.__modal_js_loaded__) {
         if (!normalized.length) {
             return;
         }
-
-        slideData = normalized;
-        currentSlide = Math.max(0, Math.min(Number(startIndex) || 0, slideData.length - 1));
-        updateCarousel();
-        openModal("", "", "", ModalType.BOX);
+        const localizedSlides = normalized.map((slide) => ({
+            src: slide.src,
+            title: (slide.titles && (slide.titles[currentLocale] || slide.titles.en)) || "",
+            description: (slide.descriptions && (slide.descriptions[currentLocale] || slide.descriptions.en)) || "",
+        }));
+        window.openImageGalleryModal(localizedSlides, startIndex);
     };
 
     window.openImageGalleryModal = function (items, startIndex = 0) {

@@ -701,6 +701,32 @@ def profile_route():
             status = "planned"
         key_project_columns[status].append(display_project)
 
+    # Build per-column modal galleries so single-image projects (common in Building/Planned)
+    # can still navigate across the other project snapshots in the same lane.
+    for _column_key, _projects in key_project_columns.items():
+        column_gallery = []
+        for _project in _projects:
+            _project_slides = list(_project.get("modal_slides") or [])
+            _project["_column_gallery_offset"] = len(column_gallery)
+            if _project_slides:
+                column_gallery.extend(_project_slides)
+
+        for _project in _projects:
+            _project_slides = list(_project.get("modal_slides") or [])
+            if len(_project_slides) > 1:
+                _project["modal_gallery_items"] = _project_slides
+                _project["modal_gallery_start_index"] = 0
+            elif len(column_gallery) > 1 and _project_slides:
+                _project["modal_gallery_items"] = column_gallery
+                _project["modal_gallery_start_index"] = int(_project.get("_column_gallery_offset", 0))
+            else:
+                _project["modal_gallery_items"] = _project_slides
+                _project["modal_gallery_start_index"] = 0
+
+    for _projects in key_project_columns.values():
+        for _project in _projects:
+            _project.pop("_column_gallery_offset", None)
+
     company_roadmap_entries = []
     for entry in [x.to_dict() for x in company_roadmap_service.get_active_company_roadmaps()]:
         roadmap_seed_i18n = _CAREER_ROADMAP_SEED_I18N.get(str(entry.get("id") or "").strip(), {})

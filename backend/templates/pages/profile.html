@@ -201,11 +201,8 @@ endblock %}
                         data-mobile-slider-label="{{ _('Career_Roadmap_Activity_Snapshots') }}"
                         data-slider-desktop-per-view="4">
                         {% for activity in entry.activities_display %}
-                        <button type="button" class="career-roadmap__activity-card" onclick="openModal(
-                            `{{ activity.image_url }}`,
-                            `{{ (activity.title or entry.company_name)|e }}`,
-                            `{{ (activity.caption or entry.role_title)|e }}`
-                        )">
+                        <button type="button" class="career-roadmap__activity-card"
+                            onclick='openImageGalleryModal({{ (entry.activities_display or []) | tojson }}, {{ loop.index0 }})'>
                             <img src="{{ activity.image_url }}" alt="{{ (activity.title or entry.company_name)|e }}" loading="lazy" decoding="async">
                             <span class="career-roadmap__activity-overlay"></span>
                             <span class="career-roadmap__activity-copy">
@@ -578,23 +575,24 @@ endblock %}
 <section id="certifications">
     <h2>{{ _('Certifications') }}</h2>
     <p>{{ _('Certifications_Description') }}</p>
+    {% set certification_gallery = [
+        {'image_url': url_for('static', filename='images/cert1.jpg'), 'title': 'Angular Basic Certificate'},
+        {'image_url': url_for('static', filename='images/cert2.jpg'), 'title': 'Java Basic Certificate'},
+        {'image_url': url_for('static', filename='images/cert3.jpg'), 'title': 'Javascript Basic Certificate'},
+        {'image_url': url_for('static', filename='images/cert4.jpg'), 'title': 'SQL Basic Certificate'},
+        {'image_url': url_for('static', filename='images/cert5.jpg'), 'title': 'Analyze Data with Python Certificate'},
+        {'image_url': url_for('static', filename='images/cert6.jpg'), 'title': 'Learn Basic Statistics with Python Certificate'},
+        {'image_url': url_for('static', filename='images/cert7.jpg'), 'title': 'Using HTML and CSS to Design a Website Certificate'},
+        {'image_url': url_for('static', filename='images/cert8.jpg'), 'title': 'Build Python Web Apps with Flask Certificate'}
+    ] %}
+    <script>
+        window.profileCertificationsGallery = {{ certification_gallery | tojson }};
+    </script>
     <div class="certification-images" data-mobile-slider data-mobile-slider-label="Certifications">
-        <img onclick="openModal(`{{ url_for('static', filename='images/cert1.jpg') }}`, 'Angular Basic Certificate')"
-            src="{{ url_for('static', filename='images/cert1.jpg') }}" alt="Certification 1" loading="lazy" decoding="async">
-        <img onclick="openModal(`{{ url_for('static', filename='images/cert2.jpg') }}`, 'Java Basic Certificate')"
-            src="{{ url_for('static', filename='images/cert2.jpg') }}" alt="Certification 2" loading="lazy" decoding="async">
-        <img onclick="openModal(`{{ url_for('static', filename='images/cert3.jpg') }}`, 'Javascript Basic Certificate')"
-            src="{{ url_for('static', filename='images/cert3.jpg') }}" alt="Certification 3" loading="lazy" decoding="async">
-        <img onclick="openModal(`{{ url_for('static', filename='images/cert4.jpg') }}`, 'SQL Basic Certificate')"
-            src="{{ url_for('static', filename='images/cert4.jpg') }}" alt="Certification 4" loading="lazy" decoding="async">
-        <img onclick="openModal(`{{ url_for('static', filename='images/cert5.jpg') }}`, 'Analyze Data with Python Certificate')"
-            src="{{ url_for('static', filename='images/cert5.jpg') }}" alt="Certification 5" loading="lazy" decoding="async">
-        <img onclick="openModal(`{{ url_for('static', filename='images/cert6.jpg') }}`, 'Learn Basic Statistics with Python Certificate')"
-            src="{{ url_for('static', filename='images/cert6.jpg') }}" alt="Certification 6" loading="lazy" decoding="async">
-        <img onclick="openModal(`{{ url_for('static', filename='images/cert7.jpg') }}`, 'Using HTML and CSS to Design a Website Certificate')"
-            src="{{ url_for('static', filename='images/cert7.jpg') }}" alt="Certification 7" loading="lazy" decoding="async">
-        <img onclick="openModal(`{{ url_for('static', filename='images/cert8.jpg') }}`, 'Build Python Web Apps with Flask Certificate')"
-            src="{{ url_for('static', filename='images/cert8.jpg') }}" alt="Certification 8" loading="lazy" decoding="async">
+        {% for cert in certification_gallery %}
+        <img onclick='openImageGalleryModal(window.profileCertificationsGallery || [], {{ loop.index0 }})'
+            src="{{ cert.image_url }}" alt="{{ cert.title }}" loading="lazy" decoding="async">
+        {% endfor %}
     </div>
 </section>
 

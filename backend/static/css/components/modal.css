@@ -86,6 +86,79 @@
     background-color: #000;
 }
 
+.image-modal-nav {
+    position: fixed;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 2105;
+    width: 56px;
+    height: 56px;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    background: rgba(0, 0, 0, 0.62);
+    color: #fff;
+    display: inline-grid;
+    place-items: center;
+    cursor: pointer;
+    box-shadow: 0 10px 22px rgba(0, 0, 0, 0.32);
+    backdrop-filter: blur(6px);
+    transition: transform 0.2s ease, background-color 0.2s ease, border-color 0.2s ease, opacity 0.2s ease;
+}
+
+.image-modal-nav:hover {
+    background: rgba(14, 18, 28, 0.82);
+    border-color: rgba(59, 130, 246, 0.42);
+    transform: translateY(-50%) scale(1.03);
+}
+
+.image-modal-nav:active {
+    transform: translateY(-50%) scale(0.98);
+}
+
+.image-modal-nav:focus-visible {
+    outline: 2px solid rgba(59, 130, 246, 0.8);
+    outline-offset: 2px;
+}
+
+.image-modal-nav[hidden] {
+    display: none !important;
+}
+
+.image-modal-nav ion-icon {
+    font-size: 1.55rem;
+}
+
+.image-modal-nav--prev {
+    left: max(14px, env(safe-area-inset-left));
+}
+
+.image-modal-nav--next {
+    right: max(14px, env(safe-area-inset-right));
+}
+
+.image-modal-gallery-counter {
+    position: fixed;
+    left: 50%;
+    bottom: max(14px, env(safe-area-inset-bottom));
+    transform: translateX(-50%);
+    z-index: 2105;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 78px;
+    padding: 5px 10px;
+    border-radius: 999px;
+    background: rgba(0, 0, 0, 0.65);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    color: rgba(255, 255, 255, 0.92);
+    font-size: 0.85rem;
+    letter-spacing: 0.02em;
+}
+
+.image-modal-gallery-counter[hidden] {
+    display: none !important;
+}
+
 #caption {
     margin: auto;
     display: block;
@@ -531,6 +604,24 @@
         font-size: 40px;
     }
 
+    .image-modal-nav {
+        width: 46px;
+        height: 46px;
+        border-radius: 14px;
+    }
+
+    .image-modal-nav ion-icon {
+        font-size: 1.35rem;
+    }
+
+    .image-modal-nav--prev {
+        left: max(8px, env(safe-area-inset-left));
+    }
+
+    .image-modal-nav--next {
+        right: max(8px, env(safe-area-inset-right));
+    }
+
     #caption {
         font-size: 16px;
     }
@@ -640,6 +731,19 @@
 }
 
 @media only screen and (max-width: 480px) {
+    .image-modal-nav {
+        width: 42px;
+        height: 42px;
+        border-radius: 12px;
+    }
+
+    .image-modal-gallery-counter {
+        bottom: max(10px, env(safe-area-inset-bottom));
+        font-size: 0.8rem;
+        min-width: 70px;
+        padding: 4px 8px;
+    }
+
     #caption {
         font-size: 14px;
     }

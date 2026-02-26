@@ -11,6 +11,7 @@ class MongoCollections:
     USERS = "users"
     GALLERY = "gallery"
     KEY_PROJECTS = "key_projects"
+    COMPANY_ROADMAPS = "company_roadmaps"
     GALLERY_LIKES = "gallery_likes"
     VIDEO_LIKES = "video_likes"
     GALLERY_COMMENTS = "gallery_comments"

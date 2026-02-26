@@ -127,6 +127,114 @@ endblock %}
     {% endif %}
 </section>
 
+<section id="company-roadmap" class="career-roadmap-section">
+    <div class="career-roadmap__header">
+        <span class="career-roadmap__eyebrow">
+            <ion-icon name="business-outline" aria-hidden="true"></ion-icon>
+            {{ _('Career_Journey') }}
+        </span>
+        <h2>{{ _('Company_Roadmap') }}</h2>
+        <p>
+            {{ _('Career_Roadmap_Description') }}
+        </p>
+    </div>
+
+    <div class="career-roadmap__timeline" id="careerRoadmapTimeline">
+        <div class="career-roadmap__rail" aria-hidden="true">
+            <span class="career-roadmap__rail-progress"></span>
+        </div>
+
+        {% for entry in company_roadmap_entries %}
+        <article class="career-roadmap__item js-roadmap-item" data-roadmap-index="{{ loop.index0 }}"
+            style="--roadmap-accent: {{ entry.accent_color|default('#2962ff') }};">
+            <div class="career-roadmap__marker" aria-hidden="true">
+                <span class="career-roadmap__marker-dot"></span>
+                <span class="career-roadmap__marker-index">{{ '%02d' % loop.index }}</span>
+            </div>
+
+            <div class="career-roadmap__card">
+                <div class="career-roadmap__card-head">
+                    <div class="career-roadmap__titles">
+                        <div class="career-roadmap__company">{{ entry.company_name }}</div>
+                        <h3>{{ entry.role_title }}</h3>
+                        <div class="career-roadmap__meta">
+                            {% if entry.employment_type %}<span>{{ entry.employment_type }}</span>{% endif %}
+                            {% if entry.period %}<span>{{ entry.period }}</span>{% endif %}
+                            {% if entry.location %}<span>{{ entry.location }}</span>{% endif %}
+                        </div>
+                    </div>
+                    {% if entry.cover_image_url %}
+                    <button type="button" class="career-roadmap__cover" onclick="openModal(
+                        `{{ entry.cover_image_url }}`,
+                        `{{ (entry.company_name ~ ' - ' ~ entry.role_title)|e }}`,
+                        `{{ (entry.definition or entry.summary or '')|e }}`
+                    )" aria-label="{{ _('Career_Roadmap_Cover_Image_Aria', company=entry.company_name) }}">
+                        <img src="{{ entry.cover_image_url }}" alt="{{ entry.company_name }} cover image" loading="lazy" decoding="async">
+                    </button>
+                    {% endif %}
+                </div>
+
+                {% if entry.definition %}
+                <div class="career-roadmap__definition">
+                    <span class="career-roadmap__label">{{ _('Career_Roadmap_Definition_Label') }}</span>
+                    <p>{{ entry.definition }}</p>
+                </div>
+                {% endif %}
+
+                {% if entry.summary %}
+                <p class="career-roadmap__summary">{{ entry.summary }}</p>
+                {% endif %}
+
+                {% if entry.highlights %}
+                <ul class="career-roadmap__highlights">
+                    {% for highlight in entry.highlights %}
+                    <li>{{ highlight }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+
+                {% if entry.activities_display %}
+                <div class="career-roadmap__activities">
+                    <div class="career-roadmap__activities-title">{{ _('Career_Roadmap_Activity_Snapshots') }}</div>
+                    <div class="career-roadmap__activity-grid"
+                        data-mobile-slider
+                        data-mobile-slider-label="{{ _('Career_Roadmap_Activity_Snapshots') }}"
+                        data-slider-desktop-per-view="4">
+                        {% for activity in entry.activities_display %}
+                        <button type="button" class="career-roadmap__activity-card" onclick="openModal(
+                            `{{ activity.image_url }}`,
+                            `{{ (activity.title or entry.company_name)|e }}`,
+                            `{{ (activity.caption or entry.role_title)|e }}`
+                        )">
+                            <img src="{{ activity.image_url }}" alt="{{ (activity.title or entry.company_name)|e }}" loading="lazy" decoding="async">
+                            <span class="career-roadmap__activity-overlay"></span>
+                            <span class="career-roadmap__activity-copy">
+                                {% if activity.title %}<strong>{{ activity.title }}</strong>{% endif %}
+                                {% if activity.caption %}<small>{{ activity.caption }}</small>{% endif %}
+                            </span>
+                        </button>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </article>
+        {% else %}
+        <div class="career-roadmap__empty">
+            {{ _('Career_Roadmap_Empty') }}
+        </div>
+        {% endfor %}
+    </div>
+    {% if get_locale() == en_locale %}
+    <img src="{{ voice_icon }}" alt="Voice Image" class="voice-icon" onclick="speak(
+        document.querySelector('#company-roadmap').textContent,
+        getVoiceLocale('{{ get_locale() }}'),
+        this,
+        '#company-roadmap'
+    )" />
+    {% endif %}
+</section>
+
 <!-- Key Projects -->
 <section id="key-projects">
     <div class="key-projects-main">

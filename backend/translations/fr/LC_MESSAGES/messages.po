@@ -432,3 +432,42 @@ msgstr "You"
 
 msgid "Modal_Project_Preview"
 msgstr "Project Preview"
+
+msgid "Career_Journey"
+msgstr "Career Journey"
+
+msgid "Company_Roadmap"
+msgstr "Company Roadmap"
+
+msgid "Career_Roadmap_Description"
+msgstr "A visual journey from internship foundations to professional software engineering work, including role definitions and activity snapshots."
+
+msgid "Career_Roadmap_Cover_Image_Aria"
+msgstr "Open %(company)s cover image"
+
+msgid "Career_Roadmap_Definition_Label"
+msgstr "Definition"
+
+msgid "Career_Roadmap_Activity_Snapshots"
+msgstr "Activity Snapshots"
+
+msgid "Career_Roadmap_Empty"
+msgstr "No company roadmap entries yet."
+
+msgid "Career_Roadmap_Work_Highlight"
+msgstr "Work Highlight"
+
+msgid "Career_Roadmap_Employment_Internship"
+msgstr "Internship"
+
+msgid "Career_Roadmap_Employment_Full_Time"
+msgstr "Full-time"
+
+msgid "Career_Roadmap_Employment_Contract"
+msgstr "Contract"
+
+msgid "Career_Roadmap_Employment_Freelance"
+msgstr "Freelance"
+
+msgid "Career_Roadmap_Employment_Experience"
+msgstr "Experience"

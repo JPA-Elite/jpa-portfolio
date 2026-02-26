@@ -3,7 +3,7 @@ from flask import Blueprint, request
 from backend.configurations import HTTPMethod as http, get_locale
 from backend.auth.middleware import admin_login_required
 from backend.Controllers.web.PageController import add_portfolio_form_route, concern_route, device_info_route, donation_route, gallery_route, index_route, music_route, profile_route, vlog_route
-from backend.Controllers.web.AdminPageController import admin_dashboard_route, admin_gallery_route, admin_key_projects_route, admin_login_attempts_route, admin_login_route, admin_logout_route, admin_music_route, admin_settings_route, admin_video_route
+from backend.Controllers.web.AdminPageController import admin_company_roadmaps_route, admin_dashboard_route, admin_gallery_route, admin_key_projects_route, admin_login_attempts_route, admin_login_route, admin_logout_route, admin_music_route, admin_settings_route, admin_video_route
 from backend.extensions import cache
 
 # Create a Blueprint for pages
@@ -16,7 +16,7 @@ def index():
     return index_route()
 
 @pages_bp.route("/profile", methods=[http.GET])
-@cache.cached(key_prefix=lambda: f"profile_ui_v8_{get_locale()}_{request.query_string.decode()}")
+@cache.cached(key_prefix=lambda: f"profile_ui_v10_{get_locale()}_{request.query_string.decode()}")
 def profile():
     return profile_route()
 
@@ -94,6 +94,12 @@ def admin_music():
 @cache.cached()
 def admin_key_projects():
     return admin_key_projects_route()
+
+@pages_bp.route("/admin/company-roadmaps", methods=[http.GET])
+@admin_login_required
+@cache.cached()
+def admin_company_roadmaps():
+    return admin_company_roadmaps_route()
 
 @pages_bp.route("/admin/settings", methods=[http.GET])
 @admin_login_required

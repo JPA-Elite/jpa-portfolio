@@ -15,6 +15,12 @@ from backend.Controllers.api.KeyProjectController import (
     key_project_list_route,
     update_key_project_route,
 )
+from backend.Controllers.api.CompanyRoadmapController import (
+    add_company_roadmap_route,
+    company_roadmap_list_route,
+    delete_company_roadmap_route,
+    update_company_roadmap_route,
+)
 from backend.Controllers.api.VideoController import add_video_route, delete_video_route, update_video_route, video_list_route
 from backend.Controllers.api.GalleryController import add_gallery_route, delete_gallery_route, gallery_list_route, update_gallery_route
 from backend.Controllers.api.GalleryLikeController import (
@@ -151,6 +157,27 @@ def update_key_project(project_id):
 @admin_login_required
 def delete_key_project(project_id):
     return delete_key_project_route(project_id)
+
+# Company Roadmaps API
+@api_bp.route("/admin/api/company-roadmap-list", methods=[http.GET])
+@admin_login_required
+def company_roadmap_list():
+    return company_roadmap_list_route()
+
+@api_bp.route("/admin/api/add-company-roadmap", methods=[http.POST])
+@admin_login_required
+def add_company_roadmap():
+    return add_company_roadmap_route()
+
+@api_bp.route("/admin/api/update-company-roadmap/<roadmap_id>", methods=[http.PUT])
+@admin_login_required
+def update_company_roadmap(roadmap_id):
+    return update_company_roadmap_route(roadmap_id)
+
+@api_bp.route("/admin/api/delete-company-roadmap/<roadmap_id>", methods=[http.DELETE])
+@admin_login_required
+def delete_company_roadmap(roadmap_id):
+    return delete_company_roadmap_route(roadmap_id)
 
 # Gallery API
 @api_bp.route("/admin/api/gallery-list", methods=[http.GET])

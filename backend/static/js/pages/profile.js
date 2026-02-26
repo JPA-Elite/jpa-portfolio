@@ -168,6 +168,57 @@ function setupMarqueeVisibility() {
     observer.observe(marqueeSection);
 }
 
+function setupCareerRoadmapReveal() {
+    const roadmapSection = document.getElementById("company-roadmap");
+    const timeline = document.getElementById("careerRoadmapTimeline");
+    const items = Array.from(document.querySelectorAll(".js-roadmap-item"));
+
+    if (!roadmapSection || !timeline || !items.length) return;
+
+    items.forEach((item, index) => {
+        item.style.setProperty("--roadmap-item-index", String(index));
+    });
+
+    const updateTimelineProgress = () => {
+        const rect = roadmapSection.getBoundingClientRect();
+        const viewportHeight = window.innerHeight || document.documentElement.clientHeight || 1;
+        const start = viewportHeight * 0.18;
+        const end = viewportHeight * 0.82;
+        const total = rect.height + (end - start);
+        const progressed = end - rect.top;
+        const ratio = Math.max(0, Math.min(1, total > 0 ? progressed / total : 0));
+        timeline.style.setProperty("--roadmap-progress", ratio.toFixed(4));
+    };
+
+    if (!("IntersectionObserver" in window)) {
+        items.forEach((item) => item.classList.add("is-visible"));
+        updateTimelineProgress();
+        window.addEventListener("scroll", updateTimelineProgress, { passive: true });
+        window.addEventListener("resize", updateTimelineProgress, { passive: true });
+        return;
+    }
+
+    const observer = new IntersectionObserver(
+        (entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add("is-visible");
+                }
+            });
+            updateTimelineProgress();
+        },
+        {
+            threshold: 0.12,
+            rootMargin: "0px 0px -8% 0px",
+        }
+    );
+
+    items.forEach((item) => observer.observe(item));
+    updateTimelineProgress();
+    window.addEventListener("scroll", updateTimelineProgress, { passive: true });
+    window.addEventListener("resize", updateTimelineProgress, { passive: true });
+}
+
 function setupMobileImageSliders() {
     const sliderTracks = document.querySelectorAll("[data-mobile-slider]");
     if (!sliderTracks.length) return;
@@ -190,6 +241,14 @@ function setupMobileImageSliders() {
 
         const slides = Array.from(track.children).filter(
             (node) => node.nodeType === Node.ELEMENT_NODE
+        );
+        const desktopPerView = Math.max(
+            1,
+            Number.parseInt(track.dataset.sliderDesktopPerView || "1", 10) || 1
+        );
+        const mobilePerView = Math.max(
+            1,
+            Number.parseInt(track.dataset.sliderMobilePerView || "1", 10) || 1
         );
 
         if (!slides.length || !track.parentNode) return;
@@ -270,13 +329,23 @@ function setupMobileImageSliders() {
 
         let activeIndex = 0;
         let scrollTicking = false;
+        let activePage = 0;
 
         const clampIndex = (index) => Math.max(0, Math.min(index, slides.length - 1));
+        const getPerView = () => (mobileQuery.matches ? mobilePerView : desktopPerView);
+        const getPageCount = () => Math.max(1, Math.ceil(slides.length / getPerView()));
 
         const getSlideLeft = (index) => {
             const slide = slides[index];
             if (!slide) return 0;
             return Math.max(0, slide.offsetLeft - track.offsetLeft);
+        };
+
+        const applyTrackResponsiveVars = () => {
+            track.style.setProperty(
+                "--mobile-image-slider-slides-per-view",
+                String(getPerView())
+            );
         };
 
         const findClosestIndex = () => {
@@ -297,33 +366,46 @@ function setupMobileImageSliders() {
 
         const updateUi = () => {
             activeIndex = clampIndex(findClosestIndex());
-            counter.textContent = `${activeIndex + 1} / ${slides.length}`;
-            prevButton.disabled = activeIndex === 0;
-            nextButton.disabled = activeIndex === slides.length - 1;
+            const perView = getPerView();
+            const pageCount = getPageCount();
+            activePage = Math.max(0, Math.min(pageCount - 1, Math.floor(activeIndex / perView)));
+
+            counter.textContent = `${activePage + 1} / ${pageCount}`;
+            prevButton.disabled = activePage === 0;
+            nextButton.disabled = activePage >= pageCount - 1;
+
+            const showNavigation = pageCount > 1;
+            controls.hidden = !showNavigation;
+            dots.hidden = !showNavigation;
 
             dotButtons.forEach((dot, index) => {
-                const isActive = index === activeIndex;
+                const isVisible = index < pageCount;
+                const isActive = isVisible && index === activePage;
+                dot.hidden = !isVisible;
                 dot.classList.toggle("is-active", isActive);
                 dot.setAttribute("aria-selected", isActive ? "true" : "false");
-                dot.setAttribute("tabindex", isActive ? "0" : "-1");
+                dot.setAttribute("tabindex", isActive && isVisible ? "0" : "-1");
             });
         };
 
-        const scrollToIndex = (index, behavior = "smooth") => {
-            const nextIndex = clampIndex(index);
+        const scrollToPage = (page, behavior = "smooth") => {
+            const pageCount = getPageCount();
+            const nextPage = Math.max(0, Math.min(pageCount - 1, page));
+            const nextIndex = clampIndex(nextPage * getPerView());
             track.scrollTo({
                 left: getSlideLeft(nextIndex),
                 behavior,
             });
             activeIndex = nextIndex;
+            activePage = nextPage;
             updateUi();
         };
 
-        prevButton.addEventListener("click", () => scrollToIndex(activeIndex - 1));
-        nextButton.addEventListener("click", () => scrollToIndex(activeIndex + 1));
+        prevButton.addEventListener("click", () => scrollToPage(activePage - 1));
+        nextButton.addEventListener("click", () => scrollToPage(activePage + 1));
 
         dotButtons.forEach((dot, index) => {
-            dot.addEventListener("click", () => scrollToIndex(index));
+            dot.addEventListener("click", () => scrollToPage(index));
         });
 
         track.addEventListener(
@@ -340,9 +422,15 @@ function setupMobileImageSliders() {
         );
 
         const handleResize = () => {
+            applyTrackResponsiveVars();
             if (mobileQuery.matches) {
                 track.scrollTo({
-                    left: getSlideLeft(activeIndex),
+                    left: getSlideLeft(clampIndex(activePage * getPerView())),
+                    behavior: "auto",
+                });
+            } else {
+                track.scrollTo({
+                    left: getSlideLeft(clampIndex(activePage * getPerView())),
                     behavior: "auto",
                 });
             }
@@ -351,6 +439,7 @@ function setupMobileImageSliders() {
 
         window.addEventListener("resize", handleResize, { passive: true });
 
+        applyTrackResponsiveVars();
         updateUi();
     });
 }
@@ -360,5 +449,6 @@ document.addEventListener("DOMContentLoaded", () => {
     setupProfileGifHover();
     setupSkillsTabs();
     setupMarqueeVisibility();
+    setupCareerRoadmapReveal();
     setupMobileImageSliders();
 });

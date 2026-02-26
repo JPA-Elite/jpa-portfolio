@@ -1,0 +1,268 @@
+{% extends "admin/dist/layout.html" %}
+
+{% block title %}Admin | Company Roadmaps{% endblock %}
+
+{% block head %}
+<style>
+  .company-roadmap-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .4rem;
+  }
+
+  .company-roadmap-actions .btn {
+    white-space: nowrap;
+  }
+
+  .activity-row-card {
+    border: 1px solid var(--bs-border-color);
+    border-radius: .75rem;
+    padding: .75rem;
+    background: var(--bs-body-bg);
+  }
+
+  .table-responsive-wrapper {
+    width: 100%;
+    overflow-x: auto;
+  }
+
+  @media (max-width: 768px) {
+    .company-roadmap-actions {
+      flex-direction: column;
+      width: 100%;
+    }
+
+    .company-roadmap-actions .btn {
+      width: 100%;
+      justify-content: center;
+      display: inline-flex;
+      align-items: center;
+      gap: .35rem;
+    }
+
+    #companyRoadmapsTableBody td:last-child {
+      min-width: 145px;
+    }
+
+    .company-roadmap-summary {
+      max-width: 220px !important;
+    }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="app-content-header">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-sm-6">
+        <h3 class="mb-0">Company Roadmaps</h3>
+      </div>
+      <div class="col-sm-6">
+        <ol class="breadcrumb float-sm-end">
+          <li class="breadcrumb-item"><a href="/admin/dashboard">Home</a></li>
+          <li class="breadcrumb-item active" aria-current="page">Maintenance</li>
+          <li class="breadcrumb-item active" aria-current="page">Company Roadmaps</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="app-content">
+  <div class="container-fluid">
+    <div class="card">
+      <div class="card-body">
+        <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 pb-3">
+          <div>
+            <label for="perPageSelect" class="form-label me-2">Show</label>
+            <select id="perPageSelect" class="form-select form-select-sm d-inline-block" style="width:auto;">
+              <option value="5">5</option>
+              <option value="10" selected>10</option>
+              <option value="20">20</option>
+            </select>
+            <span>entries</span>
+          </div>
+          <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addRoadmapModal">
+            <i class="bi bi-plus-circle"></i> Add Roadmap Entry
+          </button>
+        </div>
+
+        <div class="table-responsive-wrapper">
+          <table class="table table-bordered table-hover align-middle">
+            <thead class="table-light">
+              <tr>
+                <th>#</th>
+                <th>Cover</th>
+                <th>Company</th>
+                <th>Role</th>
+                <th>Period</th>
+                <th>Type</th>
+                <th>Activities</th>
+                <th>Active</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="companyRoadmapsTableBody">
+              <tr><td colspan="9" class="text-center">Loading...</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="d-flex justify-content-between align-items-center mt-3">
+          <button id="prevPage" class="btn btn-outline-secondary btn-sm">Prev</button>
+          <span id="pageInfo"></span>
+          <button id="nextPage" class="btn btn-outline-secondary btn-sm">Next</button>
+        </div>
+
+        <div id="companyRoadmapModals"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="addRoadmapModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Add Company Roadmap Entry</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="addCompanyRoadmapForm">
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label">Company Name <span class="text-danger">*</span></label>
+              <input type="text" id="addCompanyName" class="form-control" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Role Title <span class="text-danger">*</span></label>
+              <input type="text" id="addRoleTitle" class="form-control" required>
+            </div>
+
+            <div class="col-md-4">
+              <label class="form-label">Period <span class="text-danger">*</span></label>
+              <input type="text" id="addPeriod" class="form-control" placeholder="2024 - Present" required>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Employment Type</label>
+              <select id="addEmploymentType" class="form-select">
+                <option value="Internship">Internship</option>
+                <option value="Full-time">Full-time</option>
+                <option value="Contract">Contract</option>
+                <option value="Freelance">Freelance</option>
+                <option value="Experience">Experience</option>
+              </select>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Location</label>
+              <input type="text" id="addLocation" class="form-control" placeholder="Cebu City">
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label">Definition</label>
+              <textarea id="addDefinition" class="form-control" rows="3" placeholder="Define the role and its focus."></textarea>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Summary</label>
+              <textarea id="addSummary" class="form-control" rows="3" placeholder="Short narrative / overview."></textarea>
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label">Highlights (one per line)</label>
+              <textarea id="addHighlights" class="form-control" rows="4" placeholder="Built X feature&#10;Collaborated with team&#10;Improved workflow"></textarea>
+            </div>
+            <div class="col-12">
+              <div class="card border">
+                <div class="card-header">
+                  <strong>Translations (Cebuano / Tagalog)</strong>
+                </div>
+                <div class="card-body">
+                  <div class="row g-3">
+                    <div class="col-md-6">
+                      <label class="form-label">Role Title (Cebuano)</label>
+                      <input type="text" id="addRoleTitleCeb" class="form-control" placeholder="Optional translation">
+                    </div>
+                    <div class="col-md-6">
+                      <label class="form-label">Role Title (Tagalog)</label>
+                      <input type="text" id="addRoleTitleFil" class="form-control" placeholder="Optional translation">
+                    </div>
+                    <div class="col-md-6">
+                      <label class="form-label">Definition (Cebuano)</label>
+                      <textarea id="addDefinitionCeb" class="form-control" rows="3" placeholder="Optional translation"></textarea>
+                    </div>
+                    <div class="col-md-6">
+                      <label class="form-label">Definition (Tagalog)</label>
+                      <textarea id="addDefinitionFil" class="form-control" rows="3" placeholder="Optional translation"></textarea>
+                    </div>
+                    <div class="col-md-6">
+                      <label class="form-label">Summary (Cebuano)</label>
+                      <textarea id="addSummaryCeb" class="form-control" rows="3" placeholder="Optional translation"></textarea>
+                    </div>
+                    <div class="col-md-6">
+                      <label class="form-label">Summary (Tagalog)</label>
+                      <textarea id="addSummaryFil" class="form-control" rows="3" placeholder="Optional translation"></textarea>
+                    </div>
+                    <div class="col-md-6">
+                      <label class="form-label">Highlights (Cebuano, one per line)</label>
+                      <textarea id="addHighlightsCeb" class="form-control" rows="4" placeholder="Optional translation list"></textarea>
+                    </div>
+                    <div class="col-md-6">
+                      <label class="form-label">Highlights (Tagalog, one per line)</label>
+                      <textarea id="addHighlightsFil" class="form-control" rows="4" placeholder="Optional translation list"></textarea>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <label class="form-label">Accent Color</label>
+              <input type="color" id="addAccentColor" class="form-control form-control-color" value="#2962ff" title="Accent color">
+            </div>
+            <div class="col-md-3">
+              <label class="form-label">Sort Order</label>
+              <input type="number" id="addSortOrder" class="form-control" value="0">
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label">Cover Image <span class="text-danger">*</span></label>
+              <input type="file" id="addCoverImageFile" class="form-control" accept="image/*" required>
+            </div>
+            <div class="col-md-6 d-flex align-items-end">
+              <div class="form-check ms-2 mb-2">
+                <input class="form-check-input" type="checkbox" id="addIsActive" checked>
+                <label class="form-check-label" for="addIsActive">Active (show on profile)</label>
+              </div>
+            </div>
+
+            <div class="col-12">
+              <div class="card border">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                  <strong>Activity Images</strong>
+                  <button type="button" class="btn btn-sm btn-outline-primary" data-add-activity-row data-target="#addActivityRows">
+                    <i class="bi bi-plus"></i> Add Activity Image
+                  </button>
+                </div>
+                <div class="card-body">
+                  <p class="text-muted small mb-2">Add activity images with optional title/caption for the roadmap card gallery.</p>
+                  <div id="addActivityRows" class="d-grid gap-2"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-success" id="addRoadmapBtn"
+          data-loading-text='<span class="spinner-border spinner-border-sm me-2"></span> Saving...'
+          onclick="addCompanyRoadmap()">
+          Save
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="{{ url_for('static', filename='js/pages/admin/company-roadmaps.js') }}"></script>
+{% endblock %}

@@ -2,6 +2,36 @@
 
 {% block title %}Admin | Key Projects{% endblock %}
 
+{% block head %}
+<style>
+  .kp-admin-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .4rem;
+  }
+
+  @media (max-width: 768px) {
+    .kp-admin-actions {
+      flex-direction: column;
+      width: 100%;
+    }
+
+    .kp-admin-actions .btn {
+      width: 100%;
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      gap: .35rem;
+      margin-right: 0 !important;
+    }
+
+    #keyProjectsTableBody td:last-child {
+      min-width: 140px;
+    }
+  }
+</style>
+{% endblock %}
+
 {% block content %}
 <div class="app-content-header">
   <div class="container-fluid">

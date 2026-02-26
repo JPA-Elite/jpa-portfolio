@@ -48,3 +48,7 @@ shell:
 # Compile the translations
 compile-translations:
 	cd backend && pybabel compile -d translations
+
+# Run unit tests (controllers/services/repositories)
+test:
+	set FLASK_ENV= && python -W ignore::DeprecationWarning -m unittest discover -s tests -p "test_*.py"

@@ -16,7 +16,6 @@ class MusicService:
         try:
             duration_formatted = None
             audio = MutagenFile(temp_path)
-            print(audio)
             if audio and hasattr(audio, "info") and audio.info.length:
                 total_seconds = round(audio.info.length, 2)
                 minutes = int(total_seconds // 60)
@@ -25,8 +24,7 @@ class MusicService:
                 duration_formatted = f"{minutes}:{seconds:02d}"
 
             return duration_formatted
-        except Exception as e:
-            print(f"Error getting duration: {e}")
+        except Exception:
             return None
 
     # -------------------------- Music Service Methods -------------------------

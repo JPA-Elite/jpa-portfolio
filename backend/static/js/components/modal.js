@@ -24,6 +24,8 @@ if (!window.__modal_js_loaded__) {
     let currentCommentPage = 1;
     const COMMENTS_PER_PAGE = 100;
     const MAX_COMMENT_LENGTH = 1000;
+    let imageGalleryData = [];
+    let imageGalleryIndex = 0;
 
     fetch("/static/json/project.json")
         .then(response => response.json())
@@ -174,6 +176,76 @@ if (!window.__modal_js_loaded__) {
         return videoExtensions.includes(ext);
     }
 
+    function getImageGalleryNavElements() {
+        return {
+            prevBtn: document.getElementById("imageModalPrev"),
+            nextBtn: document.getElementById("imageModalNext"),
+            counter: document.getElementById("imageModalGalleryCounter"),
+            imageModal: document.getElementById("imageModal"),
+            boxContainer: document.querySelector(".box-modal-container"),
+            modalImage: document.getElementById("modalImage"),
+        };
+    }
+
+    function normalizeImageGalleryItems(items) {
+        if (!Array.isArray(items)) return [];
+        return items
+            .map((item) => {
+                if (!item || typeof item !== "object") return null;
+                const src = String(item.image_url || item.src || "").trim();
+                if (!src) return null;
+                return {
+                    src,
+                    title: String(item.title || "").trim(),
+                    description: String(item.caption || item.description || "").trim(),
+                };
+            })
+            .filter(Boolean);
+    }
+
+    function syncImageGalleryNav(isImageView = null) {
+        const { prevBtn, nextBtn, counter, imageModal, boxContainer, modalImage } = getImageGalleryNavElements();
+        if (!prevBtn || !nextBtn || !counter || !imageModal) return;
+
+        const modalOpen = imageModal.style.display === "flex";
+        const boxOpen = boxContainer && boxContainer.style.display === "block";
+        const imageShown = modalImage && modalImage.style.display !== "none";
+        const shouldShow = modalOpen && !boxOpen && (isImageView ?? imageShown) && imageGalleryData.length > 1;
+
+        prevBtn.hidden = !shouldShow;
+        nextBtn.hidden = !shouldShow;
+        counter.hidden = !shouldShow;
+
+        if (!shouldShow) {
+            counter.textContent = "";
+            return;
+        }
+
+        counter.textContent = `${imageGalleryIndex + 1} / ${imageGalleryData.length}`;
+    }
+
+    function clearImageGalleryNav() {
+        imageGalleryData = [];
+        imageGalleryIndex = 0;
+        syncImageGalleryNav(false);
+    }
+
+    function renderActiveImageGallerySlide() {
+        if (!imageGalleryData.length) return;
+        const total = imageGalleryData.length;
+        imageGalleryIndex = (imageGalleryIndex + total) % total;
+        const item = imageGalleryData[imageGalleryIndex];
+        openModal(
+            item.src,
+            item.title,
+            item.description,
+            ModalType.IMAGE,
+            false,
+            null,
+            { keepImageGallery: true }
+        );
+    }
+
     function pauseAllVideos() {
         const videos = document.querySelectorAll("video");
         videos.forEach(v => {
@@ -243,9 +315,25 @@ if (!window.__modal_js_loaded__) {
         openModal("", "", "", ModalType.BOX);
     };
 
+    window.openImageGalleryModal = function (items, startIndex = 0) {
+        const normalized = normalizeImageGalleryItems(items);
+        if (!normalized.length) return;
+
+        imageGalleryData = normalized;
+        imageGalleryIndex = Math.max(0, Math.min(Number(startIndex) || 0, normalized.length - 1));
+        renderActiveImageGallerySlide();
+    };
+
+    window.moveImageModalSlide = function (direction = 1) {
+        if (!imageGalleryData.length) return;
+        imageGalleryIndex = (imageGalleryIndex + (Number(direction) || 0) + imageGalleryData.length) % imageGalleryData.length;
+        renderActiveImageGallerySlide();
+    };
+
     // Function to open the modal and show the image
-    function openModal(fileSrc, title = '', description = '', type = ModalType.IMAGE, enableComments = false, selectedId = null) {
+    function openModal(fileSrc, title = '', description = '', type = ModalType.IMAGE, enableComments = false, selectedId = null, options = {}) {
         currentSelectedId = selectedId;
+        const keepImageGallery = Boolean(options && options.keepImageGallery);
         var boxModalContainer = document.querySelector(".box-modal-container");
         var modalImage = document.getElementById("modalImage");
         var modalVideo = document.getElementById("modalVideo");
@@ -253,12 +341,18 @@ if (!window.__modal_js_loaded__) {
         var imageModal = document.getElementById("imageModal");
         imageModal.style.display = "flex";
         const adminFloadtBtn = document.querySelector(".admin-float-btn");
+        let isImageView = false;
+
+        if (!keepImageGallery) {
+            clearImageGalleryNav();
+        }
 
         if (type == ModalType.BOX) {
             boxModalContainer.style.display = "block";
             modalImage.style.display = "none";
             modalVideo.style.display = "none";
             caption.style.display = "none";
+            isImageView = false;
         } else {
             boxModalContainer.style.display = "none";
             if (isVideoFile(fileSrc)) {
@@ -274,11 +368,13 @@ if (!window.__modal_js_loaded__) {
                 modalVideo.play().catch(err => {
                     console.warn("Autoplay failed:", err);
                 });
+                isImageView = false;
             } else {
                 modalVideo.style.display = "none";
                 modalImage.style.display = "block";
                 modalVideo.src = "";
                 modalImage.src = fileSrc;
+                isImageView = true;
             }
 
             caption.style.display = "block";
@@ -309,6 +405,7 @@ if (!window.__modal_js_loaded__) {
 
         adminFloadtBtn && (adminFloadtBtn.style.display = "none");
         closeCommentEmojiPicker();
+        syncImageGalleryNav(isImageView);
     }
 
     // Function to close the modal
@@ -319,6 +416,7 @@ if (!window.__modal_js_loaded__) {
         adminFloadtBtn && (adminFloadtBtn.style.display = "flex");
         pauseAllVideos();
         closeCommentEmojiPicker();
+        clearImageGalleryNav();
     }
 
     // ---------------- Comments ----------------
@@ -563,6 +661,22 @@ if (!window.__modal_js_loaded__) {
         initCommentBox();
     }
 
+    document.addEventListener("keydown", (event) => {
+        if (!imageGalleryData.length) return;
+        const imageModal = document.getElementById("imageModal");
+        const boxContainer = document.querySelector(".box-modal-container");
+        if (!imageModal || imageModal.style.display !== "flex") return;
+        if (boxContainer && boxContainer.style.display === "block") return;
+
+        if (event.key === "ArrowLeft") {
+            event.preventDefault();
+            window.moveImageModalSlide(-1);
+        } else if (event.key === "ArrowRight") {
+            event.preventDefault();
+            window.moveImageModalSlide(1);
+        }
+    });
+
 
     // expose needed functions globally
     window.submitComment = submitComment;
@@ -570,6 +684,7 @@ if (!window.__modal_js_loaded__) {
     window.closeModal = closeModal;
     window.toggleCommentLike = toggleCommentLike;
     window.moveSlide = moveSlide;
+    window.moveImageModalSlide = window.moveImageModalSlide;
     window.loadComments = loadComments;
     window.toggleCommentEmojiPicker = toggleCommentEmojiPicker;
     window.insertCommentEmoji = insertCommentEmoji;

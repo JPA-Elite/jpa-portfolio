@@ -3,6 +3,12 @@
 
 <!-- Modal for previewing the image -->
 <div id="imageModal" class="modal" style="display: none;">
+    <button type="button" id="imageModalPrev" class="image-modal-nav image-modal-nav--prev" onclick="moveImageModalSlide(-1)" hidden aria-label="Previous image">
+        <ion-icon name="chevron-back-outline"></ion-icon>
+    </button>
+    <button type="button" id="imageModalNext" class="image-modal-nav image-modal-nav--next" onclick="moveImageModalSlide(1)" hidden aria-label="Next image">
+        <ion-icon name="chevron-forward-outline"></ion-icon>
+    </button>
     <div class="modal-content-container">
         <div class="close" onclick="closeModal()"><ion-icon name="close-circle"></ion-icon></div>
         <img class="modal-content" id="modalImage">
@@ -15,6 +21,7 @@
             playsinline
         ></video>
         <div id="caption"></div>
+        <div id="imageModalGalleryCounter" class="image-modal-gallery-counter" hidden></div>
         <div class="box-modal-container" style="display: none;">
             <div id="customCarousel" class="carousel">
                 <div class="carousel-indicators" id="carouselIndicators"></div>

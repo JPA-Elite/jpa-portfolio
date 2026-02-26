@@ -20,6 +20,11 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+# Flask 2.3 warns on FLASK_ENV; normalize to FLASK_DEBUG for local compatibility.
+if os.getenv("FLASK_DEBUG") is None and os.getenv("FLASK_ENV"):
+    os.environ["FLASK_DEBUG"] = "1" if os.getenv("FLASK_ENV", "").lower() == "development" else "0"
+os.environ.pop("FLASK_ENV", None)
+
 app = Flask(__name__)
 
 
@@ -40,7 +45,7 @@ app.config["SESSION_COOKIE_HTTPONLY"] = True
 app.config["SESSION_COOKIE_SAMESITE"] = os.getenv("SESSION_COOKIE_SAMESITE", "Lax")
 app.config["SESSION_COOKIE_SECURE"] = _env_bool(
     "SESSION_COOKIE_SECURE",
-    os.getenv("FLASK_ENV", "production").lower() != "development",
+    not _env_bool("FLASK_DEBUG", False),
 )
 
 # ✅ Configure cache globally

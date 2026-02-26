@@ -13,8 +13,8 @@ if (Test-Path ".venv\\Scripts\\python.exe") {
 }
 
 Write-Host "pre-commit: running unit tests..."
-& $pythonBin -m unittest discover -s tests -p "test_*.py"
+Remove-Item Env:FLASK_ENV -ErrorAction SilentlyContinue
+& $pythonBin -W ignore::DeprecationWarning -m unittest discover -s tests -p "test_*.py"
 if ($LASTEXITCODE -ne 0) {
     exit $LASTEXITCODE
 }
-

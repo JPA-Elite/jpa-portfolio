@@ -82,10 +82,8 @@ class LoginAttemptRepository(ILoginAttemptRepository, BaseRepository):
     def delete_login_attempt(self, login_attempt_id: str):
         """Delete a login_attempt document by _id (IP or ObjectId)."""
         try:
-            print("Trying ObjectId for deletion")
             query = {"_id": ObjectId(login_attempt_id)}
         except bson_errors.InvalidId:
-            print("Falling back to IP string for deletion")
             query = {"_id": login_attempt_id}
 
         result = self.collection.delete_one(query)

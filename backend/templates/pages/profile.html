@@ -259,7 +259,7 @@ endblock %}
                         {% for project in key_project_columns.get(column_key, []) %}
                         <article class="kanban-project-card">
                             <button type="button" class="kanban-project-card__media"
-                                onclick='openProjectSlidesModal({{ (project.modal_slides or []) | tojson }})'
+                                onclick='openProjectSlidesModal({{ (project.modal_gallery_items or project.modal_slides or []) | tojson }}, {{ project.modal_gallery_start_index or 0 }})'
                                 aria-label="{{ _('KP_Preview_Aria', title=project.display_title) }}">
                                 {% if project.image_url %}
                                 <img src="{{ project.image_url }}" alt="{{ project.display_title }}" loading="lazy" decoding="async">
@@ -286,7 +286,7 @@ endblock %}
                                     {% endif %}
                                     {% if not project.demo_url and not project.repo_url %}
                                     <button type="button" class="kanban-action-link kanban-action-link--ghost"
-                                        onclick='openProjectSlidesModal({{ (project.modal_slides or []) | tojson }})'>
+                                        onclick='openProjectSlidesModal({{ (project.modal_gallery_items or project.modal_slides or []) | tojson }}, {{ project.modal_gallery_start_index or 0 }})'>
                                         <ion-icon name="expand-outline"></ion-icon> {{ _('KP_Action_Preview') }}
                                     </button>
                                     {% endif %}

@@ -32,6 +32,23 @@ class AuthServiceLoginTests(unittest.TestCase):
         self.auth_repo.find_by_username.assert_not_called()
         self.attempt_repo.update_attempt.assert_not_called()
 
+    @patch("backend.Services.AuthService.check_password_hash", return_value=True)
+    def test_authenticate_admin_ignores_expired_lockout_and_allows_login(self, _mock_check_password):
+        self.attempt_repo.get_attempt_info.return_value = {
+            "attempts": MAX_ATTEMPTS,
+            "lockout_until": datetime.utcnow() - timedelta(minutes=1),
+        }
+        user_doc = {"_id": "u1", "username": "admin", "password": "hashed"}
+        self.auth_repo.find_by_username.return_value = user_doc
+
+        user, message, is_locked = self.service.authenticate_admin("admin", "correct-password")
+
+        self.assertEqual(user, user_doc)
+        self.assertEqual(message, LOGIN_SUCCESS_MSG)
+        self.assertFalse(is_locked)
+        self.auth_repo.find_by_username.assert_called_once_with("admin")
+        self.attempt_repo.update_attempt.assert_called_once_with(success=True)
+
     def test_authenticate_admin_returns_remaining_attempts_for_unknown_user(self):
         self.attempt_repo.get_attempt_info.return_value = {"attempts": 1, "lockout_until": None}
         self.auth_repo.find_by_username.return_value = None

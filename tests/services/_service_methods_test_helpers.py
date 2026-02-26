@@ -1,7 +1,5 @@
 import importlib
 import inspect
-import pkgutil
-import unittest
 from contextlib import ExitStack
 from datetime import datetime, timezone
 from types import SimpleNamespace
@@ -9,28 +7,7 @@ from unittest.mock import MagicMock, patch
 
 from flask import Flask, session
 
-import backend.Services as services_pkg
-
 from tests.test_support import VALID_OBJECT_ID
-
-
-def _discover_service_classes():
-    for module_info in pkgutil.iter_modules(services_pkg.__path__):
-        if module_info.ispkg:
-            continue
-        module = importlib.import_module(f"{services_pkg.__name__}.{module_info.name}")
-        for _, cls in inspect.getmembers(module, inspect.isclass):
-            if cls.__module__ == module.__name__ and cls.__name__.endswith("Service"):
-                yield cls
-
-
-def _service_public_methods(service_cls):
-    for name, fn in inspect.getmembers(service_cls, inspect.isfunction):
-        if fn.__module__ != service_cls.__module__:
-            continue
-        if name == "__init__" or name.startswith("_"):
-            continue
-        yield name, fn
 
 
 def _fake_user_agent():
@@ -154,13 +131,26 @@ def _system_info_doc():
     }
 
 
-def _build_service_instance(service_cls, method_name):
+def _service_public_methods(service_cls):
+    for name, fn in inspect.getmembers(service_cls, inspect.isfunction):
+        if fn.__module__ != service_cls.__module__:
+            continue
+        if name == "__init__" or name.startswith("_"):
+            continue
+        yield name, fn
+
+
+def _load_service_class(module_name: str, class_name: str):
+    module = importlib.import_module(f"backend.Services.{module_name}")
+    return module, getattr(module, class_name)
+
+
+def _build_service_instance(service_cls):
     service_name = service_cls.__name__
 
     repo = MagicMock(name=f"{service_name}Repository")
     attempt_repo = MagicMock(name="LoginAttemptRepository")
 
-    # Generic repository defaults
     for m in (
         "add_gallery", "add_video", "add_music", "add_key_project", "add_company_roadmap",
         "add_gallery_like", "add_vlog_like", "add_comment", "insert_portfolio", "insert_system_info"
@@ -229,11 +219,8 @@ def _build_service_instance(service_cls, method_name):
     attempt_repo.update_attempt.return_value = {"attempts": 0, "lockout_until": None}
 
     if service_name == "AuthService":
-        service = service_cls(repository=repo, attempt_repository=attempt_repo)
-    else:
-        service = service_cls(repository=repo)
-
-    return service
+        return service_cls(repository=repo, attempt_repository=attempt_repo)
+    return service_cls(repository=repo)
 
 
 def _dummy_service_arg(service_name, method_name, param_name):
@@ -316,7 +303,7 @@ def _dummy_service_arg(service_name, method_name, param_name):
                     "period": "2024",
                     "definition": "Definition",
                     "summary": "Summary",
-                    "highlights": "One\nTwo",
+                    "highlights": "One\\nTwo",
                 }
             if method_name == "update_company_roadmap":
                 return {"summary": "Updated"}
@@ -327,79 +314,82 @@ def _dummy_service_arg(service_name, method_name, param_name):
     return "value"
 
 
-class ServiceMethodInvocationTests(unittest.TestCase):
-    def test_all_service_methods_execute_with_mocked_dependencies(self):
-        app = Flask(__name__)
-        app.secret_key = "test-secret"
-
-        patch_targets = [
-            ("backend.Services.AuthService.check_password_hash", lambda *_args, **_kwargs: True),
-            ("backend.Services.AuthService.generate_password_hash", lambda value: f"hashed:{value}"),
-            ("backend.Services.GalleryService.cleanup_uploaded_files", lambda *a, **k: None),
-            ("backend.Services.GalleryService.convert_to_webp", lambda path: path),
-            ("backend.Services.GalleryService.upload_file_to_cloudinary", lambda *a, **k: "/uploaded.webp"),
-            ("backend.Services.VideoService.cleanup_uploaded_files", lambda *a, **k: None),
-            ("backend.Services.VideoService.upload_file_to_cloudinary", lambda *a, **k: "/uploaded.mp4"),
-            ("backend.Services.MusicService.cleanup_uploaded_files", lambda *a, **k: None),
-            ("backend.Services.MusicService.convert_to_webp", lambda path: path),
-            ("backend.Services.MusicService.upload_file_to_cloudinary", lambda *a, **k: "/uploaded"),
-            ("backend.Services.MusicService.MutagenFile", lambda *_a, **_k: SimpleNamespace(info=SimpleNamespace(length=61.2))),
-            ("backend.Services.KeyProjectService.cleanup_uploaded_files", lambda *a, **k: None),
-            ("backend.Services.KeyProjectService.convert_to_webp", lambda path: path),
-            ("backend.Services.KeyProjectService.upload_file_to_cloudinary", lambda *a, **k: "/uploaded.webp"),
-            ("backend.Services.CompanyRoadmapService.cleanup_uploaded_files", lambda *a, **k: None),
-            ("backend.Services.CompanyRoadmapService.convert_to_webp", lambda path: path),
-            ("backend.Services.CompanyRoadmapService.upload_file_to_cloudinary", lambda *a, **k: "/uploaded.webp"),
-            ("backend.Services.VisitService.delete_image_from_cloudinary", lambda *a, **k: None),
-            ("backend.Services.PortfolioService.parse", lambda *_a, **_k: _fake_user_agent()),
-            ("backend.Services.PortfolioService.url_for", lambda *_a, **_k: "/profile"),
-            ("backend.Services.PortfolioService.requests.get", lambda *_a, **_k: SimpleNamespace(json=lambda: {})),
-            ("backend.Services.PortfolioService.pytz.timezone", lambda *_a, **_k: timezone.utc),
-            ("backend.Services.PortfolioService.platform.system", lambda: "Windows"),
-            ("backend.Services.PortfolioService.platform.node", lambda: "PC"),
-            ("backend.Services.PortfolioService.platform.release", lambda: "11"),
-            ("backend.Services.PortfolioService.platform.version", lambda: "Version"),
-            ("backend.Services.PortfolioService.platform.platform", lambda: "Windows"),
-            ("backend.Services.PortfolioService.platform.architecture", lambda: ("64bit", "")),
-        ]
-
-        executed = []
-        failures = []
-
-        with ExitStack() as stack:
-            for target, replacement in patch_targets:
-                stack.enter_context(patch(target, replacement))
-
-            for service_cls in _discover_service_classes():
-                for method_name, method in _service_public_methods(service_cls):
-                    service = _build_service_instance(service_cls, method_name)
-                    sig = inspect.signature(method)
-                    args = []
-
-                    for param_name, param in list(sig.parameters.items())[1:]:  # skip self
-                        if param.kind in (inspect.Parameter.VAR_POSITIONAL, inspect.Parameter.VAR_KEYWORD):
-                            continue
-                        if param.default is not inspect._empty:
-                            continue
-                        args.append(_dummy_service_arg(service_cls.__name__, method_name, param_name))
-
-                    try:
-                        with app.test_request_context(
-                            "/profile",
-                            json={"username": "admin", "password": "secret"},
-                            headers={"X-Forwarded-For": "127.0.0.1", "User-Agent": "Mozilla/5.0"},
-                        ):
-                            session["user_id"] = VALID_OBJECT_ID
-                            getattr(service, method_name)(*args)
-                        executed.append(f"{service_cls.__name__}.{method_name}")
-                    except Exception as exc:
-                        failures.append(f"{service_cls.__name__}.{method_name}: {exc}")
-
-        if failures:
-            self.fail("Service method execution failures:\n" + "\n".join(failures))
-
-        self.assertGreaterEqual(len(executed), 60, f"Unexpectedly low service method coverage: {len(executed)}")
+def _patch_targets():
+    return [
+        ("backend.Services.AuthService.check_password_hash", lambda *_args, **_kwargs: True),
+        ("backend.Services.AuthService.generate_password_hash", lambda value: f"hashed:{value}"),
+        ("backend.Services.GalleryService.cleanup_uploaded_files", lambda *a, **k: None),
+        ("backend.Services.GalleryService.convert_to_webp", lambda path: path),
+        ("backend.Services.GalleryService.upload_file_to_cloudinary", lambda *a, **k: "/uploaded.webp"),
+        ("backend.Services.VideoService.cleanup_uploaded_files", lambda *a, **k: None),
+        ("backend.Services.VideoService.upload_file_to_cloudinary", lambda *a, **k: "/uploaded.mp4"),
+        ("backend.Services.MusicService.cleanup_uploaded_files", lambda *a, **k: None),
+        ("backend.Services.MusicService.convert_to_webp", lambda path: path),
+        ("backend.Services.MusicService.upload_file_to_cloudinary", lambda *a, **k: "/uploaded"),
+        ("backend.Services.MusicService.MutagenFile", lambda *_a, **_k: SimpleNamespace(info=SimpleNamespace(length=61.2))),
+        ("backend.Services.KeyProjectService.cleanup_uploaded_files", lambda *a, **k: None),
+        ("backend.Services.KeyProjectService.convert_to_webp", lambda path: path),
+        ("backend.Services.KeyProjectService.upload_file_to_cloudinary", lambda *a, **k: "/uploaded.webp"),
+        ("backend.Services.CompanyRoadmapService.cleanup_uploaded_files", lambda *a, **k: None),
+        ("backend.Services.CompanyRoadmapService.convert_to_webp", lambda path: path),
+        ("backend.Services.CompanyRoadmapService.upload_file_to_cloudinary", lambda *a, **k: "/uploaded.webp"),
+        ("backend.Services.VisitService.delete_image_from_cloudinary", lambda *a, **k: None),
+        ("backend.Services.PortfolioService.parse", lambda *_a, **_k: _fake_user_agent()),
+        ("backend.Services.PortfolioService.url_for", lambda *_a, **_k: "/profile"),
+        ("backend.Services.PortfolioService.requests.get", lambda *_a, **_k: SimpleNamespace(json=lambda: {})),
+        ("backend.Services.PortfolioService.pytz.timezone", lambda *_a, **_k: timezone.utc),
+        ("backend.Services.PortfolioService.platform.system", lambda: "Windows"),
+        ("backend.Services.PortfolioService.platform.node", lambda: "PC"),
+        ("backend.Services.PortfolioService.platform.release", lambda: "11"),
+        ("backend.Services.PortfolioService.platform.version", lambda: "Version"),
+        ("backend.Services.PortfolioService.platform.platform", lambda: "Windows"),
+        ("backend.Services.PortfolioService.platform.architecture", lambda: ("64bit", "")),
+    ]
 
 
-if __name__ == "__main__":
-    unittest.main()
+def run_service_methods_test(testcase, module_name: str, class_name: str):
+    _module, service_cls = _load_service_class(module_name, class_name)
+    service_name = service_cls.__name__
+
+    app = Flask(__name__)
+    app.secret_key = "test-secret"
+
+    methods = list(_service_public_methods(service_cls))
+    executed = []
+    failures = []
+
+    with ExitStack() as stack:
+        for target, replacement in _patch_targets():
+            stack.enter_context(patch(target, replacement))
+
+        for method_name, method in methods:
+            service = _build_service_instance(service_cls)
+            sig = inspect.signature(method)
+            args = []
+            for param_name, param in list(sig.parameters.items())[1:]:
+                if param.kind in (inspect.Parameter.VAR_POSITIONAL, inspect.Parameter.VAR_KEYWORD):
+                    continue
+                if param.default is not inspect._empty:
+                    continue
+                args.append(_dummy_service_arg(service_name, method_name, param_name))
+
+            try:
+                with app.test_request_context(
+                    "/profile",
+                    json={"username": "admin", "password": "secret"},
+                    headers={"X-Forwarded-For": "127.0.0.1", "User-Agent": "Mozilla/5.0"},
+                ):
+                    session["user_id"] = VALID_OBJECT_ID
+                    getattr(service, method_name)(*args)
+                executed.append(method_name)
+            except Exception as exc:
+                failures.append(f"{service_name}.{method_name}: {exc}")
+
+    if failures:
+        testcase.fail("Service method execution failures:\\n" + "\\n".join(failures))
+
+    testcase.assertEqual(
+        len(executed),
+        len(methods),
+        f"Not all public methods executed for {service_name}: executed={len(executed)} methods={len(methods)}",
+    )

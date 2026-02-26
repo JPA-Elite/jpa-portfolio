@@ -84,7 +84,7 @@ class GalleryServiceTests(unittest.TestCase):
         items, total = self.service.search_gallery_paginated("q", ["tag1"], "en", 1, 5, SortOrder.ASC)
 
         self.assertEqual(total, 1)
-        self.assertEqual(items[1].description["en"], "Description")
+        self.assertEqual(items[0].description["en"], "Description")
         self.repo.search_gallery_paginated.assert_called_once_with("q", ["tag1"], "en", 1, 5, SortOrder.ASC)
 
     def test_get_all_tags_returns_repository_tags(self):

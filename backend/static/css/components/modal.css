@@ -71,7 +71,7 @@
 .close {
     position: fixed;
     top: 10px;
-    right: 10px;
+    right: max(18px, env(safe-area-inset-right));
     color: #fff;
     font-size: 35px;
     font-weight: bold;
@@ -293,12 +293,45 @@
 }
 
 .comment-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
     border-bottom: 1px solid rgba(255, 255, 255, 0.15);
     padding-bottom: 10px;
     margin-bottom: 15px;
     font-weight: bold;
     font-size: 16px;
     color: #ccc;
+}
+
+.comment-panel-toggle {
+    display: none;
+    align-items: center;
+    gap: 6px;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    background: rgba(255, 255, 255, 0.06);
+    color: #f3f6ff;
+    border-radius: 999px;
+    padding: 6px 10px;
+    font-size: 0.75rem;
+    line-height: 1;
+    cursor: pointer;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.comment-panel-toggle:hover {
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(59, 130, 246, 0.35);
+}
+
+.comment-panel-toggle[hidden] {
+    display: none !important;
+}
+
+.comment-panel-toggle ion-icon {
+    font-size: 15px;
+    transition: transform 0.2s ease;
 }
 
 .comment-list {
@@ -562,7 +595,8 @@
         flex-direction: column;
         width: 100%;
         height: auto;
-        overflow: visible;
+        overflow-x: hidden;
+        overflow-y: auto;
         padding: 0 0 calc(74px + env(safe-area-inset-bottom)) 0;
     }
 
@@ -588,18 +622,75 @@
 
     .comment-section {
         width: 100%;
-        height: 100%;
-        max-height: 50vh;
+        height: 28vh;
+        min-height: 0;
+        max-height: 28vh;
         overflow-y: auto;
         border-left: none;
         border-top: 1px solid rgba(255, 255, 255, 0.15);
         padding: 15px 0 0 0;
         box-sizing: border-box;
         display: flex;
+        flex-direction: column;
+        transition: max-height 0.22s ease;
     }
 
+    .comment-section.comment-section--expanded {
+        height: 50vh;
+        max-height: 50vh;
+    }
 
+    .comment-section.comment-section--collapsed {
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 2200;
+        width: 100%;
+        height: 64px !important;
+        min-height: 64px !important;
+        max-height: 64px !important;
+        padding: 0 12px;
+        border-top: 1px solid rgba(255, 255, 255, 0.18);
+        background: rgba(25, 25, 25, 0.96);
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+    }
 
+    .comment-section.comment-section--collapsed .comment-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        padding: 0 2px;
+        min-height: 0;
+        border-bottom: none;
+        text-align: left;
+        gap: 12px;
+    }
+
+    .comment-section.comment-section--collapsed .comment-panel-toggle {
+        position: static;
+        transform: none;
+        margin: 0;
+    }
+
+    .comment-section.comment-section--collapsed .comment-list,
+    .comment-section.comment-section--collapsed .comment-input,
+    .comment-section.comment-section--collapsed #prevCommentsBtn {
+        display: none !important;
+    }
+
+    .comment-panel-toggle {
+        display: inline-flex;
+    }
+
+    .comment-panel-toggle[aria-expanded="true"] ion-icon {
+        transform: rotate(180deg);
+    }
     .close {
         font-size: 40px;
     }
@@ -679,7 +770,8 @@
     }
 
     .comment-list {
-        max-height: 55vh;
+        max-height: none;
+        min-height: 0;
         overflow-y: auto;
     }
 
@@ -743,6 +835,21 @@
 }
 
 @media only screen and (max-width: 480px) {
+    .comment-section {
+        height: 64px;
+        max-height: 64px;
+    }
+
+    .comment-section.comment-section--expanded {
+        height: 50vh;
+        max-height: 50vh;
+    }
+
+    .comment-panel-toggle {
+        padding: 5px 9px;
+        font-size: 0.72rem;
+    }
+
     .image-modal-nav {
         bottom: max(46px, calc(env(safe-area-inset-bottom) + 34px));
         width: 42px;
@@ -764,6 +871,10 @@
 }
 
 @media only screen and (max-width: 400px) {
+    .comment-panel-toggle__label {
+        display: none;
+    }
+
     .comment-input {
         grid-template-columns: auto 1fr;
         grid-template-areas:

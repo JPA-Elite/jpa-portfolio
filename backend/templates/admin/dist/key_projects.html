@@ -12,12 +12,14 @@
 
   @media (max-width: 768px) {
     .kp-admin-actions {
-      flex-direction: column;
+      flex-direction: row;
+      flex-wrap: wrap;
       width: 100%;
     }
 
     .kp-admin-actions .btn {
-      width: 100%;
+      flex: 1 1 calc(50% - .4rem);
+      min-width: 96px;
       display: inline-flex;
       justify-content: center;
       align-items: center;

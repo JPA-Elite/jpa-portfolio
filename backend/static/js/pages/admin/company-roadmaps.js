@@ -221,7 +221,13 @@ async function loadCompanyRoadmaps(page = 1) {
                 <tr>
                   <td>${rowNo}</td>
                   <td style="width:92px;">
-                    ${cover ? `<img src="${escapeHtml(cover)}" alt="${escapeHtml(entry.company_name || "")}" style="width:64px;height:48px;object-fit:cover;border-radius:6px;border:1px solid #ddd;">` : `<span class="text-muted">No image</span>`}
+                    ${cover ? `<img
+                      src="${escapeHtml(cover)}"
+                      alt="${escapeHtml(entry.company_name || "")}"
+                      data-preview-src="${escapeHtml(cover)}"
+                      data-preview-title="${escapeHtml(entry.company_name || "Company Roadmap")}"
+                      onclick="playCompanyRoadmapPreview(this.dataset.previewSrc, this.dataset.previewTitle)"
+                      style="cursor:pointer;width:64px;height:48px;object-fit:cover;border-radius:6px;border:1px solid #ddd;">` : `<span class="text-muted">No image</span>`}
                   </td>
                   <td>
                     <div class="company-roadmap-summary" style="max-width:220px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="${escapeHtml(entry.company_name || "")}">
@@ -248,6 +254,14 @@ async function loadCompanyRoadmaps(page = 1) {
         console.error(error);
         tbody.innerHTML = `<tr><td colspan="9" class="text-center text-danger">Error loading company roadmap entries</td></tr>`;
     }
+}
+
+function playCompanyRoadmapPreview(url, title = "Company Roadmap Image") {
+    if (typeof window.openAdminImagePreview !== "function") {
+        console.error("openAdminImagePreview is not available.");
+        return;
+    }
+    window.openAdminImagePreview(url, title || "Company Roadmap Image");
 }
 
 function buildEditModal(entry, modalId, page, index) {

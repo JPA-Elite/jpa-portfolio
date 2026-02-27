@@ -262,6 +262,132 @@ if (!window.__modal_js_loaded__) {
         };
     }
 
+    function getCommentPanelElements() {
+        return {
+            commentSection: document.querySelector(".comment-section"),
+            commentPanelToggle: document.getElementById("commentPanelToggle"),
+            commentPanelToggleLabel: document.querySelector(".comment-panel-toggle__label"),
+        };
+    }
+
+    function isMobileViewport() {
+        return window.innerWidth <= 768;
+    }
+
+    function getCollapsedCommentPanelHeight() {
+        return "64px";
+    }
+
+    function getMobileHalfModalHeight() {
+        const safeHalf = Math.floor(window.innerHeight * 0.5);
+        return `${Math.max(240, safeHalf)}px`;
+    }
+
+    function getCollapsedCommentPanelPixels() {
+        const raw = getCollapsedCommentPanelHeight();
+        const parsed = Number.parseInt(raw, 10);
+        return Number.isFinite(parsed) ? parsed : 64;
+    }
+
+    function setMobileModalContentHeight(expanded) {
+        const modalContentContainer = document.querySelector(".modal-content-container");
+        if (!modalContentContainer) return;
+
+        if (!isMobileViewport()) {
+            modalContentContainer.style.height = "";
+            modalContentContainer.style.minHeight = "";
+            modalContentContainer.style.maxHeight = "";
+            modalContentContainer.style.paddingBottom = "";
+            return;
+        }
+
+        if (expanded) {
+            const halfHeight = getMobileHalfModalHeight();
+            modalContentContainer.style.height = halfHeight;
+            modalContentContainer.style.minHeight = halfHeight;
+            modalContentContainer.style.maxHeight = halfHeight;
+            modalContentContainer.style.paddingBottom = "0";
+            return;
+        }
+
+        const collapsedHeight = getCollapsedCommentPanelPixels();
+        const availableHeight = Math.max(220, window.innerHeight - collapsedHeight - 12);
+        const availableHeightPx = `${availableHeight}px`;
+        modalContentContainer.style.height = availableHeightPx;
+        modalContentContainer.style.minHeight = availableHeightPx;
+        modalContentContainer.style.maxHeight = availableHeightPx;
+        modalContentContainer.style.paddingBottom = "0";
+    }
+
+    function getExpandedCommentPanelHeight() {
+        const modalContentContainer = document.querySelector(".modal-content-container");
+        if (isMobileViewport() && modalContentContainer) {
+            const containerHeight = Math.round(modalContentContainer.getBoundingClientRect().height);
+            if (containerHeight > 0) {
+                return `${containerHeight}px`;
+            }
+            return getMobileHalfModalHeight();
+        }
+        return "50vh";
+    }
+
+    function setCommentPanelExpanded(expanded) {
+        const { commentSection, commentPanelToggle, commentPanelToggleLabel } = getCommentPanelElements();
+        if (!commentSection || !commentPanelToggle) return;
+
+        const isExpanded = Boolean(expanded) && isMobileViewport() && commentSection.style.display !== "none";
+        const isCollapsed = !isExpanded && isMobileViewport() && commentSection.style.display !== "none";
+        setMobileModalContentHeight(isExpanded);
+        commentSection.classList.toggle("comment-section--expanded", isExpanded);
+        commentSection.classList.toggle("comment-section--collapsed", isCollapsed);
+        commentPanelToggle.setAttribute("aria-expanded", isExpanded ? "true" : "false");
+        if (isMobileViewport()) {
+            const targetHeight = isExpanded
+                ? getExpandedCommentPanelHeight()
+                : getCollapsedCommentPanelHeight();
+            commentSection.style.height = targetHeight;
+            commentSection.style.maxHeight = targetHeight;
+        } else {
+            commentSection.style.height = "";
+            commentSection.style.maxHeight = "";
+        }
+
+        if (commentPanelToggleLabel) {
+            commentPanelToggleLabel.textContent = isExpanded
+                ? tm("commentPanelCollapse", "Collapse")
+                : tm("commentPanelExpand", "Expand");
+        }
+    }
+
+    function syncCommentPanelToggleVisibility(enableComments = false) {
+        const { commentPanelToggle } = getCommentPanelElements();
+        if (!commentPanelToggle) return;
+        const shouldShow = Boolean(enableComments) && isMobileViewport();
+        commentPanelToggle.hidden = !shouldShow;
+        if (!shouldShow) {
+            commentPanelToggle.setAttribute("aria-expanded", "false");
+        }
+    }
+
+    function resetCommentPanelState(enableComments = false) {
+        const { commentSection } = getCommentPanelElements();
+        if (commentSection) {
+            commentSection.classList.remove("comment-section--expanded");
+            commentSection.classList.remove("comment-section--collapsed");
+        }
+        syncCommentPanelToggleVisibility(enableComments);
+        setCommentPanelExpanded(Boolean(enableComments) && isMobileViewport());
+    }
+
+    function toggleCommentPanel(event) {
+        event?.preventDefault?.();
+        event?.stopPropagation?.();
+        const { commentPanelToggle } = getCommentPanelElements();
+        if (!commentPanelToggle) return;
+        const expanded = commentPanelToggle.getAttribute("aria-expanded") === "true";
+        setCommentPanelExpanded(!expanded);
+    }
+
     function closeCommentEmojiPicker() {
         const { emojiPicker, emojiToggle } = getCommentComposerElements();
         if (emojiPicker) emojiPicker.hidden = true;
@@ -395,13 +521,19 @@ if (!window.__modal_js_loaded__) {
         const commentSection = document.querySelector(".comment-section");
         const modalContentContainer = document.querySelector(".modal-content-container");
         if (enableComments) {
-            commentSection.style.display = isMobile ? "block" : "flex";
+            commentSection.style.display = "flex";
             modalContentContainer.style.width = isMobile ? "100%" : "50%";
+            resetCommentPanelState(true);
             currentCommentPage = 1;
             loadComments(selectedId, currentCommentPage, false, true);
         } else {
             commentSection.style.display = "none";
             modalContentContainer.style.width = "100%";
+            modalContentContainer.style.height = "";
+            modalContentContainer.style.minHeight = "";
+            modalContentContainer.style.maxHeight = "";
+            modalContentContainer.style.paddingBottom = "";
+            resetCommentPanelState(false);
         }
 
         adminFloadtBtn && (adminFloadtBtn.style.display = "none");
@@ -415,9 +547,17 @@ if (!window.__modal_js_loaded__) {
         document.getElementById("imageModal").style.display = "none";
         document.querySelector(".box-modal-container").style.display = "none";
         adminFloadtBtn && (adminFloadtBtn.style.display = "flex");
+        const modalContentContainer = document.querySelector(".modal-content-container");
+        if (modalContentContainer) {
+            modalContentContainer.style.height = "";
+            modalContentContainer.style.minHeight = "";
+            modalContentContainer.style.maxHeight = "";
+            modalContentContainer.style.paddingBottom = "";
+        }
         pauseAllVideos();
         closeCommentEmojiPicker();
         clearImageGalleryNav();
+        resetCommentPanelState(false);
     }
 
     // ---------------- Comments ----------------
@@ -653,6 +793,25 @@ if (!window.__modal_js_loaded__) {
             if (target.closest(".comment-input-field")) return;
             closeCommentEmojiPicker();
         });
+
+        window.addEventListener("resize", () => {
+            const { commentSection } = getCommentPanelElements();
+            const commentsVisible = Boolean(commentSection) && commentSection.style.display !== "none";
+            const modalContentContainer = document.querySelector(".modal-content-container");
+            if (modalContentContainer && commentsVisible) {
+                const { commentPanelToggle } = getCommentPanelElements();
+                const expanded = commentPanelToggle?.getAttribute("aria-expanded") === "true";
+                setMobileModalContentHeight(expanded);
+            }
+            syncCommentPanelToggleVisibility(commentsVisible);
+            if (!isMobileViewport()) {
+                setCommentPanelExpanded(false);
+            } else if (commentsVisible) {
+                const { commentPanelToggle } = getCommentPanelElements();
+                const expanded = commentPanelToggle?.getAttribute("aria-expanded") === "true";
+                setCommentPanelExpanded(expanded);
+            }
+        });
     }
 
     // Call after DOM is ready (or immediately if already ready)
@@ -689,5 +848,6 @@ if (!window.__modal_js_loaded__) {
     window.loadComments = loadComments;
     window.toggleCommentEmojiPicker = toggleCommentEmojiPicker;
     window.insertCommentEmoji = insertCommentEmoji;
+    window.toggleCommentPanel = toggleCommentPanel;
 }
 

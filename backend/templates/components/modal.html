@@ -38,6 +38,10 @@
         <div class="comment-section">
         <div class="comment-header">
             <span>{{ _('Modal_Comments_Label') }} (<span id="commentCount">0</span>)</span>
+            <button type="button" class="comment-panel-toggle" id="commentPanelToggle" aria-expanded="false" hidden onclick="toggleCommentPanel(event)">
+                <span class="comment-panel-toggle__label">Expand</span>
+                <ion-icon name="chevron-up-outline"></ion-icon>
+            </button>
         </div>
         <div class="comment-list"></div>
 
@@ -82,5 +86,7 @@
         commentTooLong: {{ _('Modal_Comment_Too_Long') | tojson }},
         commentAuthorYou: {{ _('Modal_Author_You') | tojson }},
         modalProjectPreview: {{ _('Modal_Project_Preview') | tojson }},
+        commentPanelExpand: {{ 'Expand' | tojson }},
+        commentPanelCollapse: {{ 'Collapse' | tojson }},
     };
 </script>

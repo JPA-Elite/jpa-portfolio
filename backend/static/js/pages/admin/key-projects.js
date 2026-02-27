@@ -182,7 +182,13 @@ async function loadKeyProjects(page = 1) {
                 <tr>
                     <td>${rowNo}</td>
                     <td style="width:90px;">
-                        ${img ? `<img src="${escapeHtml(img)}" alt="${safeTitle}" style="width:64px;height:48px;object-fit:cover;border-radius:6px;border:1px solid #ddd;">` : `<span class="text-muted">No image</span>`}
+                        ${img ? `<img
+                            src="${escapeHtml(img)}"
+                            alt="${safeTitle}"
+                            data-preview-src="${escapeHtml(img)}"
+                            data-preview-title="${safeTitle}"
+                            onclick="playKeyProjectPreview(this.dataset.previewSrc, this.dataset.previewTitle)"
+                            style="cursor:pointer;width:64px;height:48px;object-fit:cover;border-radius:6px;border:1px solid #ddd;">` : `<span class="text-muted">No image</span>`}
                     </td>
                     <td>
                         <div style="max-width: 220px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="${safeTitle}">
@@ -222,6 +228,14 @@ async function loadKeyProjects(page = 1) {
         console.error(error);
         tbody.innerHTML = `<tr><td colspan="9" class="text-center text-danger">Error loading key projects</td></tr>`;
     }
+}
+
+function playKeyProjectPreview(url, title = "Key Project Image") {
+    if (typeof window.openAdminImagePreview !== "function") {
+        console.error("openAdminImagePreview is not available.");
+        return;
+    }
+    window.openAdminImagePreview(url, title || "Key Project Image");
 }
 
 function buildEditModal(project, modalId, page, index) {

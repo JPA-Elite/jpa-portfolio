@@ -28,12 +28,14 @@
 
   @media (max-width: 768px) {
     .company-roadmap-actions {
-      flex-direction: column;
+      flex-direction: row;
+      flex-wrap: wrap;
       width: 100%;
     }
 
     .company-roadmap-actions .btn {
-      width: 100%;
+      flex: 1 1 calc(50% - .4rem);
+      min-width: 96px;
       justify-content: center;
       display: inline-flex;
       align-items: center;

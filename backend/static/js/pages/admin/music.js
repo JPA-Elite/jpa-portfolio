@@ -75,7 +75,7 @@ function togglePreview(musicId, musicUrl) {
         currentAudio.style.display = "none";
 
         if (currentButton) {
-            currentButton.innerHTML = `<i class="bi bi-music-note-beamed"></i> Preview`;
+            currentButton.innerHTML = `<i class="bi bi-music-note-beamed"></i> Play`;
             currentButton.classList.remove("btn-danger");
             currentButton.classList.add("btn-outline-primary");
         }
@@ -100,7 +100,7 @@ function togglePreview(musicId, musicUrl) {
         audioEl.currentTime = 0;
         audioEl.style.display = "none";
 
-        buttonEl.innerHTML = `<i class="bi bi-music-note-beamed"></i> Preview`;
+        buttonEl.innerHTML = `<i class="bi bi-music-note-beamed"></i> Play`;
         buttonEl.classList.remove("btn-danger");
         buttonEl.classList.add("btn-outline-primary");
 
@@ -151,7 +151,7 @@ async function loadMusic(page = 1) {
                 id="previewBtn_${music._id}"
                 class="btn btn-sm btn-outline-primary"
                 onclick="togglePreview('${music._id}', '${music.url}')">
-                <i class="bi bi-music-note-beamed"></i> Preview
+                <i class="bi bi-music-note-beamed"></i> Play
                 </button>
                 <audio id="audio_${
                 music._id
@@ -269,33 +269,11 @@ async function loadMusic(page = 1) {
 }
 
 function playMusicPreview(url) {
-    const modalId = "musicPreviewModal";
-    if (!document.getElementById(modalId)) {
-        const modalHtml = `
-        <div class="modal fade" id="${modalId}" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered modal-xl modal-fullscreen-sm-down">
-                <div class="modal-content bg-dark">
-                    <div class="modal-header">
-                        <h5 class="modal-title text-white">Image Preview</h5>
-                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body d-flex justify-content-center align-items-center">
-                        <img id="previewSource"
-                            class="img-fluid rounded shadow"
-                            style="max-width:100%; max-height:80vh; object-fit:contain;" />
-                    </div>
-                </div>
-            </div>
-        </div>`;
-        document.body.insertAdjacentHTML("beforeend", modalHtml);
+    if (typeof window.openAdminImagePreview !== "function") {
+        console.error("openAdminImagePreview is not available.");
+        return;
     }
-
-    const previewImg = document.getElementById("previewSource");
-    previewImg.src = url;
-    previewImg.alt = "Preview Image";
-
-    const modal = new bootstrap.Modal(document.getElementById(modalId));
-    modal.show();
+    window.openAdminImagePreview(url, "Music Image");
 }
 
 async function addMusic() {

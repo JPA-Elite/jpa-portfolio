@@ -29,9 +29,24 @@
           <div class="card-body">
             <form id="profileForm">
               <div class="row">
+                <div class="col-md-4 mb-3">
+                  <label for="profileImage" class="form-label">Profile Image</label>
+                  <div class="d-flex flex-column align-items-start gap-2">
+                    <img
+                      id="profileImagePreview"
+                      src="{{ session.get('profile_image') or url_for('static', filename='admin/assets/img/admin.png') }}"
+                      alt="Admin profile image"
+                      class="rounded-circle border"
+                      style="width: 96px; height: 96px; object-fit: cover;"
+                    >
+                    <input type="file" class="form-control" id="profileImage" name="profileImage" accept="image/*">
+                    <small class="text-muted">Optional. Upload a new image to update avatar.</small>
+                  </div>
+                  <small id="profileImageError" class="text-danger d-none"></small>
+                </div>
                 <div class="col-md-6 mb-3">
                   <label for="username" class="form-label">Username</label>
-                  <input type="text" class="form-control" id="username" name="username" value="{{ session['username'] }}">
+                  <input type="text" class="form-control" id="username" name="username" value="{{ session.get('username', '') }}">
                   <small id="usernameError" class="text-danger d-none"></small>
                 </div>
                 <div class="col-md-6 mb-3">

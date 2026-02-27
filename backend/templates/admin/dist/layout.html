@@ -38,6 +38,8 @@
 </head>
 
 <body class="layout-fixed sidebar-expand-lg sidebar-open bg-body-tertiary">
+    {% set admin_avatar = session.get('profile_image') or url_for('static', filename='admin/assets/img/admin.png') %}
+    {% set admin_username = session.get('username') or 'Admin' %}
     <div class="app-wrapper">
         <!-- Header -->
         {% block header %}
@@ -56,15 +58,15 @@
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item dropdown user-menu">
                         <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
-                            <img src="{{ url_for('static', filename='admin/assets/img/admin.png') }}"
+                            <img src="{{ admin_avatar }}"
                                 class="user-image rounded-circle shadow" alt="User Image" />
                         </a>
                         <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
                             <li class="user-header text-bg-primary">
-                                <img src="{{ url_for('static', filename='admin/assets/img/admin.png') }}"
+                                <img src="{{ admin_avatar }}"
                                     class="rounded-circle shadow" alt="User Image" />
                                 <p>
-                                    Joshua Algadipe
+                                    {{ admin_username }}
                                     <small>Administrator</small>
                                 </p>
                             </li>

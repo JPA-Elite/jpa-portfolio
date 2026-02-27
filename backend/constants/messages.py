@@ -46,6 +46,7 @@ COMMENT_NOT_FOUND_ERROR = "Comment not found"
 
 # User / Profile Messages
 USER_NOT_FOUND_ERROR = "User not found"
+USER_NAME_REQUIRED_ERROR = "Username is required."
 PROFILE_UPDATE_MSG = "Profile updated successfully!"
 
 # System / Records Messages

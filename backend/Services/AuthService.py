@@ -5,8 +5,13 @@ from backend.Repositories.Interfaces.ILoginAttemptRepository import ILoginAttemp
 from backend.Repositories.LoginAttemptRepository import MAX_ATTEMPTS
 from werkzeug.security import generate_password_hash
 from datetime import datetime
+import os
+import tempfile
 
-from backend.constants.messages import INVALID_USE_OR_PASS_ERROR, LOGIN_ATTEMPT_LOCKED_MSG, LOGIN_SUCCESS_MSG, MANY_FAILED_ATTEMPTS_ERROR, PROFILE_UPDATE_MSG, UNAUTHORIZED_ACCESS_ERROR, USER_NOT_FOUND_ERROR
+from backend.constants.messages import INVALID_USE_OR_PASS_ERROR, LOGIN_ATTEMPT_LOCKED_MSG, LOGIN_SUCCESS_MSG, MANY_FAILED_ATTEMPTS_ERROR, PROFILE_UPDATE_MSG, UNAUTHORIZED_ACCESS_ERROR, USER_NAME_REQUIRED_ERROR, USER_NOT_FOUND_ERROR
+from backend.constants.cloudinary import CloudinaryFolders, CloudinaryResourceType
+from backend.utils import cleanup_uploaded_files, convert_to_webp, upload_file_to_cloudinary
+from backend.extensions import cache
 
 class AuthService:
     def __init__(self, repository: IAuthRepository, attempt_repository: ILoginAttemptRepository):
@@ -17,7 +22,6 @@ class AuthService:
         attempt_info = self.login_attempt_repo.get_attempt_info()
         now = datetime.utcnow()
 
-        # ✅ Check for lockout first
         if attempt_info and attempt_info.get("lockout_until"):
             lockout_until = attempt_info["lockout_until"]
             if lockout_until and now < lockout_until:
@@ -46,9 +50,10 @@ class AuthService:
         if 'user_id' not in session:
             return jsonify({"message": UNAUTHORIZED_ACCESS_ERROR}), 401
 
-        data = request.get_json()
-        username = data.get('username')
-        password = data.get('password')
+        data = request.get_json(silent=True) or request.form
+        username = (data.get('username') or "").strip()
+        password = (data.get('password') or "").strip()
+        profile_image_file = request.files.get("profile_image_file")
 
         user_id = session.get('user_id')
         user = self.repository.find_by_id(user_id)
@@ -56,10 +61,66 @@ class AuthService:
         if not user:
             return jsonify({"message": USER_NOT_FOUND_ERROR}), 404
 
+        if not username:
+            return jsonify({"message": USER_NAME_REQUIRED_ERROR}), 400
+
         update_data = {"username": username}
-        if password and password.strip() != "":
+        if password:
             update_data["password"] = generate_password_hash(password)
 
-        self.repository.update_user(user_id, update_data)
+        new_profile_image = None
+        existing_profile_image = user.get("profile_image")
+        try:
+            if profile_image_file:
+                fd, path = tempfile.mkstemp()
+                os.close(fd)
+                profile_image_file.save(path)
 
-        return jsonify({"message": PROFILE_UPDATE_MSG}), 200
+                webp_path = convert_to_webp(path)
+                new_profile_image = upload_file_to_cloudinary(
+                    webp_path,
+                    resource_type=CloudinaryResourceType.IMAGE,
+                    folder=CloudinaryFolders.DEFAULT
+                )
+
+                os.remove(path)
+                if webp_path != path:
+                    os.remove(webp_path)
+
+                update_data["profile_image"] = new_profile_image
+
+            self.repository.update_user(user_id, update_data)
+        except Exception as error:
+            cleanup_uploaded_files(None, new_profile_image)
+            return jsonify({"message": f"Failed to update profile image: {error}"}), 500
+
+        if new_profile_image and existing_profile_image and str(existing_profile_image).startswith("http"):
+            cleanup_uploaded_files(None, existing_profile_image)
+
+        session["username"] = update_data.get("username", session.get("username"))
+        if new_profile_image:
+            session["profile_image"] = new_profile_image
+        self._clear_admin_page_cache()
+
+        return jsonify({
+            "message": PROFILE_UPDATE_MSG,
+            "username": session.get("username"),
+            "profile_image": session.get("profile_image"),
+        }), 200
+
+    @staticmethod
+    def _clear_admin_page_cache():
+        for key in (
+            "admin_page_dashboard",
+            "admin_page_gallery",
+            "admin_page_video",
+            "admin_page_music",
+            "admin_page_key_projects",
+            "admin_page_company_roadmaps",
+            "admin_page_settings",
+            "admin_page_login_attempts",
+        ):
+            try:
+                cache.delete(key)
+            except Exception:
+                pass

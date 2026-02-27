@@ -6,8 +6,14 @@ from backend.Controllers.api.VlogLikeController import (
     get_vlog_likes_counts_batch_route,
 )
 from backend.configurations import HTTPMethod as http
-from flask import Blueprint
+from flask import Blueprint, request, jsonify, current_app
+from datetime import datetime
+import json
+import os
+from collections import deque
 from backend.Controllers.api.BaseController import change_language_route, delete_page_system_info_route, download_song_route, get_client_ip_route, profile_config_route, proxy_audio_route
+from backend.Repositories.ActivityLogRepository import ActivityLogRepository
+from flask import session
 from backend.Controllers.api.MusicController import add_music_route, delete_music_route, music_list_route, update_music_route
 from backend.Controllers.api.KeyProjectController import (
     add_key_project_route,
@@ -28,7 +34,13 @@ from backend.Controllers.api.GalleryLikeController import (
     get_gallery_likes_count_route,
     get_gallery_likes_counts_batch_route,
 )
-from backend.Controllers.api.DashboardController import visits_info_route
+from backend.Controllers.api.DashboardController import visits_info_route, recent_activity_route, dashboard_summary_route
+from backend.Repositories.MusicRepository import MusicRepository
+from backend.Repositories.GalleryRepository import GalleryRepository
+from backend.Repositories.VideoRepository import VideoRepository
+from backend.Repositories.KeyProjectRepository import KeyProjectRepository
+from backend.Repositories.CompanyRoadmapRepository import CompanyRoadmapRepository
+from backend.Repositories.ActivityLogRepository import ActivityLogRepository
 from backend.Controllers.api.LoginAttemptController import login_attempt_list_route, delete_login_attempt_route
 from backend.Controllers.api.GalleryCommentController import gallery_comments_route, gallery_like_comment_route
 from backend.auth.middleware import admin_login_required
@@ -36,6 +48,45 @@ from backend.Controllers.api.AuthController import update_profile_route
 
 # Create a Blueprint for api
 api_bp = Blueprint("api", __name__)
+
+
+@api_bp.after_request
+def _log_admin_activity(response):
+    try:
+        if request.path.startswith("/admin/api/") and request.method in ("POST", "PUT", "DELETE"):
+            entry = {
+                "timestamp": datetime.utcnow().isoformat() + "Z",
+                "method": request.method,
+                "path": request.path,
+                "status_code": response.status_code,
+                "remote_addr": request.remote_addr,
+            }
+            try:
+                body = request.get_json(silent=True)
+                if body:
+                    entry["body"] = body
+            except Exception:
+                pass
+
+            try:
+                user_id = session.get("user_id")
+                if user_id:
+                    entry["user_id"] = user_id
+            except Exception:
+                pass
+
+            try:
+                repo = ActivityLogRepository()
+                repo.insert(entry)
+            except Exception:
+                logs_dir = os.path.join(os.path.dirname(__file__), "logs")
+                os.makedirs(logs_dir, exist_ok=True)
+                logfile = os.path.join(logs_dir, "recent_activity.jsonl")
+                with open(logfile, "a", encoding="utf-8") as fh:
+                    fh.write(json.dumps(entry, default=str) + "\n")
+    except Exception:
+        current_app.logger.exception("Failed to write admin activity log")
+    return response
 
 # ************************** PUBLIC API ********************************
 
@@ -242,3 +293,13 @@ def delete_login_attempt(login_attempt_id):
 @admin_login_required
 def get_client_ip():
     return get_client_ip_route()
+
+@api_bp.route("/admin/api/recent-activity", methods=[http.GET])
+@admin_login_required
+def recent_activity():
+    return recent_activity_route()
+
+@api_bp.route("/admin/api/dashboard-summary", methods=[http.GET])
+@admin_login_required
+def dashboard_summary():
+    return dashboard_summary_route()

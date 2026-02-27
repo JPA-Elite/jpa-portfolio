@@ -17,3 +17,4 @@ class MongoCollections:
     GALLERY_COMMENTS = "gallery_comments"
     VIDEO_COMMENTS = "video_comments"
     LOGIN_ATTEMPTS = "login_attempts"
+    ACTIVITY_LOGS = "activity_logs"

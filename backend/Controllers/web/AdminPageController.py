@@ -91,9 +91,10 @@ def admin_login_route():
         if user:
             # Clear any pre-login session data to reduce session fixation risk.
             session.clear()
-            session['username'] = username
+            session['username'] = user.get("username") or username
             session["user_id"] = str(user["_id"])
             session["role"] = user["role"]
+            session["profile_image"] = user.get("profile_image")
             admin_login_security.record_success(username)
 
             if remember:

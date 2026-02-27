@@ -1,14 +1,29 @@
+function setButtonLoading(button, isLoading) {
+    if (!button) return;
+    if (isLoading) {
+        button.dataset.originalText = button.innerHTML;
+        button.innerHTML = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Saving...`;
+        button.disabled = true;
+    } else {
+        button.innerHTML = button.dataset.originalText || "Save Changes";
+        button.disabled = false;
+    }
+}
+
 document.getElementById("profileForm").addEventListener("submit", async function (e) {
     e.preventDefault();
 
     const username = document.getElementById("username").value.trim();
     const password = document.getElementById("password").value.trim();
     const confirmPassword = document.getElementById("confirmPassword").value.trim();
+    const profileImageFile = document.getElementById("profileImage").files[0];
 
     const usernameError = document.getElementById("usernameError");
     const passwordError = document.getElementById("passwordError");
     const confirmPasswordError = document.getElementById("confirmPasswordError");
+    const profileImageError = document.getElementById("profileImageError");
     const msgBox = document.getElementById("responseMessage");
+    const saveButton = this.querySelector("button[type='submit']");
 
     let isValid = true;
 
@@ -16,6 +31,7 @@ document.getElementById("profileForm").addEventListener("submit", async function
     usernameError.classList.add("d-none");
     passwordError.classList.add("d-none");
     confirmPasswordError.classList.add("d-none");
+    profileImageError.classList.add("d-none");
     msgBox.innerHTML = "";
 
     // Username validation
@@ -30,11 +46,7 @@ document.getElementById("profileForm").addEventListener("submit", async function
     }
 
     // Password validation
-    if (!password) {
-        passwordError.textContent = "Password is required.";
-        passwordError.classList.remove("d-none");
-        isValid = false;
-    } else if (password.length < 5) {
+    if (password && password.length < 5) {
         passwordError.textContent = "Password must be at least 5 characters.";
         passwordError.classList.remove("d-none");
         isValid = false;
@@ -45,29 +57,79 @@ document.getElementById("profileForm").addEventListener("submit", async function
         confirmPasswordError.textContent = "Passwords do not match.";
         confirmPasswordError.classList.remove("d-none");
         isValid = false;
+    } else if (!password && confirmPassword) {
+        confirmPasswordError.textContent = "Enter password first.";
+        confirmPasswordError.classList.remove("d-none");
+        isValid = false;
+    }
+
+    if (profileImageFile && !profileImageFile.type.startsWith("image/")) {
+        profileImageError.textContent = "Please upload a valid image file.";
+        profileImageError.classList.remove("d-none");
+        isValid = false;
     }
 
     if (!isValid) return;
+    setButtonLoading(saveButton, true);
 
-    const data = { username, password };
+    const data = new FormData();
+    data.append("username", username);
+    if (password) {
+        data.append("password", password);
+    }
+    if (profileImageFile) {
+        data.append("profile_image_file", profileImageFile);
+    }
 
+    let keepLoading = false;
     try {
         const res = await fetch("/admin/api/update-profile", {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(data)
+            body: data
         });
 
         const result = await res.json();
 
         if (res.ok) {
             msgBox.innerHTML = `<div class="alert alert-success">${result.message}</div>`;
-            setTimeout(() => window.location.href = "/admin/logout", 2000);
+
+            if (result.profile_image) {
+                const preview = document.getElementById("profileImagePreview");
+                if (preview) {
+                    preview.src = result.profile_image;
+                }
+            }
+
+            if (password) {
+                keepLoading = true;
+                setTimeout(() => window.location.href = "/admin/logout", 1500);
+            } else {
+                keepLoading = true;
+                setTimeout(() => window.location.reload(), 900);
+            }
         } else {
             msgBox.innerHTML = `<div class="alert alert-danger">${result.message}</div>`;
         }
     } catch (error) {
         msgBox.innerHTML = `<div class="alert alert-danger">Something went wrong.</div>`;
         console.error(error);
+    } finally {
+        if (!keepLoading) {
+            setButtonLoading(saveButton, false);
+        }
     }
+});
+
+document.getElementById("profileImage")?.addEventListener("change", (event) => {
+    const file = event.target.files?.[0];
+    if (!file || !file.type.startsWith("image/")) return;
+
+    const preview = document.getElementById("profileImagePreview");
+    if (!preview) return;
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+        preview.src = e.target?.result || preview.src;
+    };
+    reader.readAsDataURL(file);
 });

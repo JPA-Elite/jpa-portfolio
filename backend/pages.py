@@ -67,48 +67,48 @@ def admin_logout():
 
 @pages_bp.route("/admin/dashboard", methods=[http.GET])
 @admin_login_required
-@cache.cached()
+@cache.cached(key_prefix="admin_page_dashboard")
 def admin_dashboard():
     return admin_dashboard_route()
 
 @pages_bp.route("/admin/gallery", methods=[http.GET])
 @admin_login_required
-@cache.cached()
+@cache.cached(key_prefix="admin_page_gallery")
 def admin_gallery():
     return admin_gallery_route()
 
 @pages_bp.route("/admin/video", methods=[http.GET])
 @admin_login_required
-@cache.cached()
+@cache.cached(key_prefix="admin_page_video")
 def admin_video():
     return admin_video_route()
 
 @pages_bp.route("/admin/music", methods=[http.GET])
 @admin_login_required
-@cache.cached()
+@cache.cached(key_prefix="admin_page_music")
 def admin_music():
     return admin_music_route()
 
 @pages_bp.route("/admin/key-projects", methods=[http.GET])
 @admin_login_required
-@cache.cached()
+@cache.cached(key_prefix="admin_page_key_projects")
 def admin_key_projects():
     return admin_key_projects_route()
 
 @pages_bp.route("/admin/company-roadmaps", methods=[http.GET])
 @admin_login_required
-@cache.cached()
+@cache.cached(key_prefix="admin_page_company_roadmaps")
 def admin_company_roadmaps():
     return admin_company_roadmaps_route()
 
 @pages_bp.route("/admin/settings", methods=[http.GET])
 @admin_login_required
-@cache.cached()
+@cache.cached(key_prefix="admin_page_settings")
 def admin_settings():
     return admin_settings_route()
 
 @pages_bp.route("/admin/login-attempts", methods=[http.GET])
 @admin_login_required
-@cache.cached()
+@cache.cached(key_prefix="admin_page_login_attempts")
 def admin_login_attempts():
     return admin_login_attempts_route()

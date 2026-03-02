@@ -33,4 +33,4 @@ COPY . /app
 EXPOSE 8080
 
 # IMPORTANT: bind to :$PORT (Cloud Run injects PORT=8080)
-CMD ["sh", "-c", "gunicorn --bind :$PORT --workers 2 --threads 8 --timeout 0 backend.app:app"]
+CMD ["sh", "-c", "gunicorn --bind :$PORT --workers 2 --threads 8 --timeout 0 app:app"]

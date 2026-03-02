@@ -29,7 +29,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy the rest of the app
 COPY . /app
 
-# Expose the port 
+# Expose the port
 EXPOSE 5000
 
 # CMD ["python", "./backend/app.py"] #development server

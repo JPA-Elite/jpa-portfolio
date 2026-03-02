@@ -21,7 +21,7 @@ RUN python -m venv /app/.venv
 ENV PATH="/app/.venv/bin:$PATH"
 
 # Copy only requirements first to leverage Docker cache
-COPY ./requirements.txt /app/
+COPY ./backend/requirements.txt /app/
 
 # Install dependencies inside the venv
 RUN pip install --no-cache-dir -r requirements.txt
@@ -30,8 +30,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . /app
 
 # Expose the port
-EXPOSE 5000
+EXPOSE 8080
 
-# CMD ["python", "./backend/app.py"] #development server
-# Run with Gunicorn
-CMD ["gunicorn", "--bind", "0.0.0.0:5000", "backend.app:app", "--workers", "4"]
+# IMPORTANT: bind to :$PORT (Cloud Run injects PORT=8080)
+CMD ["sh", "-c", "gunicorn --bind :$PORT --workers 2 --threads 8 --timeout 0 backend.app:app"]

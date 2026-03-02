@@ -1,8 +1,8 @@
 from flask import request, jsonify
-from backend.Services.VlogCommentService import VlogCommentService
-from backend.Repositories.VlogCommentRepository import VlogCommentRepository
-from backend.configurations import HTTPMethod as http
-from backend.constants.messages import COMMENT_NOT_FOUND_ERROR
+from Services.VlogCommentService import VlogCommentService
+from Repositories.VlogCommentRepository import VlogCommentRepository
+from configurations import HTTPMethod as http
+from constants.messages import COMMENT_NOT_FOUND_ERROR
 
 # Initialize Services
 vlog_comment_service = VlogCommentService(repository=VlogCommentRepository())

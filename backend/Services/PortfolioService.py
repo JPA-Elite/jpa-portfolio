@@ -1,5 +1,5 @@
-from backend.Repositories.Interfaces.IPortfolioRepository import IPortfolioRepository
-from backend.Models.SystemInfo import SystemInfo
+from Repositories.Interfaces.IPortfolioRepository import IPortfolioRepository
+from Models.SystemInfo import SystemInfo
 from flask import request, url_for
 from user_agents import parse  # type: ignore
 import platform
@@ -7,7 +7,7 @@ from datetime import datetime
 import pytz  # type: ignore
 import requests
 
-from backend.constants.messages import SYSTEM_INFO_ADD_MSG
+from constants.messages import SYSTEM_INFO_ADD_MSG
 
 class PortfolioService:
     def __init__(self, repository: IPortfolioRepository):

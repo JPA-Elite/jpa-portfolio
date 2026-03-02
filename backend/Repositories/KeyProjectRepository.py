@@ -1,10 +1,10 @@
 from bson import ObjectId
 
-from backend.Repositories.Interfaces.IKeyProjectRepository import IKeyProjectRepository
-from backend.Repositories.BaseRepository import BaseRepository
-from backend.constants.db_collections import MongoCollections as mc
-from backend.configurations import SortOrder
-from backend.Models.KeyProject import KeyProject
+from Repositories.Interfaces.IKeyProjectRepository import IKeyProjectRepository
+from Repositories.BaseRepository import BaseRepository
+from constants.db_collections import MongoCollections as mc
+from configurations import SortOrder
+from Models.KeyProject import KeyProject
 
 
 class KeyProjectRepository(IKeyProjectRepository, BaseRepository):

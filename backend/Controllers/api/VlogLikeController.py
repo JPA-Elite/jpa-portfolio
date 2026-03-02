@@ -1,11 +1,11 @@
 from flask import request, jsonify
-from backend.Services.VlogLikeService import VlogLikeService
-from backend.Repositories.VlogLikeRepository import VlogLikeRepository
-from backend.Services.VlogCommentService import VlogCommentService
-from backend.Repositories.VlogCommentRepository import VlogCommentRepository
+from Services.VlogLikeService import VlogLikeService
+from Repositories.VlogLikeRepository import VlogLikeRepository
+from Services.VlogCommentService import VlogCommentService
+from Repositories.VlogCommentRepository import VlogCommentRepository
 import json
-from backend.constants.messages import VIDEO_LIKE_TOGGLE_MSG
-from backend.utils import clear_cache_by_prefix
+from constants.messages import VIDEO_LIKE_TOGGLE_MSG
+from utils import clear_cache_by_prefix
 
 # Initialize Services
 vlog_like_service = VlogLikeService(repository=VlogLikeRepository())

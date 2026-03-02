@@ -1,7 +1,7 @@
-from backend.Repositories.BaseRepository import BaseRepository
-from backend.constants.db_collections import MongoCollections as mc
+from Repositories.BaseRepository import BaseRepository
+from constants.db_collections import MongoCollections as mc
 from bson import ObjectId
-from backend.Models.GalleryComment import GalleryComment
+from Models.GalleryComment import GalleryComment
 
 class GalleryCommentRepository(BaseRepository):
     def __init__(self):

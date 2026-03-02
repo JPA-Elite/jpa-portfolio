@@ -1,10 +1,10 @@
 # pages.py
 from flask import Blueprint, request
-from backend.configurations import HTTPMethod as http, get_locale
-from backend.auth.middleware import admin_login_required
-from backend.Controllers.web.PageController import add_portfolio_form_route, concern_route, device_info_route, donation_route, gallery_route, index_route, music_route, profile_route, vlog_route
-from backend.Controllers.web.AdminPageController import admin_company_roadmaps_route, admin_dashboard_route, admin_gallery_route, admin_key_projects_route, admin_login_attempts_route, admin_login_route, admin_logout_route, admin_music_route, admin_settings_route, admin_video_route
-from backend.extensions import cache
+from configurations import HTTPMethod as http, get_locale
+from auth.middleware import admin_login_required
+from Controllers.web.PageController import add_portfolio_form_route, concern_route, device_info_route, donation_route, gallery_route, index_route, music_route, profile_route, vlog_route
+from Controllers.web.AdminPageController import admin_company_roadmaps_route, admin_dashboard_route, admin_gallery_route, admin_key_projects_route, admin_login_attempts_route, admin_login_route, admin_logout_route, admin_music_route, admin_settings_route, admin_video_route
+from extensions import cache
 
 # Create a Blueprint for pages
 pages_bp = Blueprint("pages", __name__)

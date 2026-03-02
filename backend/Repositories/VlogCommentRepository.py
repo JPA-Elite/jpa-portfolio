@@ -1,7 +1,7 @@
-from backend.Repositories.BaseRepository import BaseRepository
-from backend.constants.db_collections import MongoCollections as mc
+from Repositories.BaseRepository import BaseRepository
+from constants.db_collections import MongoCollections as mc
 from bson import ObjectId
-from backend.Models.VlogComment import VlogComment
+from Models.VlogComment import VlogComment
 
 class VlogCommentRepository(BaseRepository):
     def __init__(self):

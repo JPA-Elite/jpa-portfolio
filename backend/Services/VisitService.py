@@ -1,9 +1,9 @@
-from backend.Repositories.Interfaces.IVisitRepository import IVisitRepository
-from backend.Models.SystemInfo import SystemInfo
-from backend.configurations import SortOrder
+from Repositories.Interfaces.IVisitRepository import IVisitRepository
+from Models.SystemInfo import SystemInfo
+from configurations import SortOrder
 from bson import ObjectId
-from backend.constants.messages import DISPLAY_RECORDS_DELETE_MSG
-from backend.utils import delete_image_from_cloudinary
+from constants.messages import DISPLAY_RECORDS_DELETE_MSG
+from utils import delete_image_from_cloudinary
 
 class VisitService:
     def __init__(self, repository: IVisitRepository):

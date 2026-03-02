@@ -2,11 +2,11 @@ import json
 
 from flask import jsonify, request
 
-from backend.Repositories.CompanyRoadmapRepository import CompanyRoadmapRepository
-from backend.Services.CompanyRoadmapService import CompanyRoadmapService
-from backend.configurations import SortOrder, SortOrderStr
-from backend.extensions import cache
-from backend.utils import clear_cache_by_prefix, get_cache_data
+from Repositories.CompanyRoadmapRepository import CompanyRoadmapRepository
+from Services.CompanyRoadmapService import CompanyRoadmapService
+from configurations import SortOrder, SortOrderStr
+from extensions import cache
+from utils import clear_cache_by_prefix, get_cache_data
 
 
 company_roadmap_service = CompanyRoadmapService(repository=CompanyRoadmapRepository())

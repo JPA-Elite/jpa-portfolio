@@ -1,5 +1,5 @@
-from backend.Repositories.Interfaces.IVlogLikeRepository import IVlogLikeRepository
-from backend.Models.VlogLike import VlogLike
+from Repositories.Interfaces.IVlogLikeRepository import IVlogLikeRepository
+from Models.VlogLike import VlogLike
 
 class VlogLikeService:
     def __init__(self, repository: IVlogLikeRepository):

@@ -4,11 +4,11 @@ import uuid
 
 from flask import current_app
 
-from backend.Models.KeyProject import KeyProject
-from backend.Repositories.Interfaces.IKeyProjectRepository import IKeyProjectRepository
-from backend.configurations import SortOrder
-from backend.constants.cloudinary import CloudinaryFolders, CloudinaryResourceType
-from backend.utils import cleanup_uploaded_files, convert_to_webp, upload_file_to_cloudinary
+from Models.KeyProject import KeyProject
+from Repositories.Interfaces.IKeyProjectRepository import IKeyProjectRepository
+from configurations import SortOrder
+from constants.cloudinary import CloudinaryFolders, CloudinaryResourceType
+from utils import cleanup_uploaded_files, convert_to_webp, upload_file_to_cloudinary
 
 
 class KeyProjectService:

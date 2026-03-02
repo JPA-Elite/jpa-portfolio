@@ -7,7 +7,7 @@ from typing import Iterable, Optional, Sequence
 
 from flask import jsonify, request
 
-from backend.extensions import cache
+from extensions import cache
 
 
 def _env_flag(name: str, default: bool) -> bool:

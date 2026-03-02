@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 
-from backend.configurations import SortOrder
-from backend.Models.KeyProject import KeyProject
+from configurations import SortOrder
+from Models.KeyProject import KeyProject
 
 
 class IKeyProjectRepository(ABC):

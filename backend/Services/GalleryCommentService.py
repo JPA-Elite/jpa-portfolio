@@ -1,6 +1,6 @@
-from backend.Repositories.Interfaces.IGalleryCommentRepository import IGalleryCommentRepository
-from backend.Models.GalleryComment import GalleryComment
-from backend.utils import num_to_alpha_lower
+from Repositories.Interfaces.IGalleryCommentRepository import IGalleryCommentRepository
+from Models.GalleryComment import GalleryComment
+from utils import num_to_alpha_lower
 
 class GalleryCommentService:
     def __init__(self, repository: IGalleryCommentRepository):

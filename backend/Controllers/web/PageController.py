@@ -1,21 +1,21 @@
 import math
 from flask import redirect, url_for, render_template, request
-from backend.Services.PortfolioService import PortfolioService
-from backend.Services.VisitService import VisitService
-from backend.Repositories.PortfolioRepository import PortfolioRepository
-from backend.Repositories.VisitRepository import VisitRepository
-from backend.Services.VideoService import VideoService
-from backend.Repositories.VideoRepository import VideoRepository
-from backend.Services.GalleryService import GalleryService
-from backend.Repositories.GalleryRepository import GalleryRepository
-from backend.Services.KeyProjectService import KeyProjectService
-from backend.Repositories.KeyProjectRepository import KeyProjectRepository
-from backend.Services.CompanyRoadmapService import CompanyRoadmapService
-from backend.Repositories.CompanyRoadmapRepository import CompanyRoadmapRepository
-from backend.Services.GalleryLikeService import GalleryLikeService
-from backend.Repositories.GalleryLikeRepository import GalleryLikeRepository
-from backend.utils import capture_image, get_random_tags
-from backend.configurations import (
+from Services.PortfolioService import PortfolioService
+from Services.VisitService import VisitService
+from Repositories.PortfolioRepository import PortfolioRepository
+from Repositories.VisitRepository import VisitRepository
+from Services.VideoService import VideoService
+from Repositories.VideoRepository import VideoRepository
+from Services.GalleryService import GalleryService
+from Repositories.GalleryRepository import GalleryRepository
+from Services.KeyProjectService import KeyProjectService
+from Repositories.KeyProjectRepository import KeyProjectRepository
+from Services.CompanyRoadmapService import CompanyRoadmapService
+from Repositories.CompanyRoadmapRepository import CompanyRoadmapRepository
+from Services.GalleryLikeService import GalleryLikeService
+from Repositories.GalleryLikeRepository import GalleryLikeRepository
+from utils import capture_image, get_random_tags
+from configurations import (
     ADD_PORTFOLIO_PAGE,
     CONCERN_PAGE,
     ERROR_404_PAGE,

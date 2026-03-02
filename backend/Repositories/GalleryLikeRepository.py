@@ -1,7 +1,7 @@
-from backend.Repositories.Interfaces.IGalleryLikeRepository import IGalleryLikeRepository
-from backend.Repositories.BaseRepository import BaseRepository
-from backend.constants.db_collections import MongoCollections as mc
-from backend.Models.GalleryLike import GalleryLike
+from Repositories.Interfaces.IGalleryLikeRepository import IGalleryLikeRepository
+from Repositories.BaseRepository import BaseRepository
+from constants.db_collections import MongoCollections as mc
+from Models.GalleryLike import GalleryLike
 class GalleryLikeRepository(IGalleryLikeRepository, BaseRepository):
     def __init__(self):
         super().__init__(mc.GALLERY_LIKES)  # use "gallery" collection

@@ -1,6 +1,6 @@
-from backend.Repositories.BaseRepository import BaseRepository
-from backend.Repositories.Interfaces.IPortfolioRepository import IPortfolioRepository
-from backend.constants.db_collections import MongoCollections as mc
+from Repositories.BaseRepository import BaseRepository
+from Repositories.Interfaces.IPortfolioRepository import IPortfolioRepository
+from constants.db_collections import MongoCollections as mc
 
 class PortfolioRepository(IPortfolioRepository, BaseRepository):
     def __init__(self):

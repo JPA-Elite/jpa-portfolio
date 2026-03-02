@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 
-from backend.configurations import SortOrder
-from backend.Models.CompanyRoadmap import CompanyRoadmap
+from configurations import SortOrder
+from Models.CompanyRoadmap import CompanyRoadmap
 
 
 class ICompanyRoadmapRepository(ABC):

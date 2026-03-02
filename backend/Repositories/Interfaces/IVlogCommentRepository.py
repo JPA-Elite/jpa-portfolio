@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from backend.Models.VlogComment import VlogComment
+from Models.VlogComment import VlogComment
 
 class IVlogCommentRepository(ABC):
     @abstractmethod

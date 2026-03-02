@@ -1,15 +1,15 @@
 from flask import redirect, stream_with_context, url_for, request, jsonify, Response
 import requests
-from backend.Services.PortfolioService import PortfolioService
-from backend.Services.VisitService import VisitService
-from backend.Repositories.PortfolioRepository import PortfolioRepository
-from backend.Repositories.VisitRepository import VisitRepository
-from backend.Services.MusicService import MusicService
-from backend.Repositories.MusicRepository import MusicRepository
+from Services.PortfolioService import PortfolioService
+from Services.VisitService import VisitService
+from Repositories.PortfolioRepository import PortfolioRepository
+from Repositories.VisitRepository import VisitRepository
+from Services.MusicService import MusicService
+from Repositories.MusicRepository import MusicRepository
 from flask_babel import gettext
 from urllib.parse import urlparse, parse_qs, urlencode, urlunparse
 
-from backend.utils import safe_filename_parts, stream_generator
+from utils import safe_filename_parts, stream_generator
 
 # Initialize Services
 portfolio_service = PortfolioService(repository=PortfolioRepository())

@@ -1,6 +1,6 @@
 from datetime import timedelta
 from flask import current_app, flash, make_response, redirect, render_template, request, session, url_for
-from backend.configurations import (
+from configurations import (
     ADMIN_DASHBOARD_PAGE,
     ADMIN_GALLERY_PAGE,
     ADMIN_LOGIN_ATTEMPTS_PAGE,
@@ -11,15 +11,15 @@ from backend.configurations import (
     ADMIN_SETTINGS_PAGE,
     ADMIN_VIDEO_PAGE,
 )
-from backend.configurations import HTTPMethod as http
-from backend.constants.login_roles import ROLE_ADMIN
-from backend.Services.AuthService import AuthService
-from backend.Repositories.AuthRepository import AuthRepository
-from backend.Repositories.LoginAttemptRepository import LoginAttemptRepository
-from backend.constants.messages import CAPTCHA_VERIFICATION_ERROR, LOGOUT_SUCCESS_MSG, WELCOME_ADMIN_MSG
-from backend.utils import verify_hcaptcha
-from backend.forms.LoginForm import LoginForm
-from backend.security import AdminLoginSecurity, get_request_ip
+from configurations import HTTPMethod as http
+from constants.login_roles import ROLE_ADMIN
+from Services.AuthService import AuthService
+from Repositories.AuthRepository import AuthRepository
+from Repositories.LoginAttemptRepository import LoginAttemptRepository
+from constants.messages import CAPTCHA_VERIFICATION_ERROR, LOGOUT_SUCCESS_MSG, WELCOME_ADMIN_MSG
+from utils import verify_hcaptcha
+from forms.LoginForm import LoginForm
+from security import AdminLoginSecurity, get_request_ip
 
 # Initialize Services
 auth_service = AuthService(

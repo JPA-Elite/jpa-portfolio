@@ -1,11 +1,11 @@
 from flask import request, jsonify
-from backend.Services.VideoService import VideoService
-from backend.Repositories.VideoRepository import VideoRepository
-from backend.configurations import SortOrder, SortOrderStr
+from Services.VideoService import VideoService
+from Repositories.VideoRepository import VideoRepository
+from configurations import SortOrder, SortOrderStr
 import json
-from backend.constants.messages import VIDEO_ADD_MSG, VIDEO_DELETE_MSG, VIDEO_NOT_FOUND_ERROR, VIDEO_UPDATE_FAILED_ERROR, VIDEO_UPDATE_MSG
-from backend.utils import clear_cache_by_prefix, get_cache_data
-from backend.extensions import cache
+from constants.messages import VIDEO_ADD_MSG, VIDEO_DELETE_MSG, VIDEO_NOT_FOUND_ERROR, VIDEO_UPDATE_FAILED_ERROR, VIDEO_UPDATE_MSG
+from utils import clear_cache_by_prefix, get_cache_data
+from extensions import cache
 
 # Initialize Services
 video_service = VideoService(repository=VideoRepository())

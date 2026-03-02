@@ -1,9 +1,9 @@
-from backend.Repositories.Interfaces.IGalleryRepository import IGalleryRepository
-from backend.Repositories.BaseRepository import BaseRepository
-from backend.configurations import SortOrder
-from backend.constants.db_collections import MongoCollections as mc
+from Repositories.Interfaces.IGalleryRepository import IGalleryRepository
+from Repositories.BaseRepository import BaseRepository
+from configurations import SortOrder
+from constants.db_collections import MongoCollections as mc
 from bson import ObjectId
-from backend.Models.Gallery import Gallery
+from Models.Gallery import Gallery
 from bson.regex import Regex
 class GalleryRepository(IGalleryRepository, BaseRepository):
     def __init__(self):

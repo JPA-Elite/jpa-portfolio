@@ -1,8 +1,8 @@
 from flask import request, jsonify
-from backend.Services.GalleryCommentService import GalleryCommentService
-from backend.Repositories.GalleryCommentRepository import GalleryCommentRepository
-from backend.configurations import HTTPMethod as http
-from backend.constants.messages import COMMENT_NOT_FOUND_ERROR
+from Services.GalleryCommentService import GalleryCommentService
+from Repositories.GalleryCommentRepository import GalleryCommentRepository
+from configurations import HTTPMethod as http
+from constants.messages import COMMENT_NOT_FOUND_ERROR
 
 # Initialize Services
 gallery_comment_service = GalleryCommentService(repository=GalleryCommentRepository())

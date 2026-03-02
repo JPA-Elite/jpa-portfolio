@@ -1,6 +1,6 @@
-from backend.Repositories.Interfaces.IVlogCommentRepository import IVlogCommentRepository
-from backend.Models.VlogComment import VlogComment
-from backend.utils import num_to_alpha_lower
+from Repositories.Interfaces.IVlogCommentRepository import IVlogCommentRepository
+from Models.VlogComment import VlogComment
+from utils import num_to_alpha_lower
 
 class VlogCommentService:
     def __init__(self, repository: IVlogCommentRepository):

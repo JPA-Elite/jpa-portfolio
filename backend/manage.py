@@ -2,9 +2,9 @@ import os
 from flask import Flask
 import click
 from dotenv import load_dotenv
-from backend.constants.db_collections import MongoCollections as mc
-from backend.migrations.migrate_json_data import migrate_json_data
-from backend.migrations.migrate_admin_creds import migrate_admin_creds
+from constants.db_collections import MongoCollections as mc
+from migrations.migrate_json_data import migrate_json_data
+from migrations.migrate_admin_creds import migrate_admin_creds
 
 load_dotenv()
 

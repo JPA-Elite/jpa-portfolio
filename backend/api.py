@@ -1,50 +1,50 @@
 # pages.py
-from backend.Controllers.api.VlogCommentController import vlog_comments_route, vlog_like_comment_route
-from backend.Controllers.api.VlogLikeController import (
+from Controllers.api.VlogCommentController import vlog_comments_route, vlog_like_comment_route
+from Controllers.api.VlogLikeController import (
     add_vlog_like_route,
     get_vlog_likes_count_route,
     get_vlog_likes_counts_batch_route,
 )
-from backend.configurations import HTTPMethod as http
+from configurations import HTTPMethod as http
 from flask import Blueprint, request, jsonify, current_app
 from datetime import datetime
 import json
 import os
 from collections import deque
-from backend.Controllers.api.BaseController import change_language_route, delete_page_system_info_route, download_song_route, get_client_ip_route, profile_config_route, proxy_audio_route
-from backend.Repositories.ActivityLogRepository import ActivityLogRepository
+from Controllers.api.BaseController import change_language_route, delete_page_system_info_route, download_song_route, get_client_ip_route, profile_config_route, proxy_audio_route
+from Repositories.ActivityLogRepository import ActivityLogRepository
 from flask import session
-from backend.Controllers.api.MusicController import add_music_route, delete_music_route, music_list_route, update_music_route
-from backend.Controllers.api.KeyProjectController import (
+from Controllers.api.MusicController import add_music_route, delete_music_route, music_list_route, update_music_route
+from Controllers.api.KeyProjectController import (
     add_key_project_route,
     delete_key_project_route,
     key_project_list_route,
     update_key_project_route,
 )
-from backend.Controllers.api.CompanyRoadmapController import (
+from Controllers.api.CompanyRoadmapController import (
     add_company_roadmap_route,
     company_roadmap_list_route,
     delete_company_roadmap_route,
     update_company_roadmap_route,
 )
-from backend.Controllers.api.VideoController import add_video_route, delete_video_route, update_video_route, video_list_route
-from backend.Controllers.api.GalleryController import add_gallery_route, delete_gallery_route, gallery_list_route, update_gallery_route
-from backend.Controllers.api.GalleryLikeController import (
+from Controllers.api.VideoController import add_video_route, delete_video_route, update_video_route, video_list_route
+from Controllers.api.GalleryController import add_gallery_route, delete_gallery_route, gallery_list_route, update_gallery_route
+from Controllers.api.GalleryLikeController import (
     add_gallery_like_route,
     get_gallery_likes_count_route,
     get_gallery_likes_counts_batch_route,
 )
-from backend.Controllers.api.DashboardController import visits_info_route, recent_activity_route, dashboard_summary_route
-from backend.Repositories.MusicRepository import MusicRepository
-from backend.Repositories.GalleryRepository import GalleryRepository
-from backend.Repositories.VideoRepository import VideoRepository
-from backend.Repositories.KeyProjectRepository import KeyProjectRepository
-from backend.Repositories.CompanyRoadmapRepository import CompanyRoadmapRepository
-from backend.Repositories.ActivityLogRepository import ActivityLogRepository
-from backend.Controllers.api.LoginAttemptController import login_attempt_list_route, delete_login_attempt_route
-from backend.Controllers.api.GalleryCommentController import gallery_comments_route, gallery_like_comment_route
-from backend.auth.middleware import admin_login_required
-from backend.Controllers.api.AuthController import update_profile_route
+from Controllers.api.DashboardController import visits_info_route, recent_activity_route, dashboard_summary_route
+from Repositories.MusicRepository import MusicRepository
+from Repositories.GalleryRepository import GalleryRepository
+from Repositories.VideoRepository import VideoRepository
+from Repositories.KeyProjectRepository import KeyProjectRepository
+from Repositories.CompanyRoadmapRepository import CompanyRoadmapRepository
+from Repositories.ActivityLogRepository import ActivityLogRepository
+from Controllers.api.LoginAttemptController import login_attempt_list_route, delete_login_attempt_route
+from Controllers.api.GalleryCommentController import gallery_comments_route, gallery_like_comment_route
+from auth.middleware import admin_login_required
+from Controllers.api.AuthController import update_profile_route
 
 # Create a Blueprint for api
 api_bp = Blueprint("api", __name__)

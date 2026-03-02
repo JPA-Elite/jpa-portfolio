@@ -2,11 +2,11 @@ import json
 
 from flask import jsonify, request
 
-from backend.Repositories.KeyProjectRepository import KeyProjectRepository
-from backend.Services.KeyProjectService import KeyProjectService
-from backend.configurations import SortOrder, SortOrderStr
-from backend.extensions import cache
-from backend.utils import clear_cache_by_prefix, get_cache_data
+from Repositories.KeyProjectRepository import KeyProjectRepository
+from Services.KeyProjectService import KeyProjectService
+from configurations import SortOrder, SortOrderStr
+from extensions import cache
+from utils import clear_cache_by_prefix, get_cache_data
 
 
 key_project_service = KeyProjectService(repository=KeyProjectRepository())

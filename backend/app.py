@@ -1,5 +1,5 @@
 from flask import Flask, render_template, send_from_directory # type: ignore
-from backend.configurations import (
+from configurations import (
     ERROR_404_PAGE,
     LANGUAGES,
     BABEL_DEFAULT_LOCALE,
@@ -9,13 +9,13 @@ from backend.configurations import (
     get_locale,
 )
 from flask_babel import Babel  # type: ignore
-from backend.pages import pages_bp
-from backend.api import api_bp
+from pages import pages_bp
+from api import api_bp
 from datetime import datetime, timedelta
-from backend.sitemap import sitemap_bp  # Import the sitemap blueprint
+from sitemap import sitemap_bp  # Import the sitemap blueprint
 import os
-from backend.extensions import cache
-from backend.security import init_ddos_guard
+from extensions import cache
+from security import init_ddos_guard
 from dotenv import load_dotenv
 
 load_dotenv()

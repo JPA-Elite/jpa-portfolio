@@ -1,8 +1,8 @@
 import re
-from backend.Repositories.Interfaces.IVlogLikeRepository import IVlogLikeRepository
-from backend.Repositories.BaseRepository import BaseRepository
-from backend.constants.db_collections import MongoCollections as mc
-from backend.Models.VlogLike import VlogLike
+from Repositories.Interfaces.IVlogLikeRepository import IVlogLikeRepository
+from Repositories.BaseRepository import BaseRepository
+from constants.db_collections import MongoCollections as mc
+from Models.VlogLike import VlogLike
 class VlogLikeRepository(IVlogLikeRepository, BaseRepository):
     def __init__(self):
         super().__init__(mc.VIDEO_LIKES)  # use "vlog" collection

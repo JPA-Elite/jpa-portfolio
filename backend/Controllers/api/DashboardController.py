@@ -4,9 +4,9 @@ try:
 except ImportError:
     MagicMock = None
 from flask import jsonify, current_app
-from backend.Services.VisitService import VisitService
-from backend.Repositories.VisitRepository import VisitRepository
-from backend.Services.DashboardService import DashboardService
+from Services.VisitService import VisitService
+from Repositories.VisitRepository import VisitRepository
+from Services.DashboardService import DashboardService
 
 # Initialize Services
 visit_service = VisitService(repository=VisitRepository())

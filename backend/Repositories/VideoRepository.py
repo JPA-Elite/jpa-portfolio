@@ -1,9 +1,9 @@
-from backend.Repositories.Interfaces.IVideoRepository import IVideoRepository
-from backend.Repositories.BaseRepository import BaseRepository
-from backend.configurations import SortOrder
-from backend.constants.db_collections import MongoCollections as mc
+from Repositories.Interfaces.IVideoRepository import IVideoRepository
+from Repositories.BaseRepository import BaseRepository
+from configurations import SortOrder
+from constants.db_collections import MongoCollections as mc
 from bson import ObjectId
-from backend.Models.Video import Video
+from Models.Video import Video
 from bson.regex import Regex
 
 class VideoRepository(IVideoRepository, BaseRepository):

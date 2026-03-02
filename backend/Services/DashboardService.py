@@ -1,11 +1,11 @@
-from backend.Repositories.MusicRepository import MusicRepository
-from backend.Repositories.GalleryRepository import GalleryRepository
-from backend.Repositories.VideoRepository import VideoRepository
-from backend.Repositories.KeyProjectRepository import KeyProjectRepository
-from backend.Repositories.CompanyRoadmapRepository import CompanyRoadmapRepository
-from backend.Repositories.ActivityLogRepository import ActivityLogRepository
-from backend.Services.VisitService import VisitService
-from backend.Repositories.VisitRepository import VisitRepository
+from Repositories.MusicRepository import MusicRepository
+from Repositories.GalleryRepository import GalleryRepository
+from Repositories.VideoRepository import VideoRepository
+from Repositories.KeyProjectRepository import KeyProjectRepository
+from Repositories.CompanyRoadmapRepository import CompanyRoadmapRepository
+from Repositories.ActivityLogRepository import ActivityLogRepository
+from Services.VisitService import VisitService
+from Repositories.VisitRepository import VisitRepository
 from flask import current_app
 import os
 import json

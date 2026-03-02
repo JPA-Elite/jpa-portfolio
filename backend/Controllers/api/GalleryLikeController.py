@@ -1,11 +1,11 @@
 from flask import request, jsonify
-from backend.Services.GalleryLikeService import GalleryLikeService
-from backend.Repositories.GalleryLikeRepository import GalleryLikeRepository
-from backend.Services.GalleryCommentService import GalleryCommentService
-from backend.Repositories.GalleryCommentRepository import GalleryCommentRepository
+from Services.GalleryLikeService import GalleryLikeService
+from Repositories.GalleryLikeRepository import GalleryLikeRepository
+from Services.GalleryCommentService import GalleryCommentService
+from Repositories.GalleryCommentRepository import GalleryCommentRepository
 import json
-from backend.constants.messages import GALLERY_LIKE_TOGGLE_MSG
-from backend.utils import clear_cache_by_prefix
+from constants.messages import GALLERY_LIKE_TOGGLE_MSG
+from utils import clear_cache_by_prefix
 
 # Initialize Services
 gallery_like_service = GalleryLikeService(repository=GalleryLikeRepository())

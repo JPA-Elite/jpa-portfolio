@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from backend.Models.GalleryComment import GalleryComment
+from Models.GalleryComment import GalleryComment
 
 class IGalleryCommentRepository(ABC):
     @abstractmethod

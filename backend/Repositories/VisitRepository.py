@@ -1,8 +1,8 @@
-from backend.Repositories.Interfaces.IVisitRepository import IVisitRepository
-from backend.Repositories.BaseRepository import BaseRepository
+from Repositories.Interfaces.IVisitRepository import IVisitRepository
+from Repositories.BaseRepository import BaseRepository
 from datetime import datetime
-from backend.configurations import SortOrder
-from backend.constants.db_collections import MongoCollections as mc
+from configurations import SortOrder
+from constants.db_collections import MongoCollections as mc
 
 class VisitRepository(IVisitRepository, BaseRepository):
     def __init__(self):

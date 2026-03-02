@@ -5,9 +5,9 @@ import os
 import cloudinary
 from datetime import datetime
 import random
-from backend.constants.cloudinary import CloudinaryFolders, CloudinaryResourceType
+from constants.cloudinary import CloudinaryFolders, CloudinaryResourceType
 from werkzeug.urls import url_encode
-from backend.extensions import cache
+from extensions import cache
 from PIL import Image, ImageOps
 import ffmpeg
 import sys

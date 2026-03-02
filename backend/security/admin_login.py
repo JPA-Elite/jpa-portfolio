@@ -7,7 +7,7 @@ from dataclasses import dataclass
 
 from flask import request, session
 
-from backend.extensions import cache
+from extensions import cache
 from .ddos_guard import get_request_ip
 
 

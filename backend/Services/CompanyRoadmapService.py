@@ -2,11 +2,11 @@ import os
 import tempfile
 import uuid
 
-from backend.Models.CompanyRoadmap import CompanyRoadmap
-from backend.Repositories.Interfaces.ICompanyRoadmapRepository import ICompanyRoadmapRepository
-from backend.configurations import SortOrder
-from backend.constants.cloudinary import CloudinaryFolders, CloudinaryResourceType
-from backend.utils import cleanup_uploaded_files, convert_to_webp, upload_file_to_cloudinary
+from Models.CompanyRoadmap import CompanyRoadmap
+from Repositories.Interfaces.ICompanyRoadmapRepository import ICompanyRoadmapRepository
+from configurations import SortOrder
+from constants.cloudinary import CloudinaryFolders, CloudinaryResourceType
+from utils import cleanup_uploaded_files, convert_to_webp, upload_file_to_cloudinary
 
 _ROADMAP_I18N_LOCALES = ("en", "ceb", "fil_PH")
 

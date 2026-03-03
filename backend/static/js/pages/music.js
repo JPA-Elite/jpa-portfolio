@@ -30,6 +30,7 @@ const playerNowPlaying = document.getElementById("playerNowPlaying");
 const playerCoverImg = document.getElementById("playerCoverImg");
 const progressBar = document.getElementById("progressBar");
 const progress = document.getElementById("progress");
+const progressHandle = document.getElementById("progressHandle");
 const currentTimeEl = document.getElementById("currentTime");
 const totalDurationEl = document.getElementById("totalDuration");
 playPauseBtn = document.getElementById("playPauseBtn");
@@ -1042,7 +1043,14 @@ function updateProgress() {
         const currentTime = audioPlayer.currentTime;
         const duration = audioPlayer.duration;
         const progressPercent = (currentTime / duration) * 100;
-        progress.style.width = progressPercent + "%";
+        const handlePercent =
+            Number.isFinite(progressPercent) && !Number.isNaN(progressPercent)
+                ? Math.min(Math.max(progressPercent, 0), 100)
+                : 0;
+        progress.style.width = handlePercent + "%";
+        if (progressHandle) {
+            progressHandle.style.left = handlePercent + "%";
+        }
         currentTimeEl.textContent = formatTime(currentTime);
     }
 }

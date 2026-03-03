@@ -221,6 +221,22 @@ main {
     height: 100%;
     background: #2962ff;
     border-radius: 5px;
+    position: relative;
+}
+
+.player .progress-handle {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    transform: translate(-50%, -50%);
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    background: #2962ff;
+    border: 3px solid #fff;
+    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.25);
+    pointer-events: none;
+    z-index: 2;
 }
 
 .player .time {

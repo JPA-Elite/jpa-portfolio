@@ -121,6 +121,20 @@ main {
     display: flex;
     flex-direction: column;
     gap: 4px;
+    flex: 1;
+    min-width: 0;
+    max-width: calc(100% - 90px);
+}
+
+.music-item .left-content .title-artist .title,
+.music-item .left-content .title-artist .artist {
+    display: block;
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .music-item .left-content .artist {
@@ -1193,6 +1207,27 @@ nav ul li.active {
         font-size: 10px;
     }
 
+    .music-item .left-content {
+        flex: 1 1 auto;
+        min-width: 0;
+    }
+
+    .music-item .left-content .title-artist {
+        flex: 1 1 auto;
+        min-width: 0;
+        max-width: calc(100% - 90px);
+        box-sizing: border-box;
+    }
+
+    .music-item .left-content .title-artist .title,
+    .music-item .left-content .title-artist .artist {
+        max-width: 100%;
+    }
+
+    .music-item .share-section {
+        flex: 0 0 auto;
+    }
+
     .cover-img {
         width: 120px;
         height: 120px;
@@ -1469,18 +1504,16 @@ nav ul li.active {
     }
 
     .music-item .left-content .title-artist {
+        flex: 1;
         min-width: 0;
+        max-width: calc(100% - 96px);
     }
 
-    .music-item .left-content .title-artist > span:first-child {
+    .music-item .left-content .title-artist span {
         display: block;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
+        width: 100%;
+        min-width: 0;
         max-width: 100%;
-    }
-
-    .music-item .left-content .title-artist .artist {
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;

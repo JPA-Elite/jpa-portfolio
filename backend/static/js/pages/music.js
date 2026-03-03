@@ -45,6 +45,134 @@ let audioContext, analyser, source, dataArray, bufferLength, visualizerRunning;
 const prevPageBtn = document.querySelector(".page-btn[onclick='prevPage()']");
 const nextPageBtn = document.querySelector(".page-btn[onclick='nextPage()']");
 
+const ACTIVE_SONG_STORAGE_KEY = "musicPageActiveSongId";
+
+function getAudioSourceUrl(song) {
+    if (!song || !song.url) return "";
+    return isMobileDevice()
+        ? song.url
+        : `/api/proxy-audio?url=${encodeURIComponent(song.url)}`;
+}
+
+function setAudioSrcForSong(song) {
+    if (!song) return;
+    const source = getAudioSourceUrl(song);
+    if (!source) return;
+    audioPlayer.src = source;
+}
+
+function persistActiveSongId(songId) {
+    if (!songId || typeof window === "undefined" || !window.localStorage) return;
+    try {
+        window.localStorage.setItem(ACTIVE_SONG_STORAGE_KEY, String(songId));
+    } catch (error) {
+        console.warn("Unable to persist active song:", error);
+    }
+}
+
+function updateActiveSongDisplay(song, { prefix = "Now Playing:" } = {}) {
+    if (!song) return;
+    if (nowPlaying) {
+        nowPlaying.textContent = `${prefix} ${song.title}`;
+    }
+    if (coverImg) {
+        coverImg.src = song.image;
+    }
+    if (playerNowPlaying) {
+        playerNowPlaying.innerHTML = `
+            <div class="title-artist">
+                <span class="title">${song.title}</span>
+                <span class="artist">${song.artist}</span>
+            </div>
+        `;
+    }
+    if (playerCoverImg) {
+        playerCoverImg.src = song.image;
+    }
+    const albumSection = document.getElementById("albumSection");
+    if (albumSection) {
+        albumSection.style.backgroundImage = `url('${song.image}')`;
+    }
+    syncLyricsPanel(song);
+}
+
+function restoreActiveSongFromStorage() {
+    if (typeof window === "undefined" || !window.localStorage) return null;
+    if (!Array.isArray(musicData) || !musicData.length) return null;
+    try {
+        const storedId = window.localStorage.getItem(ACTIVE_SONG_STORAGE_KEY);
+        if (!storedId) return null;
+        const index = musicData.findIndex((track) => String(track.id) === storedId);
+        if (index === -1) return null;
+        const track = musicData[index];
+        currentSongIndex = index;
+        currentSongData = track;
+        setAudioSrcForSong(track);
+        updateActiveSongDisplay(track);
+        return track.id;
+    } catch (error) {
+        console.warn("Failed to restore active song:", error);
+        return null;
+    }
+}
+
+let pendingUrlHistoryPush = false;
+
+function requestUrlHistoryPush() {
+    pendingUrlHistoryPush = true;
+}
+
+function applyQueryParamsFromUrl() {
+    if (typeof window === "undefined") return;
+
+    const params = new URLSearchParams(window.location.search);
+    const pageParam = Number.parseInt(params.get("page") || "", 10);
+    if (!Number.isNaN(pageParam) && pageParam >= 1) {
+        currentPage = pageParam;
+    } else {
+        currentPage = 1;
+    }
+
+    const rawSearch = (params.get("search") || "").trim();
+    activeSearchQuery = rawSearch ? rawSearch.toLowerCase() : "";
+
+    const searchInput = document.getElementById("navbarSearch");
+    if (searchInput) {
+        searchInput.value = rawSearch;
+    }
+}
+
+function updateMusicPageUrl({ push = false } = {}) {
+    if (typeof window === "undefined") return;
+
+    const url = new URL(window.location.href);
+    const params = url.searchParams;
+
+    if (activeSearchQuery) {
+        params.set("search", activeSearchQuery);
+    } else {
+        params.delete("search");
+    }
+
+    if (currentPage > 1) {
+        params.set("page", String(currentPage));
+    } else {
+        params.delete("page");
+    }
+
+    params.set("per_page", String(itemsPerPage));
+
+    const hash = url.hash || "";
+    const newSearch = params.toString();
+    const newUrl = `${url.pathname}${newSearch ? `?${newSearch}` : ""}${hash}`;
+    const currentUrl = `${window.location.pathname}${window.location.search}${window.location.hash}`;
+    if (newUrl === currentUrl) return;
+
+    const historyState = window.history.state;
+    const method = push ? "pushState" : "replaceState";
+    window.history[method](historyState, "", newUrl);
+}
+
 function getCurrentSong() {
     if (currentSongData && typeof currentSongData === "object") {
         return currentSongData;
@@ -207,6 +335,7 @@ syncFullscreenButton(false);
 document.addEventListener("DOMContentLoaded", async () => {
     const root = document.documentElement;
     root.setAttribute("data-theme", "dark");
+    applyQueryParamsFromUrl();
 
     if (lyricsBtn) {
         lyricsBtn.addEventListener("click", toggleLyricsModal);
@@ -399,13 +528,26 @@ async function loadMusicData() {
 }
 
 async function loadAndRenderMusicPage({ resetSelection = false, activeSongId = null } = {}) {
+    const pushUrlState = pendingUrlHistoryPush;
+    pendingUrlHistoryPush = false;
+
     musicData = await loadMusicData();
 
-    if (resetSelection && musicData.length > 0) {
-        selectFirstSong();
+    let activeSongIdToRender = activeSongId ?? null;
+    if (!activeSongIdToRender) {
+        const restoredId = restoreActiveSongFromStorage();
+        if (restoredId) {
+            activeSongIdToRender = restoredId;
+        }
     }
 
-    renderList(activeSongId);
+    if (!activeSongIdToRender && resetSelection && musicData.length > 0) {
+        selectFirstSong();
+        activeSongIdToRender = currentSongData?.id ?? null;
+    }
+
+    renderList(activeSongIdToRender);
+    updateMusicPageUrl({ push: pushUrlState });
 }
 
 function selectFirstSong() {
@@ -418,35 +560,9 @@ function selectFirstSong() {
     currentSongIndex = Math.floor(Math.random() * musicData.length); // Randomly select an index
     const song = musicData[currentSongIndex];
     currentSongData = song;
-    audioPlayer.src = isMobileDevice()
-        ? song.url : `/api/proxy-audio?url=${encodeURIComponent(song.url)}`; // Set the audio source for the selected song
-    let nowPlaying = document.getElementById("nowPlaying");
-    let coverImg = document.getElementById("coverImg");
-    let playerNowPlaying = document.getElementById("playerNowPlaying");
-    let playerCoverImg = document.getElementById("playerCoverImg");
-    let albumSection = document.getElementById("albumSection");
-
-    if (nowPlaying) {
-        nowPlaying.textContent = `Selected: ${song.title}`;
-    }
-    if (coverImg) {
-        coverImg.src = song.image;
-    }
-    if (playerNowPlaying) {
-        playerNowPlaying.innerHTML = `
-                    <div class="title-artist">
-                        <span class="title">${song.title}</span>
-                        <span class="artist">${song.artist}</span>
-                    </div>
-                `;
-    }
-    if (playerCoverImg) {
-        playerCoverImg.src = song.image;
-    }
-    if (albumSection) {
-        albumSection.style.backgroundImage = `url('${song.image}')`;
-    }
-    syncLyricsPanel(song);
+    setAudioSrcForSong(song);
+    updateActiveSongDisplay(song, { prefix: "Selected:" });
+    persistActiveSongId(song.id);
 }
 
 function playSong(index) {
@@ -461,19 +577,9 @@ function playSong(index) {
 
     currentSongIndex = index;
     currentSongData = song;
-    audioPlayer.src = isMobileDevice()
-        ? song.url : `/api/proxy-audio?url=${encodeURIComponent(song.url)}`;
-
-    document.getElementById("nowPlaying").textContent = `Now Playing: ${song.title}`;
-    document.getElementById("coverImg").src = song.image;
-    document.getElementById("playerNowPlaying").innerHTML = `
-        <div class="title-artist">
-            <span class="title">${song.title}</span>
-            <span class="artist">${song.artist}</span>
-        </div>`;
-    document.getElementById("playerCoverImg").src = song.image;
-    document.getElementById("albumSection").style.backgroundImage = `url('${song.image}')`;
-    syncLyricsPanel(song);
+    setAudioSrcForSong(song);
+    updateActiveSongDisplay(song);
+    persistActiveSongId(song.id);
 
     coverImg.classList.add("spin");
     audioPlayer.play();
@@ -807,6 +913,7 @@ function updatePagination(source = null) {
 async function prevPage() {
     if (currentPage > 1) {
         currentPage--;
+        requestUrlHistoryPush();
         showTripleLoading?.();
         await loadAndRenderMusicPage();
         hideTripleLoading?.();
@@ -816,6 +923,7 @@ async function prevPage() {
 async function nextPage() {
     if (currentPage < totalPagesCount) {
         currentPage++;
+        requestUrlHistoryPush();
         showTripleLoading?.();
         await loadAndRenderMusicPage();
         hideTripleLoading?.();
@@ -855,7 +963,7 @@ function renderTracks(tracks, activeSongId = null) {
                     <ion-icon name="play-circle-outline" class="hover-play-icon"></ion-icon>
                 </div>
                 <div class="title-artist">
-                    <span>${track.title}</span>
+                    <span class="title">${track.title}</span>
                     <span class="artist">${track.artist}</span>
                 </div>
             </div>
@@ -1092,6 +1200,7 @@ async function handleSearch(query) {
     activeSearchQuery = query;
     filteredResults = null; // server-side filtering now
     currentPage = 1;
+    requestUrlHistoryPush();
     showTripleLoading?.();
     await loadAndRenderMusicPage();
     hideTripleLoading?.();
@@ -1103,6 +1212,7 @@ async function clearSearch() {
     filteredResults = null;
     activeSearchQuery = "";
     currentPage = 1;
+    requestUrlHistoryPush();
     showTripleLoading?.();
     await loadAndRenderMusicPage();
     hideTripleLoading?.();

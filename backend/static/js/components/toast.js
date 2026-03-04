@@ -5,7 +5,7 @@
     const DEFAULTS = {
         type: "info",
         title: "",
-        duration: 3500,
+        duration: 6000,
         position: "top-right",
         dismissible: true,
     };

@@ -36,7 +36,7 @@ document.getElementById("profileForm").addEventListener("submit", async function
     passwordError.classList.add("d-none");
     confirmPasswordError.classList.add("d-none");
     profileImageError.classList.add("d-none");
-    msgBox.innerHTML = "";
+    if (msgBox) msgBox.innerHTML = "";
 
     // Username validation
     if (!username) {
@@ -90,7 +90,7 @@ document.getElementById("profileForm").addEventListener("submit", async function
         const result = await adminSettingsService.updateProfile(data);
 
         if (result.ok) {
-            msgBox.innerHTML = `<div class="alert alert-success">${result.data?.message || "Updated."}</div>`;
+            window.notify(result.data?.message || "Updated.", "success");
 
             if (result.data?.profile_image) {
                 const preview = document.getElementById("profileImagePreview");
@@ -107,10 +107,10 @@ document.getElementById("profileForm").addEventListener("submit", async function
                 setTimeout(() => window.location.reload(), 900);
             }
         } else {
-            msgBox.innerHTML = `<div class="alert alert-danger">${result.data?.message || "Update failed."}</div>`;
+            window.notify(result.data?.message || "Update failed.", "error");
         }
     } catch (error) {
-        msgBox.innerHTML = `<div class="alert alert-danger">Something went wrong.</div>`;
+        window.notify("Something went wrong.", "error");
         console.error(error);
     } finally {
         if (!keepLoading) {

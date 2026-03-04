@@ -9,7 +9,7 @@
 
 {% block content %}
 <!-- Link to the external CSS file for the donation -->
-<link rel="stylesheet" href="{{ url_for('static', filename='css/pages/donation.css') }}" />
+<link rel="stylesheet" href="{{ static_asset('css/pages/donation.css') }}" />
 <section id="donation">
     <h2>{{ _('donation_header') }}</h2>
     <p>{{ _('donation_message') }}</p>

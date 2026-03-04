@@ -2,7 +2,9 @@
 <html>
 <head>
     <title>Site Not Available</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/pages/not_available.css') }}" />
+    <link rel="stylesheet" href="{{ static_asset('css/pages/not_available.css') }}" />
+    {{ vite_hmr() }}
+    {{ template_livereload() }}
     <link rel="stylesheet" href="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.css" />
 </head>
 <body>

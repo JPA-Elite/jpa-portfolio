@@ -1,3 +1,7 @@
+import { AdminCrudService } from "../../services/AdminCrudService.js";
+
+const adminVideoService = new AdminCrudService("video");
+
 let currentPage = 1;
 let currentButton = null;
 let perPage = 10;
@@ -75,10 +79,11 @@ async function loadVideo(page = 1) {
     modalContainer.innerHTML = "";
 
     try {
-        const response = await fetch(
-            `/admin/api/video-list?page=${page}&per_page=${perPage}&order=desc`
-        );
-        const data = await response.json();
+        const data = await adminVideoService.fetchList({
+            page,
+            perPage,
+            order: "desc",
+        });
 
         tbody.innerHTML = ""; // clear loading
         modalContainer.innerHTML = "";
@@ -360,18 +365,13 @@ async function addVideo() {
     formData.append("video_file", videoFile);
 
     try {
-        const res = await fetch("/admin/api/add-video", {
-            method: "POST",
-            body: formData,
-        });
-
-        if (res.ok) {
+        const result = await adminVideoService.add(formData);
+        if (result.ok) {
             bootstrap.Modal.getInstance(
                 document.getElementById("addVideoModal")
             ).hide();
-            const data = await res.json();
             loadVideo(currentPage);
-            alert(data.message);
+            alert(result.data?.message || "Video added.");
         } else {
             alert("Failed to add video.");
         }
@@ -448,19 +448,14 @@ async function updateVideo(videoId, formId) {
     if (videoFile) formData.append("video_file", videoFile);
 
     try {
-        const res = await fetch(`/admin/api/update-video/${videoId}`, {
-            method: "PUT",
-            body: formData,
-        });
-
-        if (res.ok) {
+        const result = await adminVideoService.update(videoId, formData);
+        if (result.ok) {
             bootstrap.Modal.getInstance(
                 document.getElementById(form.closest(".modal").id)
             ).hide();
 
-            const data = await res.json();
             loadVideo(currentPage);
-            alert(data.message);
+            alert(result.data?.message || "Video updated.");
         } else {
             alert("Failed to update video.");
         }
@@ -478,15 +473,11 @@ async function deleteVideo(videoId, modalId) {
     setButtonLoading(btn, true);
 
     try {
-        const res = await fetch(`/admin/api/delete-video/${videoId}`, {
-            method: "DELETE",
-        });
-
-        if (res.ok) {
+        const result = await adminVideoService.remove(videoId);
+        if (result.ok) {
             bootstrap.Modal.getInstance(document.getElementById(modalId)).hide();
-            const data = await res.json();
             loadVideo(currentPage);
-            alert(data.message);
+            alert(result.data?.message || "Video deleted.");
         } else {
             alert("Failed to delete video.");
         }
@@ -526,3 +517,9 @@ document.addEventListener("DOMContentLoaded", () => {
         loadVideo(currentPage);
     });
 });
+
+window.addVideo = addVideo;
+window.updateVideo = updateVideo;
+window.deleteVideo = deleteVideo;
+window.playVideoPreview = playVideoPreview;
+

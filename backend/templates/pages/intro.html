@@ -5,13 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="google-site-verification" content="Oh3O1doyGDCEg_BxM-IBiktbmgU1qhk1KT8S6tsWNi8" />
     <title>System Loading...</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/pages/intro.css') }}" />
+    <link rel="stylesheet" href="{{ static_asset('css/pages/intro.css') }}" />
+    {{ vite_hmr() }}
+    {{ template_livereload() }}
 </head>
 <body>
     <canvas id="brainCanvas"></canvas>
     <div class="container">
         <div class="welcome-text" id="typewriter"></div>
     </div>
-    <script src="{{ url_for('static', filename='js/pages/intro.js') }}"></script>
+    <script src="{{ static_asset('js/pages/intro.js') }}"></script>
 </body>
 </html>

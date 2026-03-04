@@ -1,3 +1,7 @@
+import { AdminCrudService } from "../../services/AdminCrudService.js";
+
+const adminKeyProjectService = new AdminCrudService("key-project");
+
 let currentPage = 1;
 let perPage = 10;
 
@@ -155,8 +159,11 @@ async function loadKeyProjects(page = 1) {
     modalContainer.innerHTML = "";
 
     try {
-        const res = await fetch(`/admin/api/key-project-list?page=${page}&per_page=${perPage}&order=asc`);
-        const data = await res.json();
+        const data = await adminKeyProjectService.fetchList({
+            page,
+            perPage,
+            order: "asc",
+        });
         const rows = data.projects || [];
 
         tbody.innerHTML = "";
@@ -375,11 +382,10 @@ async function addKeyProject() {
         const addSlidesContainer = document.getElementById("addProjectSlidesContainer");
         formData.append("slides_meta", JSON.stringify(serializeSlideRows(addSlidesContainer, formData)));
 
-        const res = await fetch("/admin/api/add-key-project", { method: "POST", body: formData });
-        const data = await res.json();
-        if (!res.ok) throw new Error(data.message || "Failed to add project");
+        const result = await adminKeyProjectService.add(formData);
+        if (!result.ok) throw new Error(result.data?.message || "Failed to add project");
 
-        alert(data.message || "Added");
+        alert(result.data?.message || "Added");
         const modalEl = document.getElementById("addProjectModal");
         bootstrap.Modal.getInstance(modalEl)?.hide();
         document.getElementById("addKeyProjectForm").reset();
@@ -417,11 +423,10 @@ async function updateKeyProject(projectId, suffix) {
         const editSlidesContainer = document.getElementById(`editProjectSlidesContainer${suffix}`);
         formData.append("slides_meta", JSON.stringify(serializeSlideRows(editSlidesContainer, formData)));
 
-        const res = await fetch(`/admin/api/update-key-project/${projectId}`, { method: "PUT", body: formData });
-        const data = await res.json();
-        if (!res.ok) throw new Error(data.message || "Failed to update project");
+        const result = await adminKeyProjectService.update(projectId, formData);
+        if (!result.ok) throw new Error(result.data?.message || "Failed to update project");
 
-        alert(data.message || "Updated");
+        alert(result.data?.message || "Updated");
         const modalEl = button.closest(".modal");
         bootstrap.Modal.getInstance(modalEl)?.hide();
         loadKeyProjects(currentPage);
@@ -437,11 +442,10 @@ async function deleteKeyProject(projectId, modalId) {
     const button = document.getElementById(`deleteProjectBtn_${projectId}`);
     setButtonLoading(button, true);
     try {
-        const res = await fetch(`/admin/api/delete-key-project/${projectId}`, { method: "DELETE" });
-        const data = await res.json();
-        if (!res.ok) throw new Error(data.message || "Failed to delete project");
+        const result = await adminKeyProjectService.remove(projectId);
+        if (!result.ok) throw new Error(result.data?.message || "Failed to delete project");
 
-        alert(data.message || "Deleted");
+        alert(result.data?.message || "Deleted");
         const modalEl = document.getElementById(modalId);
         bootstrap.Modal.getInstance(modalEl)?.hide();
         loadKeyProjects(currentPage);
@@ -488,3 +492,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     loadKeyProjects(currentPage);
 });
+
+window.addKeyProject = addKeyProject;
+window.updateKeyProject = updateKeyProject;
+window.deleteKeyProject = deleteKeyProject;
+window.playKeyProjectPreview = playKeyProjectPreview;
+

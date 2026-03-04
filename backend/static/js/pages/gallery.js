@@ -1,3 +1,7 @@
+import { GalleryLikeService } from "../services/GalleryLikeService.js";
+
+const galleryLikeService = new GalleryLikeService();
+
 // Format large numbers (1k+, 1.2M+, etc.)
 const galleryPageI18n = window.galleryPageI18n || {};
 const tg = (key, fallback) => galleryPageI18n[key] || fallback;
@@ -126,19 +130,7 @@ async function toggleLike(button, galleryId) {
     }
 
     try {
-        const formData = new FormData();
-        formData.append("gallery_id", JSON.stringify(galleryId));
-
-        const response = await fetch("/api/gallery-like", {
-            method: "POST",
-            body: formData,
-        });
-
-        if (!response.ok) {
-            throw new Error("Request failed");
-        }
-
-        const data = await response.json();
+        const data = await galleryLikeService.toggleLike(galleryId);
         const liked = data.data.like === true;
 
         const finalCount = liked ? count + 1 : Math.max(0, count - 1);
@@ -182,12 +174,7 @@ async function fetchGalleryCountsBatch(likeButtons) {
     const params = new URLSearchParams();
     params.set("gallery_ids", ids.join(","));
 
-    const response = await fetch(`/api/gallery-like/counts/batch?${params.toString()}`);
-    if (!response.ok) {
-        throw new Error("Failed to load gallery counts");
-    }
-
-    const data = await response.json();
+    const data = await galleryLikeService.fetchCountsBatch(ids);
     const items = data.items || {};
 
     likeButtons.forEach(btn => {
@@ -199,8 +186,7 @@ async function fetchGalleryCountsBatch(likeButtons) {
 
 async function fetchLikeCount(galleryId, btnElement) {
     try {
-        const response = await fetch(`/api/gallery-like/counts?gallery_id=${encodeURIComponent(galleryId)}`);
-        const data = await response.json();
+        const data = await galleryLikeService.fetchCounts(galleryId);
 
         updateCountUI(btnElement, {
             like_counts: data.like_counts,
@@ -255,3 +241,6 @@ document.addEventListener("DOMContentLoaded", () => {
     optimizeGalleryRendering();
     bootstrapGalleryCounts();
 });
+
+window.toggleLike = toggleLike;
+window.shareGalleryItem = shareGalleryItem;

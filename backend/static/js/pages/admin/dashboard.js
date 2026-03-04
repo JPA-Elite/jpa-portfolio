@@ -1,5 +1,5 @@
 // pages/dashboard.js
-import { VisitService } from "../../services/VisitService.js";
+import { AdminDashboardService } from "../../services/AdminDashboardService.js";
 
 // Count animation utility
 function animateCount(element, start, end, duration) {
@@ -31,7 +31,7 @@ function formatTimestamp(date = new Date()) {
 }
 
 document.addEventListener("DOMContentLoaded", async () => {
-    const visitService = new VisitService();
+    const dashboardService = new AdminDashboardService();
     const visitorCount = document.getElementById("visitorCount");
     const botCount = document.getElementById("botCount");
     const musicCount = document.getElementById("musicCount");
@@ -42,9 +42,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const lastUpdated = document.getElementById("dashboardLastUpdated");
 
     try {
-        const res = await fetch('/admin/api/dashboard-summary');
-        if (!res.ok) throw new Error('Failed to fetch dashboard summary');
-        const summary = await res.json();
+        const summary = await dashboardService.fetchSummary();
 
         animateCount(visitorCount, 0, Number(summary?.visitor_total_count || 0), 800);
         animateCount(botCount, 0, Number(summary?.bot_total_count || 0), 800);
@@ -123,13 +121,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 }
 
                 try {
-                    const res = await fetch('/admin/api/recent-activity');
-                    if (!res.ok) {
-                        activityData = [];
-                        renderPage();
-                        return;
-                    }
-                    const data = await res.json();
+                    const data = await dashboardService.fetchRecentActivity();
                     if (!Array.isArray(data)) activityData = [];
                     else activityData = data;
                     currentPage = 1;

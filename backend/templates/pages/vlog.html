@@ -11,9 +11,9 @@ endblock %}
 
 {% block content %}
 <!-- Link to the external CSS file for the vlog -->
-<link rel="stylesheet" href="{{ url_for('static', filename='css/pages/vlog.css', v='sharefix2') }}" />
-<link rel="stylesheet" href="{{ url_for('static', filename='css/plyr/plyr.css') }}" />
-<script src="{{ url_for('static', filename='js/plyr/plyr.js') }}"></script>
+<link rel="stylesheet" href="{{ static_asset('css/pages/vlog.css') }}" />
+<link rel="stylesheet" href="{{ static_asset('css/plyr/plyr.css') }}" />
+<script src="{{ static_asset('js/plyr/plyr.js') }}"></script>
 <div class="vlog-search-shell">
     {% include 'components/searchbar.html' %}
 </div>
@@ -131,5 +131,5 @@ endblock %}
     {{ super() }}
 {% endblock %}
 
-<script src="{{ url_for('static', filename='js/pages/vlog.js', v='sharefix2') }}"></script>
+<script type="module" src="{{ static_asset('js/pages/vlog.js') }}"></script>
 {% endblock %}

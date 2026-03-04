@@ -1,5 +1,5 @@
 <!-- Link to the external CSS file for the modal -->
-<link rel="stylesheet" href="{{ url_for('static', filename='css/components/chatbox.css') }}" />
+<link rel="stylesheet" href="{{ static_asset('css/components/chatbox.css') }}" />
 
 <div class="chatbox-container">
     <div class="chatbox-icon" onclick="toggleChatbox()">
@@ -70,4 +70,4 @@
         questionPrefix: {{ _('chat_question_prefix') | tojson }},
     };
 </script>
-<script src="{{ url_for('static', filename='js/components/chatbox.js') }}"></script>
+<script src="{{ static_asset('js/components/chatbox.js') }}"></script>

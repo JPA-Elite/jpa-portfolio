@@ -1,3 +1,7 @@
+import { VisitorService } from "../services/VisitorService.js";
+
+const visitorService = new VisitorService();
+
 // Function to open the image in a modal
 function previewImage(imageUrl) {
     var modal = document.getElementById("image-modal");
@@ -45,19 +49,15 @@ document.addEventListener("DOMContentLoaded", function () {
                 clearBtn.disabled = true;
                 clearBtn.innerText = "Clearing...";
 
-                fetch("/api/delete-page-system-info", {
-                    method: "DELETE",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ records: recordsToDelete })
-                })
-                    .then(response => response.json())
-                    .then(data => {
+                visitorService
+                    .deletePageSystemInfo(recordsToDelete)
+                    .then((data) => {
                         alert(data.message);
                         if (data.status === "success") {
                             location.reload();
                         }
                     })
-                    .catch(error => console.error("Error:", error))
+                    .catch((error) => console.error("Error:", error))
                     .finally(() => {
                         // Hide spinner and reset button
                         hideLoading();
@@ -68,3 +68,6 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 });
+
+window.previewImage = previewImage;
+window.closePreview = closePreview;

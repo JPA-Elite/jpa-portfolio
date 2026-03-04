@@ -1,4 +1,4 @@
-from flask import Flask, render_template, send_from_directory # type: ignore
+from flask import Flask, render_template, send_from_directory, url_for, Response, abort # type: ignore
 from backend.configurations import (
     ERROR_404_PAGE,
     LANGUAGES,
@@ -12,11 +12,21 @@ from flask_babel import Babel  # type: ignore
 from backend.pages import pages_bp
 from backend.api import api_bp
 from datetime import datetime, timedelta
+import json
 from backend.sitemap import sitemap_bp  # Import the sitemap blueprint
 import os
+import requests
+from markupsafe import Markup  # type: ignore
+import time
 from backend.extensions import cache
 from backend.security import init_ddos_guard
 from dotenv import load_dotenv
+
+def _env_bool(name: str, default: bool) -> bool:
+    raw = os.getenv(name)
+    if raw is None:
+        return default
+    return raw.strip().lower() in {"1", "true", "yes", "on"}
 
 load_dotenv()
 
@@ -25,14 +35,27 @@ if os.getenv("FLASK_DEBUG") is None and os.getenv("FLASK_ENV"):
     os.environ["FLASK_DEBUG"] = "1" if os.getenv("FLASK_ENV", "").lower() == "development" else "0"
 os.environ.pop("FLASK_ENV", None)
 
-app = Flask(__name__)
+backend_root = os.path.dirname(__file__)
+default_templates = os.path.join(backend_root, "templates")
+default_static = os.path.join(backend_root, "static")
 
+dist_root = os.path.join(backend_root, "dist", "frontend")
+dist_templates = os.path.join(dist_root, "templates")
+dist_static = os.path.join(dist_root, "static")
 
-def _env_bool(name: str, default: bool) -> bool:
-    raw = os.getenv(name)
-    if raw is None:
-        return default
-    return raw.strip().lower() in {"1", "true", "yes", "on"}
+use_frontend_dist = _env_bool("FRONTEND_DIST", False)
+use_dist_static = use_frontend_dist and os.path.isdir(dist_static)
+use_dist_templates = (
+    use_frontend_dist
+    and _env_bool("FRONTEND_DIST_TEMPLATES", False)
+    and os.path.isdir(dist_templates)
+)
+
+app = Flask(
+    __name__,
+    template_folder=dist_templates if use_dist_templates else default_templates,
+    static_folder=dist_static if use_dist_static else default_static,
+)
 
 app.config["SECRET_KEY"] = os.getenv('SECRET_KEY')
 app.config["LANGUAGES"] = LANGUAGES
@@ -67,6 +90,120 @@ app.register_blueprint(pages_bp)
 app.register_blueprint(sitemap_bp)
 app.register_blueprint(api_bp)
 
+_asset_manifest_cache = {"mtime": None, "data": {}}
+_vite_dev_server = os.getenv("VITE_DEV_SERVER", "").strip()
+_vite_proxy_assets = _env_bool("VITE_PROXY_ASSETS", False)
+_template_livereload = _env_bool("TEMPLATE_LIVERELOAD", False) or bool(_vite_dev_server)
+_template_mtime_cache = {"checked": 0.0, "mtime": 0.0}
+
+
+def _vite_asset_url(path: str) -> str:
+    base = _vite_dev_server.rstrip("/")
+    return f"{base}/{path.lstrip('/')}"
+
+
+def _load_asset_manifest() -> dict:
+    manifest_path = os.path.join(app.static_folder or "", "manifest.json")
+    if not os.path.isfile(manifest_path):
+        _asset_manifest_cache["mtime"] = None
+        _asset_manifest_cache["data"] = {}
+        return {}
+    mtime = os.path.getmtime(manifest_path)
+    if _asset_manifest_cache["mtime"] == mtime:
+        return _asset_manifest_cache["data"]
+    try:
+        with open(manifest_path, "r", encoding="utf-8") as handle:
+            manifest = json.load(handle)
+    except (OSError, json.JSONDecodeError):
+        _asset_manifest_cache["mtime"] = None
+        _asset_manifest_cache["data"] = {}
+        return {}
+    asset_map = {}
+    for key, entry in manifest.items():
+        if isinstance(entry, str):
+            file_name = entry
+            src_name = None
+        else:
+            file_name = entry.get("file")
+            src_name = entry.get("src")
+        if file_name:
+            asset_map[str(key).lstrip("/")] = file_name
+            if src_name:
+                asset_map[str(src_name).lstrip("/")] = file_name
+    _asset_manifest_cache["mtime"] = mtime
+    _asset_manifest_cache["data"] = asset_map
+    return asset_map
+
+
+def static_asset(path: str) -> str:
+    if not path:
+        return ""
+    clean_path = path.lstrip("/")
+    if _vite_dev_server:
+        if _vite_proxy_assets:
+            return url_for("vite_proxy", asset_path=clean_path)
+        return _vite_asset_url(clean_path)
+    asset_map = _load_asset_manifest()
+    mapped = asset_map.get(clean_path)
+    if mapped:
+        return url_for("static", filename=mapped)
+    return url_for("static", filename=clean_path)
+
+
+def vite_hmr() -> str:
+    if not _vite_dev_server:
+        return ""
+    src = static_asset("@vite/client")
+    return Markup(f'<script type="module" src="{src}"></script>')
+
+
+def _latest_template_mtime() -> float:
+    root = app.template_folder or ""
+    if not root or not os.path.isdir(root):
+        return 0.0
+    now = time.time()
+    if now - _template_mtime_cache["checked"] < 1.0:
+        return _template_mtime_cache["mtime"]
+    latest = 0.0
+    for dirpath, dirnames, filenames in os.walk(root):
+        if "__pycache__" in dirnames:
+            dirnames.remove("__pycache__")
+        for name in filenames:
+            if not name.endswith(".html"):
+                continue
+            try:
+                mtime = os.path.getmtime(os.path.join(dirpath, name))
+            except OSError:
+                continue
+            if mtime > latest:
+                latest = mtime
+    _template_mtime_cache["checked"] = now
+    _template_mtime_cache["mtime"] = latest
+    return latest
+
+
+def template_livereload() -> str:
+    if not _template_livereload:
+        return ""
+    return Markup(
+        "<script>"
+        "(function(){"
+        "var last=0;"
+        "async function check(){"
+        "try{"
+        "var res=await fetch('/_template_mtime',{cache:'no-store'});"
+        "var txt=await res.text();"
+        "var cur=Number(txt)||0;"
+        "if(last&&cur>last){location.reload();return;}"
+        "last=cur;"
+        "}catch(e){}"
+        "}"
+        "setInterval(check,1000);"
+        "check();"
+        "})();"
+        "</script>"
+    )
+
 
 # ✅ Initialize cache
 cache.init_app(app)
@@ -89,8 +226,38 @@ def inject_locale():
     return dict(get_locale=get_locale)
 
 @app.context_processor
+def inject_static_asset():
+    return dict(static_asset=static_asset)
+
+@app.context_processor
+def inject_vite_hmr():
+    return dict(vite_hmr=vite_hmr)
+
+@app.context_processor
+def inject_template_livereload():
+    return dict(template_livereload=template_livereload)
+
+@app.context_processor
 def inject_hcaptcha():
     return dict(HCAPTCHA_SITE_KEY=os.getenv("HCAPTCHA_SITE_KEY"))
+
+
+if _vite_dev_server:
+    @app.route("/_vite/<path:asset_path>")
+    def vite_proxy(asset_path):
+        target = _vite_asset_url(asset_path)
+        try:
+            resp = requests.get(target, timeout=10)
+        except requests.RequestException:
+            abort(502)
+        excluded = {"content-encoding", "transfer-encoding", "connection"}
+        headers = [(k, v) for k, v in resp.headers.items() if k.lower() not in excluded]
+        return Response(resp.content, status=resp.status_code, headers=headers)
+
+if _template_livereload:
+    @app.route("/_template_mtime")
+    def template_mtime():
+        return Response(str(_latest_template_mtime()), mimetype="text/plain")
 
 
 # ************************** LOCALE CONTANTS ********************************
@@ -119,7 +286,7 @@ def not_found(error):
 
 @app.route('/robots.txt')
 def robots():
-    return send_from_directory(os.path.join(app.root_path, 'static'), 'robots.txt')
+    return send_from_directory(app.static_folder, 'robots.txt')
 
 
 @app.template_filter()

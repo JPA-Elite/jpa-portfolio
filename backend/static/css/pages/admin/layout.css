@@ -19,3 +19,15 @@
     text-overflow: ellipsis; /* optional: shows ... if overflow */
     overflow: hidden; /* prevents spill */
 }
+
+/* Match user dropdown header to sidebar tone (override AdminLTE primary) */
+.app-header .user-menu .dropdown-menu .user-header,
+.app-header .user-menu .dropdown-menu .user-header.text-bg-primary {
+    background-color: #343a40 !important;
+    color: #fff;
+}
+
+.app-header .user-menu .dropdown-menu .user-header p,
+.app-header .user-menu .dropdown-menu .user-header small {
+    color: inherit;
+}

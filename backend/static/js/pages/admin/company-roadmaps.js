@@ -449,7 +449,7 @@ async function addCompanyRoadmap() {
             throw new Error(result.data?.message || "Failed to add company roadmap entry.");
         }
 
-        alert(result.data?.message || "Added");
+        window.notify(result.data?.message || "Added", "success");
         const modalEl = document.getElementById("addRoadmapModal");
         bootstrap.Modal.getInstance(modalEl)?.hide();
         document.getElementById("addCompanyRoadmapForm").reset();
@@ -460,7 +460,7 @@ async function addCompanyRoadmap() {
         loadCompanyRoadmaps(currentPage);
     } catch (error) {
         console.error(error);
-        alert(error.message || "Failed to add company roadmap entry.");
+        window.notify(error.message || "Failed to add company roadmap entry.", "error");
     } finally {
         setButtonLoading(button, false);
     }
@@ -477,13 +477,13 @@ async function updateCompanyRoadmap(roadmapId, suffix) {
             throw new Error(result.data?.message || "Failed to update company roadmap entry.");
         }
 
-        alert(result.data?.message || "Updated");
+        window.notify(result.data?.message || "Updated", "success");
         const modalEl = button.closest(".modal");
         bootstrap.Modal.getInstance(modalEl)?.hide();
         loadCompanyRoadmaps(currentPage);
     } catch (error) {
         console.error(error);
-        alert(error.message || "Failed to update company roadmap entry.");
+        window.notify(error.message || "Failed to update company roadmap entry.", "error");
     } finally {
         setButtonLoading(button, false);
     }
@@ -498,12 +498,12 @@ async function deleteCompanyRoadmap(roadmapId, modalId) {
             throw new Error(result.data?.message || "Failed to delete company roadmap entry.");
         }
 
-        alert(result.data?.message || "Deleted");
+        window.notify(result.data?.message || "Deleted", "success");
         bootstrap.Modal.getInstance(document.getElementById(modalId))?.hide();
         loadCompanyRoadmaps(currentPage);
     } catch (error) {
         console.error(error);
-        alert(error.message || "Failed to delete company roadmap entry.");
+        window.notify(error.message || "Failed to delete company roadmap entry.", "error");
     } finally {
         setButtonLoading(button, false);
     }

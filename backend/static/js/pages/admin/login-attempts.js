@@ -119,13 +119,13 @@ async function deleteLoginAttempt(loginAttemptId, modalId) {
         if (result.ok) {
             bootstrap.Modal.getInstance(document.getElementById(modalId)).hide();
             loadLoginAttempt(currentPage);
-            alert(result.data?.message || "Deleted.");
+            window.notify(result.data?.message || "Deleted.", "success");
         } else {
-            alert("Failed to delete login attempt.");
+            window.notify("Failed to delete login attempt.", "error");
         }
     } catch (error) {
         console.error("Error deleting login attempt:", error);
-        alert("An error occurred while deleting the login attempt.");
+        window.notify("An error occurred while deleting the login attempt.", "error");
     } finally {
         setButtonLoading(btn, false);
     }

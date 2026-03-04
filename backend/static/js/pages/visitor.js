@@ -52,7 +52,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 visitorService
                     .deletePageSystemInfo(recordsToDelete)
                     .then((data) => {
-                        alert(data.message);
+                        window.notify(data.message, "success");
                         if (data.status === "success") {
                             location.reload();
                         }

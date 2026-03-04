@@ -338,14 +338,14 @@ async function addVideo() {
         !descriptions.fil_PH ||
         !videoFile
     ) {
-        alert("All titles, descriptions, and a video file are required.");
+        window.notify("All titles, descriptions, and a video file are required.", "warning");
         setButtonLoading(btn, false);
         return;
     }
 
     // ✅ File type validation
     if (!videoFile.type.startsWith("video/")) {
-        alert("Please upload a valid video file.");
+        window.notify("Please upload a valid video file.", "warning");
         setButtonLoading(btn, false);
         return;
     }
@@ -353,7 +353,7 @@ async function addVideo() {
     // ✅ Validate tags
     const tagError = validateTags(tags);
     if (tagError) {
-        alert(tagError);
+        window.notify(tagError, "warning");
         setButtonLoading(btn, false);
         return;
     }
@@ -371,13 +371,13 @@ async function addVideo() {
                 document.getElementById("addVideoModal")
             ).hide();
             loadVideo(currentPage);
-            alert(result.data?.message || "Video added.");
+            window.notify(result.data?.message || "Video added.", "success");
         } else {
-            alert("Failed to add video.");
+            window.notify("Failed to add video.", "error");
         }
     } catch (err) {
         console.error(err);
-        alert("Error adding video.");
+        window.notify("Error adding video.", "error");
     } finally {
         setButtonLoading(btn, false);
     }
@@ -422,13 +422,13 @@ async function updateVideo(videoId, formId) {
         !descriptions.fr ||
         !descriptions.fil_PH
     ) {
-        alert("All titles and descriptions are required.");
+        window.notify("All titles and descriptions are required.", "warning");
         setButtonLoading(btn, false);
         return;
     }
 
     if (videoFile && !videoFile.type.startsWith("video/")) {
-        alert("Please upload a valid video file.");
+        window.notify("Please upload a valid video file.", "warning");
         setButtonLoading(btn, false);
         return;
     }
@@ -436,7 +436,7 @@ async function updateVideo(videoId, formId) {
     // ✅ Validate tags
     const tagError = validateTags(tags);
     if (tagError) {
-        alert(tagError);
+        window.notify(tagError, "warning");
         setButtonLoading(btn, false);
         return;
     }
@@ -455,13 +455,13 @@ async function updateVideo(videoId, formId) {
             ).hide();
 
             loadVideo(currentPage);
-            alert(result.data?.message || "Video updated.");
+            window.notify(result.data?.message || "Video updated.", "success");
         } else {
-            alert("Failed to update video.");
+            window.notify("Failed to update video.", "error");
         }
     } catch (err) {
         console.error(err);
-        alert("Error updating video.");
+        window.notify("Error updating video.", "error");
     } finally {
         // 🔹 Restore button
         setButtonLoading(btn, false);
@@ -477,14 +477,14 @@ async function deleteVideo(videoId, modalId) {
         if (result.ok) {
             bootstrap.Modal.getInstance(document.getElementById(modalId)).hide();
             loadVideo(currentPage);
-            alert(result.data?.message || "Video deleted.");
+            window.notify(result.data?.message || "Video deleted.", "success");
         } else {
-            alert("Failed to delete video.");
+            window.notify("Failed to delete video.", "error");
         }
 
     } catch (error) {
         console.error("Error deleting video:", error);
-        alert("An error occurred while deleting the video.");
+        window.notify("An error occurred while deleting the video.", "error");
     }
     finally {
         setButtonLoading(btn, false);

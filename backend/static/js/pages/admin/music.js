@@ -296,19 +296,19 @@ async function addMusic() {
 
     // ✅ Required field checks
     if (!title || !artist || !musicFile || !imageFile) {
-        alert("All fields are required.");
+        window.notify("All fields are required.", "warning");
         setButtonLoading(btn, false);
         return;
     }
 
     // ✅ File type validation
     if (!musicFile.type.startsWith("audio/")) {
-        alert("Please upload a valid music file.");
+        window.notify("Please upload a valid music file.", "warning");
         setButtonLoading(btn, false);
         return;
     }
     if (!imageFile.type.startsWith("image/")) {
-        alert("Please upload a valid image file.");
+        window.notify("Please upload a valid image file.", "warning");
         setButtonLoading(btn, false);
         return;
     }
@@ -327,13 +327,13 @@ async function addMusic() {
                 document.getElementById("addMusicModal")
             ).hide();
             loadMusic(currentPage);
-            alert(result.data?.message || "Music added.");
+            window.notify(result.data?.message || "Music added.", "success");
         } else {
-            alert("Failed to add music.");
+            window.notify("Failed to add music.", "error");
         }
     } catch (err) {
         console.error(err);
-        alert("Error adding music.");
+        window.notify("Error adding music.", "error");
     } finally {
         setButtonLoading(btn, false);
     }
@@ -365,19 +365,19 @@ async function updateMusic(musicId, formId) {
 
     // ✅ Required checks
     if (!title || !artist) {
-        alert("Title and Artist are required.");
+        window.notify("Title and Artist are required.", "warning");
         setButtonLoading(btn, false);
         return;
     }
 
     // ✅ File type validation (only if provided)
     if (musicFile && !musicFile.type.startsWith("audio/")) {
-        alert("Please upload a valid music file.");
+        window.notify("Please upload a valid music file.", "warning");
         setButtonLoading(btn, false);
         return;
     }
     if (imageFile && !imageFile.type.startsWith("image/")) {
-        alert("Please upload a valid image file.");
+        window.notify("Please upload a valid image file.", "warning");
         setButtonLoading(btn, false);
         return;
     }
@@ -397,13 +397,13 @@ async function updateMusic(musicId, formId) {
             ).hide();
 
             loadMusic(currentPage);
-            alert(result.data?.message || "Music updated.");
+            window.notify(result.data?.message || "Music updated.", "success");
         } else {
-            alert("Failed to update music.");
+            window.notify("Failed to update music.", "error");
         }
     } catch (err) {
         console.error(err);
-        alert("Error updating music.");
+        window.notify("Error updating music.", "error");
     } finally {
         // 🔹 Restore button
         setButtonLoading(btn, false);
@@ -419,13 +419,13 @@ async function deleteMusic(musicId, modalId) {
     if (result.ok) {
         bootstrap.Modal.getInstance(document.getElementById(modalId)).hide();
         loadMusic(currentPage);
-        alert(result.data?.message || "Music deleted.");
+        window.notify(result.data?.message || "Music deleted.", "success");
     } else {
-        alert("Failed to delete music.");
+        window.notify("Failed to delete music.", "error");
     }
     } catch (err) {
         console.error(err);
-        alert("Error deleting music.");
+        window.notify("Error deleting music.", "error");
     } finally {
         setButtonLoading(btn, false);
     }

@@ -17,6 +17,7 @@
     <link rel="stylesheet" href="{{ static_asset('css/pages/styles.css') }}" />
     <link rel="stylesheet" href="{{ static_asset('css/pages/profile.css') }}" />
     <link rel="stylesheet" href="{{ static_asset('css/themes.css') }}" />
+    <link rel="stylesheet" href="{{ static_asset('css/components/toast.css') }}" />
     <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='images/favicon.ico') }}">
     <script src="{{ static_asset('js/utils.js') }}"></script>
     {{ vite_hmr() }}
@@ -280,6 +281,7 @@
         window.isProfessionalMode = "{{ request.args.get('mode') == 'professional' }}";
         window.pageLocale = {{ get_locale() | tojson }};
     </script>
+    <script src="{{ static_asset('js/components/toast.js') }}"></script>
     <script src="{{ static_asset('js/pages/base.js') }}"></script>
     {% block modal_script %}
         <script src="{{ static_asset('js/components/modal.js') }}"></script>

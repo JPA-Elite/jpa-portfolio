@@ -351,13 +351,13 @@ async function addGallery() {
         !descriptions.fil_PH ||
         !imageFile
     ) {
-        alert("All titles, descriptions, and a gallery file are required.");
+        window.notify("All titles, descriptions, and a gallery file are required.", "warning");
         setButtonLoading(btn, false);
         return;
     }
 
     if (!imageFile.type.startsWith("image/")) {
-        alert("Please upload a valid image file.");
+        window.notify("Please upload a valid image file.", "warning");
         setButtonLoading(btn, false);
         return;
     }
@@ -365,7 +365,7 @@ async function addGallery() {
     // ✅ Validate tags
     const tagError = validateTags(tags);
     if (tagError) {
-        alert(tagError);
+        window.notify(tagError, "warning");
         setButtonLoading(btn, false);
         return;
     }
@@ -383,13 +383,13 @@ async function addGallery() {
                 document.getElementById("addGalleryModal")
             ).hide();
             loadGallery(currentPage);
-            alert(result.data?.message || "Gallery added.");
+            window.notify(result.data?.message || "Gallery added.", "success");
         } else {
-            alert("Failed to add gallery.");
+            window.notify("Failed to add gallery.", "error");
         }
     } catch (err) {
         console.error(err);
-        alert("Error adding gallery.");
+        window.notify("Error adding gallery.", "error");
     } finally {
         setButtonLoading(btn, false);
     }
@@ -441,13 +441,13 @@ async function updateGallery(galleryId, formId) {
         !descriptions.fr ||
         !descriptions.fil_PH
     ) {
-        alert("All titles and descriptions are required.");
+        window.notify("All titles and descriptions are required.", "warning");
         setButtonLoading(btn, false);
         return;
     }
 
     if (imageFile && !imageFile.type.startsWith("image/")) {
-        alert("Please upload a valid image file.");
+        window.notify("Please upload a valid image file.", "warning");
         setButtonLoading(btn, false);
         return;
     }
@@ -455,7 +455,7 @@ async function updateGallery(galleryId, formId) {
     // ✅ Validate tags
     const tagError = validateTags(tags);
     if (tagError) {
-        alert(tagError);
+        window.notify(tagError, "warning");
         setButtonLoading(btn, false);
         return;
     }
@@ -474,13 +474,13 @@ async function updateGallery(galleryId, formId) {
             ).hide();
 
             loadGallery(currentPage);
-            alert(result.data?.message || "Gallery updated.");
+            window.notify(result.data?.message || "Gallery updated.", "success");
         } else {
-            alert("Failed to update gallery.");
+            window.notify("Failed to update gallery.", "error");
         }
     } catch (err) {
         console.error(err);
-        alert("Error updating gallery.");
+        window.notify("Error updating gallery.", "error");
     } finally {
         // 🔹 Restore button
         setButtonLoading(btn, false);
@@ -496,14 +496,14 @@ async function deleteGallery(galleryId, modalId) {
         if (result.ok) {
             bootstrap.Modal.getInstance(document.getElementById(modalId)).hide();
             loadGallery(currentPage);
-            alert(result.data?.message || "Gallery deleted.");
+            window.notify(result.data?.message || "Gallery deleted.", "success");
         } else {
-            alert("Failed to delete gallery.");
+            window.notify("Failed to delete gallery.", "error");
         }
 
     } catch (error) {
         console.error("Error deleting gallery:", error);
-        alert("An error occurred while deleting the gallery.");
+        window.notify("An error occurred while deleting the gallery.", "error");
     } finally {
         setButtonLoading(btn, false);
     }

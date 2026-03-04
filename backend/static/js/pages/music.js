@@ -692,7 +692,7 @@ function downloadSong() {
     const audio = document.getElementById("audioPlayer");
     const src = audio.getAttribute("src");
     if (!src) {
-        alert("No song is currently loaded.");
+        window.notify("No song is currently loaded.", "warning");
         return;
     }
 
@@ -708,7 +708,7 @@ function downloadSong() {
 function copyLink(url = null) {
     const textToCopy = url || audioPlayer?.src;
     if (!textToCopy) {
-        alert("No song is currently loaded.");
+        window.notify("No song is currently loaded.", "warning");
         return;
     }
 
@@ -741,7 +741,7 @@ function fallbackCopy(text) {
         showCopyPopup();
     } catch (err) {
         console.error("Fallback copy failed:", err);
-        alert("Failed to copy the link.");
+        window.notify("Failed to copy the link.", "error");
     }
     document.body.removeChild(textarea);
 }

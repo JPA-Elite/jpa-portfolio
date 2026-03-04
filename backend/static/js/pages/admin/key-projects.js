@@ -362,7 +362,7 @@ async function addKeyProject() {
     try {
         const imageFile = document.getElementById("addImageFile").files[0];
         if (!imageFile) {
-            alert("Image is required.");
+            window.notify("Image is required.", "warning");
             return;
         }
 
@@ -385,7 +385,7 @@ async function addKeyProject() {
         const result = await adminKeyProjectService.add(formData);
         if (!result.ok) throw new Error(result.data?.message || "Failed to add project");
 
-        alert(result.data?.message || "Added");
+        window.notify(result.data?.message || "Added", "success");
         const modalEl = document.getElementById("addProjectModal");
         bootstrap.Modal.getInstance(modalEl)?.hide();
         document.getElementById("addKeyProjectForm").reset();
@@ -395,7 +395,7 @@ async function addKeyProject() {
         loadKeyProjects(currentPage);
     } catch (err) {
         console.error(err);
-        alert(err.message || "Failed to add key project");
+        window.notify(err.message || "Failed to add key project", "error");
     } finally {
         setButtonLoading(button, false);
     }
@@ -426,13 +426,13 @@ async function updateKeyProject(projectId, suffix) {
         const result = await adminKeyProjectService.update(projectId, formData);
         if (!result.ok) throw new Error(result.data?.message || "Failed to update project");
 
-        alert(result.data?.message || "Updated");
+        window.notify(result.data?.message || "Updated", "success");
         const modalEl = button.closest(".modal");
         bootstrap.Modal.getInstance(modalEl)?.hide();
         loadKeyProjects(currentPage);
     } catch (err) {
         console.error(err);
-        alert(err.message || "Failed to update key project");
+        window.notify(err.message || "Failed to update key project", "error");
     } finally {
         setButtonLoading(button, false);
     }
@@ -445,13 +445,13 @@ async function deleteKeyProject(projectId, modalId) {
         const result = await adminKeyProjectService.remove(projectId);
         if (!result.ok) throw new Error(result.data?.message || "Failed to delete project");
 
-        alert(result.data?.message || "Deleted");
+        window.notify(result.data?.message || "Deleted", "success");
         const modalEl = document.getElementById(modalId);
         bootstrap.Modal.getInstance(modalEl)?.hide();
         loadKeyProjects(currentPage);
     } catch (err) {
         console.error(err);
-        alert(err.message || "Failed to delete key project");
+        window.notify(err.message || "Failed to delete key project", "error");
     } finally {
         setButtonLoading(button, false);
     }

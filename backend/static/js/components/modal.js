@@ -685,12 +685,13 @@ if (!window.__modal_js_loaded__) {
 
         if (!text || !currentSelectedId) return;
         if (text.length > MAX_COMMENT_LENGTH) {
-            alert(
+            window.notify(
                 tm(
                     "commentTooLong",
                     "Comment cannot exceed {max} characters.",
                     { max: MAX_COMMENT_LENGTH }
-                )
+                ),
+                "warning"
             );
             return;
         }

@@ -52,10 +52,10 @@ dev:
 
 # Run Flask with Vite dev server assets (same-origin via proxy)
 start-local-vite:
-	VITE_DEV_SERVER=http://127.0.0.1:5173 VITE_PROXY_ASSETS=1 python -m backend.app
+	VITE_DEV_SERVER=http://127.0.0.1:5173 python -m backend.app
 
 start-local-vite-cmd:
-	cmd /C "set VITE_DEV_SERVER=http://127.0.0.1:5173 && set VITE_PROXY_ASSETS=1 && python -m backend.app"
+	cmd /C "set VITE_DEV_SERVER=http://127.0.0.1:5173 && python -m backend.app"
 
 # Stop the Docker container
 stop:

@@ -84,10 +84,14 @@ document.addEventListener("DOMContentLoaded", async () => {
             if (currentPage > totalPages) currentPage = totalPages;
             const start = (currentPage - 1) * perPage;
             const end = Math.min(total, start + perPage);
+            const atFirstPage = currentPage <= 1;
+            const atLastPage = currentPage >= totalPages;
 
             if (total === 0) {
                 tableBody.innerHTML = '<tr><td colspan="5" class="text-center text-muted">No recent activity.</td></tr>';
                 pageInfo.textContent = '';
+                prevBtn.disabled = true;
+                nextBtn.disabled = true;
                 return;
             }
 
@@ -109,6 +113,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             tableBody.innerHTML = rows;
             pageInfo.textContent = `${start + 1}-${end} of ${total}`;
+            prevBtn.disabled = atFirstPage;
+            nextBtn.disabled = atLastPage;
         }
 
         async function loadActivity() {

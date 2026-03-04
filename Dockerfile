@@ -13,6 +13,8 @@ RUN apt-get update -qq \
       libgl1 \
       # libgl1-mesa-glx \ #deprecated
       libglib2.0-0 \
+      nodejs \
+      npm \
       && apt-get clean \
       && rm -rf /var/lib/apt/lists/*
 
@@ -26,8 +28,20 @@ COPY ./backend/requirements.txt /app/
 # Install dependencies inside the venv
 RUN pip install --no-cache-dir -r requirements.txt
 
+# Copy frontend build config and install node deps
+COPY ./package.json /app/
+COPY ./vite.config.mjs /app/
+RUN npm install
+
 # Copy the rest of the app
 COPY . /app
+
+# Build frontend assets for hashed filenames
+RUN npm run build:frontend
+
+# Serve built frontend assets + templates by default
+ENV FRONTEND_DIST=1
+ENV FRONTEND_DIST_TEMPLATES=1
 
 # Expose the port
 EXPOSE 8080

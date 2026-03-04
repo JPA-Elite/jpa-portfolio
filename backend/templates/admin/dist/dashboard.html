@@ -8,7 +8,7 @@
   crossorigin="anonymous" />
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jsvectormap@1.5.3/dist/css/jsvectormap.min.css"
   crossorigin="anonymous" />
-<link rel="stylesheet" href="{{ url_for('static', filename='css/pages/admin/dashboard.css') }}" />
+<link rel="stylesheet" href="{{ static_asset('css/pages/admin/dashboard.css') }}" />
 {% endblock %}
 
 {% block content %}
@@ -181,5 +181,5 @@
 
 {% block scripts %}
 {{ super() }}
-<script type="module" src="{{ url_for('static', filename='js/pages/admin/dashboard.js') }}"></script>
+<script type="module" src="{{ static_asset('js/pages/admin/dashboard.js') }}"></script>
 {% endblock %}

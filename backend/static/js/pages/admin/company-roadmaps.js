@@ -1,3 +1,7 @@
+import { AdminCrudService } from "../../services/AdminCrudService.js";
+
+const adminCompanyRoadmapService = new AdminCrudService("company-roadmap");
+
 let currentPage = 1;
 let perPage = 10;
 
@@ -196,8 +200,11 @@ async function loadCompanyRoadmaps(page = 1) {
     modalContainer.innerHTML = "";
 
     try {
-        const res = await fetch(`/admin/api/company-roadmap-list?page=${page}&per_page=${perPage}&order=asc`);
-        const data = await res.json();
+        const data = await adminCompanyRoadmapService.fetchList({
+            page,
+            perPage,
+            order: "asc",
+        });
         const rows = data.roadmaps || [];
 
         tbody.innerHTML = "";
@@ -437,11 +444,12 @@ async function addCompanyRoadmap() {
         }
 
         const formData = collectRoadmapFormData("add");
-        const res = await fetch("/admin/api/add-company-roadmap", { method: "POST", body: formData });
-        const data = await res.json();
-        if (!res.ok) throw new Error(data.message || "Failed to add company roadmap entry.");
+        const result = await adminCompanyRoadmapService.add(formData);
+        if (!result.ok) {
+            throw new Error(result.data?.message || "Failed to add company roadmap entry.");
+        }
 
-        alert(data.message || "Added");
+        alert(result.data?.message || "Added");
         const modalEl = document.getElementById("addRoadmapModal");
         bootstrap.Modal.getInstance(modalEl)?.hide();
         document.getElementById("addCompanyRoadmapForm").reset();
@@ -464,11 +472,12 @@ async function updateCompanyRoadmap(roadmapId, suffix) {
 
     try {
         const formData = collectRoadmapFormData("edit", suffix);
-        const res = await fetch(`/admin/api/update-company-roadmap/${roadmapId}`, { method: "PUT", body: formData });
-        const data = await res.json();
-        if (!res.ok) throw new Error(data.message || "Failed to update company roadmap entry.");
+        const result = await adminCompanyRoadmapService.update(roadmapId, formData);
+        if (!result.ok) {
+            throw new Error(result.data?.message || "Failed to update company roadmap entry.");
+        }
 
-        alert(data.message || "Updated");
+        alert(result.data?.message || "Updated");
         const modalEl = button.closest(".modal");
         bootstrap.Modal.getInstance(modalEl)?.hide();
         loadCompanyRoadmaps(currentPage);
@@ -484,11 +493,12 @@ async function deleteCompanyRoadmap(roadmapId, modalId) {
     const button = document.getElementById(`deleteRoadmapBtn_${roadmapId}`);
     setButtonLoading(button, true);
     try {
-        const res = await fetch(`/admin/api/delete-company-roadmap/${roadmapId}`, { method: "DELETE" });
-        const data = await res.json();
-        if (!res.ok) throw new Error(data.message || "Failed to delete company roadmap entry.");
+        const result = await adminCompanyRoadmapService.remove(roadmapId);
+        if (!result.ok) {
+            throw new Error(result.data?.message || "Failed to delete company roadmap entry.");
+        }
 
-        alert(data.message || "Deleted");
+        alert(result.data?.message || "Deleted");
         bootstrap.Modal.getInstance(document.getElementById(modalId))?.hide();
         loadCompanyRoadmaps(currentPage);
     } catch (error) {
@@ -544,3 +554,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     loadCompanyRoadmaps(currentPage);
 });
+
+window.addCompanyRoadmap = addCompanyRoadmap;
+window.updateCompanyRoadmap = updateCompanyRoadmap;
+window.deleteCompanyRoadmap = deleteCompanyRoadmap;
+window.playCompanyRoadmapPreview = playCompanyRoadmapPreview;
+

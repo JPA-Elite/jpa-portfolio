@@ -1,3 +1,7 @@
+import { AdminCrudService } from "../../services/AdminCrudService.js";
+
+const adminMusicService = new AdminCrudService("music");
+
 let currentPage = 1;
 let currentAudio = null;
 let currentButton = null;
@@ -119,10 +123,11 @@ async function loadMusic(page = 1) {
     modalContainer.innerHTML = "";
 
     try {
-        const response = await fetch(
-            `/admin/api/music-list?page=${page}&per_page=${perPage}&order=desc`
-        );
-        const data = await response.json();
+        const data = await adminMusicService.fetchList({
+            page,
+            perPage,
+            order: "desc",
+        });
 
         tbody.innerHTML = ""; // clear loading
         modalContainer.innerHTML = "";
@@ -316,18 +321,13 @@ async function addMusic() {
     formData.append("image_file", imageFile);
 
     try {
-        const res = await fetch("/admin/api/add-music", {
-            method: "POST",
-            body: formData,
-        });
-
-        if (res.ok) {
+        const result = await adminMusicService.add(formData);
+        if (result.ok) {
             bootstrap.Modal.getInstance(
                 document.getElementById("addMusicModal")
             ).hide();
-            const data = await res.json();
             loadMusic(currentPage);
-            alert(data.message);
+            alert(result.data?.message || "Music added.");
         } else {
             alert("Failed to add music.");
         }
@@ -390,19 +390,14 @@ async function updateMusic(musicId, formId) {
     if (imageFile) formData.append("image_file", imageFile);
 
     try {
-        const res = await fetch(`/admin/api/update-music/${musicId}`, {
-            method: "PUT",
-            body: formData,
-        });
-
-        if (res.ok) {
+        const result = await adminMusicService.update(musicId, formData);
+        if (result.ok) {
             bootstrap.Modal.getInstance(
                 document.getElementById(form.closest(".modal").id)
             ).hide();
 
-            const data = await res.json();
             loadMusic(currentPage);
-            alert(data.message);
+            alert(result.data?.message || "Music updated.");
         } else {
             alert("Failed to update music.");
         }
@@ -420,15 +415,11 @@ async function deleteMusic(musicId, modalId) {
     setButtonLoading(btn, true);
 
     try {
-    const res = await fetch(`/admin/api/delete-music/${musicId}`, {
-        method: "DELETE",
-    });
-
-    if (res.ok) {
+    const result = await adminMusicService.remove(musicId);
+    if (result.ok) {
         bootstrap.Modal.getInstance(document.getElementById(modalId)).hide();
-        const data = await res.json();
         loadMusic(currentPage);
-        alert(data.message);
+        alert(result.data?.message || "Music deleted.");
     } else {
         alert("Failed to delete music.");
     }
@@ -474,3 +465,10 @@ document.addEventListener("DOMContentLoaded", () => {
         loadMusic(currentPage);
     });
 });
+
+window.addMusic = addMusic;
+window.updateMusic = updateMusic;
+window.deleteMusic = deleteMusic;
+window.togglePreview = togglePreview;
+window.playMusicPreview = playMusicPreview;
+

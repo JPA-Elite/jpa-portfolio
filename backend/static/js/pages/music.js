@@ -1,3 +1,7 @@
+import { MusicService } from "../services/MusicService.js";
+
+const musicService = new MusicService();
+
 // Declare global variables
 let audioPlayer,
     playPauseBtn,
@@ -499,12 +503,7 @@ async function loadMusicData() {
         params.set("search", activeSearchQuery);
     }
 
-    const response = await fetch(`/api/music-list?${params.toString()}`);
-    if (!response.ok) {
-        throw new Error(`Failed to fetch music list: ${response.status}`);
-    }
-
-    const result = await response.json();
+    const result = await musicService.fetchMusicList(params);
     const items = result?.music || [];
     totalMusicCount = Number(result?.total_music || 0);
     totalPagesCount = Math.max(1, Number(result?.total_pages || 1));
@@ -1330,4 +1329,18 @@ function stopVisualizer() {
     // 🚫 Do NOT touch audio context or source, only pause animation
     visualizerRunning = false;
 }
+
+
+window.handleSearch = handleSearch;
+window.clearSearch = clearSearch;
+window.prevPage = prevPage;
+window.nextPage = nextPage;
+window.downloadSong = downloadSong;
+window.copyLink = copyLink;
+window.prevSong = prevSong;
+window.togglePlay = togglePlay;
+window.nextSong = nextSong;
+window.toggleShuffle = toggleShuffle;
+window.toggleAutoplay = toggleAutoplay;
+window.toggleFullscreen = toggleFullscreen;
 

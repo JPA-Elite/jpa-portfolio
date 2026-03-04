@@ -1,4 +1,4 @@
-<link rel="stylesheet" href="{{ url_for('static', filename='css/components/searchbar.css') }}" />
+<link rel="stylesheet" href="{{ static_asset('css/components/searchbar.css') }}" />
 <form action="{{ base_url }}" method="GET">
     <div class="search-container">
         <!-- Section for displaying selected tags -->
@@ -30,4 +30,4 @@
         </div>
     </div>
 </form>
-<script src="{{ url_for('static', filename='js/components/searchbar.js') }}"></script>
+<script src="{{ static_asset('js/components/searchbar.js') }}"></script>

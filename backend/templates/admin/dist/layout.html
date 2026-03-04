@@ -10,7 +10,7 @@
 
     <!--begin::Accessibility Features-->
     <!-- Skip links will be dynamically added by accessibility.js -->
-    <link rel="preload" href="{{ url_for('static', filename='css/pages/admin/adminlte.css') }}" as="style" />
+    <link rel="preload" href="{{ static_asset('css/pages/admin/adminlte.css') }}" as="style" />
     <!--end::Accessibility Features-->
 
     <!--begin::Fonts-->
@@ -30,10 +30,12 @@
     <!--end::Third Party Plugin(Bootstrap Icons)-->
 
     <!--begin::Required Plugin(AdminLTE)-->
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/pages/admin/adminlte.css') }}" />
+    <link rel="stylesheet" href="{{ static_asset('css/pages/admin/adminlte.css') }}" />
     <!--end::Required Plugin(AdminLTE)-->
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/pages/admin/layout.css') }}" />
-    <script src="{{ url_for('static', filename='js/pages/admin/image-preview-modal.js') }}"></script>
+    <link rel="stylesheet" href="{{ static_asset('css/pages/admin/layout.css') }}" />
+    <script src="{{ static_asset('js/pages/admin/image-preview-modal.js') }}"></script>
+    {{ vite_hmr() }}
+    {{ template_livereload() }}
     {% block head %}{% endblock %}
 </head>
 
@@ -186,7 +188,7 @@
         crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.min.js"
         crossorigin="anonymous"></script>
-    <script src="{{ url_for('static', filename='js/pages/admin/adminlte.js') }}"></script>
+    <script src="{{ static_asset('js/pages/admin/adminlte.js') }}"></script>
     {% endblock %}
 </body>
 

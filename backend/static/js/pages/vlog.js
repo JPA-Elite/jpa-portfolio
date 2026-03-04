@@ -1,3 +1,7 @@
+import { VlogLikeService } from "../services/VlogLikeService.js";
+
+const vlogLikeService = new VlogLikeService();
+
 const vlogPageI18n = window.vlogPageI18n || {};
 const tv = (key, fallback) => vlogPageI18n[key] || fallback;
 
@@ -126,19 +130,7 @@ async function toggleLike(button, vlogId) {
     }
 
     try {
-        const formData = new FormData();
-        formData.append("vlog_id", JSON.stringify(vlogId));
-
-        const response = await fetch("/api/vlog-like", {
-            method: "POST",
-            body: formData,
-        });
-
-        if (!response.ok) {
-            throw new Error("Request failed");
-        }
-
-        const data = await response.json();
+        const data = await vlogLikeService.toggleLike(vlogId);
         const liked = data.data.like === true;
         const finalCount = liked ? count + 1 : Math.max(0, count - 1);
 
@@ -184,12 +176,7 @@ async function fetchVlogCountsBatch(likeButtons) {
     const params = new URLSearchParams();
     params.set("vlog_ids", ids.join(","));
 
-    const response = await fetch(`/api/vlog-like/counts/batch?${params.toString()}`);
-    if (!response.ok) {
-        throw new Error("Failed to load vlog counts");
-    }
-
-    const data = await response.json();
+    const data = await vlogLikeService.fetchCountsBatch(ids);
     const items = data.items || {};
 
     likeButtons.forEach((btn) => {
@@ -201,8 +188,7 @@ async function fetchVlogCountsBatch(likeButtons) {
 
 async function fetchLikeCount(vlogId, btnElement) {
     try {
-        const response = await fetch(`/api/vlog-like/counts?vlog_id=${encodeURIComponent(vlogId)}`);
-        const data = await response.json();
+        const data = await vlogLikeService.fetchCounts(vlogId);
 
         updateCountUI(btnElement, {
             like_counts: data.like_counts,
@@ -294,3 +280,6 @@ document.addEventListener("DOMContentLoaded", () => {
     setupPlyrPlayers();
     scheduleCountsBootstrap();
 });
+
+window.toggleLike = toggleLike;
+window.shareVlogItem = shareVlogItem;

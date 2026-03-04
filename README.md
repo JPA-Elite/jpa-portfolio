@@ -22,9 +22,7 @@ Languages: flask (python)
 
 ## START UP
 
-1. cd fask
-2. run command: `cd backend && python -m backend.app`,
-   run command: `make start-local` or `make run-local`
+1. run command: `make start-build`
 
 ## DDoS / Abuse Protection (Render + Cloudflare)
 

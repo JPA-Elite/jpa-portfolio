@@ -1,3 +1,7 @@
+import { AdminSettingsService } from "../../services/AdminSettingsService.js";
+
+const adminSettingsService = new AdminSettingsService();
+
 function setButtonLoading(button, isLoading) {
     if (!button) return;
     if (isLoading) {
@@ -83,20 +87,15 @@ document.getElementById("profileForm").addEventListener("submit", async function
 
     let keepLoading = false;
     try {
-        const res = await fetch("/admin/api/update-profile", {
-            method: "POST",
-            body: data
-        });
+        const result = await adminSettingsService.updateProfile(data);
 
-        const result = await res.json();
+        if (result.ok) {
+            msgBox.innerHTML = `<div class="alert alert-success">${result.data?.message || "Updated."}</div>`;
 
-        if (res.ok) {
-            msgBox.innerHTML = `<div class="alert alert-success">${result.message}</div>`;
-
-            if (result.profile_image) {
+            if (result.data?.profile_image) {
                 const preview = document.getElementById("profileImagePreview");
                 if (preview) {
-                    preview.src = result.profile_image;
+                    preview.src = result.data.profile_image;
                 }
             }
 
@@ -108,7 +107,7 @@ document.getElementById("profileForm").addEventListener("submit", async function
                 setTimeout(() => window.location.reload(), 900);
             }
         } else {
-            msgBox.innerHTML = `<div class="alert alert-danger">${result.message}</div>`;
+            msgBox.innerHTML = `<div class="alert alert-danger">${result.data?.message || "Update failed."}</div>`;
         }
     } catch (error) {
         msgBox.innerHTML = `<div class="alert alert-danger">Something went wrong.</div>`;

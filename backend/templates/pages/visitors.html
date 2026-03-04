@@ -4,7 +4,7 @@
 {% block head %}{% endblock %}
 
 {% block content %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/pages/visitors.css') }}" />
+<link rel="stylesheet" href="{{ static_asset('css/pages/visitors.css') }}" />
 
 <section>
     <button id="clear-page-btn" class="clear-btn">{{ _('Clear Page') }}</button>
@@ -69,5 +69,5 @@
     <span class="close" onclick="closePreview()">&times;</span>
     <img class="modal-content" id="preview-image">
 </div>
-<script src="{{ url_for('static', filename='js/pages/visitor.js') }}"></script>
+<script type="module" src="{{ static_asset('js/pages/visitor.js') }}"></script>
 {% endblock %}

@@ -16,11 +16,46 @@ package-install:
 run:
 	docker run -d -p $(PORT):5000 --name $(APP_NAME) $(DOCKER_IMAGE)
 
+# Docker build + run
+start-build-docker: build run
+
+build-frontend:
+	npm run build:frontend
+
+frontend-install:
+	npm install
+
+frontend-dev:
+	npm run dev:frontend
+
+clean-frontend:
+	python -c "import shutil; shutil.rmtree('backend/dist/frontend', ignore_errors=True)"
+
 run-local:
 	python -m backend.app
 
 start-local:
 	python -m backend.app
+
+# Build frontend assets + run locally using dist
+start-local-dist:
+	FRONTEND_DIST=1 FRONTEND_DIST_TEMPLATES=1 python -m backend.app
+
+# Build frontend assets + run locally using dist (cmd/PowerShell friendly)
+start-local-dist-cmd:
+	cmd /C "set FRONTEND_DIST=1 && set FRONTEND_DIST_TEMPLATES=1 && python -m backend.app"
+
+start-build: build-frontend start-local-dist
+
+dev:
+	npm run dev
+
+# Run Flask with Vite dev server assets (same-origin via proxy)
+start-local-vite:
+	VITE_DEV_SERVER=http://127.0.0.1:5173 VITE_PROXY_ASSETS=1 python -m backend.app
+
+start-local-vite-cmd:
+	cmd /C "set VITE_DEV_SERVER=http://127.0.0.1:5173 && set VITE_PROXY_ASSETS=1 && python -m backend.app"
 
 # Stop the Docker container
 stop:

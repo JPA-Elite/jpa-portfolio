@@ -1,3 +1,7 @@
+import { AdminCrudService } from "../../services/AdminCrudService.js";
+
+const adminGalleryService = new AdminCrudService("gallery");
+
 let currentPage = 1;
 let currentButton = null;
 let perPage = 10;
@@ -65,10 +69,11 @@ async function loadGallery(page = 1) {
     modalContainer.innerHTML = "";
 
     try {
-        const response = await fetch(
-            `/admin/api/gallery-list?page=${page}&per_page=${perPage}&order=desc`
-        );
-        const data = await response.json();
+        const data = await adminGalleryService.fetchList({
+            page,
+            perPage,
+            order: "desc",
+        });
 
         tbody.innerHTML = ""; // clear loading
         modalContainer.innerHTML = "";
@@ -372,18 +377,13 @@ async function addGallery() {
     formData.append("image_file", imageFile);
 
     try {
-        const res = await fetch("/admin/api/add-gallery", {
-            method: "POST",
-            body: formData,
-        });
-
-        if (res.ok) {
+        const result = await adminGalleryService.add(formData);
+        if (result.ok) {
             bootstrap.Modal.getInstance(
                 document.getElementById("addGalleryModal")
             ).hide();
-            const data = await res.json();
             loadGallery(currentPage);
-            alert(data.message);
+            alert(result.data?.message || "Gallery added.");
         } else {
             alert("Failed to add gallery.");
         }
@@ -467,19 +467,14 @@ async function updateGallery(galleryId, formId) {
     if (imageFile) formData.append("image_file", imageFile);
 
     try {
-        const res = await fetch(`/admin/api/update-gallery/${galleryId}`, {
-            method: "PUT",
-            body: formData,
-        });
-
-        if (res.ok) {
+        const result = await adminGalleryService.update(galleryId, formData);
+        if (result.ok) {
             bootstrap.Modal.getInstance(
                 document.getElementById(form.closest(".modal").id)
             ).hide();
 
-            const data = await res.json();
             loadGallery(currentPage);
-            alert(data.message);
+            alert(result.data?.message || "Gallery updated.");
         } else {
             alert("Failed to update gallery.");
         }
@@ -497,15 +492,11 @@ async function deleteGallery(galleryId, modalId) {
     setButtonLoading(btn, true);
 
     try {
-        const res = await fetch(`/admin/api/delete-gallery/${galleryId}`, {
-            method: "DELETE",
-        });
-
-        if (res.ok) {
+        const result = await adminGalleryService.remove(galleryId);
+        if (result.ok) {
             bootstrap.Modal.getInstance(document.getElementById(modalId)).hide();
-            const data = await res.json();
             loadGallery(currentPage);
-            alert(data.message);
+            alert(result.data?.message || "Gallery deleted.");
         } else {
             alert("Failed to delete gallery.");
         }
@@ -552,3 +543,9 @@ document.addEventListener("DOMContentLoaded", () => {
         loadGallery(currentPage);
     });
 });
+
+window.addGallery = addGallery;
+window.updateGallery = updateGallery;
+window.deleteGallery = deleteGallery;
+window.playGalleryPreview = playGalleryPreview;
+

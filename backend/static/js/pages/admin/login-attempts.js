@@ -1,3 +1,7 @@
+import { AdminLoginAttemptsService } from "../../services/AdminLoginAttemptsService.js";
+
+const loginAttemptsService = new AdminLoginAttemptsService();
+
 let currentPage = 1;
 let currentAudio = null;
 let currentButton = null;
@@ -19,8 +23,7 @@ function setButtonLoading(button, isLoading) {
 
 async function getCurrentIP() {
     try {
-        const res = await fetch("/admin/api/get-client-ip");
-        const data = await res.json();
+        const data = await loginAttemptsService.fetchClientIp();
         currentIP = data.ip;
         console.log("Current Device IP:", currentIP);
     } catch (error) {
@@ -38,10 +41,11 @@ async function loadLoginAttempt(page = 1) {
     modalContainer.innerHTML = "";
 
     try {
-        const response = await fetch(
-            `/admin/api/login-attempts?page=${page}&per_page=${perPage}&order=desc`
-        );
-        const data = await response.json();
+        const data = await loginAttemptsService.fetchList({
+            page,
+            perPage,
+            order: "desc",
+        });
 
         tbody.innerHTML = ""; // clear loading
         modalContainer.innerHTML = "";
@@ -111,15 +115,11 @@ async function deleteLoginAttempt(loginAttemptId, modalId) {
     setButtonLoading(btn, true);
 
     try {
-        const res = await fetch(`/admin/api/delete-login-attempt/${loginAttemptId}`, {
-            method: "DELETE",
-        });
-
-        if (res.ok) {
+        const result = await loginAttemptsService.remove(loginAttemptId);
+        if (result.ok) {
             bootstrap.Modal.getInstance(document.getElementById(modalId)).hide();
-            const data = await res.json();
             loadLoginAttempt(currentPage);
-            alert(data.message);
+            alert(result.data?.message || "Deleted.");
         } else {
             alert("Failed to delete login attempt.");
         }
@@ -153,3 +153,5 @@ document.addEventListener("DOMContentLoaded", async () => {
         loadLoginAttempt(currentPage);
     });
 });
+
+window.deleteLoginAttempt = deleteLoginAttempt;

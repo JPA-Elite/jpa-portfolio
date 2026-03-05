@@ -10,7 +10,15 @@ class ICompanyRoadmapRepository(ABC):
         pass
 
     @abstractmethod
-    def get_paginated_company_roadmaps(self, page: int, per_page: int, order: SortOrder):
+    def get_paginated_company_roadmaps(
+        self,
+        page: int,
+        per_page: int,
+        order: SortOrder,
+        search_query: str = "",
+        employment_type_filter: str = "",
+        is_active_filter=None,
+    ):
         pass
 
     @abstractmethod

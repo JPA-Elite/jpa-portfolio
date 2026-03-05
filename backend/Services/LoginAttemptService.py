@@ -12,8 +12,8 @@ class LoginAttemptService:
     def get_login_attempt_by_id(self, login_attempt_id: str):
         return self.repository.get_login_attempt_by_id(login_attempt_id)
 
-    def get_paginated_login_attempt_list(self, page, per_page, order):
-        data, total_data = self.repository.get_paginated_login_attempt_list(page, per_page, order)
+    def get_paginated_login_attempt_list(self, page, per_page, order, search_query: str = ""):
+        data, total_data = self.repository.get_paginated_login_attempt_list(page, per_page, order, search_query)
         system_info_list = []
 
         for login_attempt in data:

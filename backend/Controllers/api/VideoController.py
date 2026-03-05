@@ -19,13 +19,25 @@ def video_list_route():
 
     page = int(request.args.get("page", 1))
     per_page = int(request.args.get("per_page", 10))
+    search_query = (request.args.get("search") or "").strip()
     order = SortOrder.DESC if request.args.get("order", "desc").upper() == SortOrderStr.DESC else SortOrder.ASC
-    video_list, total_video = video_service.get_paginated_video_list(page, per_page, order)
+    if search_query:
+        video_list, total_video = video_service.search_video_paginated(
+            search_query,
+            None,
+            "en",
+            page,
+            per_page,
+            order,
+        )
+    else:
+        video_list, total_video = video_service.get_paginated_video_list(page, per_page, order)
 
     response_data = {
         "video": [video.to_dict() for video in video_list],
         "total_video": total_video,
         "total_pages": (total_video + per_page - 1) // per_page,
+        "search": search_query,
     }
 
     cache.set(cache_key, response_data, timeout=300)

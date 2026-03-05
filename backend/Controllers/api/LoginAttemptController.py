@@ -18,13 +18,20 @@ def login_attempt_list_route():
 
     page = int(request.args.get("page", 1))
     per_page = int(request.args.get("per_page", 10))
+    search_query = (request.args.get("search") or "").strip()
     order = SortOrder.DESC if request.args.get("order", "desc").upper() == SortOrderStr.DESC else SortOrder.ASC
-    login_attempt_list, total_login_attempt = login_attempt_service.get_paginated_login_attempt_list(page, per_page, order)
+    login_attempt_list, total_login_attempt = login_attempt_service.get_paginated_login_attempt_list(
+        page,
+        per_page,
+        order,
+        search_query,
+    )
 
     response_data = {
         "login_attempt": [login_attempt.to_dict() for login_attempt in login_attempt_list],
         "total_login_attempt": total_login_attempt,
         "total_pages": (total_login_attempt + per_page - 1) // per_page,
+        "search": search_query,
     }
 
     cache.set(cache_key, response_data, timeout=300)

@@ -25,18 +25,27 @@
       <div class="col-12">
         <div class="card">
           <div class="card-body">
-            <div class="d-flex justify-content-between align-items-center pb-2">
-              <div>
-                <label for="perPageSelect" class="form-label me-2">Show</label>
-                <select id="perPageSelect" class="form-select form-select-sm d-inline-block" style="width: auto;">
-                  <option value="5">5</option>
-                  <option value="10" selected>10</option>
-                  <option value="20">20</option>
-                  <option value="50">50</option>
+            <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 pb-2 admin-table-toolbar">
+              <div class="d-flex flex-wrap align-items-center gap-2 admin-table-filters">
+                <div class="d-flex align-items-center gap-2 admin-table-show">
+                  <label for="perPageSelect" class="form-label mb-0">Show</label>
+                  <select id="perPageSelect" class="form-select form-select-sm admin-table-filter-select" style="width: auto;">
+                    <option value="5">5</option>
+                    <option value="10" selected>10</option>
+                    <option value="20">20</option>
+                    <option value="50">50</option>
+                  </select>
+                  <span>entries</span>
+                </div>
+                <input id="searchInput" type="search" class="form-control form-control-sm admin-table-filter-input"
+                  style="width: 220px;"
+                  placeholder="Search title, description, or tags" />
+                <select id="orderSelect" class="form-select form-select-sm admin-table-filter-select" style="width: 150px;">
+                  <option value="desc" selected>Newest First</option>
+                  <option value="asc">Oldest First</option>
                 </select>
-                <span>entries</span>
               </div>
-              <div>
+              <div class="admin-table-action">
                 <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addGalleryModal">
                   <i class="bi bi-plus-circle"></i> Add Gallery
                 </button>

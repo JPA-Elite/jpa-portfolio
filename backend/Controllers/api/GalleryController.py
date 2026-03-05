@@ -19,13 +19,25 @@ def gallery_list_route():
 
     page = int(request.args.get("page", 1))
     per_page = int(request.args.get("per_page", 10))
+    search_query = (request.args.get("search") or "").strip()
     order = SortOrder.DESC if request.args.get("order", "desc").upper() == SortOrderStr.DESC else SortOrder.ASC
-    gallery_list, total_gallery = gallery_service.get_paginated_gallery_list(page, per_page, order)
+    if search_query:
+        gallery_list, total_gallery = gallery_service.search_gallery_paginated(
+            search_query,
+            None,
+            "en",
+            page,
+            per_page,
+            order,
+        )
+    else:
+        gallery_list, total_gallery = gallery_service.get_paginated_gallery_list(page, per_page, order)
 
     response_data = {
         "gallery": [gallery.to_dict() for gallery in gallery_list],
         "total_gallery": total_gallery,
         "total_pages": (total_gallery + per_page - 1) // per_page,
+        "search": search_query,
     }
 
     cache.set(cache_key, response_data, timeout=300)

@@ -8,13 +8,34 @@ export class AdminCrudRepository extends IAdminCrudRepository {
         this.baseUrl = baseUrl;
     }
 
-    async fetchList({ page = 1, perPage = 10, order = "desc" } = {}) {
+    async fetchList(options = {}) {
+        const {
+            page = 1,
+            perPage = 10,
+            order = "desc",
+            search = "",
+            ...extraParams
+        } = options;
         const params = new URLSearchParams();
         params.set("page", String(page));
         params.set("per_page", String(perPage));
         if (order) {
             params.set("order", order);
         }
+        const normalizedSearch = String(search || "").trim();
+        if (normalizedSearch) {
+            params.set("search", normalizedSearch);
+        }
+        Object.entries(extraParams).forEach(([key, value]) => {
+            if (value === undefined || value === null) {
+                return;
+            }
+            const normalized = String(value).trim();
+            if (!normalized) {
+                return;
+            }
+            params.set(key, normalized);
+        });
 
         const response = await fetch(
             `${this.baseUrl}/${this.resource}-list?${params.toString()}`

@@ -40,17 +40,37 @@ def company_roadmap_list_route():
 
     page = int(request.args.get("page", 1))
     per_page = int(request.args.get("per_page", 10))
+    search_query = (request.args.get("search") or "").strip()
+    employment_type_filter = (request.args.get("employment_type") or "").strip()
+
+    is_active_raw = (request.args.get("is_active") or "").strip().lower()
+    is_active_filter = None
+    if is_active_raw in {"1", "true", "yes", "on"}:
+        is_active_filter = True
+    elif is_active_raw in {"0", "false", "no", "off"}:
+        is_active_filter = False
+
     order = (
         SortOrder.DESC
         if request.args.get("order", "desc").upper() == SortOrderStr.DESC
         else SortOrder.ASC
     )
 
-    roadmaps, total = company_roadmap_service.get_paginated_company_roadmaps(page, per_page, order)
+    roadmaps, total = company_roadmap_service.get_paginated_company_roadmaps(
+        page,
+        per_page,
+        order,
+        search_query,
+        employment_type_filter=employment_type_filter,
+        is_active_filter=is_active_filter,
+    )
     response_data = {
         "roadmaps": [roadmap.to_dict() for roadmap in roadmaps],
         "total_roadmaps": total,
         "total_pages": (total + per_page - 1) // per_page,
+        "search": search_query,
+        "employment_type": employment_type_filter,
+        "is_active": is_active_filter,
     }
     cache.set(cache_key, response_data, timeout=300)
     return jsonify(response_data)

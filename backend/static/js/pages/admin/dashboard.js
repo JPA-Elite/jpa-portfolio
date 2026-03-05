@@ -68,6 +68,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     (function () {
         const tableBody = document.getElementById("recentActivityTableBody");
         const perPageSelect = document.getElementById("activityPerPage");
+        const searchInput = document.getElementById("activitySearchInput");
+        const orderSelect = document.getElementById("activityOrderSelect");
         const prevBtn = document.getElementById("activityPrevPage");
         const nextBtn = document.getElementById("activityNextPage");
         const pageInfo = document.getElementById("activityPageInfo");
@@ -77,9 +79,47 @@ document.addEventListener("DOMContentLoaded", async () => {
         let activityData = [];
         let currentPage = 1;
 
+        function getFilteredActivityData() {
+            const searchValue = String(searchInput?.value || "").trim().toLowerCase();
+            const filtered = !searchValue
+                ? [...activityData]
+                : activityData.filter((item) => {
+                    let details = "";
+                    if (item.body) {
+                        try {
+                            details = JSON.stringify(item.body);
+                        } catch (error) {
+                            details = String(item.body);
+                        }
+                    } else if (item.status_code) {
+                        details = `Status: ${item.status_code}`;
+                    }
+
+                    const searchable = [
+                        item.timestamp || "",
+                        item.user_id || item.user || "",
+                        item.method || "",
+                        item.path || item.action || "",
+                        details || "",
+                    ].join(" ").toLowerCase();
+
+                    return searchable.includes(searchValue);
+                });
+
+            const order = String(orderSelect?.value || "desc").toLowerCase();
+            filtered.sort((a, b) => {
+                const aTime = new Date(a.timestamp || 0).getTime() || 0;
+                const bTime = new Date(b.timestamp || 0).getTime() || 0;
+                return order === "asc" ? aTime - bTime : bTime - aTime;
+            });
+
+            return filtered;
+        }
+
         function renderPage() {
+            const filteredData = getFilteredActivityData();
             const perPage = Number(perPageSelect.value) || 10;
-            const total = activityData.length;
+            const total = filteredData.length;
             const totalPages = Math.max(1, Math.ceil(total / perPage));
             if (currentPage > totalPages) currentPage = totalPages;
             const start = (currentPage - 1) * perPage;
@@ -89,27 +129,38 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             if (total === 0) {
                 tableBody.innerHTML = '<tr><td colspan="5" class="text-center text-muted">No recent activity.</td></tr>';
-                pageInfo.textContent = '';
+                pageInfo.textContent = "";
                 prevBtn.disabled = true;
                 nextBtn.disabled = true;
                 return;
             }
 
-            const rows = activityData.slice(start, end).map(item => {
+            const rows = filteredData.slice(start, end).map((item) => {
                 const ts = item.timestamp ? new Date(item.timestamp) : new Date();
-                const user = item.user_id || item.user || '—';
-                const method = item.method || '—';
-                const action = item.path || item.action || '';
-                let details = '';
+                const user = item.user_id || item.user || "-";
+                const method = item.method || "-";
+                const action = item.path || item.action || "";
+                let details = "";
                 if (item.body) {
-                    try { details = JSON.stringify(item.body); } catch (e) { details = String(item.body); }
+                    try {
+                        details = JSON.stringify(item.body);
+                    } catch (error) {
+                        details = String(item.body);
+                    }
                 } else if (item.status_code) {
                     details = `Status: ${item.status_code}`;
                 }
-                // truncate details
-                if (details.length > 200) details = details.slice(0, 200) + '...';
-                return `\n                    <tr>\n                      <td class="small text-muted">${formatTimestamp(ts)}</td>\n                      <td>${user}</td>\n                      <td>${method}</td>\n                      <td>${action}</td>\n                      <td><pre class="mb-0 small">${details}</pre></td>\n                    </tr>`;
-            }).join('');
+                if (details.length > 200) details = `${details.slice(0, 200)}...`;
+
+                return `
+                    <tr>
+                      <td class="small text-muted">${formatTimestamp(ts)}</td>
+                      <td>${user}</td>
+                      <td>${method}</td>
+                      <td>${action}</td>
+                      <td><pre class="mb-0 small">${details}</pre></td>
+                    </tr>`;
+            }).join("");
 
             tableBody.innerHTML = rows;
             pageInfo.textContent = `${start + 1}-${end} of ${total}`;
@@ -118,30 +169,52 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
 
         async function loadActivity() {
-                tableBody.innerHTML = '<tr><td colspan="5" class="text-center">Loading...</td></tr>';
-                if (window.__dashboard_recent_activity && Array.isArray(window.__dashboard_recent_activity)) {
-                    activityData = window.__dashboard_recent_activity;
-                    currentPage = 1;
-                    renderPage();
-                    return;
-                }
+            tableBody.innerHTML = '<tr><td colspan="5" class="text-center">Loading...</td></tr>';
+            if (window.__dashboard_recent_activity && Array.isArray(window.__dashboard_recent_activity)) {
+                activityData = window.__dashboard_recent_activity;
+                currentPage = 1;
+                renderPage();
+                return;
+            }
 
-                try {
-                    const data = await dashboardService.fetchRecentActivity();
-                    if (!Array.isArray(data)) activityData = [];
-                    else activityData = data;
-                    currentPage = 1;
-                    renderPage();
-                } catch (err) {
-                    console.error('Failed to load recent activity', err);
-                    activityData = [];
-                    renderPage();
-                }
+            try {
+                const data = await dashboardService.fetchRecentActivity();
+                activityData = Array.isArray(data) ? data : [];
+                currentPage = 1;
+                renderPage();
+            } catch (err) {
+                console.error("Failed to load recent activity", err);
+                activityData = [];
+                renderPage();
+            }
         }
 
-        perPageSelect.addEventListener('change', () => { currentPage = 1; renderPage(); });
-        prevBtn.addEventListener('click', () => { if (currentPage > 1) { currentPage--; renderPage(); } });
-        nextBtn.addEventListener('click', () => { const perPage = Number(perPageSelect.value)||10; const totalPages = Math.max(1, Math.ceil(activityData.length / perPage)); if (currentPage < totalPages) { currentPage++; renderPage(); } });
+        perPageSelect.addEventListener("change", () => {
+            currentPage = 1;
+            renderPage();
+        });
+        searchInput?.addEventListener("input", () => {
+            currentPage = 1;
+            renderPage();
+        });
+        orderSelect?.addEventListener("change", () => {
+            currentPage = 1;
+            renderPage();
+        });
+        prevBtn.addEventListener("click", () => {
+            if (currentPage > 1) {
+                currentPage--;
+                renderPage();
+            }
+        });
+        nextBtn.addEventListener("click", () => {
+            const perPage = Number(perPageSelect.value) || 10;
+            const totalPages = Math.max(1, Math.ceil(getFilteredActivityData().length / perPage));
+            if (currentPage < totalPages) {
+                currentPage++;
+                renderPage();
+            }
+        });
 
         loadActivity();
     })();

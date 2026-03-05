@@ -18,8 +18,23 @@ class CompanyRoadmapService:
     def get_company_roadmap_by_id(self, roadmap_id: str):
         return self.repository.get_company_roadmap_by_id(roadmap_id)
 
-    def get_paginated_company_roadmaps(self, page, per_page, order: SortOrder = SortOrder.DESC):
-        data, total = self.repository.get_paginated_company_roadmaps(page, per_page, order)
+    def get_paginated_company_roadmaps(
+        self,
+        page,
+        per_page,
+        order: SortOrder = SortOrder.DESC,
+        search_query: str = "",
+        employment_type_filter: str = "",
+        is_active_filter=None,
+    ):
+        data, total = self.repository.get_paginated_company_roadmaps(
+            page,
+            per_page,
+            order,
+            search_query,
+            employment_type_filter=employment_type_filter,
+            is_active_filter=is_active_filter,
+        )
         return [CompanyRoadmap.from_dict(item) for item in data], total
 
     def get_active_company_roadmaps(self):

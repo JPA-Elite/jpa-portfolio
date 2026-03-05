@@ -28,6 +28,35 @@ class KeyProjectServiceTests(unittest.TestCase):
         self.assertEqual(total, 1)
         self.assertEqual(items[0].id, "kp1")
         self.assertEqual(items[0].title["en"], "Project")
+        self.repo.get_paginated_key_projects.assert_called_once_with(
+            1,
+            10,
+            SortOrder.DESC,
+            "",
+            status_filter="",
+            is_active_filter=None,
+        )
+
+    def test_get_paginated_key_projects_forwards_filters(self):
+        self.repo.get_paginated_key_projects.return_value = ([key_project_doc()], 1)
+
+        self.service.get_paginated_key_projects(
+            2,
+            5,
+            SortOrder.ASC,
+            "python",
+            status_filter="planned",
+            is_active_filter=False,
+        )
+
+        self.repo.get_paginated_key_projects.assert_called_once_with(
+            2,
+            5,
+            SortOrder.ASC,
+            "python",
+            status_filter="planned",
+            is_active_filter=False,
+        )
 
     def test_get_active_key_projects_maps_models(self):
         self.repo.get_active_key_projects.return_value = [key_project_doc()]

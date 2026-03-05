@@ -18,7 +18,7 @@ class ILoginAttemptRepository(ABC):
         pass
 
     @abstractmethod
-    def get_paginated_login_attempt_list(self, page: int, per_page: int, order):
+    def get_paginated_login_attempt_list(self, page: int, per_page: int, order, search_query: str = ""):
         pass
 
     @abstractmethod

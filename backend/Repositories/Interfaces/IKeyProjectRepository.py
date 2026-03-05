@@ -10,7 +10,15 @@ class IKeyProjectRepository(ABC):
         pass
 
     @abstractmethod
-    def get_paginated_key_projects(self, page: int, per_page: int, order: SortOrder):
+    def get_paginated_key_projects(
+        self,
+        page: int,
+        per_page: int,
+        order: SortOrder,
+        search_query: str = "",
+        status_filter: str = "",
+        is_active_filter=None,
+    ):
         pass
 
     @abstractmethod

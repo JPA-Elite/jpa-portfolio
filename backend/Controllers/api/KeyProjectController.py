@@ -25,17 +25,39 @@ def key_project_list_route():
 
     page = int(request.args.get("page", 1))
     per_page = int(request.args.get("per_page", 10))
+    search_query = (request.args.get("search") or "").strip()
+    status_filter = (request.args.get("status") or "").strip().lower()
+    if status_filter not in {"", "shipped", "building", "planned"}:
+        status_filter = ""
+
+    is_active_raw = (request.args.get("is_active") or "").strip().lower()
+    is_active_filter = None
+    if is_active_raw in {"1", "true", "yes", "on"}:
+        is_active_filter = True
+    elif is_active_raw in {"0", "false", "no", "off"}:
+        is_active_filter = False
+
     order = (
         SortOrder.DESC
         if request.args.get("order", "desc").upper() == SortOrderStr.DESC
         else SortOrder.ASC
     )
 
-    project_list, total = key_project_service.get_paginated_key_projects(page, per_page, order)
+    project_list, total = key_project_service.get_paginated_key_projects(
+        page,
+        per_page,
+        order,
+        search_query,
+        status_filter=status_filter,
+        is_active_filter=is_active_filter,
+    )
     response_data = {
         "projects": [project.to_dict() for project in project_list],
         "total_projects": total,
         "total_pages": (total + per_page - 1) // per_page,
+        "search": search_query,
+        "status": status_filter,
+        "is_active": is_active_filter,
     }
     cache.set(cache_key, response_data, timeout=300)
     return jsonify(response_data)

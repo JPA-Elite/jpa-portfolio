@@ -18,8 +18,23 @@ class KeyProjectService:
     def get_key_project_by_id(self, project_id: str):
         return self.repository.get_key_project_by_id(project_id)
 
-    def get_paginated_key_projects(self, page, per_page, order: SortOrder = SortOrder.DESC):
-        data, total = self.repository.get_paginated_key_projects(page, per_page, order)
+    def get_paginated_key_projects(
+        self,
+        page,
+        per_page,
+        order: SortOrder = SortOrder.DESC,
+        search_query: str = "",
+        status_filter: str = "",
+        is_active_filter=None,
+    ):
+        data, total = self.repository.get_paginated_key_projects(
+            page,
+            per_page,
+            order,
+            search_query,
+            status_filter=status_filter,
+            is_active_filter=is_active_filter,
+        )
         return [KeyProject.from_dict(item) for item in data], total
 
     def get_active_key_projects(self):

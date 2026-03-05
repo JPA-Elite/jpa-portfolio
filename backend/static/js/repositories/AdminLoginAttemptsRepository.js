@@ -15,12 +15,16 @@ export class AdminLoginAttemptsRepository extends IAdminLoginAttemptsRepository 
         return response.json();
     }
 
-    async fetchList({ page = 1, perPage = 10, order = "desc" } = {}) {
+    async fetchList({ page = 1, perPage = 10, order = "desc", search = "" } = {}) {
         const params = new URLSearchParams();
         params.set("page", String(page));
         params.set("per_page", String(perPage));
         if (order) {
             params.set("order", order);
+        }
+        const normalizedSearch = String(search || "").trim();
+        if (normalizedSearch) {
+            params.set("search", normalizedSearch);
         }
 
         const response = await fetch(

@@ -6,6 +6,9 @@ let currentPage = 1;
 let currentAudio = null;
 let currentButton = null;
 let perPage = 10;
+let searchQuery = "";
+let sortOrder = "desc";
+let searchDebounceTimer = null;
 
 function escapeHtml(value = "") {
     return String(value)
@@ -126,7 +129,8 @@ async function loadMusic(page = 1) {
         const data = await adminMusicService.fetchList({
             page,
             perPage,
-            order: "desc",
+            order: sortOrder,
+            search: searchQuery,
         });
 
         tbody.innerHTML = ""; // clear loading
@@ -462,6 +466,25 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("perPageSelect").addEventListener("change", (e) => {
         perPage = parseInt(e.target.value);
         currentPage = 1; // reset to first page when perPage changes
+        loadMusic(currentPage);
+    });
+
+    const searchInput = document.getElementById("searchInput");
+    const orderSelect = document.getElementById("orderSelect");
+
+    searchInput?.addEventListener("input", (event) => {
+        const nextValue = String(event.target.value || "").trim();
+        clearTimeout(searchDebounceTimer);
+        searchDebounceTimer = setTimeout(() => {
+            searchQuery = nextValue;
+            currentPage = 1;
+            loadMusic(currentPage);
+        }, 300);
+    });
+
+    orderSelect?.addEventListener("change", (event) => {
+        sortOrder = String(event.target.value || "desc");
+        currentPage = 1;
         loadMusic(currentPage);
     });
 });

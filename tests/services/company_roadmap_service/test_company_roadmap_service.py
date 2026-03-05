@@ -27,7 +27,35 @@ class CompanyRoadmapServiceTests(unittest.TestCase):
 
         self.assertEqual(total, 1)
         self.assertEqual(items[0].company_name, "Chronostep")
-        self.repo.get_paginated_company_roadmaps.assert_called_once_with(1, 10, SortOrder.ASC)
+        self.repo.get_paginated_company_roadmaps.assert_called_once_with(
+            1,
+            10,
+            SortOrder.ASC,
+            "",
+            employment_type_filter="",
+            is_active_filter=None,
+        )
+
+    def test_get_paginated_company_roadmaps_forwards_filters(self):
+        self.repo.get_paginated_company_roadmaps.return_value = ([roadmap_doc()], 1)
+
+        self.service.get_paginated_company_roadmaps(
+            2,
+            5,
+            SortOrder.DESC,
+            "chronostep",
+            employment_type_filter="Internship",
+            is_active_filter=True,
+        )
+
+        self.repo.get_paginated_company_roadmaps.assert_called_once_with(
+            2,
+            5,
+            SortOrder.DESC,
+            "chronostep",
+            employment_type_filter="Internship",
+            is_active_filter=True,
+        )
 
     def test_get_active_company_roadmaps_maps_models(self):
         self.repo.get_active_company_roadmaps.return_value = [roadmap_doc()]

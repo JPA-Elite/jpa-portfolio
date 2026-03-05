@@ -4,6 +4,11 @@ const adminCompanyRoadmapService = new AdminCrudService("company-roadmap");
 
 let currentPage = 1;
 let perPage = 10;
+let searchQuery = "";
+let sortOrder = "asc";
+let employmentTypeFilter = "";
+let activeFilter = "";
+let searchDebounceTimer = null;
 
 function setButtonLoading(button, isLoading) {
     if (!button) return;
@@ -203,7 +208,10 @@ async function loadCompanyRoadmaps(page = 1) {
         const data = await adminCompanyRoadmapService.fetchList({
             page,
             perPage,
-            order: "asc",
+            order: sortOrder,
+            search: searchQuery,
+            employment_type: employmentTypeFilter,
+            is_active: activeFilter,
         });
         const rows = data.roadmaps || [];
 
@@ -511,8 +519,41 @@ async function deleteCompanyRoadmap(roadmapId, modalId) {
 
 document.addEventListener("DOMContentLoaded", () => {
     const perPageSelect = document.getElementById("perPageSelect");
+    const searchInput = document.getElementById("searchInput");
+    const orderSelect = document.getElementById("orderSelect");
+    const employmentTypeFilterSelect = document.getElementById("employmentTypeFilterSelect");
+    const activeFilterSelect = document.getElementById("activeFilterSelect");
+
     perPageSelect?.addEventListener("change", () => {
         perPage = Number(perPageSelect.value || 10);
+        currentPage = 1;
+        loadCompanyRoadmaps(currentPage);
+    });
+
+    searchInput?.addEventListener("input", (event) => {
+        const nextValue = String(event.target.value || "").trim();
+        clearTimeout(searchDebounceTimer);
+        searchDebounceTimer = setTimeout(() => {
+            searchQuery = nextValue;
+            currentPage = 1;
+            loadCompanyRoadmaps(currentPage);
+        }, 300);
+    });
+
+    orderSelect?.addEventListener("change", (event) => {
+        sortOrder = String(event.target.value || "asc");
+        currentPage = 1;
+        loadCompanyRoadmaps(currentPage);
+    });
+
+    employmentTypeFilterSelect?.addEventListener("change", (event) => {
+        employmentTypeFilter = String(event.target.value || "").trim();
+        currentPage = 1;
+        loadCompanyRoadmaps(currentPage);
+    });
+
+    activeFilterSelect?.addEventListener("change", (event) => {
+        activeFilter = String(event.target.value || "").trim();
         currentPage = 1;
         loadCompanyRoadmaps(currentPage);
     });

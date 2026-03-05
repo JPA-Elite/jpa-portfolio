@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta
 from flask import request
+import re
 from backend.Repositories.BaseRepository import BaseRepository
 from backend.constants.db_collections import MongoCollections as mc
 from backend.Repositories.Interfaces.ILoginAttemptRepository import ILoginAttemptRepository
@@ -62,20 +63,36 @@ class LoginAttemptRepository(ILoginAttemptRepository, BaseRepository):
 
         return self.collection.find_one(query)
 
-    def get_paginated_login_attempt_list(self, page: int, per_page: int, order: SortOrder):
+    def get_paginated_login_attempt_list(
+        self,
+        page: int,
+        per_page: int,
+        order: SortOrder,
+        search_query: str = "",
+    ):
         # Mongo sort order by _id
         sort_order = -1 if order == SortOrder.DESC else 1
+        query = {}
+
+        if search_query:
+            escaped = re.escape(search_query.strip())
+            or_filters = [
+                {"_id": {"$regex": escaped, "$options": "i"}},
+            ]
+            if search_query.strip().isdigit():
+                or_filters.append({"attempts": int(search_query.strip())})
+            query = {"$or": or_filters}
 
         # Use MongoDB skip + limit for pagination
         cursor = (
-            self.collection.find()
+            self.collection.find(query)
             .sort("_id", sort_order)
             .skip((page - 1) * per_page)
             .limit(per_page)
         )
 
         data = list(cursor)
-        total_data = self.collection.count_documents({})
+        total_data = self.collection.count_documents(query)
 
         return data, total_data
 

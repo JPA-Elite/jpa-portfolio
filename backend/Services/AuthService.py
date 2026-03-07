@@ -119,6 +119,8 @@ class AuthService:
             "admin_page_company_roadmaps",
             "admin_page_settings",
             "admin_page_login_attempts",
+            "admin_page_server_users",
+            "admin_page_server_channels",
         ):
             try:
                 cache.delete(key)

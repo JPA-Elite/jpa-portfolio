@@ -18,3 +18,7 @@ class MongoCollections:
     VIDEO_COMMENTS = "video_comments"
     LOGIN_ATTEMPTS = "login_attempts"
     ACTIVITY_LOGS = "activity_logs"
+    SERVER_USERS = "server_users"
+    SERVER_CHANNELS = "server_channels"
+    SERVER_MESSAGES = "server_messages"
+    SERVER_FILES = "server_files"

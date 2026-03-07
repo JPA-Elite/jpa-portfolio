@@ -1,0 +1,37 @@
+{% macro date_input(id, name, label, value="", required=false) -%}
+  {% set safe_value = value | default('') %}
+  <div class="server-date-picker" data-date-picker>
+    <label for="{{ id }}_display" class="form-label">{{ label }}</label>
+    <div class="server-date-input">
+      <i class="bi bi-calendar3" aria-hidden="true"></i>
+      <input
+        id="{{ id }}_display"
+        type="text"
+        class="form-control server-date-display"
+        value="{{ safe_value }}"
+        placeholder="YYYY-MM-DD"
+        autocomplete="off"
+        {% if required %}required{% endif %}
+      >
+      <input
+        id="{{ id }}"
+        name="{{ name }}"
+        type="hidden"
+        class="server-date-value"
+        value="{{ safe_value }}"
+        {% if required %}required{% endif %}
+      >
+      <div class="server-date-panel" aria-hidden="true">
+        <div class="server-date-panel-header">
+          <button type="button" class="server-date-nav" data-action="prev" aria-label="Previous month">&lsaquo;</button>
+          <div class="server-date-month"></div>
+          <button type="button" class="server-date-nav" data-action="next" aria-label="Next month">&rsaquo;</button>
+        </div>
+        <div class="server-date-weekdays">
+          <span>Su</span><span>Mo</span><span>Tu</span><span>We</span><span>Th</span><span>Fr</span><span>Sa</span>
+        </div>
+        <div class="server-date-grid"></div>
+      </div>
+    </div>
+  </div>
+{%- endmacro %}

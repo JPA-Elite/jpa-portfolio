@@ -124,6 +124,9 @@
                     <li class="{% if request.endpoint == 'pages.concern' %}active{% endif %}">
                         <a href="{{ url_for('pages.concern') }}{{ '?mode=professional' if request.args.get('mode') == 'professional' else '' }}">Concern</a>
                     </li>
+                    <li class="{% if request.endpoint in ['pages.server_entry', 'pages.server_login', 'pages.server_register', 'pages.server_app', 'pages.server_settings', 'pages.server_forgot_password'] %}active{% endif %}">
+                        <a href="{{ url_for('pages.server_entry') }}">Server</a>
+                    </li>
                 </ul>
 
                 <!-- Mobile Sidebar -->
@@ -192,6 +195,12 @@
                                 </a>
                             </li>
                         {% endif %}
+                        <li class="{% if request.endpoint in ['pages.server_entry', 'pages.server_login', 'pages.server_register', 'pages.server_app', 'pages.server_settings', 'pages.server_forgot_password'] %}active{% endif %}">
+                            <a href="{{ url_for('pages.server_entry') }}">
+                                <ion-icon name="server-outline"></ion-icon>
+                                Server
+                            </a>
+                        </li>
                     </ul>
                 </div>
 
@@ -200,6 +209,9 @@
                         style="margin-right: {{ '15px' if request.args.get('mode') == 'professional' else '0px' }};"
                         href="{{ url_for('pages.concern') }}{{ '?mode=professional' if request.args.get('mode') == 'professional' else '' }}">
                         Concern
+                    </a>
+                    <a class="mobile-concern-btn" style="margin-right: 10px;" href="{{ url_for('pages.server_entry') }}">
+                        Server
                     </a>
                     {% if request.args.get('mode') != 'professional' %}
                         <a class="donation-btn" href="{{ url_for('pages.donation') }}">

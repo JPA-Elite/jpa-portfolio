@@ -11,6 +11,7 @@
 {% block content %}
 <!-- Link to the external CSS file for the concern -->
 <link rel="stylesheet" href="{{ static_asset('css/pages/concern.css') }}" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css" crossorigin="anonymous" />
 <section id="concern">
     <h2>{{ _('concern_header') }}</h2>
     <p>{{ _('concern_feedback_message') }}</p>
@@ -18,6 +19,14 @@
     <div class="concern-button">
         <a href="{{ 'https://forms.gle/QV5kHc3STEFDFUYf9' if request.args.get('mode') != 'professional' else 'https://forms.gle/5UqVgzzxgkJS11Qj9' }}" target="_blank">
             <button class="concern-btn">{{ _('concern_button') }}</button>
+        </a>
+    </div>
+
+    <div class="concern-button" style="margin-top: 12px;">
+        <a href="{{ url_for('pages.server_entry') }}">
+            <button class="concern-btn">
+                Connect Server <i class="bi bi-arrow-left ms-1"></i>
+            </button>
         </a>
     </div>
 </section>

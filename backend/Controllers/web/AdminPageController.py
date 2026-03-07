@@ -10,6 +10,8 @@ from backend.configurations import (
     ADMIN_COMPANY_ROADMAPS_PAGE,
     ADMIN_SETTINGS_PAGE,
     ADMIN_VIDEO_PAGE,
+    ADMIN_SERVER_USERS_PAGE,
+    ADMIN_SERVER_CHANNELS_PAGE,
 )
 from backend.configurations import HTTPMethod as http
 from backend.constants.login_roles import ROLE_ADMIN
@@ -141,3 +143,11 @@ def admin_settings_route():
 
 def admin_login_attempts_route():
     return render_template(ADMIN_LOGIN_ATTEMPTS_PAGE, title="Login Attempts")
+
+
+def admin_server_users_route():
+    return render_template(ADMIN_SERVER_USERS_PAGE, title="Server Community Users")
+
+
+def admin_server_channels_route():
+    return render_template(ADMIN_SERVER_CHANNELS_PAGE, title="Server Community Channels")

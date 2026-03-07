@@ -43,7 +43,31 @@ from backend.Repositories.CompanyRoadmapRepository import CompanyRoadmapReposito
 from backend.Repositories.ActivityLogRepository import ActivityLogRepository
 from backend.Controllers.api.LoginAttemptController import login_attempt_list_route, delete_login_attempt_route
 from backend.Controllers.api.GalleryCommentController import gallery_comments_route, gallery_like_comment_route
-from backend.auth.middleware import admin_login_required
+from backend.Controllers.api.ServerCommunityController import (
+    admin_add_server_channel_route,
+    admin_add_server_user_route,
+    admin_delete_server_channel_route,
+    admin_delete_server_user_route,
+    admin_server_channel_list_route,
+    admin_server_user_list_route,
+    admin_update_server_channel_route,
+    admin_update_server_user_route,
+    server_channels_route,
+    server_delete_message_route,
+    server_google_auth_route,
+    server_me_route,
+    server_activities_route,
+    server_channel_detail_route,
+    server_messages_route,
+    server_files_route,
+    server_update_file_route,
+    server_delete_file_route,
+    server_pin_message_route,
+    server_react_message_route,
+    server_user_profile_route,
+    server_update_message_route,
+)
+from backend.auth.middleware import admin_login_required, server_api_login_required
 from backend.Controllers.api.AuthController import update_profile_route
 
 # Create a Blueprint for api
@@ -113,6 +137,75 @@ def proxy_audio():
 @api_bp.route("/api/music-list", methods=[http.GET])
 def user_music_list():
     return music_list_route()
+
+@api_bp.route("/api/server/me", methods=[http.GET])
+@server_api_login_required
+def server_me():
+    return server_me_route()
+
+@api_bp.route("/api/server/channels", methods=[http.GET, http.POST])
+@server_api_login_required
+def server_channels():
+    return server_channels_route()
+
+@api_bp.route("/api/server/channels/<channel_id>", methods=[http.PUT, http.DELETE])
+@server_api_login_required
+def server_channel_detail(channel_id):
+    return server_channel_detail_route(channel_id)
+
+@api_bp.route("/api/server/messages", methods=[http.GET, http.POST])
+@server_api_login_required
+def server_messages():
+    return server_messages_route()
+
+@api_bp.route("/api/server/files", methods=[http.GET, http.POST])
+@server_api_login_required
+def server_files():
+    return server_files_route()
+
+@api_bp.route("/api/server/files/<file_id>", methods=[http.PUT])
+@server_api_login_required
+def server_update_file(file_id):
+    return server_update_file_route(file_id)
+
+@api_bp.route("/api/server/files/<file_id>", methods=[http.DELETE])
+@server_api_login_required
+def server_delete_file(file_id):
+    return server_delete_file_route(file_id)
+
+@api_bp.route("/api/server/activities", methods=[http.GET])
+@server_api_login_required
+def server_activities():
+    return server_activities_route()
+
+@api_bp.route("/api/server/auth/google", methods=[http.POST])
+def server_auth_google():
+    return server_google_auth_route()
+
+@api_bp.route("/api/server/messages/<message_id>", methods=[http.PUT])
+@server_api_login_required
+def server_update_message(message_id):
+    return server_update_message_route(message_id)
+
+@api_bp.route("/api/server/messages/<message_id>", methods=[http.DELETE])
+@server_api_login_required
+def server_delete_message(message_id):
+    return server_delete_message_route(message_id)
+
+@api_bp.route("/api/server/messages/react", methods=[http.POST])
+@server_api_login_required
+def server_react_message():
+    return server_react_message_route()
+
+@api_bp.route("/api/server/messages/pin", methods=[http.POST])
+@server_api_login_required
+def server_pin_message():
+    return server_pin_message_route()
+
+@api_bp.route("/api/server/users/<user_id>", methods=[http.GET])
+@server_api_login_required
+def server_user_profile(user_id):
+    return server_user_profile_route(user_id)
 
 # Gallery Likes API
 @api_bp.route("/api/gallery-like/counts", methods=[http.GET])
@@ -287,6 +380,47 @@ def login_attempts():
 @admin_login_required
 def delete_login_attempt(login_attempt_id):
     return delete_login_attempt_route(login_attempt_id)
+
+# Server Community Admin API
+@api_bp.route("/admin/api/server-user-list", methods=[http.GET])
+@admin_login_required
+def admin_server_user_list():
+    return admin_server_user_list_route()
+
+@api_bp.route("/admin/api/add-server-user", methods=[http.POST])
+@admin_login_required
+def admin_add_server_user():
+    return admin_add_server_user_route()
+
+@api_bp.route("/admin/api/update-server-user/<user_id>", methods=[http.PUT])
+@admin_login_required
+def admin_update_server_user(user_id):
+    return admin_update_server_user_route(user_id)
+
+@api_bp.route("/admin/api/delete-server-user/<user_id>", methods=[http.DELETE])
+@admin_login_required
+def admin_delete_server_user(user_id):
+    return admin_delete_server_user_route(user_id)
+
+@api_bp.route("/admin/api/server-channel-list", methods=[http.GET])
+@admin_login_required
+def admin_server_channel_list():
+    return admin_server_channel_list_route()
+
+@api_bp.route("/admin/api/add-server-channel", methods=[http.POST])
+@admin_login_required
+def admin_add_server_channel():
+    return admin_add_server_channel_route()
+
+@api_bp.route("/admin/api/update-server-channel/<channel_id>", methods=[http.PUT])
+@admin_login_required
+def admin_update_server_channel(channel_id):
+    return admin_update_server_channel_route(channel_id)
+
+@api_bp.route("/admin/api/delete-server-channel/<channel_id>", methods=[http.DELETE])
+@admin_login_required
+def admin_delete_server_channel(channel_id):
+    return admin_delete_server_channel_route(channel_id)
 
 # Other API
 @api_bp.route("/admin/api/get-client-ip", methods=[http.GET])

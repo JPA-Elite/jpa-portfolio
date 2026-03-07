@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{{ title or "Server Community" }}</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css" crossorigin="anonymous" />
+  <link rel="stylesheet" href="{{ static_asset('css/pages/server.css') }}" />
+</head>
+<body class="server-community-page">
+  <div class="server-auth-wrapper">
+    <div class="server-auth-card">
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          {% for category, message in messages %}
+            <div class="server-alert server-alert-{{ category }}">{{ message }}</div>
+          {% endfor %}
+        {% endif %}
+      {% endwith %}
+
+      <h1>Server Community</h1>
+      <p class="server-auth-meta">
+        Join the text-based community channels for <strong>general</strong> and <strong>business concerns</strong>.
+      </p>
+
+      <div class="d-grid gap-2">
+        <a class="btn btn-primary btn-lg" href="{{ url_for('pages.server_login') }}">
+          Connect Server <i class="bi bi-arrow-left ms-1"></i>
+        </a>
+        <a class="btn btn-outline-light" href="{{ url_for('pages.server_register') }}">Create Account</a>
+      </div>
+
+      <div class="server-auth-links mt-3">
+        <a class="server-auth-link" href="{{ url_for('pages.concern') }}">Back to Concern</a>
+        <a class="server-auth-link" href="{{ url_for('pages.profile') }}">Back to Portfolio</a>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

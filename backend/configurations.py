@@ -24,6 +24,12 @@ CONCERN_PAGE = "pages/concern.html"
 ADD_PORTFOLIO_PAGE = "pages/add_portfolio.html"
 DONATION_PAGE = "pages/donation.html"
 DEVICE_INFO_VISIT_PAGE = "pages/visitors.html"
+SERVER_ENTRY_PAGE = "pages/server_entry.html"
+SERVER_LOGIN_PAGE = "pages/server_login.html"
+SERVER_REGISTER_PAGE = "pages/server_register.html"
+SERVER_FORGOT_PASSWORD_PAGE = "pages/server_forgot_password.html"
+SERVER_APP_PAGE = "pages/server_app.html"
+SERVER_SETTINGS_PAGE = "pages/server_settings.html"
 ERROR_404_PAGE = "error/404.html"
 
 # admin pages
@@ -36,6 +42,8 @@ ADMIN_KEY_PROJECTS_PAGE = "admin/dist/key_projects.html"
 ADMIN_COMPANY_ROADMAPS_PAGE = "admin/dist/company_roadmaps.html"
 ADMIN_SETTINGS_PAGE = "admin/dist/settings.html"
 ADMIN_LOGIN_ATTEMPTS_PAGE = "admin/dist/login_attempts.html"
+ADMIN_SERVER_USERS_PAGE = "admin/dist/server_users.html"
+ADMIN_SERVER_CHANNELS_PAGE = "admin/dist/server_channels.html"
 
 LANGUAGES = {
     "en": "English",

@@ -111,10 +111,13 @@ class DashboardService:
             raise
 
     def delete_activity_logs(self, record_ids: list) -> dict:
-        """Delete activity log entries by their _id values."""
+        """Delete activity log entries by their _id values, or delete all if record_ids is empty."""
         try:
             from bson import ObjectId
             from bson.errors import InvalidId
+            if not record_ids:
+                result = self.activity_repo.collection.delete_many({})
+                return {"status": "success", "message": f"Deleted {result.deleted_count} record(s).", "deleted_count": result.deleted_count}
             object_ids = []
             for rid in record_ids:
                 try:

@@ -14,3 +14,7 @@ class IVisitRepository(ABC):
     def count_visits(self, where_condition: dict = None):
         pass
 
+    @abstractmethod
+    def delete_all_visitors(self) -> dict:
+        pass
+

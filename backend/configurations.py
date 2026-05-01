@@ -7,10 +7,10 @@ IMAGE_PATH = "/static/images/"
 DOCUMENT_PATH = "/static/documents/"
 JSON_PATH = "/static/json/"
 
-PROFILE_IMAGE = f"{IMAGE_PATH}1x1_the_eys_will_move_and_also_its_m.png"
+PROFILE_IMAGE = f"{IMAGE_PATH}1x1_the_eys_will_move_and_also_its_m.webp"
 PROFILE_IMAGE_GIF = f"{IMAGE_PATH}08a08500-b5ae-41da-9c7c-d99b34a4dc2c_video.gif"
 RESUME_PDF = f"{DOCUMENT_PATH}joshua_algadipe.pdf"
-CHAT_ICON = f"{IMAGE_PATH}chat.png"
+CHAT_ICON = f"{IMAGE_PATH}chat.webp"
 GALLERY_JSON_PATH = f"{JSON_PATH}gallery.json"
 VLOG_JSON_PATH =  f"{JSON_PATH}vlog.json"
 

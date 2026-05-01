@@ -629,7 +629,7 @@ def profile_route():
     profile_goals = gettext("profile_goals")
     profile_desc = f"{escape(profile_intro)} {escape(profile_age)}<br>{escape(profile_introvert)}<br>{escape(profile_job)} {escape(profile_goals)}"
 
-    voice_icon = url_for("static", filename="images/voice.png", _external=True)
+    voice_icon = url_for("static", filename="images/voice.webp", _external=True)
 
     try:
         key_project_service.seed_default_projects_if_empty()
@@ -826,7 +826,7 @@ def gallery_route():
         gallery_data.append(gallery_dict)
 
     total_pages = math.ceil(total / items_per_page)
-    voice_icon = url_for("static", filename="images/voice.png", _external=True)
+    voice_icon = url_for("static", filename="images/voice.webp", _external=True)
     random_tags = get_random_tags(gallery_service.get_all_tags(100), 12)
 
     return handle_log_parameter() or render_template(

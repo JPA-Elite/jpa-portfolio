@@ -24,38 +24,38 @@
     {{ template_livereload() }}
 
     <!-- Set background image to default -->
-    {% set background_image = 'images/background1.jpg' %}
+    {% set background_image = 'images/background1.webp' %}
     {% set force_light_theme = "False" %}
 
     <!-- Set background image for Christmas -->
     {% if now.month == 12 and now.day == 25 %}
     {% set force_light_theme = "True" %}
-    {% set background_image = 'images/christmas.jpg' %}
+    {% set background_image = 'images/christmas.webp' %}
 
     <!-- Set background image for New Year -->
     {% elif now.month == 1 and now.day == 1 %}
     {% set force_light_theme = "True" %}
-    {% set background_image = 'images/newyear.jpg' %}
+    {% set background_image = 'images/newyear.webp' %}
 
     <!-- Set background image for Valentines Day -->
     {% elif now.month == 2 and now.day == 14 %}
     {% set force_light_theme = "True" %}
-    {% set background_image = 'images/valentines.jpg' %}
+    {% set background_image = 'images/valentines.webp' %}
 
     <!-- Set background image for Independence Day -->
     {% elif now.month == 6 and now.day == 12 %}
     {% set force_light_theme = "True" %}
-    {% set background_image = 'images/independence.jpg' %}
+    {% set background_image = 'images/independence.webp' %}
 
     <!-- Set background image for Halloween Day -->
     {% elif now.month == 10 and now.day == 31 %}
     {% set force_light_theme = "True" %}
-    {% set background_image = 'images/halloween.jpg' %}
+    {% set background_image = 'images/halloween.webp' %}
 
     <!-- Set background image for National Heroes Day -->
     {% elif now.month == 11 and now.day == 30 %}
     {% set force_light_theme = "True" %}
-    {% set background_image = 'images/nationalheroes.jpg' %}
+    {% set background_image = 'images/nationalheroes.webp' %}
     {% endif %}
     <style>
         body::before {
@@ -203,22 +203,22 @@
                     </a>
                     {% if request.args.get('mode') != 'professional' %}
                         <a class="donation-btn" href="{{ url_for('pages.donation') }}">
-                            <img src="{{ url_for('static', filename='images/peso.png') }}" alt="donation" class="flag-icon">
+                            <img src="{{ url_for('static', filename='images/peso.webp') }}" alt="donation" class="flag-icon">
                         </a>
                     {% endif %}
                     <div class="dropdown">
                         <button class="dropbtn">
                             {% if get_locale() == en_locale %}
-                            <img src="{{ url_for('static', filename='images/en_flag.png') }}" alt="English"
+                            <img src="{{ url_for('static', filename='images/en_flag.webp') }}" alt="English"
                                 class="flag-icon">
                             {% elif get_locale() == ceb_locale %}
-                            <img src="{{ url_for('static', filename='images/ph_flag.png') }}" alt="Cebuano"
+                            <img src="{{ url_for('static', filename='images/ph_flag.webp') }}" alt="Cebuano"
                                 class="flag-icon">
                             {% elif get_locale() == tl_locale %}
-                            <img src="{{ url_for('static', filename='images/ph_flag.png') }}" alt="Tagalog"
+                            <img src="{{ url_for('static', filename='images/ph_flag.webp') }}" alt="Tagalog"
                                 class="flag-icon">
                             {% else %}
-                            <img src="{{ url_for('static', filename='images/en_flag.png') }}" alt="Default"
+                            <img src="{{ url_for('static', filename='images/en_flag.webp') }}" alt="Default"
                                 class="flag-icon">
                             {% endif %}
                         </button>
@@ -226,19 +226,19 @@
                             <a href="{{ url_for('api.change_language', lang_code=en_locale) }}?mode=professional"
                                 class="{% if get_locale()==en_locale %}active{% endif %}"
                                 onclick="changeLanguage('/change_language/{{en_locale}}?mode=professional'); return false;">
-                                <img src="{{ url_for('static', filename='images/en_flag.png') }}" alt="English"
+                                <img src="{{ url_for('static', filename='images/en_flag.webp') }}" alt="English"
                                     class="flag-icon"> {{ _('English') }}
                             </a>
                             <a href="{{ url_for('api.change_language', lang_code=ceb_locale) }}?mode=professional"
                                 class="{% if get_locale()==ceb_locale %}active{% endif %}"
                                 onclick="changeLanguage('/change_language/{{ceb_locale}}?mode=professional'); return false;">
-                                <img src="{{ url_for('static', filename='images/ph_flag.png') }}" alt="Cebuano"
+                                <img src="{{ url_for('static', filename='images/ph_flag.webp') }}" alt="Cebuano"
                                     class="flag-icon"> {{ _('Cebuano') }}
                             </a>
                             <a href="{{ url_for('api.change_language', lang_code=tl_locale) }}?mode=professional"
                                 class="{% if get_locale()==tl_locale %}active{% endif %}"
                                 onclick="changeLanguage('/change_language/{{tl_locale}}?mode=professional'); return false;">
-                                <img src="{{ url_for('static', filename='images/ph_flag.png') }}" alt="Tagalog"
+                                <img src="{{ url_for('static', filename='images/ph_flag.webp') }}" alt="Tagalog"
                                     class="flag-icon"> {{ _('Tagalog') }}
                             </a>
                         </div>

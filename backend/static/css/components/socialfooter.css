@@ -211,6 +211,17 @@
     transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
+.social-footer__collab-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-top: 12px;
+}
+
+.social-footer__collab {
+    margin-top: 0;
+}
+
 .social-footer__collab:hover {
     transform: translateY(-2px);
     border-color: rgba(41, 98, 255, 0.28);
@@ -374,6 +385,10 @@
 
     .social-footer__collab {
         grid-template-columns: auto 1fr;
+    }
+
+    .social-footer__collab-grid {
+        grid-template-columns: 1fr;
     }
 
     .social-footer__collab-action {

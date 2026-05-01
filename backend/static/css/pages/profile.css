@@ -2314,9 +2314,13 @@ section>*+* {
 
 [data-theme="light"] #resume .cta-button {
     color: #fff !important;
-    background: linear-gradient(135deg, #ec4899, #3b82f6) !important;
-    border-color: rgba(255, 255, 255, 0.45);
+    background: #2563eb !important;
+    border-color: rgba(0, 0, 0, 0.15);
     text-decoration: none;
+}
+
+[data-theme="light"] #resume .cta-button:hover {
+    background: #1d4ed8 !important;
 }
 
 @media only screen and (max-width: 768px) {
@@ -2372,9 +2376,13 @@ section>*+* {
     #resume .cta-button {
         padding: 8px 12px;
         border-radius: 10px;
-        background: linear-gradient(135deg, #ec4899, #3b82f6) !important;
+        background: #2563eb !important;
         color: #fff !important;
         text-decoration: none;
+    }
+
+    [data-theme="light"] #resume .cta-button {
+        background: #2563eb !important;
     }
 
     #contact ul ul li a {

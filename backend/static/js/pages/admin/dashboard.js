@@ -132,8 +132,13 @@ document.addEventListener("DOMContentLoaded", async () => {
                 pageInfo.textContent = "";
                 prevBtn.disabled = true;
                 nextBtn.disabled = true;
+                const clearBtn = document.getElementById("clearActivityBtn");
+                if (clearBtn) clearBtn.disabled = true;
                 return;
             }
+
+            const clearBtn = document.getElementById("clearActivityBtn");
+            if (clearBtn) clearBtn.disabled = false;
 
             const rows = filteredData.slice(start, end).map((item) => {
                 const ts = item.timestamp ? new Date(item.timestamp) : new Date();
@@ -231,6 +236,20 @@ document.addEventListener("DOMContentLoaded", async () => {
             currentPage = 1;
             renderPage();
         });
+        document.getElementById("clearActivityBtn")?.addEventListener("click", () => {
+            window.confirmDelete("Clear all recent activity records?", async () => {
+                const res = await fetch("/admin/api/clear-all-activity", { method: "DELETE" });
+                const json = await res.json();
+                if (json.ok) {
+                    bootstrap.Modal.getInstance(document.getElementById("deleteConfirmModal")).hide();
+                    window.notify(json.message || "All activity cleared.", "success");
+                    activityData = [];
+                    renderPage();
+                } else {
+                    window.notify(json.message || "Failed to clear activity.", "error");
+                }
+            });
+        });
         prevBtn.addEventListener("click", () => {
             if (currentPage > 1) {
                 currentPage--;
@@ -298,8 +317,13 @@ document.addEventListener("DOMContentLoaded", async () => {
                 pageInfo.textContent = "";
                 prevBtn.disabled = true;
                 nextBtn.disabled = true;
+                const clearBtn = document.getElementById("clearVisitsBtn");
+                if (clearBtn) clearBtn.disabled = true;
                 return;
             }
+
+            const clearBtn = document.getElementById("clearVisitsBtn");
+            if (clearBtn) clearBtn.disabled = false;
 
             const rows = filtered.slice(start, end).map((item) => {
                 const ts = item.timestamp ? new Date(item.timestamp) : null;
@@ -371,6 +395,20 @@ document.addEventListener("DOMContentLoaded", async () => {
         perPageSelect?.addEventListener("change", () => { currentPage = 1; renderPage(); });
         searchInput?.addEventListener("input", () => { currentPage = 1; renderPage(); });
         orderSelect?.addEventListener("change", () => { currentPage = 1; renderPage(); });
+        document.getElementById("clearVisitsBtn")?.addEventListener("click", () => {
+            window.confirmDelete("Clear all visitor records?", async () => {
+                const res = await fetch("/admin/api/clear-all-visitors", { method: "DELETE" });
+                const json = await res.json();
+                if (json.ok) {
+                    bootstrap.Modal.getInstance(document.getElementById("deleteConfirmModal")).hide();
+                    window.notify(json.message || "All visitors cleared.", "success");
+                    allVisits = [];
+                    renderPage();
+                } else {
+                    window.notify(json.message || "Failed to clear visitors.", "error");
+                }
+            });
+        });
         prevBtn.addEventListener("click", () => { if (currentPage > 1) { currentPage--; renderPage(); } });
         nextBtn.addEventListener("click", () => {
             const perPage = Number(perPageSelect?.value) || 10;

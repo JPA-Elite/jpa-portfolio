@@ -79,3 +79,11 @@ class VisitRepository(IVisitRepository, BaseRepository):
             "visitor_total_count": visitor_total_count,
             "bot_total_count": bot_total_count
         }
+
+    def delete_all_visitors(self) -> dict:
+        """Delete all visitor records. Returns deleted count."""
+        try:
+            result = self.collection.delete_many({})
+            return {"status": "success", "deleted_count": result.deleted_count}
+        except Exception as e:
+            return {"status": "error", "message": str(e)}

@@ -34,7 +34,7 @@ from backend.Controllers.api.GalleryLikeController import (
     get_gallery_likes_count_route,
     get_gallery_likes_counts_batch_route,
 )
-from backend.Controllers.api.DashboardController import visits_info_route, recent_activity_route, dashboard_summary_route, visits_list_route, visits_delete_route, recent_activity_delete_route
+from backend.Controllers.api.DashboardController import visits_info_route, recent_activity_route, dashboard_summary_route, visits_list_route, visits_delete_route, recent_activity_delete_route, clear_all_visitors_route, clear_all_activity_route
 from backend.Repositories.MusicRepository import MusicRepository
 from backend.Repositories.GalleryRepository import GalleryRepository
 from backend.Repositories.VideoRepository import VideoRepository
@@ -181,6 +181,16 @@ def delete_visits(record_id):
 def delete_activity():
     ids = request.json.get("record_ids", []) if request.json else []
     return recent_activity_delete_route(ids)
+
+@api_bp.route("/admin/api/clear-all-visitors", methods=[http.DELETE])
+@admin_login_required
+def clear_all_visitors():
+    return clear_all_visitors_route()
+
+@api_bp.route("/admin/api/clear-all-activity", methods=[http.DELETE])
+@admin_login_required
+def clear_all_activity():
+    return clear_all_activity_route()
 
 # Music API
 

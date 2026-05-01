@@ -8,8 +8,7 @@
     const body = document.body;
     const root = document.documentElement;
     const sidebar = document.getElementById("adminSidebar");
-    const themeToggleButton = document.getElementById("adminThemeToggle");
-    const themeToggleIcon = document.getElementById("adminThemeToggleIcon");
+    const themeToggle = document.getElementById("adminThemeToggle");
     const sidebarToggleButtons = document.querySelectorAll('[data-lte-toggle="sidebar"]');
     const sidebarCollapseButton = document.getElementById("sidebarCollapseButton");
     const sidebarCollapseIcon = document.getElementById("sidebarCollapseIcon");
@@ -53,23 +52,6 @@
         if (sidebar) {
             sidebar.setAttribute("data-bs-theme", activeTheme);
         }
-
-        if (!themeToggleIcon || !themeToggleButton) {
-            return;
-        }
-
-        themeToggleIcon.classList.remove("bi-moon-stars-fill", "bi-sun-fill");
-
-        if (activeTheme === "dark") {
-            themeToggleIcon.classList.add("bi-sun-fill");
-            themeToggleButton.setAttribute("aria-label", "Switch to light mode");
-            themeToggleButton.setAttribute("title", "Light mode");
-            return;
-        }
-
-        themeToggleIcon.classList.add("bi-moon-stars-fill");
-        themeToggleButton.setAttribute("aria-label", "Switch to dark mode");
-        themeToggleButton.setAttribute("title", "Dark mode");
     };
 
     const applySidebarStateForViewport = () => {
@@ -137,15 +119,20 @@
     };
 
     const initThemeToggle = () => {
-        applyTheme(getPreferredTheme());
+        const preferredTheme = getPreferredTheme();
+        applyTheme(preferredTheme);
 
-        if (!themeToggleButton) {
+        // Sync checkbox state: checked = dark, unchecked = light
+        if (themeToggle) {
+            themeToggle.checked = preferredTheme === "dark";
+        }
+
+        if (!themeToggle) {
             return;
         }
 
-        themeToggleButton.addEventListener("click", () => {
-            const currentTheme = root.getAttribute("data-bs-theme") === "dark" ? "dark" : "light";
-            const nextTheme = currentTheme === "dark" ? "light" : "dark";
+        themeToggle.addEventListener("change", () => {
+            const nextTheme = themeToggle.checked ? "dark" : "light";
             applyTheme(nextTheme);
             writeStorage(THEME_STORAGE_KEY, nextTheme);
         });

@@ -614,7 +614,10 @@ def _resolve_project_stack_display(stack_value, locale_value, seed_stack_map=Non
 
 
 def index_route():
-    return handle_log_parameter() or render_template(INTRO_PAGE)
+    log_result = handle_log_parameter()
+    if log_result is not None:
+        return log_result
+    return redirect(url_for("pages.profile"))
 
 def profile_route():
     profile_name = gettext("profile_name")

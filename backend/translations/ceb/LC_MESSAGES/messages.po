@@ -309,6 +309,12 @@ msgstr "Unsang klase nga tawo ka?"
 msgid "qa_type_of_person_answer"
 msgstr "Medyo misteryoso ko ug dili ko katawa kung ang usa ka tawo dili mo match sa akong vibes, pero kung komportable na ako sa usa, ako na ang magkatawa sa tanan."
 
+msgid "qa_favorite_programming_language"
+msgstr "Unsay imong paboritong programming language?"
+
+msgid "qa_favorite_programming_language_answer"
+msgstr "Ang akong paboritong programming language kay Python kay nag-focus siya sa hardware integration, sama sa pagbuhat og robotics ug IoT devices, dili lang software sama sa websites o apps sa lain-laing platform."
+
 msgid "profile_name"
 msgstr "Akong Profile"
 

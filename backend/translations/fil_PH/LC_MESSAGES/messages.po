@@ -309,6 +309,12 @@ msgstr "Anong uri ng tao ka?"
 msgid "qa_type_of_person_answer"
 msgstr "Ako ay medyo mahiwaga at hindi tatawa kung hindi ko kapareho ng vibes ang isang tao, pero kapag komportable na ako, ako ang pinaka-maingay at palatawa."
 
+msgid "qa_favorite_programming_language"
+msgstr "Ano ang paborito mong programming language?"
+
+msgid "qa_favorite_programming_language_answer"
+msgstr "Ang paborito kong programming language ay Python dahil focused siya sa hardware integration, tulad ng pagbuo ng robotics at IoT devices, hindi lang software tulad ng websites o apps sa ibat-ibang platforms."
+
 msgid "profile_name"
 msgstr "Aking Profile"
 

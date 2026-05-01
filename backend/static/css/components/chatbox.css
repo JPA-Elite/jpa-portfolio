@@ -205,6 +205,16 @@
     border-radius: 50%;
     background: #3ba55d;
     box-shadow: 0 0 0 2px rgba(59, 165, 93, 0.18);
+    animation: statusPulse 2s ease-in-out infinite;
+}
+
+@keyframes statusPulse {
+    0%, 100% {
+        box-shadow: 0 0 0 2px rgba(59, 165, 93, 0.18);
+    }
+    50% {
+        box-shadow: 0 0 0 4px rgba(59, 165, 93, 0.35), 0 0 8px rgba(59, 165, 93, 0.5);
+    }
 }
 
 .chatbox-close {

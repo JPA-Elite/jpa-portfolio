@@ -50,16 +50,22 @@
     min-width: 0;
 }
 
-/* Match user dropdown header to sidebar tone (override AdminLTE primary) */
+/* User dropdown header — light mode: white bg, dark text; dark mode: dark bg, light text */
 .app-header .user-menu .dropdown-menu .user-header,
 .app-header .user-menu .dropdown-menu .user-header.text-bg-primary {
-    background-color: #343a40 !important;
-    color: #fff;
+    background-color: #f8f9fa !important;
+    color: #212529 !important;
 }
 
 .app-header .user-menu .dropdown-menu .user-header p,
 .app-header .user-menu .dropdown-menu .user-header small {
     color: inherit;
+}
+
+[data-bs-theme="dark"] .app-header .user-menu .dropdown-menu .user-header,
+[data-bs-theme="dark"] .app-header .user-menu .dropdown-menu .user-header.text-bg-primary {
+    background-color: #343a40 !important;
+    color: #fff !important;
 }
 
 /* ── Theme toggle switch ── */

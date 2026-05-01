@@ -30,7 +30,7 @@
     <!--end::Third Party Plugin(Bootstrap Icons)-->
 
     <link rel="icon" type="image/png"
-        href="{{ url_for('static', filename='admin/assets/img/AdminLTELogo.png') }}" />
+        href="{{ url_for('static', filename='admin/assets/img/AdminLTELogo.webp') }}" />
 
     <!--begin::Required Plugin(AdminLTE)-->
     <link rel="stylesheet" href="{{ static_asset('css/pages/admin/adminlte.css') }}" />
@@ -45,7 +45,7 @@
 </head>
 
 <body class="layout-fixed sidebar-expand-lg sidebar-mini bg-body-tertiary">
-    {% set admin_avatar = session.get('profile_image') or url_for('static', filename='admin/assets/img/admin.png') %}
+    {% set admin_avatar = session.get('profile_image') or url_for('static', filename='admin/assets/img/admin.webp') %}
     {% set admin_username = session.get('username') or 'Admin' %}
     <div class="app-wrapper">
         <!-- Header -->
@@ -99,7 +99,7 @@
         <aside id="adminSidebar" class="app-sidebar bg-body-secondary shadow" data-bs-theme="dark">
             <div class="sidebar-brand">
                 <a href="/admin/dashboard" class="brand-link">
-                    <img src="{{ url_for('static', filename='admin/assets/img/AdminLTELogo.png', _external=True) }}"
+                    <img src="{{ url_for('static', filename='admin/assets/img/AdminLTELogo.webp', _external=True) }}"
                         alt="AdminLTE Logo" class="brand-image opacity-75 shadow" />
                     <span class="brand-text fw-light">JPA ADMIN</span>
                 </a>

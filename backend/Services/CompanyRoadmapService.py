@@ -176,7 +176,7 @@ class CompanyRoadmapService:
         if self.repository.count_company_roadmaps() > 0:
             return 0
 
-        placeholder = "/static/images/no-project.png"
+        placeholder = "/static/images/no-project.webp"
         seeded = [
             CompanyRoadmap.from_dict({
                 "id": "cr-business-intern",

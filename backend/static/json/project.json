@@ -1,7 +1,7 @@
 [
     {
         "slideId": 1,
-        "src": "/static/images/jaom_home.png",
+        "src": "/static/images/jaom_home.webp",
         "titles": {
             "en": "Home Page",
             "ceb": "Home Page",
@@ -17,7 +17,7 @@
     },
     {
         "slideId": 2,
-        "src": "/static/images/jaom_about_us.png",
+        "src": "/static/images/jaom_about_us.webp",
         "titles": {
             "en": "About Us",
             "ceb": "Mahitungod Kanato",

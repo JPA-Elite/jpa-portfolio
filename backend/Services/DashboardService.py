@@ -110,6 +110,25 @@ class DashboardService:
             current_app.logger.exception("Failed to build dashboard summary in DashboardService")
             raise
 
+    def delete_activity_logs(self, record_ids: list) -> dict:
+        """Delete activity log entries by their _id values."""
+        try:
+            from bson import ObjectId
+            from bson.errors import InvalidId
+            object_ids = []
+            for rid in record_ids:
+                try:
+                    object_ids.append(ObjectId(rid))
+                except InvalidId:
+                    pass
+            if not object_ids:
+                return {"status": "error", "message": "Invalid record IDs."}
+            result = self.activity_repo.collection.delete_many({"_id": {"$in": object_ids}})
+            return {"status": "success", "message": f"Deleted {result.deleted_count} record(s).", "deleted_count": result.deleted_count}
+        except Exception as e:
+            current_app.logger.exception("Failed to delete activity logs")
+            return {"status": "error", "message": str(e)}
+
     def get_recent_activity(self, limit: int = 50):
         """Return recent activity entries, with file fallback."""
         try:

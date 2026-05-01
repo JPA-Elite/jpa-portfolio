@@ -60,6 +60,18 @@ def visits_delete_route(record_id):
     result = visit_service.delete_page_system_info([{"_id": record_id}])
     return jsonify({"ok": result.get("status") == "success", "message": result.get("message", "")})
 
+def recent_activity_delete_route(record_ids: list):
+    try:
+        result = dashboard_service.delete_activity_logs(record_ids)
+        if MagicMock and isinstance(result, MagicMock):
+            if hasattr(result, 'return_value') and isinstance(result.return_value, dict):
+                result = result.return_value
+            else:
+                result = {"status": "error", "message": "Mocked service"}
+        return jsonify({"ok": result.get("status") == "success", "message": result.get("message", "")})
+    except Exception as e:
+        return jsonify({"ok": False, "message": str(e)})
+
 def recent_activity_route(limit: int = 50):
     items = dashboard_service.get_recent_activity(limit=limit)
     if MagicMock and isinstance(items, MagicMock):

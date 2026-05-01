@@ -6,7 +6,7 @@ from backend.Controllers.api.VlogLikeController import (
     get_vlog_likes_counts_batch_route,
 )
 from backend.configurations import HTTPMethod as http
-from flask import Blueprint, request, jsonify, current_app
+from flask import Blueprint, request, request, jsonify, current_app
 from datetime import datetime
 import json
 import os
@@ -34,7 +34,7 @@ from backend.Controllers.api.GalleryLikeController import (
     get_gallery_likes_count_route,
     get_gallery_likes_counts_batch_route,
 )
-from backend.Controllers.api.DashboardController import visits_info_route, recent_activity_route, dashboard_summary_route, visits_list_route, visits_delete_route
+from backend.Controllers.api.DashboardController import visits_info_route, recent_activity_route, dashboard_summary_route, visits_list_route, visits_delete_route, recent_activity_delete_route
 from backend.Repositories.MusicRepository import MusicRepository
 from backend.Repositories.GalleryRepository import GalleryRepository
 from backend.Repositories.VideoRepository import VideoRepository
@@ -175,6 +175,12 @@ def visits_list():
 @admin_login_required
 def delete_visits(record_id):
     return visits_delete_route(record_id)
+
+@api_bp.route("/admin/api/delete-activity", methods=[http.DELETE])
+@admin_login_required
+def delete_activity():
+    ids = request.json.get("record_ids", []) if request.json else []
+    return recent_activity_delete_route(ids)
 
 # Music API
 

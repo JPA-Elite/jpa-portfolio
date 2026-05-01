@@ -39,6 +39,7 @@
     <link rel="stylesheet" href="{{ static_asset('css/components/toast.css') }}" />
     <script src="{{ static_asset('js/components/toast.js') }}"></script>
     <script src="{{ static_asset('js/pages/admin/image-preview-modal.js') }}"></script>
+    <script src="{{ static_asset('js/pages/admin/video-preview-modal.js') }}"></script>
     {{ vite_hmr() }}
     {{ template_livereload() }}
     <script>
@@ -54,15 +55,6 @@
         } catch(e) {}
     })();
     </script>
-    <style>
-    /* Prevent sidebar from rendering with wrong theme during load */
-    .app-sidebar.bg-body-secondary {
-        background-color: var(--bs-secondary-bg, #f8f9fa) !important;
-    }
-    [data-bs-theme="dark"] .app-sidebar.bg-body-secondary {
-        background-color: var(--bs-secondary-bg, #343a40) !important;
-    }
-    </style>
     {% block head %}{% endblock %}
 </head>
 

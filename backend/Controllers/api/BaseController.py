@@ -59,6 +59,7 @@ def profile_config_route():
         { "question": gettext("qa_dream_job"), "answer": gettext("qa_dream_job_answer") },
         { "question": gettext("qa_type_of_person"), "answer": gettext("qa_type_of_person_answer") },
         { "question": gettext("qa_nickname"), "answer": gettext("qa_nickname_answer") },
+        { "question": gettext("qa_favorite_programming_language"), "answer": gettext("qa_favorite_programming_language_answer") },
         # { "question": gettext("qa_behaviour"), "answer": gettext("qa_behaviour_answer") },
         # { "question": gettext("qa_song"), "answer": gettext("qa_song_answer") }
     ]

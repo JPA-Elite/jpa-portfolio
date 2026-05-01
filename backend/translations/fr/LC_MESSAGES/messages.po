@@ -303,6 +303,12 @@ msgstr "Quel genre de personne êtes-vous ?"
 msgid "qa_type_of_person_answer"
 msgstr "Je suis un peu énigmatique et je ne ris pas si quelqu'un ne correspond pas à mes vibes, mais une fois que je suis à l'aise avec quelqu'un, je suis celui qui rit le plus."
 
+msgid "qa_favorite_programming_language"
+msgstr "Quel est votre langage de programmation préféré ?"
+
+msgid "qa_favorite_programming_language_answer"
+msgstr "Mon langage de programmation préféré est Python car il se concentre sur l'intégration matérielle, comme la construction de robotique et d'appareils IoT, pas seulement sur les logiciels comme les sites web ou les applications sur différentes plateformes."
+
 msgid "profile_name"
 msgstr "My Profile"
 

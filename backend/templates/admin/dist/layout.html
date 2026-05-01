@@ -41,6 +41,28 @@
     <script src="{{ static_asset('js/pages/admin/image-preview-modal.js') }}"></script>
     {{ vite_hmr() }}
     {{ template_livereload() }}
+    <script>
+    // Apply theme BEFORE first render to prevent flash
+    (function() {
+        try {
+            var stored = localStorage.getItem("admin.theme");
+            var theme = stored === "dark" ? "dark" : "light";
+            if (theme !== "light" && theme !== "dark") {
+                theme = (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) ? "dark" : "light";
+            }
+            document.documentElement.setAttribute("data-bs-theme", theme);
+        } catch(e) {}
+    })();
+    </script>
+    <style>
+    /* Prevent sidebar from rendering with wrong theme during load */
+    .app-sidebar.bg-body-secondary {
+        background-color: var(--bs-secondary-bg, #f8f9fa) !important;
+    }
+    [data-bs-theme="dark"] .app-sidebar.bg-body-secondary {
+        background-color: var(--bs-secondary-bg, #343a40) !important;
+    }
+    </style>
     {% block head %}{% endblock %}
 </head>
 
@@ -96,7 +118,7 @@
 
         <!-- Sidebar -->
         {% block sidebar %}
-        <aside id="adminSidebar" class="app-sidebar bg-body-secondary shadow" data-bs-theme="dark">
+        <aside id="adminSidebar" class="app-sidebar bg-body-secondary shadow">
             <div class="sidebar-brand">
                 <a href="/admin/dashboard" class="brand-link">
                     <img src="{{ url_for('static', filename='admin/assets/img/AdminLTELogo.png', _external=True) }}"

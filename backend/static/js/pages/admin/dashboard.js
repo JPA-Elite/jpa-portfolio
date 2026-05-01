@@ -128,7 +128,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             const atLastPage = currentPage >= totalPages;
 
             if (total === 0) {
-                tableBody.innerHTML = '<tr><td colspan="5" class="text-center text-muted">No recent activity.</td></tr>';
+                tableBody.innerHTML = '<tr><td colspan="6" class="text-center text-muted">No recent activity.</td></tr>';
                 pageInfo.textContent = "";
                 prevBtn.disabled = true;
                 nextBtn.disabled = true;
@@ -153,12 +153,17 @@ document.addEventListener("DOMContentLoaded", async () => {
                 if (details.length > 200) details = `${details.slice(0, 200)}...`;
 
                 return `
-                    <tr>
+                    <tr data-record-id="${item._id || ""}">
                       <td class="small text-muted">${formatTimestamp(ts)}</td>
                       <td>${user}</td>
                       <td>${method}</td>
                       <td>${action}</td>
                       <td><pre class="mb-0 small">${details}</pre></td>
+                      <td>
+                        <button class="btn btn-outline-danger btn-sm py-0 px-1 activity-delete-btn" title="Delete">
+                          <i class="bi bi-trash"></i>
+                        </button>
+                      </td>
                     </tr>`;
             }).join("");
 
@@ -166,10 +171,35 @@ document.addEventListener("DOMContentLoaded", async () => {
             pageInfo.textContent = `${start + 1}-${end} of ${total}`;
             prevBtn.disabled = atFirstPage;
             nextBtn.disabled = atLastPage;
+
+            // Attach delete handlers
+            tableBody.querySelectorAll(".activity-delete-btn").forEach((btn) => {
+                btn.addEventListener("click", function () {
+                    const row = this.closest("tr");
+                    const recordId = row.dataset.recordId;
+                    window.confirmDelete("Are you sure you want to delete this activity record?", async () => {
+                        const BASE = "/admin/api";
+                        const res = await fetch(BASE + "/delete-activity", {
+                            method: "DELETE",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({ record_ids: [recordId] }),
+                        });
+                        const json = await res.json();
+                        if (json.ok) {
+                            bootstrap.Modal.getInstance(document.getElementById("deleteConfirmModal")).hide();
+                            window.notify(json.message || "Record deleted.", "success");
+                            activityData = activityData.filter((v) => (v._id || "") !== recordId);
+                            renderPage();
+                        } else {
+                            window.notify(json.message || "Delete failed.", "error");
+                        }
+                    });
+                });
+            });
         }
 
         async function loadActivity() {
-            tableBody.innerHTML = '<tr><td colspan="5" class="text-center">Loading...</td></tr>';
+            tableBody.innerHTML = '<tr><td colspan="6" class="text-center">Loading...</td></tr>';
             if (window.__dashboard_recent_activity && Array.isArray(window.__dashboard_recent_activity)) {
                 activityData = window.__dashboard_recent_activity;
                 currentPage = 1;

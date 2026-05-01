@@ -487,8 +487,8 @@ function updateTheme(theme) {
     }
 }
 
-// Set default theme to dark if no preference is saved
-const savedTheme = localStorage.getItem("theme") || "dark";
+// Set default theme to light if no preference is saved
+const savedTheme = localStorage.getItem("theme") || "light";
 updateTheme(window.isForceLightMode == "True" ? "light" : savedTheme);
 
 themeToggle.addEventListener("click", () => {

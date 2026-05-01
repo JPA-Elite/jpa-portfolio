@@ -339,7 +339,7 @@ syncFullscreenButton(false);
 
 document.addEventListener("DOMContentLoaded", async () => {
     const root = document.documentElement;
-    root.setAttribute("data-theme", "dark");
+    root.setAttribute("data-theme", "light");
     applyQueryParamsFromUrl();
 
     if (lyricsBtn) {

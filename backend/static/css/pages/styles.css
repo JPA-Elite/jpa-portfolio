@@ -688,6 +688,11 @@ nav #navList li a {
     font-size: 20px;
     margin-left: 12px;
     margin-right: 8px;
+    transition: transform 0.3s ease;
+}
+
+.admin-float-btn:hover ion-icon {
+    transform: rotate(90deg);
 }
 
 /* Label text (optional) */

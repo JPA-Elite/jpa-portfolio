@@ -105,6 +105,33 @@ function updateCountUI(buttonElement, data) {
     }
 }
 
+function spawnHeartEffect(cardRoot, button) {
+    const rect = button.getBoundingClientRect();
+    const cardRect = cardRoot.getBoundingClientRect();
+    const heartX = rect.left + rect.width / 2 - cardRect.left;
+    const heartY = rect.top + rect.height / 2 - cardRect.top;
+
+    for (let i = 0; i < 6; i++) {
+        const heart = document.createElement("div");
+        heart.className = "heart-particle";
+        heart.innerHTML = `<ion-icon name="heart"></ion-icon>`;
+        heart.style.cssText = `
+            position: absolute;
+            left: ${heartX}px;
+            top: ${heartY}px;
+            color: #fb7299;
+            font-size: ${10 + Math.random() * 10}px;
+            pointer-events: none;
+            z-index: 100;
+            animation: heartBurst 0.7s ease-out forwards;
+            --tx: ${(Math.random() - 0.5) * 120}px;
+            --ty: ${-30 - Math.random() * 80}px;
+        `;
+        cardRoot.appendChild(heart);
+        setTimeout(() => heart.remove(), 700);
+    }
+}
+
 async function toggleLike(button, galleryId) {
     const icon = button.querySelector("ion-icon");
     const cardRoot = button.closest(".gallery-item");
@@ -113,8 +140,15 @@ async function toggleLike(button, galleryId) {
     const likeBadge = cardRoot?.querySelector(".gallery-count-badge--like");
 
     const wasLiked = button.classList.contains("liked");
-    button.classList.toggle("liked");
     const isLiked = !wasLiked;
+
+    if (isLiked) {
+        button.classList.add("liked");
+        spawnHeartEffect(cardRoot, button);
+    } else {
+        button.classList.remove("liked");
+    }
+
     if (likeBadge) {
         likeBadge.classList.toggle("is-active", isLiked);
     }

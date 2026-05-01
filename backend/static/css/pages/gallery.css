@@ -488,6 +488,23 @@
     color: var(--text-primary);
 }
 
+:root[data-theme="light"] #gallery .tag {
+    border-color: rgba(0, 0, 0, 0.12);
+}
+
+:root[data-theme="light"] #gallery .action-btn {
+    border-color: rgba(0, 0, 0, 0.12);
+}
+
+:root[data-theme="light"] #gallery .like-count,
+:root[data-theme="light"] #gallery .comment-count {
+    background: rgba(0, 0, 0, 0.08);
+}
+
+:root[data-theme="light"] #gallery .like-btn.liked {
+    border-color: transparent;
+}
+
 @supports not (overflow: clip) {
     #gallery .gallery-item {
         overflow: hidden;
@@ -611,5 +628,16 @@
     #gallery .tag:hover,
     #gallery .action-btn:hover {
         transform: none;
+    }
+}
+
+@keyframes heartBurst {
+    0% {
+        opacity: 1;
+        transform: translate(0, 0) scale(1);
+    }
+    100% {
+        opacity: 0;
+        transform: translate(var(--tx), var(--ty)) scale(1.4);
     }
 }

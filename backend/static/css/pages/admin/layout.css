@@ -153,6 +153,38 @@
     color: var(--bs-emphasis-color);
 }
 
+/* ── Preview modal header buttons ── */
+/* Prevent sidebar from rendering with wrong theme during load */
+.app-sidebar.bg-body-secondary {
+    background-color: var(--bs-secondary-bg, #f8f9fa) !important;
+}
+
+[data-bs-theme="dark"] .app-sidebar.bg-body-secondary {
+    background-color: var(--bs-secondary-bg, #343a40) !important;
+}
+
+/* Icon-only header buttons: transparent bg, color adapts to theme */
+.preview-header-btn {
+    background: transparent !important;
+    border: none !important;
+}
+
+.preview-header-btn i.bi {
+    color: #000 !important;
+}
+
+[data-bs-theme="dark"] .preview-header-btn i.bi {
+    color: #fff !important;
+}
+
+.preview-header-btn:hover {
+    background: rgba(0, 0, 0, 0.08) !important;
+}
+
+[data-bs-theme="dark"] .preview-header-btn:hover {
+    background: rgba(255, 255, 255, 0.1) !important;
+}
+
 @media (max-width: 767.98px) {
     .admin-table-toolbar {
         align-items: stretch !important;

@@ -97,6 +97,45 @@
     --chat-user-bubble: rgba(88, 101, 242, 0.18);
 }
 
+[data-theme="light"] .chatbox-modal {
+    --chat-surface: #ffffff;
+    --chat-surface-2: #ffffff;
+    --chat-border: #e5e5e5;
+    background: #ffffff;
+}
+
+[data-theme="light"] .chatbox-header {
+    background: #ffffff;
+}
+
+[data-theme="light"] .chatbox-help-card {
+    background: #ffffff;
+    border-color: #e5e5e5;
+}
+
+[data-theme="light"] .chatbox-footer {
+    background: #ffffff;
+}
+
+[data-theme="light"] .chatbox-body {
+    background: #ffffff;
+}
+
+[data-theme="light"] .chatbox-composer {
+    background: #ffffff;
+    border-color: #e5e5e5;
+}
+
+[data-theme="light"] .chat-options button {
+    background: #ffffff;
+    border-color: #e5e5e5;
+}
+
+[data-theme="light"] .chat-options button:hover {
+    background: #f5f5f5;
+    border-color: #5865f2;
+}
+
 .chatbox-modal .dots-loader {
     min-height: 100%;
 }
@@ -488,11 +527,9 @@
 }
 
 .chatbox-send {
-    border: 1px solid color-mix(in srgb, var(--chat-accent) 22%, transparent);
-    background:
-        linear-gradient(180deg, rgba(88, 101, 242, 0.26), rgba(88, 101, 242, 0.14)),
-        color-mix(in srgb, var(--chat-surface-2) 90%, transparent);
-    color: var(--chat-text);
+    border: 1px solid color-mix(in srgb, var(--accent-color, #007bff) 30%, transparent);
+    background: var(--accent-color, #007bff);
+    color: #fff;
     min-height: 38px;
     padding: 8px 12px;
     border-radius: 10px;
@@ -501,6 +538,11 @@
     cursor: pointer;
     white-space: nowrap;
     transition: background-color 0.18s ease, transform 0.18s ease, border-color 0.18s ease;
+}
+
+[data-theme="dark"] .chatbox-send {
+    background: var(--accent-color, #2962ff);
+    border-color: var(--accent-color, #2962ff);
 }
 
 .chatbox-send ion-icon {
@@ -514,15 +556,12 @@
 
 .chatbox-send:hover {
     transform: translateY(-1px);
-    border-color: color-mix(in srgb, var(--chat-accent) 34%, transparent);
-    background:
-        linear-gradient(180deg, rgba(88, 101, 242, 0.34), rgba(88, 101, 242, 0.18)),
-        color-mix(in srgb, var(--chat-surface-2) 86%, transparent);
+    background: color-mix(in srgb, var(--accent-color, #007bff) 90%, #000);
 }
 
 .chatbox-send:focus-visible,
 .chatbox-input:focus-visible {
-    outline: 2px solid color-mix(in srgb, var(--chat-accent) 35%, transparent);
+    outline: 2px solid color-mix(in srgb, var(--accent-color, #007bff) 35%, transparent);
     outline-offset: 2px;
 }
 

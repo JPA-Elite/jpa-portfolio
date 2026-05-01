@@ -168,17 +168,56 @@
     <div class="content-wrapper">
       <section class="content">
         <div class="container-fluid">
-          <div class="card shadow-sm">
-            <div class="card-header">
-              <h3 class="card-title">Visit External Analytics Page</h3>
+          <div class="card shadow-sm mb-4">
+            <div class="card-header d-flex flex-wrap justify-content-between align-items-center gap-2 admin-table-toolbar">
+              <h3 class="card-title">Visitor Analytics</h3>
+              <div class="d-flex flex-wrap align-items-center gap-2 ms-auto admin-table-filters">
+                <div class="admin-table-show">
+                  <label for="visitsPerPage" class="mb-0">Show</label>
+                  <select id="visitsPerPage" class="form-select form-select-sm admin-table-filter-select" style="width: auto;">
+                    <option value="5">5</option>
+                    <option value="10" selected>10</option>
+                    <option value="20">20</option>
+                    <option value="50">50</option>
+                  </select>
+                </div>
+                <input id="visitsSearchInput" type="search"
+                  class="form-control form-control-sm admin-table-filter-input"
+                  style="width: 220px;" placeholder="Search system, device, browser, ip..." />
+                <select id="visitsOrderSelect" class="form-select form-select-sm admin-table-filter-select" style="width: 150px;">
+                  <option value="desc" selected>Newest First</option>
+                  <option value="asc">Oldest First</option>
+                </select>
+              </div>
             </div>
-            <div class="card-body text-center py-5">
-              <p class="lead mb-4">
-                The device info analytics is hosted externally. Click below to open it.
-              </p>
-              <a href="/device-info/visits" target="_blank" class="btn btn-primary btn-lg">
-                <i class="bi bi-box-arrow-up-right me-2"></i> Go to Device Info
-              </a>
+            <div class="card-body">
+              <div class="table-responsive-wrapper">
+                <table class="table table-bordered table-hover">
+                  <thead class="table-light">
+                    <tr>
+                      <th style="width:120px">System</th>
+                      <th style="width:90px">Device</th>
+                      <th style="width:90px">Browser</th>
+                      <th style="width:90px">OS</th>
+                      <th style="width:130px">IP Address</th>
+                      <th style="width:100px">City</th>
+                      <th style="width:100px">Country</th>
+                      <th style="width:150px">Timestamp</th>
+                      <th style="width:80px">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody id="visitsTableBody">
+                    <tr>
+                      <td colspan="9" class="text-center">Loading...</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div class="d-flex justify-content-between align-items-center mt-3">
+                <button id="visitsPrevPage" class="btn btn-outline-secondary btn-sm">Prev</button>
+                <span id="visitsPageInfo"></span>
+                <button id="visitsNextPage" class="btn btn-outline-secondary btn-sm">Next</button>
+              </div>
             </div>
           </div>
         </div>

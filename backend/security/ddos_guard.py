@@ -206,14 +206,6 @@ def _default_rules() -> Iterable[RateLimitRule]:
             path_prefixes=("/admin/login",),
             methods=("POST",),
         ),
-        # Analytics endpoint often gets spammed and can grow storage.
-        RateLimitRule(
-            name="device_info_visits",
-            limit=_safe_int_env("DDOS_GUARD_DEVICE_INFO_LIMIT", 30),
-            window_seconds=_safe_int_env("DDOS_GUARD_DEVICE_INFO_WINDOW", 60),
-            path_prefixes=("/device-info/visits",),
-            methods=("GET",),
-        ),
     )
 
 

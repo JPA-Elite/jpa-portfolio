@@ -1,9 +1,7 @@
 import math
 from flask import redirect, url_for, render_template, request
 from backend.Services.PortfolioService import PortfolioService
-from backend.Services.VisitService import VisitService
 from backend.Repositories.PortfolioRepository import PortfolioRepository
-from backend.Repositories.VisitRepository import VisitRepository
 from backend.Services.VideoService import VideoService
 from backend.Repositories.VideoRepository import VideoRepository
 from backend.Services.GalleryService import GalleryService
@@ -29,7 +27,6 @@ from backend.configurations import (
     RESUME_PDF,
     VLOG_PAGE,
     MUSIC_PAGE,
-    DEVICE_INFO_VISIT_PAGE,
     DONATION_PAGE,
     SortOrder,
     get_locale,
@@ -40,7 +37,6 @@ import requests
 
 # Initialize Services
 portfolio_service = PortfolioService(repository=PortfolioRepository())
-visit_service = VisitService(repository=VisitRepository())
 gallery_service = GalleryService(repository=GalleryRepository())
 video_service = VideoService(repository=VideoRepository())
 key_project_service = KeyProjectService(repository=KeyProjectRepository())
@@ -883,20 +879,6 @@ def add_portfolio_form_route():
 
 def donation_route():
     return handle_log_parameter() or render_template(DONATION_PAGE)
-
-def device_info_route():
-    page = int(request.args.get("page", 1))
-    per_page = 10
-    documents, total_docs = visit_service.get_paginated_system_info(page, per_page)
-    total_pages = (total_docs + per_page - 1) // per_page
-
-    return handle_log_parameter() or render_template(
-        DEVICE_INFO_VISIT_PAGE,
-        documents=[doc.to_dict() for doc in documents],
-        current_page=page,
-        total_pages=total_pages,
-        title="User Visits",
-    )
 
 # ************************** PRIVATE FUNCTIONS ********************************
 def handle_log_parameter():

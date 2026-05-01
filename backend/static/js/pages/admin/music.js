@@ -121,9 +121,7 @@ async function loadMusic(page = 1) {
     const modalContainer = document.getElementById("musicModals");
     const pageInfo = document.getElementById("pageInfo");
 
-    // ✅ Show loading row
     tbody.innerHTML = `<tr><td colspan="6" class="text-center">Loading...</td></tr>`;
-    modalContainer.innerHTML = "";
 
     try {
         const data = await adminMusicService.fetchList({
@@ -144,7 +142,6 @@ async function loadMusic(page = 1) {
 
         data.music.forEach((music, index) => {
             const modalIdEdit = `editModal${page}_${index}`;
-            const modalIdDelete = `deleteModal${page}_${index}`;
             const safeTitle = escapeHtml(music.title || "");
             const safeArtist = escapeHtml(music.artist || "");
             const safeLyrics = escapeHtml(music.lyrics || "");
@@ -174,7 +171,7 @@ async function loadMusic(page = 1) {
                 <button class="btn btn-sm btn-primary me-1" data-bs-toggle="modal" data-bs-target="#${modalIdEdit}">
                 <i class="bi bi-pencil"></i> Edit
                 </button>
-                <button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#${modalIdDelete}">
+                <button class="btn btn-sm btn-danger music-delete-btn" data-record-id="${music._id}" data-title="${safeTitle}" data-artist="${safeArtist}">
                 <i class="bi bi-trash"></i> Delete
                 </button>
             </td>
@@ -238,27 +235,6 @@ async function loadMusic(page = 1) {
             </div>
             `;
 
-            // ✅ Add Delete modal
-            modalContainer.innerHTML += `
-            <div class="modal fade" id="${modalIdDelete}" tabindex="-1" aria-labelledby="${modalIdDelete}Label" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="${modalIdDelete}Label">Delete Music</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    Are you sure you want to delete <strong>${safeTitle}</strong> by <em>${safeArtist}</em>?
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="button" id="deleteBtn_${music._id}" class="btn btn-danger" data-loading-text='<span class="spinner-border spinner-border-sm me-2"></span> Deleting...' onclick="deleteMusic('${music._id}', '${modalIdDelete}')">Delete</button>
-                </div>
-                </div>
-            </div>
-            </div>
-            `;
-
             setTimeout(() => {
                 initDropZone(
                     `editDropZone${page}_${index}`,
@@ -271,6 +247,28 @@ async function loadMusic(page = 1) {
         pageInfo.textContent = `Page ${page} | ${data.total_pages}`;
         document.getElementById("prevPage").disabled = page <= 1;
         document.getElementById("nextPage").disabled = page == data.total_pages;
+
+        // Attach delete handlers via delegation
+        tbody.querySelectorAll(".music-delete-btn").forEach((btn) => {
+            btn.addEventListener("click", function () {
+                const recordId = this.dataset.recordId;
+                const title = this.dataset.title;
+                const artist = this.dataset.artist;
+                window.confirmDelete(
+                    `Are you sure you want to delete <strong>${title}</strong> by <em>${artist}</em>?`,
+                    async () => {
+                        const result = await adminMusicService.remove(recordId);
+                        if (result.ok) {
+                            bootstrap.Modal.getInstance(document.getElementById("deleteConfirmModal")).hide();
+                            window.notify(result.data?.message || "Music deleted.", "success");
+                            loadMusic(currentPage);
+                        } else {
+                            window.notify("Failed to delete music.", "error");
+                        }
+                    }
+                );
+            });
+        });
     } catch (error) {
         console.error("Error fetching music list:", error);
         tbody.innerHTML = `<tr><td colspan="6" class="text-center text-danger">Error loading data</td></tr>`;
@@ -414,24 +412,13 @@ async function updateMusic(musicId, formId) {
     }
 }
 
-async function deleteMusic(musicId, modalId) {
-    const btn = document.getElementById(`deleteBtn_${musicId}`);
-    setButtonLoading(btn, true);
-
-    try {
+async function deleteMusic(musicId) {
     const result = await adminMusicService.remove(musicId);
     if (result.ok) {
-        bootstrap.Modal.getInstance(document.getElementById(modalId)).hide();
         loadMusic(currentPage);
         window.notify(result.data?.message || "Music deleted.", "success");
     } else {
         window.notify("Failed to delete music.", "error");
-    }
-    } catch (err) {
-        console.error(err);
-        window.notify("Error deleting music.", "error");
-    } finally {
-        setButtonLoading(btn, false);
     }
 }
 

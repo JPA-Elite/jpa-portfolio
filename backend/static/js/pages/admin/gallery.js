@@ -22,6 +22,15 @@ function setButtonLoading(button, isLoading) {
     }
 }
 
+function escapeHtml(value = "") {
+    return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+}
+
 function initDropZone(dropZoneId, inputId) {
     const dropZone = document.getElementById(dropZoneId);
     const inputEl = document.getElementById(inputId);
@@ -90,7 +99,6 @@ async function loadGallery(page = 1) {
 
         data.gallery.forEach((gallery, index) => {
             const modalIdEdit = `editModal${page}_${index}`;
-            const modalIdDelete = `deleteModal${page}_${index}`;
 
             // ✅ Add table row
             tbody.innerHTML += `
@@ -132,7 +140,7 @@ async function loadGallery(page = 1) {
                 <button class="btn btn-sm btn-primary me-1" data-bs-toggle="modal" data-bs-target="#${modalIdEdit}">
                 <i class="bi bi-pencil"></i> Edit
                 </button>
-                <button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#${modalIdDelete}">
+                <button class="btn btn-sm btn-danger gallery-delete-btn" data-record-id="${gallery._id}" data-title="${escapeHtml(gallery.title?.en || "")}">
                 <i class="bi bi-trash"></i> Delete
                 </button>
             </td>
@@ -252,27 +260,6 @@ async function loadGallery(page = 1) {
             </div>
             `;
 
-            // ✅ Add Delete modal
-            modalContainer.innerHTML += `
-            <div class="modal fade" id="${modalIdDelete}" tabindex="-1" aria-labelledby="${modalIdDelete}Label" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="${modalIdDelete}Label">Delete Gallery</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    Are you sure you want to delete <strong>${gallery.title.en}</strong>?
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button id="deleteBtn_${gallery._id}" data-loading-text='<span class="spinner-border spinner-border-sm me-2"></span> Deleting...' type="button" class="btn btn-danger" onclick="deleteGallery('${gallery._id}', '${modalIdDelete}')">Delete</button>
-                </div>
-                </div>
-            </div>
-            </div>
-            `;
-
             setTimeout(() => {
                 initDropZone(
                     `editDropZone${page}_${index}`,
@@ -285,6 +272,27 @@ async function loadGallery(page = 1) {
         pageInfo.textContent = `Page ${page} | ${data.total_pages}`;
         document.getElementById("prevPage").disabled = page <= 1;
         document.getElementById("nextPage").disabled = page == data.total_pages;
+
+        // Attach delete handlers via delegation
+        tbody.querySelectorAll(".gallery-delete-btn").forEach((btn) => {
+            btn.addEventListener("click", function () {
+                const recordId = this.dataset.recordId;
+                const title = this.dataset.title;
+                window.confirmDelete(
+                    `Are you sure you want to delete <strong>${title}</strong>?`,
+                    async () => {
+                        const result = await adminGalleryService.remove(recordId);
+                        if (result.ok) {
+                            bootstrap.Modal.getInstance(document.getElementById("deleteConfirmModal")).hide();
+                            window.notify(result.data?.message || "Gallery deleted.", "success");
+                            loadGallery(currentPage);
+                        } else {
+                            window.notify("Failed to delete gallery.", "error");
+                        }
+                    }
+                );
+            });
+        });
     } catch (error) {
         console.error("Error fetching gallery list:", error);
         tbody.innerHTML = `<tr><td colspan="6" class="text-center text-danger">Error loading data</td></tr>`;
@@ -491,25 +499,13 @@ async function updateGallery(galleryId, formId) {
     }
 }
 
-async function deleteGallery(galleryId, modalId) {
-    const btn = document.getElementById(`deleteBtn_${galleryId}`);
-    setButtonLoading(btn, true);
-
-    try {
-        const result = await adminGalleryService.remove(galleryId);
-        if (result.ok) {
-            bootstrap.Modal.getInstance(document.getElementById(modalId)).hide();
-            loadGallery(currentPage);
-            window.notify(result.data?.message || "Gallery deleted.", "success");
-        } else {
-            window.notify("Failed to delete gallery.", "error");
-        }
-
-    } catch (error) {
-        console.error("Error deleting gallery:", error);
-        window.notify("An error occurred while deleting the gallery.", "error");
-    } finally {
-        setButtonLoading(btn, false);
+async function deleteGallery(galleryId) {
+    const result = await adminGalleryService.remove(galleryId);
+    if (result.ok) {
+        loadGallery(currentPage);
+        window.notify(result.data?.message || "Gallery deleted.", "success");
+    } else {
+        window.notify("Failed to delete gallery.", "error");
     }
 }
 

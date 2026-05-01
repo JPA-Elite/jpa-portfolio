@@ -218,4 +218,136 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         loadActivity();
     })();
+
+    // ─── Visits Table ───────────────────────────────────────────────────
+    (function () {
+        const tableBody = document.getElementById("visitsTableBody");
+        const perPageSelect = document.getElementById("visitsPerPage");
+        const searchInput = document.getElementById("visitsSearchInput");
+        const orderSelect = document.getElementById("visitsOrderSelect");
+        const prevBtn = document.getElementById("visitsPrevPage");
+        const nextBtn = document.getElementById("visitsNextPage");
+        const pageInfo = document.getElementById("visitsPageInfo");
+
+        if (!tableBody) return;
+
+        let allVisits = []; // full unfiltered list from server
+        let currentPage = 1;
+
+        function getFilteredVisits() {
+            const searchValue = String(searchInput?.value || "").trim().toLowerCase();
+            if (!searchValue) return [...allVisits];
+            return allVisits.filter((item) => {
+                const searchable = [
+                    item.system || "",
+                    item.device || "",
+                    item.browser || "",
+                    item.os || "",
+                    item.ip_address || "",
+                    item.city || "",
+                    item.country || "",
+                    item.timestamp || "",
+                ].join(" ").toLowerCase();
+                return searchable.includes(searchValue);
+            });
+        }
+
+        function renderPage() {
+            const filtered = getFilteredVisits();
+            const perPage = Number(perPageSelect?.value) || 10;
+            const total = filtered.length;
+            const totalPages = Math.max(1, Math.ceil(total / perPage));
+            if (currentPage > totalPages) currentPage = totalPages;
+            const start = (currentPage - 1) * perPage;
+            const end = Math.min(total, start + perPage);
+            const atFirst = currentPage <= 1;
+            const atLast = currentPage >= totalPages;
+
+            if (total === 0) {
+                tableBody.innerHTML = '<tr><td colspan="9" class="text-center text-muted">No visit records found.</td></tr>';
+                pageInfo.textContent = "";
+                prevBtn.disabled = true;
+                nextBtn.disabled = true;
+                return;
+            }
+
+            const rows = filtered.slice(start, end).map((item) => {
+                const ts = item.timestamp ? new Date(item.timestamp) : null;
+                const location = [item.city, item.country].filter(Boolean).join(", ") || "Unknown";
+                const ip = item.ip_address || "Unknown";
+                const _id = item._id?.$oid || item._id || "";
+                return `
+                    <tr data-record-id="${_id}">
+                        <td>${item.system || "-"}</td>
+                        <td>${item.device || "-"}</td>
+                        <td>${item.browser || "-"}</td>
+                        <td>${item.os || "-"}</td>
+                        <td>${ip}</td>
+                        <td>${item.city || "-"}</td>
+                        <td>${item.country || "-"}</td>
+                        <td class="small text-muted">${ts ? formatTimestamp(ts) : "-"}</td>
+                        <td>
+                            <button class="btn btn-outline-danger btn-sm py-0 px-1 visit-delete-btn"
+                                title="Delete">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </td>
+                    </tr>`;
+            }).join("");
+
+            tableBody.innerHTML = rows;
+            pageInfo.textContent = `${start + 1}-${end} of ${total}`;
+            prevBtn.disabled = atFirst;
+            nextBtn.disabled = atLast;
+
+            // Attach delete handlers
+            tableBody.querySelectorAll(".visit-delete-btn").forEach((btn) => {
+                btn.addEventListener("click", function () {
+                    const row = this.closest("tr");
+                    const recordId = row.dataset.recordId;
+                    window.confirmDelete("Are you sure you want to delete this visit record?", async () => {
+                        const BASE = "/admin/api";
+                        const res = await fetch(`${BASE}/delete-visits/${recordId}`, { method: "DELETE" });
+                        const json = await res.json();
+                        if (json.ok) {
+                            bootstrap.Modal.getInstance(document.getElementById("deleteConfirmModal")).hide();
+                            window.notify("Record deleted.", "success");
+                            allVisits = allVisits.filter((v) => (v._id || "") !== recordId);
+                            renderPage();
+                        } else {
+                            window.notify(json.message || "Delete failed.", "error");
+                        }
+                    });
+                });
+            });
+        }
+
+        async function loadVisits() {
+            tableBody.innerHTML = '<tr><td colspan="9" class="text-center">Loading...</td></tr>';
+            try {
+                const BASE = "/admin/api";
+                const res = await fetch(`${BASE}/visits-list?page=1&perPage=200`);
+                const json = await res.json();
+                allVisits = Array.isArray(json.data) ? json.data : [];
+                currentPage = 1;
+                renderPage();
+            } catch (err) {
+                console.error("Failed to load visits", err);
+                allVisits = [];
+                renderPage();
+            }
+        }
+
+        perPageSelect?.addEventListener("change", () => { currentPage = 1; renderPage(); });
+        searchInput?.addEventListener("input", () => { currentPage = 1; renderPage(); });
+        orderSelect?.addEventListener("change", () => { currentPage = 1; renderPage(); });
+        prevBtn.addEventListener("click", () => { if (currentPage > 1) { currentPage--; renderPage(); } });
+        nextBtn.addEventListener("click", () => {
+            const perPage = Number(perPageSelect?.value) || 10;
+            const totalPages = Math.max(1, Math.ceil(getFilteredVisits().length / perPage));
+            if (currentPage < totalPages) { currentPage++; renderPage(); }
+        });
+
+        loadVisits();
+    })();
 });

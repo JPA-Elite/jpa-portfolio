@@ -187,7 +187,6 @@ async function loadKeyProjects(page = 1) {
         rows.forEach((project, index) => {
             const rowNo = (page - 1) * perPage + index + 1;
             const editModalId = `editProjectModal_${page}_${index}`;
-            const deleteModalId = `deleteProjectModal_${page}_${index}`;
             const img = project.image_url || "";
             const safeTitle = escapeHtml(project.title?.en || "Untitled");
             const safeStack = escapeHtml(project.stack || "");
@@ -224,7 +223,9 @@ async function loadKeyProjects(page = 1) {
                             <button class="btn btn-sm btn-primary me-1" data-bs-toggle="modal" data-bs-target="#${editModalId}">
                                 <i class="bi bi-pencil"></i> Edit
                             </button>
-                            <button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#${deleteModalId}">
+                            <button class="btn btn-sm btn-danger key-project-delete-btn"
+                                data-record-id="${project._id}"
+                                data-title="${safeTitle}">
                                 <i class="bi bi-trash"></i> Delete
                             </button>
                         </div>
@@ -233,12 +234,29 @@ async function loadKeyProjects(page = 1) {
             `);
 
             modalContainer.insertAdjacentHTML("beforeend", buildEditModal(project, editModalId, page, index));
-            modalContainer.insertAdjacentHTML("beforeend", buildDeleteModal(project, deleteModalId));
         });
 
         pageInfo.textContent = `Page ${page} | ${data.total_pages || 1}`;
         document.getElementById("prevPage").disabled = page <= 1;
         document.getElementById("nextPage").disabled = page >= (data.total_pages || 1);
+
+        // Attach delete handlers via delegation
+        tbody.querySelectorAll(".key-project-delete-btn").forEach((btn) => {
+            btn.addEventListener("click", function () {
+                const recordId = this.dataset.recordId;
+                const title = this.dataset.title;
+                window.confirmDelete(
+                    `Are you sure you want to delete <strong>${title}</strong>?`,
+                    async () => {
+                        const result = await adminKeyProjectService.remove(recordId);
+                        if (!result.ok) throw new Error(result.data?.message || "Failed to delete project");
+                        bootstrap.Modal.getInstance(document.getElementById("deleteConfirmModal")).hide();
+                        window.notify(result.data?.message || "Deleted", "success");
+                        loadKeyProjects(currentPage);
+                    }
+                );
+            });
+        });
     } catch (error) {
         console.error(error);
         tbody.innerHTML = `<tr><td colspan="9" class="text-center text-danger">Error loading key projects</td></tr>`;
@@ -446,23 +464,11 @@ async function updateKeyProject(projectId, suffix) {
     }
 }
 
-async function deleteKeyProject(projectId, modalId) {
-    const button = document.getElementById(`deleteProjectBtn_${projectId}`);
-    setButtonLoading(button, true);
-    try {
-        const result = await adminKeyProjectService.remove(projectId);
-        if (!result.ok) throw new Error(result.data?.message || "Failed to delete project");
-
-        window.notify(result.data?.message || "Deleted", "success");
-        const modalEl = document.getElementById(modalId);
-        bootstrap.Modal.getInstance(modalEl)?.hide();
-        loadKeyProjects(currentPage);
-    } catch (err) {
-        console.error(err);
-        window.notify(err.message || "Failed to delete key project", "error");
-    } finally {
-        setButtonLoading(button, false);
-    }
+async function deleteKeyProject(projectId) {
+    const result = await adminKeyProjectService.remove(projectId);
+    if (!result.ok) throw new Error(result.data?.message || "Failed to delete project");
+    window.notify(result.data?.message || "Deleted", "success");
+    loadKeyProjects(currentPage);
 }
 
 document.addEventListener("DOMContentLoaded", () => {

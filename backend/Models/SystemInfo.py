@@ -1,22 +1,22 @@
 class SystemInfo:
     def __init__(
         self,
-        system,
-        node,
-        release,
-        version,
-        platform,
-        architecture,
-        user_agent,
-        device,
-        brand,
-        model,
-        browser,
-        browser_version,
-        os,
-        os_version,
-        page,
-        timestamp,
+        system=None,
+        node=None,
+        release=None,
+        version=None,
+        platform=None,
+        architecture=None,
+        user_agent=None,
+        device=None,
+        brand=None,
+        model=None,
+        browser=None,
+        browser_version=None,
+        os=None,
+        os_version=None,
+        page=None,
+        timestamp=None,
         ip_address=None,
         city=None,
         region=None,
@@ -78,8 +78,8 @@ class SystemInfo:
             "location": self.location
         }
 
-        # Include _id if present
+        # Include _id if present (convert ObjectId to string for JSON serialization)
         if self._id is not None:
-            data["_id"] = self._id
+            data["_id"] = str(self._id)
 
         return data

@@ -2,7 +2,7 @@
 from flask import Blueprint, request
 from backend.configurations import HTTPMethod as http, get_locale
 from backend.auth.middleware import admin_login_required
-from backend.Controllers.web.PageController import add_portfolio_form_route, concern_route, device_info_route, donation_route, gallery_route, index_route, music_route, profile_route, vlog_route
+from backend.Controllers.web.PageController import add_portfolio_form_route, concern_route, donation_route, gallery_route, index_route, music_route, profile_route, vlog_route
 from backend.Controllers.web.AdminPageController import admin_company_roadmaps_route, admin_dashboard_route, admin_gallery_route, admin_key_projects_route, admin_login_attempts_route, admin_login_route, admin_logout_route, admin_music_route, admin_settings_route, admin_video_route
 from backend.extensions import cache
 
@@ -44,10 +44,6 @@ def concern():
 @cache.cached(key_prefix=lambda: f"donation_{get_locale()}_{request.query_string.decode()}")
 def donation():
     return donation_route()
-
-@pages_bp.route("/device-info/visits", methods=[http.GET])
-def device_info():
-    return device_info_route()
 
 @pages_bp.route("/add_portfolio_form", methods=[http.GET])
 @cache.cached(key_prefix=lambda: f"add_portfolio_form_{get_locale()}_{request.query_string.decode()}")

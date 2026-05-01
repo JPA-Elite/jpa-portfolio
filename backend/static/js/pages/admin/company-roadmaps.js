@@ -184,13 +184,16 @@ function serializeActivityRows(container, formData) {
     return activitiesMeta;
 }
 
-function buildActionsCell(editModalId, deleteModalId) {
+function buildActionsCell(editModalId, recordId, companyName, roleTitle) {
     return `
     <div class="company-roadmap-actions">
       <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#${editModalId}">
         <i class="bi bi-pencil"></i> Edit
       </button>
-      <button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#${deleteModalId}">
+      <button class="btn btn-sm btn-danger company-roadmap-delete-btn"
+        data-record-id="${recordId}"
+        data-company="${escapeHtml(companyName || "")}"
+        data-role="${escapeHtml(roleTitle || "")}">
         <i class="bi bi-trash"></i> Delete
       </button>
     </div>`;
@@ -254,17 +257,35 @@ async function loadCompanyRoadmaps(page = 1) {
                   <td><span class="badge text-bg-light border">${escapeHtml(entry.employment_type || "Experience")}</span></td>
                   <td><span class="badge text-bg-info">${activitiesCount}</span></td>
                   <td>${entry.is_active === false ? '<span class="badge text-bg-secondary">No</span>' : '<span class="badge text-bg-success">Yes</span>'}</td>
-                  <td>${buildActionsCell(editModalId, deleteModalId)}</td>
+                  <td>${buildActionsCell(editModalId, entry._id, entry.company_name, entry.role_title)}</td>
                 </tr>
             `);
 
             modalContainer.insertAdjacentHTML("beforeend", buildEditModal(entry, editModalId, page, index));
-            modalContainer.insertAdjacentHTML("beforeend", buildDeleteModal(entry, deleteModalId));
         });
 
         pageInfo.textContent = `Page ${page} | ${data.total_pages || 1}`;
         document.getElementById("prevPage").disabled = page <= 1;
         document.getElementById("nextPage").disabled = page >= (data.total_pages || 1);
+
+        // Attach delete handlers via delegation
+        tbody.querySelectorAll(".company-roadmap-delete-btn").forEach((btn) => {
+            btn.addEventListener("click", function () {
+                const recordId = this.dataset.recordId;
+                const company = this.dataset.company;
+                const role = this.dataset.role;
+                window.confirmDelete(
+                    `Are you sure you want to delete <strong>${company}</strong>${role ? ` (${role})` : ""}?`,
+                    async () => {
+                        const result = await adminCompanyRoadmapService.remove(recordId);
+                        if (!result.ok) throw new Error(result.data?.message || "Failed to delete entry");
+                        bootstrap.Modal.getInstance(document.getElementById("deleteConfirmModal")).hide();
+                        window.notify(result.data?.message || "Deleted", "success");
+                        loadCompanyRoadmaps(currentPage);
+                    }
+                );
+            });
+        });
     } catch (error) {
         console.error(error);
         tbody.innerHTML = `<tr><td colspan="9" class="text-center text-danger">Error loading company roadmap entries</td></tr>`;
@@ -497,24 +518,11 @@ async function updateCompanyRoadmap(roadmapId, suffix) {
     }
 }
 
-async function deleteCompanyRoadmap(roadmapId, modalId) {
-    const button = document.getElementById(`deleteRoadmapBtn_${roadmapId}`);
-    setButtonLoading(button, true);
-    try {
-        const result = await adminCompanyRoadmapService.remove(roadmapId);
-        if (!result.ok) {
-            throw new Error(result.data?.message || "Failed to delete company roadmap entry.");
-        }
-
-        window.notify(result.data?.message || "Deleted", "success");
-        bootstrap.Modal.getInstance(document.getElementById(modalId))?.hide();
-        loadCompanyRoadmaps(currentPage);
-    } catch (error) {
-        console.error(error);
-        window.notify(error.message || "Failed to delete company roadmap entry.", "error");
-    } finally {
-        setButtonLoading(button, false);
-    }
+async function deleteCompanyRoadmap(roadmapId) {
+    const result = await adminCompanyRoadmapService.remove(roadmapId);
+    if (!result.ok) throw new Error(result.data?.message || "Failed to delete entry");
+    window.notify(result.data?.message || "Deleted", "success");
+    loadCompanyRoadmaps(currentPage);
 }
 
 document.addEventListener("DOMContentLoaded", () => {

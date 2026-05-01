@@ -9,6 +9,15 @@ let searchQuery = "";
 let sortOrder = "desc";
 let searchDebounceTimer = null;
 
+function escapeHtml(value = "") {
+    return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+}
+
 function setButtonLoading(button, isLoading) {
     if (!button) return;
 
@@ -50,7 +59,6 @@ async function loadVideo(page = 1) {
 
         data.video.forEach((video, index) => {
             const modalIdEdit = `editModal${page}_${index}`;
-            const modalIdDelete = `deleteModal${page}_${index}`;
 
             // ✅ Add table row
             tbody.innerHTML += `
@@ -96,7 +104,7 @@ async function loadVideo(page = 1) {
                 <button class="btn btn-sm btn-primary me-1" data-bs-toggle="modal" data-bs-target="#${modalIdEdit}">
                 <i class="bi bi-pencil"></i> Edit
                 </button>
-                <button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#${modalIdDelete}">
+                <button class="btn btn-sm btn-danger video-delete-btn" data-record-id="${video._id}" data-title="${escapeHtml(video.title?.en || "")}">
                 <i class="bi bi-trash"></i> Delete
                 </button>
             </td>
@@ -207,32 +215,39 @@ async function loadVideo(page = 1) {
             </div>
             `;
 
-            // ✅ Add Delete modal
-            modalContainer.innerHTML += `
-            <div class="modal fade" id="${modalIdDelete}" tabindex="-1" aria-labelledby="${modalIdDelete}Label" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="${modalIdDelete}Label">Delete Video</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    Are you sure you want to delete <strong>${video.title.en}</strong>?
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button id="deleteBtn_${video._id}" data-loading-text='<span class="spinner-border spinner-border-sm me-2"></span> Deleting...' type="button" class="btn btn-danger" onclick="deleteVideo('${video._id}', '${modalIdDelete}')">Delete</button>
-                </div>
-                </div>
-            </div>
-            </div>
-            `;
+            setTimeout(() => {
+                initDropZone(
+                    `editDropZone${page}_${index}`,
+                    `editImageFile${page}_${index}`
+                );
+            }, 0);
         });
 
         // ✅ Update page info
         pageInfo.textContent = `Page ${page} | ${data.total_pages}`;
         document.getElementById("prevPage").disabled = page <= 1;
         document.getElementById("nextPage").disabled = page == data.total_pages;
+
+        // Attach delete handlers via delegation
+        tbody.querySelectorAll(".video-delete-btn").forEach((btn) => {
+            btn.addEventListener("click", function () {
+                const recordId = this.dataset.recordId;
+                const title = this.dataset.title;
+                window.confirmDelete(
+                    `Are you sure you want to delete <strong>${title}</strong>?`,
+                    async () => {
+                        const result = await adminVideoService.remove(recordId);
+                        if (result.ok) {
+                            bootstrap.Modal.getInstance(document.getElementById("deleteConfirmModal")).hide();
+                            window.notify(result.data?.message || "Video deleted.", "success");
+                            loadVideo(currentPage);
+                        } else {
+                            window.notify("Failed to delete video.", "error");
+                        }
+                    }
+                );
+            });
+        });
     } catch (error) {
         console.error("Error fetching video list:", error);
         tbody.innerHTML = `<tr><td colspan="6" class="text-center text-danger">Error loading data</td></tr>`;
@@ -422,26 +437,13 @@ async function updateVideo(videoId, formId) {
     }
 }
 
-async function deleteVideo(videoId, modalId) {
-    const btn = document.getElementById(`deleteBtn_${videoId}`);
-    setButtonLoading(btn, true);
-
-    try {
-        const result = await adminVideoService.remove(videoId);
-        if (result.ok) {
-            bootstrap.Modal.getInstance(document.getElementById(modalId)).hide();
-            loadVideo(currentPage);
-            window.notify(result.data?.message || "Video deleted.", "success");
-        } else {
-            window.notify("Failed to delete video.", "error");
-        }
-
-    } catch (error) {
-        console.error("Error deleting video:", error);
-        window.notify("An error occurred while deleting the video.", "error");
-    }
-    finally {
-        setButtonLoading(btn, false);
+async function deleteVideo(videoId) {
+    const result = await adminVideoService.remove(videoId);
+    if (result.ok) {
+        loadVideo(currentPage);
+        window.notify(result.data?.message || "Video deleted.", "success");
+    } else {
+        window.notify("Failed to delete video.", "error");
     }
 }
 

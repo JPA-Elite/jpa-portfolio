@@ -34,7 +34,7 @@ from backend.Controllers.api.GalleryLikeController import (
     get_gallery_likes_count_route,
     get_gallery_likes_counts_batch_route,
 )
-from backend.Controllers.api.DashboardController import visits_info_route, recent_activity_route, dashboard_summary_route
+from backend.Controllers.api.DashboardController import visits_info_route, recent_activity_route, dashboard_summary_route, visits_list_route, visits_delete_route
 from backend.Repositories.MusicRepository import MusicRepository
 from backend.Repositories.GalleryRepository import GalleryRepository
 from backend.Repositories.VideoRepository import VideoRepository
@@ -165,6 +165,16 @@ def vlog_like_comment():
 @admin_login_required
 def visits_info():
     return visits_info_route()
+
+@api_bp.route("/admin/api/visits-list", methods=[http.GET])
+@admin_login_required
+def visits_list():
+    return visits_list_route()
+
+@api_bp.route("/admin/api/delete-visits/<record_id>", methods=[http.DELETE])
+@admin_login_required
+def delete_visits(record_id):
+    return visits_delete_route(record_id)
 
 # Music API
 

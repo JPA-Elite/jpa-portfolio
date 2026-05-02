@@ -110,6 +110,75 @@ function setupProfileGifHover() {
     });
 }
 
+function animateSkillBars(container, forceReplay) {
+    const bars = container.querySelectorAll('.bar');
+    const percents = container.querySelectorAll('.percent');
+
+    bars.forEach((bar, i) => {
+        if (!forceReplay && bar.classList.contains('animated')) return;
+
+        bar.classList.remove('animated');
+        const rawWidth = bar.style.width;
+        const target = parseFloat(rawWidth);
+        // Force reflow so browser picks up width: 0 immediately
+        bar.style.width = '0';
+        bar.style.opacity = '1';
+        void bar.offsetWidth;
+
+        const delay = i * 100;
+        const duration = 1200;
+        const startTime = Date.now() + delay;
+
+        function tick() {
+            const elapsed = Date.now() - startTime;
+            if (elapsed < 0) {
+                setTimeout(tick, 20);
+                return;
+            }
+            const progress = Math.min(elapsed / duration, 1);
+            const eased = 1 - Math.pow(1 - progress, 3); // easeOutCubic
+            bar.style.width = (eased * target) + '%';
+            if (progress < 1) {
+                setTimeout(tick, 16);
+            } else {
+                bar.style.width = rawWidth;
+                bar.classList.add('animated');
+            }
+        }
+
+        setTimeout(tick, 20);
+    });
+
+    // Count-up for percent spans
+    percents.forEach((el, i) => {
+        if (forceReplay) el.classList.remove('counting');
+        const target = parseInt(el.textContent, 10);
+        const delay = i * 100;
+        el.classList.add('counting');
+        let current = 0;
+        const duration = 1200;
+        const startTime = Date.now() + delay;
+
+        function tick() {
+            const elapsed = Date.now() - startTime;
+            if (elapsed < 0) {
+                setTimeout(tick, 20);
+                return;
+            }
+            const progress = Math.min(elapsed / duration, 1);
+            current = Math.round((1 - Math.pow(1 - progress, 3)) * target);
+            el.textContent = current + '%';
+            if (progress < 1) {
+                setTimeout(tick, 16);
+            } else {
+                el.classList.remove('counting');
+            }
+        }
+
+        setTimeout(tick, 20);
+    });
+}
+
 function setupSkillsTabs() {
     const tabs = document.querySelectorAll(".tab");
     const sections = document.querySelectorAll(".skills-container");
@@ -136,8 +205,43 @@ function setupSkillsTabs() {
             targetSection.classList.remove("hidden");
             void targetSection.offsetWidth;
             targetSection.classList.add("active");
+            animateSkillBars(targetSection, true); // force replay on tab switch
         });
     });
+
+    // Animate bars on page load for the active tab
+    const activeSection = document.querySelector(".skills-container.active");
+    if (activeSection) {
+        setTimeout(() => animateSkillBars(activeSection), 400);
+    }
+}
+
+function setupSkillsScrollAnimation() {
+    const skillsSection = document.getElementById("skills");
+    if (!skillsSection) return;
+
+    const triggerAnimation = () => {
+        const activeTab = document.querySelector(".skills-container.active");
+        if (activeTab) animateSkillBars(activeTab, true);
+    };
+
+    if (!("IntersectionObserver" in window)) {
+        triggerAnimation();
+        return;
+    }
+
+    const observer = new IntersectionObserver(
+        (entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    triggerAnimation();
+                }
+            });
+        },
+        { threshold: 0.15 }
+    );
+
+    observer.observe(skillsSection);
 }
 
 function setupMarqueeVisibility() {
@@ -448,6 +552,7 @@ document.addEventListener("DOMContentLoaded", () => {
     setupCarousel();
     setupProfileGifHover();
     setupSkillsTabs();
+    setupSkillsScrollAnimation();
     setupMarqueeVisibility();
     setupCareerRoadmapReveal();
     setupMobileImageSliders();

@@ -1743,24 +1743,60 @@ section>*+* {
     background: #e5e7eb;
     border-radius: 10px;
     height: 8px;
-    overflow: hidden;
+    overflow: visible;
+    position: relative;
 }
 
 
 .bar {
     height: 100%;
     background: linear-gradient(90deg, #4f46e5, #06b6d4);
-    width: 0;
     border-radius: 10px;
-    transition: width 1s ease-in-out;
+    width: 0;
+    opacity: 0;
+    position: relative;
+    overflow: hidden;
 }
 
+/* Shimmer sweep */
+.bar::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 60%;
+    height: 100%;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.45),
+        transparent
+    );
+    animation: shimmer 1.8s ease-in-out infinite;
+}
 
+@keyframes shimmer {
+    0%   { left: -100%; }
+    100% { left: 200%; }
+}
+
+.bar.animated {
+    opacity: 1;
+}
+
+/* percent counting highlight */
 .percent {
     flex-basis: 45px;
     text-align: right;
     font-size: 0.9rem;
     color: #4b5563;
+    font-variant-numeric: tabular-nums;
+    transition: color 0.3s ease;
+}
+
+.percent.counting {
+    color: #4f46e5;
+    font-weight: 700;
 }
 
 .hidden {

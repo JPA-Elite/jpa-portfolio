@@ -12,6 +12,8 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/css/adminlte.min.css">
     <script src="https://hcaptcha.com/1/api.js" async defer></script>
     <link rel="stylesheet" href="{{ static_asset('css/pages/admin/login.css') }}" />
+    <link rel="icon" type="image/png"
+        href="{{ url_for('static', filename='admin/assets/img/AdminLTELogo.png') }}" />
     {{ vite_hmr() }}
     {{ template_livereload() }}
 </head>

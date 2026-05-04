@@ -517,6 +517,29 @@ function updateTheme(theme) {
 const savedTheme = localStorage.getItem("theme") || "light";
 updateTheme(window.isForceLightMode == "True" ? "light" : savedTheme);
 
+// ── Lazy Reveal ──────────────────────────────────────────────────────────────
+// Reusable: sections/elements fade + slide in when scrolled into view.
+function setupLazyReveal() {
+    const els = document.querySelectorAll(".lazy-reveal");
+    if (!els.length) return;
+
+    els.forEach((el) => el.classList.add("lazy-pending"));
+
+    const observer = new IntersectionObserver(
+        (entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add("is-revealed");
+                    observer.unobserve(entry.target);
+                }
+            });
+        },
+        { threshold: 0.08, rootMargin: "0px 0px 40px 0px" }
+    );
+
+    els.forEach((el) => observer.observe(el));
+}
+
 themeToggle.addEventListener("click", () => {
     const currentTheme = root.getAttribute("data-theme");
     const newTheme = currentTheme === "light" ? "dark" : "light";
@@ -525,6 +548,8 @@ themeToggle.addEventListener("click", () => {
 });
 
 document.addEventListener("DOMContentLoaded", function () {
+    setupLazyReveal();
+
     if (window.isProfessionalMode) {
         const header = document.querySelector(
             "header, .app-header, .navbar-fixed-top"

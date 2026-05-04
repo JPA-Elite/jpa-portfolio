@@ -556,4 +556,5 @@ document.addEventListener("DOMContentLoaded", () => {
     setupMarqueeVisibility();
     setupCareerRoadmapReveal();
     setupMobileImageSliders();
+    // setupLazyReveal() lives in base.js — shared across all pages
 });

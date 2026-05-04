@@ -710,6 +710,10 @@ body.loading-done .admin-float-btn {
 
 /* Mobile Navigation */
 @media only screen and (max-width: 768px) {
+    body.loading-done .admin-float-btn {
+        visibility: hidden;
+    }
+
     .admin-float-btn {
         top: auto;
         bottom: 15px;

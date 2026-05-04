@@ -59,6 +59,15 @@ function tChat(key, fallback = "") {
     return typeof value === "string" && value.length ? value : fallback;
 }
 
+function hideHelpCardIfHasMessages() {
+    const helpCard = document.querySelector(".chatbox-help-card");
+    const chatMessages = document.getElementById("chatMessages");
+    if (!helpCard || !chatMessages) return;
+    if (chatMessages.children.length > 0) {
+        helpCard.style.display = "none";
+    }
+}
+
 function scrollChatToBottom(behavior = "smooth") {
     const chatMessages = document.getElementById("chatMessages");
     if (!chatMessages) return;
@@ -163,6 +172,7 @@ function showTypingIndicator() {
 
     typingIndicatorRow = row;
     chatMessages.appendChild(row);
+    hideHelpCardIfHasMessages();
     scrollChatToBottom("smooth");
 }
 
@@ -323,6 +333,7 @@ function displayMessage(message, backgroundColor = '', color = '', typeEffect = 
     const { row, bubble: messageElement } = createMessageRow(role, timestamp);
 
     chatMessages.appendChild(row);
+    hideHelpCardIfHasMessages();
 
     if (role !== "user") {
         addTypingEffect(messageElement, message, typeEffect);
@@ -385,6 +396,7 @@ function loadCachedChat(qaArray = []) {
         const timestamp = entry.timestamp ?? Date.now();
         displayMessage(text, role === "user" ? "transparent" : "", "black", false, { role, timestamp });
     });
+    hideHelpCardIfHasMessages();
 
     const chatboxVisible = localStorage.getItem(cacheChatboxVisible) === 'true';
     const modal = document.getElementById("chatboxModal");
@@ -405,6 +417,8 @@ function clearChat() {
     if (chatMessages) {
         chatMessages.innerHTML = '';
     }
+    const helpCard = document.querySelector(".chatbox-help-card");
+    if (helpCard) helpCard.style.display = '';
     updateClearChatButtonVisibility();
 }
 

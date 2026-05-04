@@ -44,7 +44,16 @@ endblock %}
 </section>
 
 <!-- About Me -->
-<section id="about">
+<section id="about" class="lazy-reveal">
+    <div class="skeleton-panel" aria-hidden="true">
+        <div class="skeleton-line skeleton-line--title"></div>
+        <div class="skeleton-line skeleton-line--subtitle"></div>
+        <div class="skeleton-line skeleton-line--text"></div>
+        <div class="skeleton-line skeleton-line--text skeleton-line--short"></div>
+        <div class="skeleton-line skeleton-line--text"></div>
+        <div class="skeleton-line skeleton-line--text skeleton-line--medium"></div>
+    </div>
+    <div class="lazy-content">
     <h2>{{ _('About_Me') }}</h2>
     <p>{{ _('Highlights_Description') }}</p>
     <ul>
@@ -78,11 +87,21 @@ endblock %}
         '#about'
     )" />
     {% endif %}
-
+    </div>
 </section>
 
 <!-- Resume -->
-<section id="resume">
+<section id="resume" class="lazy-reveal">
+    <div class="skeleton-panel" aria-hidden="true">
+        <div class="skeleton-line skeleton-line--title"></div>
+        <div class="skeleton-line skeleton-line--subtitle"></div>
+        <div class="skeleton-line skeleton-line--text"></div>
+        <div class="skeleton-line skeleton-line--text skeleton-line--short"></div>
+        <div class="skeleton-line skeleton-line--text"></div>
+        <div class="skeleton-line skeleton-line--text skeleton-line--medium"></div>
+        <div class="skeleton-line skeleton-line--text skeleton-line--short"></div>
+    </div>
+    <div class="lazy-content">
     <h2>{{ _('Resume') }}</h2>
     <p>{{ _('Professional_Highlights_Description') }}</p>
     <ul>
@@ -125,6 +144,7 @@ endblock %}
         '#resume'
     )" />
     {% endif %}
+    </div>
 </section>
 
 <section id="company-roadmap" class="career-roadmap-section">
@@ -233,7 +253,19 @@ endblock %}
 </section>
 
 <!-- Key Projects -->
-<section id="key-projects">
+<section id="key-projects" class="lazy-reveal">
+    <div class="skeleton-panel" aria-hidden="true">
+        <div class="skeleton-line skeleton-line--title" style="width:35%"></div>
+        <div class="skeleton-cards-grid">
+            <div class="skeleton-card"></div>
+            <div class="skeleton-card"></div>
+            <div class="skeleton-card"></div>
+            <div class="skeleton-card"></div>
+            <div class="skeleton-card"></div>
+            <div class="skeleton-card"></div>
+        </div>
+    </div>
+    <div class="lazy-content">
     <div class="key-projects-main">
         <h3>{{ _('Key_Projects') }}</h3>
         <div class="key-projects-board">
@@ -384,32 +416,56 @@ endblock %}
             <div class="skills-container hidden" id="technical">
                 <div class="skills-card">
                     <h3>🎨 {{ _('Frontend Development') }}</h3>
-                    <div class="skill"><span>HTML</span>
+                    <div class="skill">
+                        <span class="skill-icon-wrap">
+                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg" alt="HTML" class="skill-icon" onerror="this.style.display='none'">
+                            <span>HTML</span>
+                        </span>
                         <div class="progress">
                             <div class="bar" style="width:95%"></div>
                         </div><span class="percent">95%</span>
                     </div>
-                    <div class="skill"><span>CSS</span>
+                    <div class="skill">
+                        <span class="skill-icon-wrap">
+                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg" alt="CSS" class="skill-icon" onerror="this.style.display='none'">
+                            <span>CSS</span>
+                        </span>
                         <div class="progress">
                             <div class="bar" style="width:93%"></div>
                         </div><span class="percent">93%</span>
                     </div>
-                    <div class="skill"><span>JavaScript</span>
+                    <div class="skill">
+                        <span class="skill-icon-wrap">
+                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg" alt="JavaScript" class="skill-icon" onerror="this.style.display='none'">
+                            <span>JavaScript</span>
+                        </span>
                         <div class="progress">
                             <div class="bar" style="width:90%"></div>
                         </div><span class="percent">90%</span>
                     </div>
-                    <div class="skill"><span>TypeScript</span>
+                    <div class="skill">
+                        <span class="skill-icon-wrap">
+                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg" alt="TypeScript" class="skill-icon" onerror="this.style.display='none'">
+                            <span>TypeScript</span>
+                        </span>
                         <div class="progress">
                             <div class="bar" style="width:85%"></div>
                         </div><span class="percent">85%</span>
                     </div>
-                    <div class="skill"><span>jQuery</span>
+                    <div class="skill">
+                        <span class="skill-icon-wrap">
+                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/jquery/jquery-original.svg" alt="jQuery" class="skill-icon" onerror="this.style.display='none'">
+                            <span>jQuery</span>
+                        </span>
                         <div class="progress">
                             <div class="bar" style="width:82%"></div>
                         </div><span class="percent">82%</span>
                     </div>
-                    <div class="skill"><span>AJAX</span>
+                    <div class="skill">
+                        <span class="skill-icon-wrap">
+                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/apache/apache-original.svg" alt="AJAX" class="skill-icon" style="opacity:0.7" onerror="this.style.display='none'">
+                            <span>AJAX</span>
+                        </span>
                         <div class="progress">
                             <div class="bar" style="width:80%"></div>
                         </div><span class="percent">80%</span>
@@ -418,37 +474,65 @@ endblock %}
 
                 <div class="skills-card">
                     <h3>⚙️ {{ _('Backend Development') }}</h3>
-                    <div class="skill"><span>Node.js</span>
+                    <div class="skill">
+                        <span class="skill-icon-wrap">
+                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg" alt="Node.js" class="skill-icon" onerror="this.style.display='none'">
+                            <span>Node.js</span>
+                        </span>
                         <div class="progress">
                             <div class="bar" style="width:60%"></div>
                         </div><span class="percent">60%</span>
                     </div>
-                    <div class="skill"><span>PHP</span>
+                    <div class="skill">
+                        <span class="skill-icon-wrap">
+                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/php/php-original.svg" alt="PHP" class="skill-icon" onerror="this.style.display='none'">
+                            <span>PHP</span>
+                        </span>
                         <div class="progress">
                             <div class="bar" style="width:84%"></div>
                         </div><span class="percent">84%</span>
                     </div>
-                    <div class="skill"><span>Java</span>
+                    <div class="skill">
+                        <span class="skill-icon-wrap">
+                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/java/java-original.svg" alt="Java" class="skill-icon" onerror="this.style.display='none'">
+                            <span>Java</span>
+                        </span>
                         <div class="progress">
                             <div class="bar" style="width:82%"></div>
                         </div><span class="percent">82%</span>
                     </div>
-                    <div class="skill"><span>Python</span>
+                    <div class="skill">
+                        <span class="skill-icon-wrap">
+                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" alt="Python" class="skill-icon" onerror="this.style.display='none'">
+                            <span>Python</span>
+                        </span>
                         <div class="progress">
                             <div class="bar" style="width:80%"></div>
                         </div><span class="percent">80%</span>
                     </div>
-                    <div class="skill"><span>SQL</span>
+                    <div class="skill">
+                        <span class="skill-icon-wrap">
+                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mysql/mysql-original.svg" alt="SQL" class="skill-icon" onerror="this.style.display='none'">
+                            <span>SQL</span>
+                        </span>
                         <div class="progress">
                             <div class="bar" style="width:78%"></div>
                         </div><span class="percent">78%</span>
                     </div>
-                    <div class="skill"><span>MySQL</span>
+                    <div class="skill">
+                        <span class="skill-icon-wrap">
+                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mysql/mysql-original.svg" alt="MySQL" class="skill-icon" onerror="this.style.display='none'">
+                            <span>MySQL</span>
+                        </span>
                         <div class="progress">
                             <div class="bar" style="width:80%"></div>
                         </div><span class="percent">80%</span>
                     </div>
-                    <div class="skill"><span>Postgres</span>
+                    <div class="skill">
+                        <span class="skill-icon-wrap">
+                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postgresql/postgresql-original.svg" alt="Postgres" class="skill-icon" onerror="this.style.display='none'">
+                            <span>Postgres</span>
+                        </span>
                         <div class="progress">
                             <div class="bar" style="width:72%"></div>
                         </div><span class="percent">72%</span>
@@ -460,22 +544,38 @@ endblock %}
             <div class="skills-container active" id="frameworks">
                 <div class="skills-card">
                     <h3>💻 Frontend Frameworks</h3>
-                    <div class="skill"><span>Angular</span>
+                    <div class="skill">
+                        <span class="skill-icon-wrap">
+                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/angular/angular-original.svg" alt="Angular" class="skill-icon" onerror="this.style.display='none'">
+                            <span>Angular</span>
+                        </span>
                         <div class="progress">
                             <div class="bar" style="width:88%"></div>
                         </div><span class="percent">88%</span>
                     </div>
-                    <div class="skill"><span>Vue.js</span>
+                    <div class="skill">
+                        <span class="skill-icon-wrap">
+                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vuejs/vuejs-original.svg" alt="Vue.js" class="skill-icon" onerror="this.style.display='none'">
+                            <span>Vue.js</span>
+                        </span>
                         <div class="progress">
                             <div class="bar" style="width:85%"></div>
                         </div><span class="percent">85%</span>
                     </div>
-                    <div class="skill"><span>Next.js</span>
+                    <div class="skill">
+                        <span class="skill-icon-wrap">
+                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nextjs/nextjs-original.svg" alt="Next.js" class="skill-icon" onerror="this.style.display='none'">
+                            <span>Next.js</span>
+                        </span>
                         <div class="progress">
                             <div class="bar" style="width:87%"></div>
                         </div><span class="percent">87%</span>
                     </div>
-                    <div class="skill"><span>Tailwind CSS</span>
+                    <div class="skill">
+                        <span class="skill-icon-wrap">
+                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/tailwindcss/tailwindcss-original.svg" alt="Tailwind CSS" class="skill-icon" onerror="this.style.display='none'">
+                            <span>Tailwind CSS</span>
+                        </span>
                         <div class="progress">
                             <div class="bar" style="width:90%"></div>
                         </div><span class="percent">90%</span>
@@ -484,17 +584,29 @@ endblock %}
 
                 <div class="skills-card">
                     <h3>⚙️ Backend Frameworks</h3>
-                    <div class="skill"><span>Laravel</span>
+                    <div class="skill">
+                        <span class="skill-icon-wrap">
+                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/laravel/laravel-original.svg" alt="Laravel" class="skill-icon" onerror="this.style.display='none'">
+                            <span>Laravel</span>
+                        </span>
                         <div class="progress">
                             <div class="bar" style="width:89%"></div>
                         </div><span class="percent">89%</span>
                     </div>
-                    <div class="skill"><span>Spring Boot</span>
+                    <div class="skill">
+                        <span class="skill-icon-wrap">
+                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/spring/spring-original.svg" alt="Spring Boot" class="skill-icon" onerror="this.style.display='none'">
+                            <span>Spring Boot</span>
+                        </span>
                         <div class="progress">
                             <div class="bar" style="width:78%"></div>
                         </div><span class="percent">78%</span>
                     </div>
-                    <div class="skill"><span>Flask</span>
+                    <div class="skill">
+                        <span class="skill-icon-wrap">
+                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/flask/flask-original.svg" alt="Flask" class="skill-icon" onerror="this.style.display='none'">
+                            <span>Flask</span>
+                        </span>
                         <div class="progress">
                             <div class="bar" style="width:80%"></div>
                         </div><span class="percent">80%</span>
@@ -506,42 +618,74 @@ endblock %}
             <div class="skills-container hidden" id="tools">
                 <div class="skills-card">
                     <h3>🧠 Developer Tools</h3>
-                    <div class="skill"><span>Git</span>
+                    <div class="skill">
+                        <span class="skill-icon-wrap">
+                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg" alt="Git" class="skill-icon" onerror="this.style.display='none'">
+                            <span>Git</span>
+                        </span>
                         <div class="progress">
                             <div class="bar" style="width:95%"></div>
                         </div><span class="percent">95%</span>
                     </div>
-                    <div class="skill"><span>Bitbucket</span>
+                    <div class="skill">
+                        <span class="skill-icon-wrap">
+                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/bitbucket/bitbucket-original.svg" alt="Bitbucket" class="skill-icon" onerror="this.style.display='none'">
+                            <span>Bitbucket</span>
+                        </span>
                         <div class="progress">
                             <div class="bar" style="width:85%"></div>
                         </div><span class="percent">85%</span>
                     </div>
-                    <div class="skill"><span>Postman API</span>
+                    <div class="skill">
+                        <span class="skill-icon-wrap">
+                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postman/postman-original.svg" alt="Postman API" class="skill-icon" onerror="this.style.display='none'">
+                            <span>Postman API</span>
+                        </span>
                         <div class="progress">
                             <div class="bar" style="width:90%"></div>
                         </div><span class="percent">90%</span>
                     </div>
-                    <div class="skill"><span>Swagger API</span>
+                    <div class="skill">
+                        <span class="skill-icon-wrap">
+                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/swagger/swagger-original.svg" alt="Swagger API" class="skill-icon" onerror="this.style.display='none'">
+                            <span>Swagger API</span>
+                        </span>
                         <div class="progress">
                             <div class="bar" style="width:88%"></div>
                         </div><span class="percent">88%</span>
                     </div>
-                    <div class="skill"><span>ESLint</span>
+                    <div class="skill">
+                        <span class="skill-icon-wrap">
+                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/eslint/eslint-original.svg" alt="ESLint" class="skill-icon" onerror="this.style.display='none'">
+                            <span>ESLint</span>
+                        </span>
                         <div class="progress">
                             <div class="bar" style="width:80%"></div>
                         </div><span class="percent">80%</span>
                     </div>
-                    <div class="skill"><span>Figma</span>
+                    <div class="skill">
+                        <span class="skill-icon-wrap">
+                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/figma/figma-original.svg" alt="Figma" class="skill-icon" onerror="this.style.display='none'">
+                            <span>Figma</span>
+                        </span>
                         <div class="progress">
                             <div class="bar" style="width:83%"></div>
                         </div><span class="percent">83%</span>
                     </div>
-                    <div class="skill"><span>CMD</span>
+                    <div class="skill">
+                        <span class="skill-icon-wrap">
+                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/bash/bash-original.svg" alt="CMD" class="skill-icon" onerror="this.style.display='none'">
+                            <span>CMD</span>
+                        </span>
                         <div class="progress">
                             <div class="bar" style="width:92%"></div>
                         </div><span class="percent">92%</span>
                     </div>
-                    <div class="skill"><span>Make</span>
+                    <div class="skill">
+                        <span class="skill-icon-wrap">
+                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/linux/linux-original.svg" alt="Make" class="skill-icon" onerror="this.style.display='none'">
+                            <span>Make</span>
+                        </span>
                         <div class="progress">
                             <div class="bar" style="width:78%"></div>
                         </div><span class="percent">78%</span>
@@ -550,29 +694,73 @@ endblock %}
 
                 <div class="skills-card">
                     <h3>☁️ Others</h3>
-                    <div class="skill"><span>Docker</span>
+                    <div class="skill">
+                        <span class="skill-icon-wrap">
+                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg" alt="Docker" class="skill-icon" onerror="this.style.display='none'">
+                            <span>Docker</span>
+                        </span>
                         <div class="progress">
                             <div class="bar" style="width:60%"></div>
                         </div><span class="percent">60%</span>
                     </div>
-                    <div class="skill"><span>Pusher</span>
+                    <div class="skill">
+                        <span class="skill-icon-wrap">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="currentColor" class="skill-icon" style="display:inline-flex;align-items:center">
+                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"/>
+                            </svg>
+                            <span>Pusher</span>
+                        </span>
                         <div class="progress">
                             <div class="bar" style="width:75%"></div>
                         </div><span class="percent">75%</span>
                     </div>
-                    <div class="skill"><span>Agile</span>
+                    <div class="skill">
+                        <span class="skill-icon-wrap">
+                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/jira/jira-original.svg" alt="Agile" class="skill-icon" onerror="this.style.display='none'">
+                            <span>Agile</span>
+                        </span>
                         <div class="progress">
                             <div class="bar" style="width:88%"></div>
                         </div><span class="percent">88%</span>
+                    </div>
+                    <div class="skill">
+                        <span class="skill-icon-wrap">
+                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/ssh/ssh-original.svg" alt="SSH" class="skill-icon" onerror="this.style.display='none'">
+                            <span>SSH</span>
+                        </span>
+                        <div class="progress">
+                            <div class="bar" style="width:80%"></div>
+                        </div><span class="percent">80%</span>
+                    </div>
+                    <div class="skill">
+                        <span class="skill-icon-wrap">
+                            <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/ngrok/ngrok-original.svg" alt="ngrok" class="skill-icon" onerror="this.style.display='none'">
+                            <span>ngrok</span>
+                        </span>
+                        <div class="progress">
+                            <div class="bar" style="width:80%"></div>
+                        </div><span class="percent">80%</span>
                     </div>
                 </div>
             </div>
         </section>
     </div>
+    </div>
 </section>
 
 <!-- Certications -->
-<section id="certifications">
+<section id="certifications" class="lazy-reveal">
+    <div class="skeleton-panel" aria-hidden="true">
+        <div class="skeleton-line skeleton-line--title"></div>
+        <div class="skeleton-line skeleton-line--subtitle"></div>
+        <div class="skeleton-cert-grid">
+            <div class="skeleton-cert"></div>
+            <div class="skeleton-cert"></div>
+            <div class="skeleton-cert"></div>
+            <div class="skeleton-cert"></div>
+        </div>
+    </div>
+    <div class="lazy-content">
     <h2>{{ _('Certifications') }}</h2>
     <p>{{ _('Certifications_Description') }}</p>
     {% set certification_gallery = [
@@ -594,10 +782,19 @@ endblock %}
             src="{{ cert.image_url }}" alt="{{ cert.title }}" loading="lazy" decoding="async">
         {% endfor %}
     </div>
+    </div>
 </section>
 
 <!-- Contact Me -->
-<section id="contact">
+<section id="contact" class="lazy-reveal">
+    <div class="skeleton-panel" aria-hidden="true">
+        <div class="skeleton-line skeleton-line--title"></div>
+        <div class="skeleton-line skeleton-line--subtitle"></div>
+        <div class="skeleton-line skeleton-line--text skeleton-line--medium"></div>
+        <div class="skeleton-line skeleton-line--text skeleton-line--medium"></div>
+        <div class="skeleton-line skeleton-line--text skeleton-line--short"></div>
+    </div>
+    <div class="lazy-content">
     <h2>{{ _('Contact_Me') }}</h2>
     <p>{{ _('Contact_Description') }}</p>
     <ul>
@@ -661,6 +858,7 @@ endblock %}
         '#contact'
     )" />
     {% endif %}
+    </div>
 </section>
 <script>
     window.profileI18n = {

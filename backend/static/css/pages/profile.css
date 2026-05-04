@@ -1180,6 +1180,104 @@ section>*+* {
     margin-block-start: 0.5rem;
 }
 
+/* ── Lazy skeleton panel ── */
+.skeleton-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 20px 0;
+}
+
+.skeleton-line {
+    height: 16px;
+    border-radius: 8px;
+    background: linear-gradient(
+        90deg,
+        rgba(255, 255, 255, 0.04) 0%,
+        rgba(255, 255, 255, 0.08) 40%,
+        rgba(255, 255, 255, 0.04) 80%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 1.8s ease-in-out infinite;
+}
+
+.skeleton-line--title { width: 50%; height: 28px; }
+.skeleton-line--subtitle { width: 75%; }
+.skeleton-line--text { width: 100%; }
+.skeleton-line--short { width: 45%; }
+.skeleton-line--medium { width: 65%; }
+
+/* Card skeleton for key-projects */
+.skeleton-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 14px;
+}
+
+.skeleton-card {
+    height: 140px;
+    border-radius: 14px;
+    background: linear-gradient(
+        90deg,
+        rgba(255, 255, 255, 0.04) 0%,
+        rgba(255, 255, 255, 0.08) 40%,
+        rgba(255, 255, 255, 0.04) 80%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 1.8s ease-in-out infinite;
+}
+
+/* Cert grid skeleton */
+.skeleton-cert-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 14px;
+}
+
+.skeleton-cert {
+    height: 100px;
+    border-radius: 12px;
+    background: linear-gradient(
+        90deg,
+        rgba(255, 255, 255, 0.04) 0%,
+        rgba(255, 255, 255, 0.08) 40%,
+        rgba(255, 255, 255, 0.04) 80%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 1.8s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+/* Hide real content until revealed */
+.lazy-content {
+    display: none;
+}
+
+.lazy-reveal.is-revealed .skeleton-panel {
+    display: none;
+}
+
+.lazy-reveal.is-revealed .lazy-content {
+    display: block;
+}
+
+/* Light theme shimmer */
+:root[data-theme="light"] .skeleton-line,
+:root[data-theme="light"] .skeleton-card,
+:root[data-theme="light"] .skeleton-cert {
+    background: linear-gradient(
+        90deg,
+        rgba(0, 0, 0, 0.06) 0%,
+        rgba(0, 0, 0, 0.12) 40%,
+        rgba(0, 0, 0, 0.06) 80%
+    );
+    background-size: 200% 100%;
+}
+
 /* Reduce initial render work for lower sections on long profile pages */
 #about,
 #resume,
@@ -1728,6 +1826,24 @@ section>*+* {
     margin: 8px 0;
 }
 
+.skill-icon-wrap {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.skill-icon-wrap span {
+    font-weight: 500;
+    color: var(--text-secondary);
+}
+
+.skill-icon {
+    width: 20px;
+    height: 20px;
+    object-fit: contain;
+    flex-shrink: 0;
+}
+
 .skill span:first-child {
     flex: 1;
     font-weight: 500;
@@ -1736,6 +1852,7 @@ section>*+* {
 .skill span {
     font-weight: 600;
     color: var(--text-secondary);
+    font-size: 13px;
 }
 
 .progress {
@@ -1843,7 +1960,7 @@ section>*+* {
 
     .skill span,
     .percent {
-        font-size: 0.9rem;
+        font-size: 0.7rem;
     }
 
     .mobile-toggle {

@@ -81,6 +81,36 @@
         </span>
     </a>
 </div>
+
+<div class="social-footer__mode-toggle" id="modeToggleContainer">
+    <span class="social-footer__mode-label" id="modeToggleLabel">Switch to Professional Mode</span>
+    <button id="modeToggleBtn" class="social-footer__mode-btn" type="button" aria-label="Toggle mode">
+        <ion-icon name="swap-horizontal-outline"></ion-icon>
+    </button>
 </div>
+</div>
+<script>
+(function () {
+    var container = document.getElementById("modeToggleContainer");
+    var label = document.getElementById("modeToggleLabel");
+    var btn = document.getElementById("modeToggleBtn");
+    if (!container || !label || !btn) return;
+
+    function updateToggleUI() {
+        var isProfessional = new URLSearchParams(window.location.search).get("mode") === "professional";
+        label.textContent = isProfessional ? "Switch to Social Mode" : "Switch to Professional Mode";
+    }
+
+    updateToggleUI();
+
+    btn.addEventListener("click", function () {
+        var isProfessional = new URLSearchParams(window.location.search).get("mode") === "professional";
+        var url = isProfessional
+            ? window.location.pathname
+            : window.location.pathname + "?mode=professional";
+        window.location.href = url;
+    });
+})();
+</script>
 <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
 <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>

@@ -888,6 +888,26 @@ nav ul li.active {
     gap: 15px;
 }
 
+#navbarMenu {
+    display: flex;
+    align-items: center;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    gap: 20px;
+}
+
+#navbarMenu li a {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    text-decoration: none;
+    font-size: 15px;
+    padding: 8px 12px;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+}
+
 #beatVisualizer {
     position: absolute;
     top: 0;
@@ -948,7 +968,8 @@ nav ul li.active {
     }
 
     .social-dropdown {
-        display: none;
+        display: inline-block;
+        position: relative;
     }
 
     .social-dropdown-btn {
@@ -959,18 +980,32 @@ nav ul li.active {
     }
 
     .social-dropdown .social-icon {
-        position: static;
-        width: 100%;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: max-content;
         border-radius: 10px;
-        background: rgba(0, 0, 0, 0.8);
-        box-shadow: none;
-        margin-top: 8px;
+        background: rgba(0, 0, 0, 0.95);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+        padding: 10px;
+        display: none;
+        flex-direction: column;
+        gap: 5px;
+        z-index: 1000;
+    }
+
+    .social-dropdown.active .social-icon {
+        display: flex;
     }
 
     .social-icon__link {
         font-size: 13px;
         padding: 10px 12px;
         justify-content: flex-start;
+    }
+
+    .social-icon__link span {
+        display: inline;
     }
 
     .searchbar-container {
@@ -1166,11 +1201,6 @@ nav ul li.active {
     .social-dropdown-btn {
         font-size: 12px;
         padding: 8px 12px;
-    }
-
-    .social-icon__link span {
-        display: none;
-        /* icons only for smaller phones */
     }
 
     .social-icon__link ion-icon {
@@ -1929,3 +1959,5 @@ body.lyrics-modal-open {
         padding: 12px;
     }
 }
+
+/* Dark theme music page styles */

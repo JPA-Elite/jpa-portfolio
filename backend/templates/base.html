@@ -14,6 +14,16 @@
     <meta name="keywords" content="{% block meta_keywords %}portfolio, projects, gallery, vlog{% endblock %}">
     <meta name="author" content="{% block meta_author %}Joshua Algadipe{% endblock %}">
 
+    <!-- Pre-set theme before paint so loading overlay uses correct colors -->
+    <script>
+        (function () {
+            var saved = localStorage.getItem('theme');
+            var forceLight = {{ (force_light_theme if force_light_theme is defined else 'False') | tojson }};
+            var theme = forceLight === 'True' ? 'light' : (saved || 'light');
+            document.documentElement.setAttribute('data-theme', theme);
+        })();
+    </script>
+
     <link rel="stylesheet" href="{{ static_asset('css/pages/styles.css') }}" />
     <link rel="stylesheet" href="{{ static_asset('css/pages/profile.css') }}" />
     <link rel="stylesheet" href="{{ static_asset('css/themes.css') }}" />
@@ -80,6 +90,14 @@
 </head>
 
 <body>
+    <!-- Page Loading Overlay — 3-dot wave, full screen -->
+    <div id="pageLoadingOverlay" aria-label="Loading..." role="status">
+        <div class="loading-dots-wrap">
+            <span class="loading-dot loading-dot-1"></span>
+            <span class="loading-dot loading-dot-2"></span>
+            <span class="loading-dot loading-dot-3"></span>
+        </div>
+    </div>
     <canvas id="brainCanvas"></canvas>
     <div class="container">
         <header>
@@ -93,36 +111,66 @@
                 <ul id="navList">
                     {% if request.args.get('mode') != 'professional' %}
                         <li class="{% if request.endpoint == 'pages.profile' %}active{% endif %}">
-                            <a href="{{ url_for('pages.profile') }}">Portfolio</a>
+                            <a href="{{ url_for('pages.profile') }}">
+                                <ion-icon name="person-outline"></ion-icon>
+                                Portfolio
+                            </a>
                         </li>
                         <li class="{% if request.endpoint == 'pages.gallery' %}active{% endif %}">
-                            <a href="{{ url_for('pages.gallery') }}">Gallery</a>
+                            <a href="{{ url_for('pages.gallery') }}">
+                                <ion-icon name="images-outline"></ion-icon>
+                                Gallery
+                            </a>
                         </li>
                         <li class="{% if request.endpoint == 'pages.vlog' %}active{% endif %}">
-                            <a href="{{ url_for('pages.vlog') }}">Vlog</a>
+                            <a href="{{ url_for('pages.vlog') }}">
+                                <ion-icon name="videocam-outline"></ion-icon>
+                                Vlog
+                            </a>
                         </li>
                         <li class="{% if request.endpoint == 'pages.music' %}active{% endif %}">
-                            <a href="{{ url_for('pages.music') }}">Music</a>
+                            <a href="{{ url_for('pages.music') }}">
+                                <ion-icon name="musical-notes-outline"></ion-icon>
+                                Music
+                            </a>
                         </li>
                     {% else %}
                         <li>
-                            <a href="{{ url_for('pages.profile') }}?mode=professional#portfolio">Summary</a>
+                            <a href="{{ url_for('pages.profile') }}?mode=professional#portfolio">
+                                <ion-icon name="document-text-outline"></ion-icon>
+                                Summary
+                            </a>
                         </li>
                         <li>
-                            <a href="{{ url_for('pages.profile') }}?mode=professional#about">About Me</a>
+                            <a href="{{ url_for('pages.profile') }}?mode=professional#about">
+                                <ion-icon name="person-outline"></ion-icon>
+                                About Me
+                            </a>
                         </li>
                         <li>
-                            <a href="{{ url_for('pages.profile') }}?mode=professional#resume">Resume</a>
+                            <a href="{{ url_for('pages.profile') }}?mode=professional#resume">
+                                <ion-icon name="reader-outline"></ion-icon>
+                                Resume
+                            </a>
                         </li>
                         <li>
-                            <a href="{{ url_for('pages.profile') }}?mode=professional#key-projects">Projects</a>
+                            <a href="{{ url_for('pages.profile') }}?mode=professional#key-projects">
+                                <ion-icon name="rocket-outline"></ion-icon>
+                                Projects
+                            </a>
                         </li>
                         <li>
-                            <a href="{{ url_for('pages.profile') }}?mode=professional#contact">Contact</a>
+                            <a href="{{ url_for('pages.profile') }}?mode=professional#contact">
+                                <ion-icon name="mail-outline"></ion-icon>
+                                Contact
+                            </a>
                         </li>
                     {% endif %}
                     <li class="{% if request.endpoint == 'pages.concern' %}active{% endif %}">
-                        <a href="{{ url_for('pages.concern') }}{{ '?mode=professional' if request.args.get('mode') == 'professional' else '' }}">Concern</a>
+                        <a href="{{ url_for('pages.concern') }}{{ '?mode=professional' if request.args.get('mode') == 'professional' else '' }}">
+                            <ion-icon name="chatbubbles-outline"></ion-icon>
+                            Concern
+                        </a>
                     </li>
                 </ul>
 

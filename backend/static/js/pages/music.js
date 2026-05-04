@@ -339,7 +339,9 @@ syncFullscreenButton(false);
 
 document.addEventListener("DOMContentLoaded", async () => {
     const root = document.documentElement;
-    root.setAttribute("data-theme", "light");
+    // Always force dark theme on the music page, regardless of saved preference from other pages
+    root.setAttribute("data-theme", "dark");
+
     applyQueryParamsFromUrl();
 
     if (lyricsBtn) {

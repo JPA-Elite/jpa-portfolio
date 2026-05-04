@@ -676,6 +676,13 @@ nav #navList li a {
     z-index: 9999;
     overflow: visible;
     transition: all 0.3s ease;
+    /* Hidden while page loading overlay is visible */
+    visibility: hidden;
+}
+
+/* Show the admin float button once page load is complete */
+body.loading-done .admin-float-btn {
+    visibility: visible;
 }
 
 /* Hover animation */
@@ -774,4 +781,87 @@ nav #navList li a {
     .nav-toggle {
         display: block;
     }
+}
+
+/* =============================================
+   PAGE LOADING OVERLAY — 3-dot wave animation
+   ============================================= */
+
+#pageLoadingOverlay {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.4s ease;
+}
+
+/* Light theme — white bg, black dots */
+[data-theme="light"] #pageLoadingOverlay {
+    background-color: #ffffff;
+}
+
+/* Dark theme — black bg, white dots */
+[data-theme="dark"] #pageLoadingOverlay {
+    background-color: #111111;
+}
+
+/* Fallback when no theme attr (defaults to light) */
+#pageLoadingOverlay {
+    background-color: #ffffff;
+}
+
+/* Three dots wrapper — horizontal */
+.loading-dots-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+/* Each dot */
+.loading-dot {
+    display: block;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    animation: wave-dot 1.2s ease-in-out infinite;
+}
+
+/* Light theme dots */
+[data-theme="light"] .loading-dot {
+    background-color: #222222;
+}
+
+/* Dark theme dots */
+[data-theme="dark"] .loading-dot {
+    background-color: #eeeeee;
+}
+
+/* Fallback */
+.loading-dot {
+    background-color: #222222;
+}
+
+/* Dot 2 and 3 delayed by 0.2s each */
+.loading-dot-2 { animation-delay: 0.2s; }
+.loading-dot-3 { animation-delay: 0.4s; }
+
+/* Wave keyframe: bouncy up-and-down */
+@keyframes wave-dot {
+    0%, 80%, 100% {
+        transform: translateY(0);
+        opacity: 0.5;
+    }
+    40% {
+        transform: translateY(-18px);
+        opacity: 1;
+    }
+}
+
+/* Hide overlay when page is done loading */
+#pageLoadingOverlay.loaded {
+    opacity: 0;
+    pointer-events: none;
 }

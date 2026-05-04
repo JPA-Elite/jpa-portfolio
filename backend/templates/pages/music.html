@@ -65,22 +65,40 @@
         </div>
         <ul id="navbarMenu">
             <li class="{% if request.endpoint == 'pages.profile' %}active{% endif %}">
-                <a href="{{ url_for('pages.profile') }}">Portfolio</a>
+                <a href="{{ url_for('pages.profile') }}">
+                    <ion-icon name="person-outline"></ion-icon>
+                    Portfolio
+                </a>
             </li>
             <li class="{% if request.endpoint == 'pages.gallery' %}active{% endif %}">
-                <a href="{{ url_for('pages.gallery') }}">Gallery</a>
+                <a href="{{ url_for('pages.gallery') }}">
+                    <ion-icon name="images-outline"></ion-icon>
+                    Gallery
+                </a>
             </li>
             <li class="{% if request.endpoint == 'pages.vlog' %}active{% endif %}">
-                <a href="{{ url_for('pages.vlog') }}">Vlog</a>
+                <a href="{{ url_for('pages.vlog') }}">
+                    <ion-icon name="videocam-outline"></ion-icon>
+                    Vlog
+                </a>
             </li>
             <li class="{% if request.endpoint == 'pages.music' %}active{% endif %}">
-                <a href="{{ url_for('pages.music') }}">Music</a>
+                <a href="{{ url_for('pages.music') }}">
+                    <ion-icon name="musical-notes-outline"></ion-icon>
+                    Music
+                </a>
             </li>
             <li class="{% if request.endpoint == 'pages.concern' %}active{% endif %}">
-                <a href="{{ url_for('pages.concern') }}">Concern</a>
+                <a href="{{ url_for('pages.concern') }}">
+                    <ion-icon name="chatbubbles-outline"></ion-icon>
+                    Concern
+                </a>
             </li>
             <li class="{% if request.endpoint == 'pages.donation' %}active{% endif %}">
-                <a href="{{ url_for('pages.donation') }}">Donation</a>
+                <a href="{{ url_for('pages.donation') }}">
+                    <ion-icon name="heart-outline"></ion-icon>
+                    Donation
+                </a>
             </li>
         </ul>
         <div class="navbarMenu2">

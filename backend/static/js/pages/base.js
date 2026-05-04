@@ -1,3 +1,29 @@
+// ---- PAGE LOADING OVERLAY — hide once page is ready ----
+(function () {
+    var overlay = document.getElementById('pageLoadingOverlay');
+    if (!overlay) return;
+
+    // Hide once DOM is ready and all images/fonts have started loading
+    function hideOverlay() {
+        overlay.classList.add('loaded');
+        // Also reveal the admin float button now that page is ready
+        document.body.classList.add('loading-done');
+        setTimeout(function () {
+            overlay.style.display = 'none';
+        }, 500);
+    }
+
+    // Fallback: always hide after 2s max (prevents stuck loading)
+    setTimeout(hideOverlay, 2000);
+
+    // Hide as soon as DOM is built and interactive
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', hideOverlay);
+    } else {
+        hideOverlay();
+    }
+})();
+
 // ---- CANVAS NEURAL NETWORK ANIMATION ----
 const canvas = document.getElementById("brainCanvas");
 const ctx = canvas.getContext("2d");

@@ -394,6 +394,12 @@
     color: #ccc;
 }
 
+/* Comment like button active state */
+.comment-meta .like-btn.liked {
+    color: #2962ff;
+    font-weight: 700;
+}
+
 /* Input box */
 .comment-input {
     display: grid;

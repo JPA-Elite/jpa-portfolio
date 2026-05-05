@@ -79,6 +79,7 @@ endblock %}
             </ul>
         </li>
     </ul>
+    </div>
     {% if get_locale() == en_locale %}
     <img src="{{ voice_icon }}" alt="Voice Image" class="voice-icon" onclick="speak(
         document.querySelector('#about').textContent,
@@ -87,7 +88,6 @@ endblock %}
         '#about'
     )" />
     {% endif %}
-    </div>
 </section>
 
 <!-- Resume -->
@@ -136,6 +136,7 @@ endblock %}
         <a>{{ _('Detailed_Resume_Description') }}:</a>
         <a href="{{ resume_pdf }}" target="_blank" class="cta-button">{{ _('Here_Link') }}</a>
     </p>
+    </div>
     {% if get_locale() == en_locale %}
     <img src="{{ voice_icon }}" alt="Voice Image" class="voice-icon" onclick="speak(
         document.querySelector('#resume').textContent,
@@ -144,7 +145,6 @@ endblock %}
         '#resume'
     )" />
     {% endif %}
-    </div>
 </section>
 
 <section id="company-roadmap" class="career-roadmap-section">

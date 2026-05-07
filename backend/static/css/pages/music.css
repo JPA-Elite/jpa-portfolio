@@ -961,6 +961,8 @@ nav ul li.active {
     transition: filter 0.25s ease;
 }
 
+ion-icon { pointer-events: none !important; }
+
 /* Mobile Navigation */
 @media only screen and (max-width: 768px) {
     .no-results {

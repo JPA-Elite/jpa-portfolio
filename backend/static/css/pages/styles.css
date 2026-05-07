@@ -235,6 +235,10 @@ nav ul li.media-dropdown.active .media-megamenu__item {
     color: var(--accent-color, #2962ff);
 }
 
+.media-megamenu__item:last-child {
+    padding-bottom: 0;
+}
+
 /* ============================
    MOBILE MEDIA SUBMENU
    ============================ */
@@ -264,9 +268,27 @@ nav ul li.media-dropdown.active .media-megamenu__item {
 .mobile-media-submenu {
     display: none;
     flex-direction: column;
-    padding-left: 20px;
+    gap: 0;
+    padding: 10px 0 0;
     list-style: none;
     margin: 4px 0 0;
+}
+
+.mobile-media-submenu li:last-child {
+    padding-bottom: 0;
+}
+
+/* Mobile sidebar media dropdown - no extra gap when open */
+.sidebar .mobile-media-dropdown.is-open {
+    padding-bottom: 0;
+}
+
+.sidebar .mobile-media-submenu li:last-child {
+    padding-bottom: 0;
+}
+
+.mobile-media-submenu li:last-child a {
+    padding-bottom: 0;
 }
 
 .mobile-media-submenu li a {

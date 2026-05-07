@@ -116,23 +116,26 @@
                                 Portfolio
                             </a>
                         </li>
-                        <li class="{% if request.endpoint == 'pages.gallery' %}active{% endif %}">
-                            <a href="{{ url_for('pages.gallery') }}">
-                                <ion-icon name="images-outline"></ion-icon>
-                                Gallery
-                            </a>
-                        </li>
-                        <li class="{% if request.endpoint == 'pages.vlog' %}active{% endif %}">
-                            <a href="{{ url_for('pages.vlog') }}">
-                                <ion-icon name="videocam-outline"></ion-icon>
-                                Vlog
-                            </a>
-                        </li>
-                        <li class="{% if request.endpoint == 'pages.music' %}active{% endif %}">
-                            <a href="{{ url_for('pages.music') }}">
-                                <ion-icon name="musical-notes-outline"></ion-icon>
-                                Music
-                            </a>
+                        <li class="media-dropdown {% if request.endpoint in ('pages.gallery', 'pages.vlog', 'pages.music') %}active{% endif %}">
+                            <button type="button" class="media-dropdown-trigger">
+                                <ion-icon name="folder-outline"></ion-icon>
+                                Media
+                                <ion-icon name="chevron-down-outline"></ion-icon>
+                            </button>
+                            <div class="media-megamenu">
+                                <a href="{{ url_for('pages.gallery') }}" class="media-megamenu__item">
+                                    <ion-icon name="images-outline"></ion-icon>
+                                    <span>Gallery</span>
+                                </a>
+                                <a href="{{ url_for('pages.vlog') }}" class="media-megamenu__item">
+                                    <ion-icon name="videocam-outline"></ion-icon>
+                                    <span>Vlog</span>
+                                </a>
+                                <a href="{{ url_for('pages.music') }}" class="media-megamenu__item">
+                                    <ion-icon name="musical-notes-outline"></ion-icon>
+                                    <span>Music</span>
+                                </a>
+                            </div>
                         </li>
                     {% else %}
                         <li>
@@ -184,23 +187,32 @@
                                     Portfolio
                                 </a>
                             </li>
-                            <li class="{% if request.endpoint == 'pages.gallery' %}active{% endif %}">
-                                <a href="{{ url_for('pages.gallery') }}">
-                                    <ion-icon name="images-outline"></ion-icon>
-                                    Gallery
-                                </a>
-                            </li>
-                            <li class="{% if request.endpoint == 'pages.vlog' %}active{% endif %}">
-                                <a href="{{ url_for('pages.vlog') }}">
-                                    <ion-icon name="videocam-outline"></ion-icon>
-                                    Vlog
-                                </a>
-                            </li>
-                            <li class="{% if request.endpoint == 'pages.music' %}active{% endif %}">
-                                <a href="{{ url_for('pages.music') }}">
-                                    <ion-icon name="musical-notes-outline"></ion-icon>
-                                    Music
-                                </a>
+                            <li class="mobile-media-dropdown">
+                                <button type="button" class="mobile-media-toggle" tabindex="0">
+                                    <ion-icon name="folder-outline"></ion-icon>
+                                    Media
+                                    <ion-icon class="mobile-media-chevron" name="chevron-down-outline"></ion-icon>
+                                </button>
+                                <ul class="mobile-media-submenu">
+                                    <li class="{% if request.endpoint == 'pages.gallery' %}active{% endif %}">
+                                        <a href="{{ url_for('pages.gallery') }}">
+                                            <ion-icon name="images-outline"></ion-icon>
+                                            Gallery
+                                        </a>
+                                    </li>
+                                    <li class="{% if request.endpoint == 'pages.vlog' %}active{% endif %}">
+                                        <a href="{{ url_for('pages.vlog') }}">
+                                            <ion-icon name="videocam-outline"></ion-icon>
+                                            Vlog
+                                        </a>
+                                    </li>
+                                    <li class="{% if request.endpoint == 'pages.music' %}active{% endif %}">
+                                        <a href="{{ url_for('pages.music') }}">
+                                            <ion-icon name="musical-notes-outline"></ion-icon>
+                                            Music
+                                        </a>
+                                    </li>
+                                </ul>
                             </li>
                             <li class="{% if request.endpoint == 'pages.concern' %}active{% endif %}">
                                 <a href="{{ url_for('pages.concern') }}">

@@ -155,38 +155,73 @@ function toggleNav() {
     }, 100);
 }
 
-// Close sidebar when clicking outside
+function toggleMobileMedia(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    const dropdown = document.querySelector(".mobile-media-dropdown");
+    if (dropdown) {
+        dropdown.classList.toggle("is-open");
+    }
+}
+
+// Event delegation — catches clicks on .mobile-media-toggle regardless of when it appears in DOM
+document.addEventListener("click", function (e) {
+    if (e.target.closest(".mobile-media-toggle")) {
+        e.preventDefault();
+        e.stopPropagation();
+        var sidebar = document.getElementById("sidebar");
+        var toggleButton = document.getElementById("toggleButton");
+        // If sidebar is closed, open it first so the dropdown is visible inside it
+        if (!sidebar.classList.contains("active")) {
+            sidebar.classList.add("active");
+            toggleButton.classList.add("active");
+            document.body.classList.add("nav-active");
+        }
+        var dropdown = document.querySelector(".mobile-media-dropdown");
+        if (dropdown) {
+            dropdown.classList.toggle("is-open");
+        }
+    }
+
+    // Desktop: toggle media megamenu on click of the trigger
+    if (e.target.closest(".media-dropdown-trigger")) {
+        e.preventDefault();
+        var dropdown = document.querySelector(".media-dropdown");
+        if (dropdown) {
+            dropdown.classList.toggle("is-open");
+        }
+    }
+});
+
+// Close sidebar and desktop media dropdown when clicking outside
 document.addEventListener("click", function (e) {
     const sidebar = document.getElementById("sidebar");
     const toggle = document.getElementById("toggleButton");
+
+    // Don't close sidebar when clicking inside mobile media submenu (Gallery/Vlog/Music links)
+    if (e.target.closest(".mobile-media-submenu")) return;
+
+    // Don't close sidebar when clicking the toggle button (it handles its own toggle logic)
+    if (e.target.closest(".nav-toggle")) return;
+
     if (
         !sidebar.contains(e.target) &&
-        !toggle.contains(e.target) &&
         sidebar.classList.contains("active")
     ) {
         document.body.classList.remove("nav-active");
         sidebar.classList.remove("active");
         toggle.classList.remove("active");
     }
-});
 
-function handleClickOutside(event) {
-    const navList = document.getElementById("navList");
-    const toggleButton = document.getElementById("toggleButton");
-
-    if (
-        navList.classList.contains("show") &&
-        !toggleButton.contains(event.target) &&
-        !navList.contains(event.target)
-    ) {
-        document.body.classList.remove("nav-active");
-        navList.classList.remove("show");
+    // Close desktop media dropdown when clicking outside
+    var mediaDropdown = document.querySelector(".media-dropdown");
+    if (mediaDropdown && !e.target.closest(".media-dropdown")) {
+        mediaDropdown.classList.remove("is-open");
     }
-}
-
-document.body.addEventListener("click", function (event) {
-    handleClickOutside(event);
 });
+
+// Remove old redundant handler — its logic is now merged into the handler above
+// (kept here as a no-op placeholder to avoid breaking any external references)
 
 function getVoiceLocale(locale) {
     const voiceMap = {

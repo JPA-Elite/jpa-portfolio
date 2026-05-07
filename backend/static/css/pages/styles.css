@@ -1130,3 +1130,6 @@ body.loading-done .admin-float-btn {
     opacity: 0;
     pointer-events: none;
 }
+
+/* Suppress Ion Icons default SVG title tooltips */
+ion-icon { pointer-events: none !important; }

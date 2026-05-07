@@ -148,8 +148,21 @@ function changeLanguage(url) {
 function toggleNav() {
     const sidebar = document.getElementById("sidebar");
     const toggleButton = document.getElementById("toggleButton");
+    const navIcon = toggleButton.querySelector("ion-icon.nav-toggle-icon");
     sidebar.classList.toggle("active");
     toggleButton.classList.toggle("active");
+
+    // Swap hamburger (menu-outline) ↔ close (close-outline) icon with fade animation
+    if (navIcon) {
+        const isOpen = sidebar.classList.contains("active");
+        navIcon.style.transition = "opacity 0.15s ease";
+        navIcon.style.opacity = "0";
+        setTimeout(() => {
+            navIcon.setAttribute("name", isOpen ? "close-outline" : "menu-outline");
+            navIcon.style.opacity = "1";
+        }, 80);
+    }
+
     setTimeout(() => {
         document.body.classList.toggle("nav-active");
     }, 100);
@@ -211,6 +224,16 @@ document.addEventListener("click", function (e) {
         document.body.classList.remove("nav-active");
         sidebar.classList.remove("active");
         toggle.classList.remove("active");
+        // Switch icon back to hamburger
+        var navIcon = toggle.querySelector("ion-icon.nav-toggle-icon");
+        if (navIcon) {
+            navIcon.style.transition = "opacity 0.15s ease";
+            navIcon.style.opacity = "0";
+            setTimeout(() => {
+                navIcon.setAttribute("name", "menu-outline");
+                navIcon.style.opacity = "1";
+            }, 80);
+        }
     }
 
     // Close desktop media dropdown when clicking outside

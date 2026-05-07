@@ -101,6 +101,194 @@ nav ul li.active a {
     /* font-style: italic; */
 }
 
+/* Override pointer-events: none for megamenu items when the dropdown is open */
+nav ul li.media-dropdown.is-open .media-megamenu__item {
+    pointer-events: auto;
+}
+
+/* Active state: blue bottom border when on Gallery/Vlog/Music page — toggle via is-open */
+nav ul li.media-dropdown.active {
+    border-bottom: 2px solid var(--accent-color);
+    border-radius: 5px;
+}
+
+/* Show megamenu only via is-open class (JS toggle); 'active' only gives the underline */
+nav ul li.media-dropdown.is-open .media-megamenu {
+    display: flex;
+}
+
+/* Megamenu items must be clickable when is-open or active */
+nav ul li.media-dropdown.is-open .media-megamenu__item,
+nav ul li.media-dropdown.active .media-megamenu__item {
+    pointer-events: auto;
+}
+
+/* ============================
+   MEDIA DROPDOWN — Desktop
+   ============================ */
+.media-dropdown {
+    position: relative;
+}
+
+.media-dropdown-trigger {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--text-primary, #fff);
+    font-weight: bold;
+    font-size: 15px !important;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 2px;
+    border-radius: 5px;
+    width: 100%;
+}
+
+.media-dropdown-trigger:hover {
+    opacity: 0.8;
+    transition: opacity 0.3s ease;
+}
+
+.media-dropdown-trigger ion-icon:last-child {
+    font-size: 12px;
+    transition: transform 0.25s ease;
+}
+
+.media-dropdown.is-open .media-dropdown-trigger ion-icon:last-child {
+    transform: rotate(180deg);
+}
+
+.media-megamenu {
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0;
+    display: none;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 180px;
+    padding: 8px 6px;
+    border-radius: 10px;
+    background: var(--card-bg, #1e1e1e);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow: 0 16px 32px rgba(0, 0, 0, 0.35);
+    z-index: 100;
+}
+
+/* Arrow pointing UP toward the "Media" nav item */
+.media-megamenu::before {
+    content: "";
+    position: absolute;
+    bottom: 100%;
+    left: 20px;
+    width: 0;
+    height: 0;
+    border-left: 9px solid transparent;
+    border-right: 9px solid transparent;
+    border-bottom: 9px solid rgba(255, 255, 255, 0.12);
+    margin-bottom: 1px;
+}
+
+.media-megamenu::after {
+    content: "";
+    position: absolute;
+    bottom: 100%;
+    left: 21px;
+    width: 0;
+    height: 0;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-bottom: 8px solid var(--card-bg, #1e1e1e);
+}
+
+.media-dropdown:hover .media-megamenu,
+.media-dropdown:focus-within .media-megamenu {
+    /* disabled — megamenu is shown only via .is-open JS toggle */
+    display: none;
+}
+
+.media-dropdown.is-open .media-megamenu {
+    display: flex;
+}
+
+.media-megamenu__item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 12px;
+    border-radius: 8px;
+    text-decoration: none;
+    color: var(--text-primary, #fff);
+    font-size: 14px;
+    font-weight: 600;
+    transition: background 0.18s ease, color 0.18s ease;
+    white-space: nowrap;
+}
+
+.media-megamenu__item ion-icon {
+    font-size: 1.1rem;
+    flex-shrink: 0;
+}
+
+.media-megamenu__item:hover {
+    background: rgba(41, 98, 255, 0.12);
+    color: var(--accent-color, #2962ff);
+}
+
+/* ============================
+   MOBILE MEDIA SUBMENU
+   ============================ */
+.mobile-media-dropdown > button {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--text-primary, #fff);
+    font-size: 16px;
+    font-weight: bold;
+    padding: 0;
+    width: 100%;
+}
+
+.mobile-media-chevron {
+    margin-left: auto;
+    transition: transform 0.25s ease;
+}
+
+.mobile-media-dropdown.is-open > button .mobile-media-chevron {
+    transform: rotate(180deg);
+}
+
+.mobile-media-submenu {
+    display: none;
+    flex-direction: column;
+    padding-left: 20px;
+    list-style: none;
+    margin: 4px 0 0;
+}
+
+.mobile-media-submenu li a {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 10px;
+    border-radius: 8px;
+    font-size: 14px;
+    color: var(--text-primary, #fff);
+    text-decoration: none;
+    transition: background 0.18s ease;
+}
+
+.mobile-media-submenu li a:hover {
+    background: rgba(255, 255, 255, 0.06);
+}
+
+.mobile-media-submenu li.active a {
+    color: var(--accent-color, #2962ff);
+}
+
 .cta-button {
     display: inline-block;
     padding: 5px;
@@ -321,14 +509,31 @@ nav #navList {
     border-color: transparent !important;
 }
 
+
 @media (max-width: 1400px) {
     .dropdown-content {
         right: 0;
     }
 }
 
-/* Mobile Styles */
+/* Mobile (≤768px): show submenu via JS is-open class only — no :focus interference */
 @media (max-width: 768px) {
+    .mobile-media-dropdown.is-open .mobile-media-submenu {
+        display: flex;
+        padding-left: 20px;
+    }
+
+    .mobile-media-dropdown.is-open .mobile-media-submenu li {
+        padding: 0 !important;
+    }
+
+    .mobile-media-dropdown.is-open > button .mobile-media-chevron {
+        transform: rotate(180deg);
+    }
+
+    .mobile-media-dropdown > button {
+        padding-left: 20px !important;
+    }
 
     button,
     a,
@@ -376,6 +581,11 @@ nav #navList {
         cursor: pointer;
         font-size: 30px;
         margin-bottom: 3px;
+    }
+
+    /* Hide desktop megamenu on mobile — mobile uses .mobile-media-dropdown with JS toggle */
+    .media-megamenu {
+        display: none;
     }
 
     nav #navList {
@@ -507,6 +717,17 @@ nav #navList {
         font-size: 20px;
     }
 
+    .mobile-media-submenu li a {
+        padding: 15px 10px;
+    }
+
+    .mobile-media-submenu a {
+        font-size: 15px !important;
+    }
+
+    .mobile-media-submenu a ion-icon {
+        font-size: 18px !important;
+    }
 }
 
 /* Additional Responsive Styles */
@@ -589,7 +810,7 @@ footer {
     gap: 15px;
 }
 
-#mobileNavList li a ion-icon {
+#mobileNavList li a ion-icon, .mobile-media-dropdown > button ion-icon {
     font-size: 24px;
     min-width: 24px;
 }
@@ -625,6 +846,26 @@ footer {
     padding: 10px 20px;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     transition: 0.3s ease;
+}
+
+/* Make the Media button span the full width inside the padded <li> */
+.mobile-media-dropdown {
+    padding: 10px 20px !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.mobile-media-dropdown > button {
+    width: 100%;
+    padding: 0;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--text-primary, #fff);
+    font-size: 16px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
 .sidebar ul li:hover {
@@ -768,6 +1009,10 @@ body.loading-done .admin-float-btn {
         /* Hide desktop nav */
     }
 
+    nav ul {
+        gap: 0 !important;
+    }
+
     .sidebar {
         display: block;
         position: fixed;
@@ -797,10 +1042,14 @@ body.loading-done .admin-float-btn {
     .nav-toggle {
         display: block;
     }
+
+    .sidebar ul li, .sidebar ul li:hover {
+        padding-left: 0 !important;
+    }
 }
 
 /* =============================================
-   PAGE LOADING OVERLAY — 3-dot wave animation
+    PAGE LOADING OVERLAY — 3-dot wave animation
    ============================================= */
 
 #pageLoadingOverlay {

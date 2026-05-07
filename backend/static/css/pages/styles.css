@@ -543,6 +543,7 @@ nav #navList {
     .mobile-media-dropdown.is-open .mobile-media-submenu {
         display: flex;
         padding-left: 20px;
+        padding-top: 10px;
     }
 
     .mobile-media-dropdown.is-open .mobile-media-submenu li {

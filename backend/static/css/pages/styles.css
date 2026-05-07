@@ -865,7 +865,7 @@ footer {
     font-weight: bold;
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 15px;
 }
 
 .sidebar ul li:hover {

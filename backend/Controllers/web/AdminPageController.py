@@ -29,11 +29,11 @@ auth_service = AuthService(
 admin_login_security = AdminLoginSecurity()
 
 
-def _render_admin_login(form, status_code=200):
+def _render_admin_login(form, errors=None, status_code=200):
     """Render admin login with one-time anti-automation fields and no-store headers."""
     security_context = admin_login_security.issue_form_challenge()
     response = make_response(
-        render_template(ADMIN_LOGIN_PAGE, form=form, **security_context),
+        render_template(ADMIN_LOGIN_PAGE, form=form, errors=errors or {}, **security_context),
         status_code,
     )
     response.headers["Cache-Control"] = "no-store, no-cache, must-revalidate, max-age=0, private"
@@ -56,6 +56,16 @@ def admin_login_route():
 
     if form.validate_on_submit():
         username = (form.username.data or "").strip()
+        password = form.password.data or ""
+
+        # Manual field-level validation
+        errors = {}
+        if not username:
+            errors["username"] = "Username is required."
+        if not password:
+            errors["password"] = "Password is required."
+        if errors:
+            return _render_admin_login(form, errors=errors, status_code=400)
 
         form_gate = admin_login_security.validate_form_submission()
         if not form_gate.allowed:
@@ -78,7 +88,7 @@ def admin_login_route():
             flash(CAPTCHA_VERIFICATION_ERROR, "warning")
             return _render_admin_login(form, status_code=400)
 
-        password = form.password.data
+        password = password  # already extracted above
         remember = form.remember.data
 
         user, message, locked = auth_service.authenticate_admin(username, password)
@@ -108,7 +118,7 @@ def admin_login_route():
 
         # Invalid login
         admin_login_security.record_failure(username)
-        flash(message, "warning")
+        flash("Invalid username or password.", "warning")
 
     return _render_admin_login(form)
 

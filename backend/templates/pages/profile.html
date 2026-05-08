@@ -795,61 +795,62 @@ endblock %}
         <div class="skeleton-line skeleton-line--text skeleton-line--short"></div>
     </div>
     <div class="lazy-content">
-    <h2>{{ _('Contact_Me') }}</h2>
-    <p>{{ _('Contact_Description') }}</p>
-    <ul>
-        <li>
-            <div class="contact-header">
-                <ion-icon name="call-outline"></ion-icon>
-                <b>{{ _('Phone Number') }}:</b>
-            </div>
-            <ul>
-                <li><a href="tel:+639319127640">0931 912 7640</a></li>
-            </ul>
-        </li>
-        <li>
-            <div class="contact-header">
-                <ion-icon name="mail-outline"></ion-icon>
-                <b>{{ _('Email') }}:</b>
-            </div>
-            <ul>
-                <li><a href="mailto:algadipej962@gmail.com">algadipej962@gmail.com</a></li>
-            </ul>
-        </li>
-        <li>
-            <div class="contact-header">
-                <ion-icon name="logo-facebook"></ion-icon>
-                <b>{{ _('Facebook') }}:</b>
-            </div>
-            <ul>
-                <li><a
-                        href="https://www.facebook.com/profile.php?id=100017724583212">facebook.com/profile.php?id=100017724583212</a>
-                </li>
-            </ul>
-        </li>
-        <li>
-            <div class="contact-header">
-                <ion-icon name="logo-linkedin"></ion-icon>
-                <b>{{ _('LinkedIn') }}:</b>
-            </div>
-            <ul>
-                <li>
-                    <a href="https://www.linkedin.com/in/joshua-algadipe-53933924b/" target="_blank">
-                        linkedin.com/in/joshua-algadipe-53933924b/
-                    </a>
-                </li>
-            </ul>
-        </li>
-        <li>
-            <div class="contact-header">
-                <ion-icon name="logo-github"></ion-icon>
-                <b>{{ _('GitHub') }}:</b>
-            </div>
-            <ul>
-                <li><a href="https://github.com/JPA-Elite" target="_blank">github.com/JPA-Elite</a></li>
-            </ul>
-        </li>
-    </ul>
+        <h2>{{ _('Contact_Me') }}</h2>
+        <p>{{ _('Contact_Description') }}</p>
+        <ul>
+            <li>
+                <div class="contact-header">
+                    <ion-icon name="call-outline"></ion-icon>
+                    <b>{{ _('Phone Number') }}:</b>
+                </div>
+                <ul>
+                    <li><a href="tel:+639319127640">0931 912 7640</a></li>
+                </ul>
+            </li>
+            <li>
+                <div class="contact-header">
+                    <ion-icon name="mail-outline"></ion-icon>
+                    <b>{{ _('Email') }}:</b>
+                </div>
+                <ul>
+                    <li><a href="mailto:algadipej962@gmail.com">algadipej962@gmail.com</a></li>
+                </ul>
+            </li>
+            <li>
+                <div class="contact-header">
+                    <ion-icon name="logo-facebook"></ion-icon>
+                    <b>{{ _('Facebook') }}:</b>
+                </div>
+                <ul>
+                    <li><a
+                            href="https://www.facebook.com/profile.php?id=100017724583212">facebook.com/profile.php?id=100017724583212</a>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <div class="contact-header">
+                    <ion-icon name="logo-linkedin"></ion-icon>
+                    <b>{{ _('LinkedIn') }}:</b>
+                </div>
+                <ul>
+                    <li>
+                        <a href="https://www.linkedin.com/in/joshua-algadipe-53933924b/" target="_blank">
+                            linkedin.com/in/joshua-algadipe-53933924b/
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <div class="contact-header">
+                    <ion-icon name="logo-github"></ion-icon>
+                    <b>{{ _('GitHub') }}:</b>
+                </div>
+                <ul>
+                    <li><a href="https://github.com/JPA-Elite" target="_blank">github.com/JPA-Elite</a></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
     {% if get_locale() == en_locale %}
     <img src="{{ voice_icon }}" alt="Voice Image" class="voice-icon" onclick="speak(
         document.querySelector('#contact').textContent,
@@ -858,7 +859,6 @@ endblock %}
         '#contact'
     )" />
     {% endif %}
-    </div>
 </section>
 <script>
     window.profileI18n = {

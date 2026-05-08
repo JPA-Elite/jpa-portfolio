@@ -55,17 +55,23 @@
                             autocomplete="off">
                     </div>
                     <div class="input-group mb-3">
-                        {{ form.username(class="form-control", placeholder="Username", autocomplete="username", autocapitalize="none", spellcheck="false") }}
+                        {{ form.username(class="form-control" + (" is-invalid" if errors.get("username") else ""), placeholder="Username", autocomplete="username", autocapitalize="none", spellcheck="false") }}
                         <div class="input-group-append">
                             <div class="input-group-text"><span class="fas fa-user"></span></div>
                         </div>
+                        {% if errors.get("username") %}
+                        <div class="invalid-feedback d-block">{{ errors["username"] }}</div>
+                        {% endif %}
                     </div>
 
                     <div class="input-group mb-3">
-                        {{ form.password(class="form-control", placeholder="Password", autocomplete="current-password") }}
+                        {{ form.password(class="form-control" + (" is-invalid" if errors.get("password") else ""), placeholder="Password", autocomplete="current-password") }}
                         <div class="input-group-append">
                             <div class="input-group-text"><span class="fas fa-lock"></span></div>
                         </div>
+                        {% if errors.get("password") %}
+                        <div class="invalid-feedback d-block">{{ errors["password"] }}</div>
+                        {% endif %}
                     </div>
 
                     <!-- hCaptcha widget -->

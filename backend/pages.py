@@ -63,7 +63,6 @@ def admin_logout():
 
 @pages_bp.route("/admin/dashboard", methods=[http.GET])
 @admin_login_required
-@cache.cached(key_prefix="admin_page_dashboard")
 def admin_dashboard():
     return admin_dashboard_route()
 

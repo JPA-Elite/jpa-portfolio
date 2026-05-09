@@ -99,8 +99,14 @@ def admin_login_route():
             return _render_admin_login(form, status_code=429)
 
         if user:
-            # Clear any pre-login session data to reduce session fixation risk.
-            session.clear()
+            # Set session flag AND flash — both work together; dashboard reads the flag
+            session["_login_success"] = True
+            flash(WELCOME_ADMIN_MSG, "success")
+
+            # Selectively remove only pre-login session keys to prevent session fixation
+            # without wiping the flash message stored in the session cookie
+            for key in ("username", "user_id", "role", "profile_image"):
+                session.pop(key, None)
             session['username'] = user.get("username") or username
             session["user_id"] = str(user["_id"])
             session["role"] = user["role"]
@@ -113,7 +119,6 @@ def admin_login_route():
             else:
                 session.permanent = False
 
-            flash(WELCOME_ADMIN_MSG, "success")
             return redirect(url_for("pages.admin_dashboard"))
 
         # Invalid login
@@ -129,6 +134,7 @@ def admin_logout_route():
     return redirect(url_for("pages.admin_login"))
 
 def admin_dashboard_route():
+    session.pop("_login_success", None)  # consume the flag without using it
     return render_template(ADMIN_DASHBOARD_PAGE, title="Admin Dashboard")
 
 def admin_gallery_route():

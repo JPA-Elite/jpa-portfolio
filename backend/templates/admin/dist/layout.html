@@ -234,6 +234,15 @@
             </div>
           </div>
         </div>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        <div class="flash-toasts">
+            {% for category, message in messages %}
+            <div class="flash-toast flash-toast--{{ category }}">{{ message }}</div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        {% endwith %}
     </div>
     {% block scripts %}
     <script src="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.11.0/browser/overlayscrollbars.browser.es6.min.js"

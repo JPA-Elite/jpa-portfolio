@@ -171,9 +171,21 @@
         });
     };
 
+    const initFlashToasts = () => {
+        const toasts = document.querySelectorAll(".flash-toast");
+        toasts.forEach((toast) => {
+            // Auto-dismiss after 4 seconds with exit animation
+            setTimeout(() => {
+                toast.classList.add("fade-out");
+                toast.addEventListener("animationend", () => toast.remove(), { once: true });
+            }, 4000);
+        });
+    };
+
     const init = () => {
         initThemeToggle();
         initSidebarBehavior();
+        initFlashToasts();
     };
 
     if (document.readyState === "loading") {

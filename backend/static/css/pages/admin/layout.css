@@ -248,6 +248,51 @@ html[data-bs-theme="dark"] .theme-switch > .form-check-input::before {
 
 ion-icon { pointer-events: none !important; }
 
+/* Flash toast notifications rendered from server-side flash() */
+.flash-toasts {
+    position: fixed;
+    top: 1rem;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    pointer-events: none;
+}
+
+.flash-toast {
+    display: inline-block;
+    padding: 0.75rem 1rem;
+    border-radius: 0.375rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+    pointer-events: auto;
+    max-width: 320px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    animation: flash-toast-in 0.3s ease-out;
+}
+
+.flash-toast--success { background: #d1e7dd; color: #0a3622; border-left: 4px solid #198754; }
+.flash-toast--danger  { background: #f8d7da; color: #58151c; border-left: 4px solid #dc3545; }
+.flash-toast--warning { background: #fff3cd; color: #664d03; border-left: 4px solid #ffc107; }
+.flash-toast--info    { background: #cff4fc; color: #05516b; border-left: 4px solid #0dcaf0; }
+
+@keyframes flash-toast-in {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+@keyframes flash-toast-out {
+    from { opacity: 1; }
+    to   { opacity: 0; }
+}
+
+.flash-toast.fade-out {
+    animation: flash-toast-out 0.3s ease-in forwards;
+}
+
 @media (max-width: 767.98px) {
     .admin-table-toolbar {
         align-items: stretch !important;

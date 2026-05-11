@@ -561,11 +561,45 @@ if (!window.__modal_js_loaded__) {
     }
 
     // ---------------- Comments ----------------
+    function getSkeletonMarkup(count = 4) {
+        let html = `<div class="comment-skeleton-list">`;
+        for (let i = 0; i < count; i++) {
+            html += `
+            <div class="comment-skeleton-item">
+                <div class="comment-skeleton-avatar"></div>
+                <div class="comment-skeleton-body">
+                    <div class="comment-skeleton-line comment-skeleton-line--short"></div>
+                    <div class="comment-skeleton-line comment-skeleton-line--long"></div>
+                    <div class="comment-skeleton-meta">
+                        <div class="comment-skeleton-line"></div>
+                        <div class="comment-skeleton-line"></div>
+                    </div>
+                </div>
+            </div>`;
+        }
+        html += `</div>`;
+        return html;
+    }
+
+    function showCommentSkeletons(commentList) {
+        const existing = commentList.querySelector(".comment-skeleton-list");
+        if (existing) return;
+        commentList.insertAdjacentHTML("beforeend", getSkeletonMarkup(4));
+    }
+
+    function removeCommentSkeletons(commentList) {
+        const skeletons = commentList.querySelectorAll(".comment-skeleton-list");
+        skeletons.forEach(s => s.remove());
+    }
+
     async function loadComments(selectedId, page = 1, prependOlder = false, initial = false) {
         const commentList = document.querySelector(".comment-list");
         const commentSection = document.querySelector(".comment-section");
 
-        if (initial) commentList.innerHTML = '';
+        if (initial) {
+            commentList.innerHTML = '';
+            showCommentSkeletons(commentList);
+        }
 
         // Save current scroll position if prepending older comments
         let previousScrollHeight = 0;
@@ -575,7 +609,7 @@ if (!window.__modal_js_loaded__) {
             previousScrollTop = commentList.scrollTop;
         }
 
-        // “Load Previous” button logic
+        // "Load Previous" button logic
         let prevBtn = document.getElementById("prevCommentsBtn");
         if (!prevBtn) {
             prevBtn = document.createElement("button");
@@ -592,6 +626,9 @@ if (!window.__modal_js_loaded__) {
             const res = await fetch(`/api/${baseUrl}?${idType}=${selectedId}&page=${page}&limit=${COMMENTS_PER_PAGE}`);
             const data = await res.json();
 
+            // Remove skeletons once data arrives
+            removeCommentSkeletons(commentList);
+
             const comments = data.comments || [];
             const totalComments = data.total || 0;
             const totalPages = Math.ceil(totalComments / COMMENTS_PER_PAGE);
@@ -606,7 +643,7 @@ if (!window.__modal_js_loaded__) {
                 return;
             }
 
-            // Backend sends newest first, so reverse for UI (oldest → newest)
+            // Backend sends newest first, so reverse for UI (oldest ?' newest)
             const sortedComments = !prependOlder ? [...comments].reverse() : comments;
             sortedComments.forEach(comment => {
                 const div = renderComment(comment);
@@ -633,6 +670,7 @@ if (!window.__modal_js_loaded__) {
             }
         } catch (err) {
             console.error(err);
+            removeCommentSkeletons(commentList);
             const emptyDiv = document.createElement("div");
             emptyDiv.classList.add("no-comments");
             emptyDiv.textContent = tm(
@@ -732,7 +770,7 @@ if (!window.__modal_js_loaded__) {
 
             commentBox.value = "";
 
-            // 🧷 Auto-scroll to bottom smoothly
+            // ?? Auto-scroll to bottom smoothly
             commentList.scrollTo({
                 top: commentList.scrollHeight,
                 behavior: "smooth",

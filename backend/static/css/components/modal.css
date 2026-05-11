@@ -562,6 +562,65 @@
     cursor: pointer;
 }
 
+/* ── Comment skeleton shimmer loading ── */
+.comment-skeleton-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.comment-skeleton-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+}
+
+.comment-skeleton-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    flex-shrink: 0;
+    animation: skeleton-shimmer 1.4s ease-in-out infinite;
+}
+
+.comment-skeleton-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding-top: 4px;
+}
+
+.comment-skeleton-line {
+    height: 12px;
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.1);
+    animation: skeleton-shimmer 1.4s ease-in-out infinite;
+}
+
+.comment-skeleton-line--short  { width: 40%; }
+.comment-skeleton-line--medium { width: 65%; }
+.comment-skeleton-line--long   { width: 90%; }
+.comment-skeleton-line--full   { width: 100%; }
+
+.comment-skeleton-meta {
+    display: flex;
+    gap: 10px;
+    margin-top: 2px;
+}
+
+.comment-skeleton-meta .comment-skeleton-line {
+    height: 10px;
+    width: 60px;
+}
+
+@keyframes skeleton-shimmer {
+    0%   { opacity: 0.4; }
+    50%  { opacity: 0.75; }
+    100% { opacity: 0.4; }
+}
+
 .comment-spinner {
     display: flex;
     justify-content: center;

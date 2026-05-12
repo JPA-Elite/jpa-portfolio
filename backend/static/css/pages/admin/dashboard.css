@@ -59,3 +59,7 @@
     background-color: rgba(0, 0, 0, 0.2);
     text-decoration: none;
 }
+
+.dash-cards h3, .dash-cards p {
+    color: #fff !important;
+}

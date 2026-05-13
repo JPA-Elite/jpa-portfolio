@@ -172,34 +172,6 @@
                     alt="Cover Art" />
             </div>
             <div class="now-playing" id="nowPlaying">Select a song</div>
-            <div class="visualizer-panel" id="visualizerPanel">
-                <div class="viz-row">
-                    <select id="vizTheme"><option>Dark</option><option>RGB</option><option>Retro Synthwave</option><option>Minimal</option><option>Auto</option></select>
-                    <select id="vizMode"><option>Disco</option><option>Jazz</option><option>Neon Wave</option><option>Cyberpunk</option><option>Lo-fi</option><option>EDM</option><option>Chill</option><option>Custom</option></select>
-                    <select id="vizStyle"><option>Vertical Bars</option><option>Circular Spectrum</option><option>Waveform</option><option>Radial Pulse</option><option>3D Tunnel Bars</option><option>Floating Particles</option></select>
-                </div>
-                <div class="viz-row sliders">
-                    <label>Bars <input id="barCount" type="range" min="16" max="256" value="96"></label>
-                    <label>Width <input id="barWidth" type="range" min="1" max="14" value="4"></label>
-                    <label>Sensitivity <input id="sensitivity" type="range" min="20" max="220" value="120"></label>
-                    <label>Smoothness <input id="smoothness" type="range" min="0" max="95" value="72"></label>
-                    <label>Wave Speed <input id="waveSpeed" type="range" min="1" max="30" value="10"></label>
-                    <label>Glow <input id="glowIntensity" type="range" min="0" max="40" value="16"></label>
-                    <label>Particles <input id="particleAmount" type="range" min="0" max="250" value="85"></label>
-                </div>
-                <div class="viz-row">
-                    <label>Bars <input id="barColor" type="color" value="#28d7ff"></label>
-                    <label>Background <input id="bgColor" type="color" value="#130a25"></label>
-                    <label>Volume <input id="vizVolume" type="range" min="0" max="100" value="100"></label>
-                    <label>Bass Boost <input id="bassBoost" type="range" min="0" max="30" value="0"></label>
-                    <button id="micInputBtn" type="button">🎤 Mic</button>
-                    <button id="uploadAudioBtn" type="button">📁 Upload</button>
-                    <input id="uploadAudioInput" type="file" accept="audio/*" hidden>
-                    <button id="fullscreenVizBtn" type="button">⛶ Fullscreen</button>
-                    <button id="savePresetBtn" type="button">💾 Save</button>
-                    <button id="loadPresetBtn" type="button">📂 Load</button>
-                </div>
-            </div>
         </div>
     </main>
     <footer class="player" id="player">

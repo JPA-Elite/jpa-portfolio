@@ -1963,11 +1963,3 @@ body.lyrics-modal-open {
 }
 
 /* Dark theme music page styles */
-
-.visualizer-panel{position:absolute;left:16px;right:16px;bottom:14px;z-index:3;background:rgba(7,12,24,.42);backdrop-filter:blur(14px);border:1px solid rgba(255,255,255,.16);border-radius:14px;padding:10px;display:flex;flex-direction:column;gap:8px;color:#e9f5ff}
-.visualizer-panel .viz-row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
-.visualizer-panel label{display:flex;gap:4px;align-items:center;font-size:.74rem;background:rgba(255,255,255,.07);padding:3px 8px;border-radius:10px}
-.visualizer-panel input[type="range"]{width:88px}
-.visualizer-panel select,.visualizer-panel button{background:rgba(3,8,20,.65);color:#dcf3ff;border:1px solid rgba(126,207,255,.45);border-radius:10px;padding:6px 8px;font-size:.75rem}
-.visualizer-panel button.active{background:#23c6ff;color:#04101f}
-@media (max-width:900px){.visualizer-panel{position:static;margin-top:10px}.visualizer-panel .viz-row.sliders{overflow-x:auto;flex-wrap:nowrap}}

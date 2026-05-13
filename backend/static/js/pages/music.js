@@ -1286,7 +1286,8 @@ function bindVisualizerSettings() {
     const panel=document.getElementById('visualizerSettingsPanel'), openBtn=document.getElementById('visualizerSettingsBtn'), closeBtn=document.getElementById('visualizerCloseBtn'), backdrop=document.getElementById('visualizerSettingsBackdrop');
     const openPanel = ()=>{ panel?.classList.add('open'); backdrop?.classList.add('open'); panel?.setAttribute('aria-hidden','false'); backdrop?.setAttribute('aria-hidden','false'); };
     const closePanel = ()=>{ panel?.classList.remove('open'); backdrop?.classList.remove('open'); panel?.setAttribute('aria-hidden','true'); backdrop?.setAttribute('aria-hidden','true'); };
-    if (openBtn && !openBtn.dataset.bound) { openBtn.dataset.bound='1'; openBtn.addEventListener('click', openPanel); }
+    const togglePanel = ()=>{ if (panel?.classList.contains('open')) closePanel(); else openPanel(); };
+    if (openBtn && !openBtn.dataset.bound) { openBtn.dataset.bound='1'; openBtn.addEventListener('click', togglePanel); }
     if (closeBtn && !closeBtn.dataset.bound) { closeBtn.dataset.bound='1'; closeBtn.addEventListener('click', closePanel); }
     if (backdrop && !backdrop.dataset.bound) { backdrop.dataset.bound='1'; backdrop.addEventListener('click', closePanel); }
     const modes=document.getElementById('visualizerModes'); if (modes && !modes.dataset.bound) { modes.dataset.bound='1'; modes.addEventListener('click',(e)=>{ const m=e.target?.dataset?.mode; if(!m) return; applyMode(m); }); }

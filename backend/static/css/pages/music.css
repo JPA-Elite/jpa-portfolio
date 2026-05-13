@@ -1979,3 +1979,5 @@ body.lyrics-modal-open {
 
 .visualizer-settings-backdrop{position:fixed;inset:0;background:rgba(2,8,18,.46);opacity:0;pointer-events:none;transition:opacity .25s ease;z-index:2147483646}
 .visualizer-settings-backdrop.open{opacity:1;pointer-events:auto}
+
+@media (max-width:768px){#visualizerSettingsBtn,#visualizerSettingsPanel,#visualizerSettingsBackdrop{display:none !important}}

@@ -1975,4 +1975,7 @@ body.lyrics-modal-open {
 .visualizer-settings__grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .visualizer-settings__grid label{display:flex;flex-direction:column;font-size:.73rem;color:#d7e8ff;gap:4px}
 .visualizer-settings__grid input{width:100%}
-@media (max-width:768px){.visualizer-settings{left:0;right:0;top:auto;bottom:0;width:100%;border-radius:18px 18px 0 0;padding:14px 14px calc(14px + env(safe-area-inset-bottom));transform:translateY(100%)}.visualizer-settings.open{transform:translateY(0)}.visualizer-settings__grid{grid-template-columns:1fr}}
+@media (max-width:768px){.visualizer-settings{position:fixed;left:0;right:0;top:auto;bottom:0;width:100%;max-height:min(72vh,680px);overflow-y:auto;border-radius:18px 18px 0 0;padding:14px 14px calc(14px + env(safe-area-inset-bottom));transform:translateY(100%);z-index:13050}.visualizer-settings.open{transform:translateY(0)}.visualizer-settings__grid{grid-template-columns:1fr}}
+
+.visualizer-settings-backdrop{position:fixed;inset:0;background:rgba(2,8,18,.46);opacity:0;pointer-events:none;transition:opacity .25s ease;z-index:13040}
+.visualizer-settings-backdrop.open{opacity:1;pointer-events:auto}

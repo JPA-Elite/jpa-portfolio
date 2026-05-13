@@ -1250,87 +1250,71 @@ function updateMusicHeader() {
 }
 
 function initVisualizer() {
-    if (!audioPlayer) return;
+    if (!audioPlayer || !canvas || !ctx) return;
+    if (!audioContext) audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    if (!source) source = audioContext.createMediaElementSource(audioPlayer);
+    if (!analyser) analyser = audioContext.createAnalyser();
+    analyser.fftSize = 2048;
+    analyser.smoothingTimeConstant = 0.72;
+    bufferLength = analyser.frequencyBinCount;
+    dataArray = new Uint8Array(bufferLength);
+    source.connect(analyser);
 
-    if (!audioContext) {
-        audioContext = new (window.AudioContext || window.webkitAudioContext)();
-        analyser = audioContext.createAnalyser();
-        analyser.fftSize = 256; // Adjust smoothness/detail
-        bufferLength = analyser.frequencyBinCount;
-        dataArray = new Uint8Array(bufferLength);
-
-        source = audioContext.createMediaElementSource(audioPlayer);
-        source.connect(analyser);
-        analyser.connect(audioContext.destination);
+    if (!window.__vizGain) {
+        window.__vizGain = audioContext.createGain();
+        window.__vizBass = audioContext.createBiquadFilter();
+        window.__vizBass.type = 'lowshelf';
+        window.__vizBass.frequency.value = 200;
+        analyser.connect(window.__vizBass);
+        window.__vizBass.connect(window.__vizGain);
+        window.__vizGain.connect(audioContext.destination);
     }
-
+    setupVisualizerControls();
     resizeCanvas();
-    drawVisualizer();
 }
 
-function resizeCanvas() {
-    canvas.width = canvas.clientWidth;
-    canvas.height = canvas.clientHeight;
-}
-
+function resizeCanvas() { canvas.width = canvas.clientWidth; canvas.height = canvas.clientHeight; }
 window.addEventListener("resize", resizeCanvas);
 
-function drawVisualizer() {
-    if (!visualizerRunning || !analyser) return; // stop cleanly
+const vizState = { mode:'Neon Wave', style:'Vertical Bars', theme:'Dark', barCount:96, barWidth:4, sensitivity:120, smoothness:72, waveSpeed:10, glowIntensity:16, particleAmount:85, barColor:'#28d7ff', bgColor:'#130a25', beat:0, t:0 };
+const particles = [];
+let micStream;
 
+function setupVisualizerControls() {
+    const map = [['vizMode','mode'],['vizStyle','style'],['vizTheme','theme'],['barCount','barCount'],['barWidth','barWidth'],['sensitivity','sensitivity'],['smoothness','smoothness'],['waveSpeed','waveSpeed'],['glowIntensity','glowIntensity'],['particleAmount','particleAmount'],['barColor','barColor'],['bgColor','bgColor']];
+    map.forEach(([id,key])=>{ const el=document.getElementById(id); if(!el||el.dataset.bound) return; el.dataset.bound='1'; el.addEventListener('input',()=>{ vizState[key]=el.type==='range'?Number(el.value):el.value; if(key==='smoothness'&&analyser) analyser.smoothingTimeConstant=vizState.smoothness/100; });});
+    const volume = document.getElementById('vizVolume'); if(volume && !volume.dataset.bound){ volume.dataset.bound='1'; volume.addEventListener('input', ()=>{audioPlayer.volume=Number(volume.value)/100; if(window.__vizGain) window.__vizGain.gain.value=audioPlayer.volume;});}
+    const bass = document.getElementById('bassBoost'); if(bass && !bass.dataset.bound){ bass.dataset.bound='1'; bass.addEventListener('input', ()=>{ if(window.__vizBass) window.__vizBass.gain.value=Number(bass.value);});}
+    const upBtn=document.getElementById('uploadAudioBtn'), upInput=document.getElementById('uploadAudioInput'); if(upBtn && upInput && !upBtn.dataset.bound){ upBtn.dataset.bound='1'; upBtn.onclick=()=>upInput.click(); upInput.onchange=(e)=>{ const f=e.target.files?.[0]; if(f){ audioPlayer.src=URL.createObjectURL(f); audioPlayer.play(); startVisualizer(); } }; }
+    const micBtn=document.getElementById('micInputBtn'); if(micBtn && !micBtn.dataset.bound){ micBtn.dataset.bound='1'; micBtn.onclick=async()=>{ try{ if(micStream){ micStream.getTracks().forEach(t=>t.stop()); micStream=null; micBtn.classList.remove('active'); return;} micStream=await navigator.mediaDevices.getUserMedia({audio:true}); const micSource=audioContext.createMediaStreamSource(micStream); micSource.connect(analyser); micBtn.classList.add('active'); startVisualizer(); }catch(err){ console.error(err);} }; }
+    const fsBtn=document.getElementById('fullscreenVizBtn'); if(fsBtn && !fsBtn.dataset.bound){ fsBtn.dataset.bound='1'; fsBtn.onclick=()=>toggleFullscreen(); }
+    const saveBtn=document.getElementById('savePresetBtn'); if(saveBtn && !saveBtn.dataset.bound){ saveBtn.dataset.bound='1'; saveBtn.onclick=()=>localStorage.setItem('vizCustomPreset',JSON.stringify(vizState)); }
+    const loadBtn=document.getElementById('loadPresetBtn'); if(loadBtn && !loadBtn.dataset.bound){ loadBtn.dataset.bound='1'; loadBtn.onclick=()=>{ const raw=localStorage.getItem('vizCustomPreset'); if(!raw) return; Object.assign(vizState, JSON.parse(raw)); Object.entries(vizState).forEach(([k,v])=>{ const el=document.getElementById(k==='mode'?'vizMode':k==='style'?'vizStyle':k==='theme'?'vizTheme':k); if(el) el.value=v;}); }; }
+}
+
+function drawVisualizer() {
+    if (!visualizerRunning || !analyser) return;
     requestAnimationFrame(drawVisualizer);
     analyser.getByteFrequencyData(dataArray);
-
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    const barWidth = (canvas.width / bufferLength) * 2.5;
-    let x = 0;
-
-    for (let i = 0; i < bufferLength; i++) {
-        const barHeight = dataArray[i] * 0.6;
-        const gradient = ctx.createLinearGradient(0, canvas.height, 0, 0);
-        gradient.addColorStop(0, "#00b4ff");
-        gradient.addColorStop(0.5, "#009dff");
-        gradient.addColorStop(1, "#80eaff");
-        ctx.fillStyle = gradient;
-        ctx.fillRect(x, canvas.height - barHeight, barWidth, barHeight);
-        x += barWidth + 1;
-    }
+    const wave = new Uint8Array(bufferLength); analyser.getByteTimeDomainData(wave);
+    const w=canvas.width, h=canvas.height, cX=w/2, cY=h/2;
+    vizState.t += 0.01*vizState.waveSpeed;
+    const bassEnergy = dataArray.slice(0, 24).reduce((a,b)=>a+b,0)/24;
+    vizState.beat = bassEnergy > vizState.sensitivity ? 1 : Math.max(0, vizState.beat - 0.06);
+    ctx.fillStyle = vizState.bgColor; ctx.globalAlpha=0.17; ctx.fillRect(0,0,w,h); ctx.globalAlpha=1;
+    ctx.shadowBlur = vizState.glowIntensity; ctx.shadowColor = vizState.barColor; ctx.strokeStyle = vizState.barColor; ctx.fillStyle = vizState.barColor;
+    const count = Math.max(8, vizState.barCount); const step=Math.floor(bufferLength/count);
+    if (vizState.style === 'Waveform') { ctx.beginPath(); for(let i=0;i<count;i++){ const x=(i/(count-1))*w; const y=(wave[i*step]/255)*h; i?ctx.lineTo(x,y):ctx.moveTo(x,y);} ctx.stroke(); }
+    else if (vizState.style === 'Circular Spectrum' || vizState.style === 'Radial Pulse') { for(let i=0;i<count;i++){ const a=(i/count)*Math.PI*2; const v=(dataArray[i*step]/255)*vizState.sensitivity; const r=(vizState.style==='Radial Pulse'?80:130)+(v*0.8)+(vizState.beat*24); ctx.fillRect(cX+Math.cos(a)*r, cY+Math.sin(a)*r, vizState.barWidth, vizState.barWidth+v*0.2);} }
+    else { let x=0; const bw=vizState.barWidth; for(let i=0;i<count;i++){ const v=(dataArray[i*step]/255)*h*0.7*(vizState.sensitivity/100); if(vizState.style==='3D Tunnel Bars'){ const p=i/count; const z=(Math.sin(vizState.t+p*8)+1)*0.5; ctx.globalAlpha=0.3+z*0.7; } ctx.fillRect(x,h-v,bw,v); x+=bw+2; } ctx.globalAlpha=1; }
+    for(let i=particles.length;i<vizState.particleAmount;i++) particles.push({x:Math.random()*w,y:Math.random()*h,v:0.4+Math.random()*1.6,s:1+Math.random()*2});
+    particles.length = vizState.particleAmount;
+    particles.forEach(p=>{ p.y-=p.v + vizState.beat*1.3; if(p.y<0){p.y=h; p.x=Math.random()*w;} ctx.globalAlpha=0.2+Math.random()*0.6; ctx.fillRect(p.x,p.y,p.s,p.s);});
+    ctx.globalAlpha=1;
 }
 
-function startVisualizer() {
-    if (!audioPlayer) return;
-
-    // 🔒 Initialize audio context and analyser only once
-    if (!audioContext) {
-        audioContext = new (window.AudioContext || window.webkitAudioContext)();
-        analyser = audioContext.createAnalyser();
-        analyser.fftSize = 256;
-        bufferLength = analyser.frequencyBinCount;
-        dataArray = new Uint8Array(bufferLength);
-
-        source = audioContext.createMediaElementSource(audioPlayer);
-        source.connect(analyser);
-        analyser.connect(audioContext.destination);
-    }
-
-    // ✅ Resume context if paused (required on Chrome mobile sometimes)
-    if (audioContext.state === "suspended") {
-        audioContext.resume();
-    }
-
-    // ✅ Only start drawing if not already running
-    if (!visualizerRunning) {
-        visualizerRunning = true;
-        resizeCanvas();
-        drawVisualizer();
-    }
-}
-
-function stopVisualizer() {
-    // 🚫 Do NOT touch audio context or source, only pause animation
-    visualizerRunning = false;
-}
+function startVisualizer() { initVisualizer(); if (audioContext?.state === 'suspended') audioContext.resume(); if (!visualizerRunning) { visualizerRunning = true; drawVisualizer(); } }
+function stopVisualizer() { visualizerRunning = false; }
 
 
 window.handleSearch = handleSearch;

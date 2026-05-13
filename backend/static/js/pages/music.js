@@ -1251,6 +1251,13 @@ function updateMusicHeader() {
 
 const vizConfig = { mode: 'Neon Wave', freq: 196, bass: 10, treble: 8, sensitivity: 125, bars: 72, speed: 10, glow: 14, smooth: 70, phase: 0 };
 
+function toNearestValidFftSize(value) {
+    const min = 32; const max = 32768;
+    const clamped = Math.min(max, Math.max(min, Number(value) || 256));
+    const pow = Math.round(Math.log2(clamped));
+    return 2 ** pow;
+}
+
 function initVisualizer() {
     if (!audioPlayer || !canvas || !ctx) return;
     if (!audioContext) audioContext = new (window.AudioContext || window.webkitAudioContext)();
@@ -1299,8 +1306,10 @@ window.addEventListener('resize', resizeCanvas);
 function drawVisualizer() {
     if (!visualizerRunning || !analyser) return;
     requestAnimationFrame(drawVisualizer);
-    analyser.fftSize = Math.max(64, vizConfig.freq * 2);
-    bufferLength = analyser.frequencyBinCount; dataArray = new Uint8Array(bufferLength);
+    const nextFftSize = toNearestValidFftSize(vizConfig.freq * 2);
+    if (analyser.fftSize !== nextFftSize) analyser.fftSize = nextFftSize;
+    bufferLength = analyser.frequencyBinCount;
+    if (!dataArray || dataArray.length !== bufferLength) dataArray = new Uint8Array(bufferLength);
     analyser.getByteFrequencyData(dataArray);
     const w=canvas.width,h=canvas.height; vizConfig.phase += vizConfig.speed*0.012;
     const beat = dataArray.slice(0,20).reduce((a,b)=>a+b,0)/20;

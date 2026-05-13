@@ -172,6 +172,26 @@
                     alt="Cover Art" />
             </div>
             <div class="now-playing" id="nowPlaying">Select a song</div>
+            <div id="visualizerSettingsPanel" class="visualizer-settings" aria-hidden="true">
+                <div class="visualizer-settings__header">
+                    <h3>Visualizer Settings</h3>
+                    <button id="visualizerCloseBtn" type="button" aria-label="Close settings">✕</button>
+                </div>
+                <div class="visualizer-modes" id="visualizerModes">
+                    <button type="button" data-mode="Disco">Disco</button><button type="button" data-mode="Jazz">Jazz</button><button type="button" data-mode="Neon Wave">Neon Wave</button><button type="button" data-mode="Cyberpunk">Cyberpunk</button><button type="button" data-mode="Lo-fi">Lo-fi</button><button type="button" data-mode="EDM">EDM</button><button type="button" data-mode="Chill">Chill</button><button type="button" data-mode="Custom">Custom Mode</button>
+                </div>
+                <div class="visualizer-settings__grid" id="visualizerCustomControls">
+                    <label>Hertz Range <input id="vizFreq" type="range" min="32" max="512" value="196"></label>
+                    <label>Bass <input id="vizBass" type="range" min="0" max="30" value="10"></label>
+                    <label>Treble <input id="vizTreble" type="range" min="0" max="30" value="8"></label>
+                    <label>Sensitivity <input id="vizSensitivity" type="range" min="20" max="240" value="125"></label>
+                    <label>Bar Count <input id="vizBars" type="range" min="16" max="180" value="72"></label>
+                    <label>Speed <input id="vizSpeed" type="range" min="1" max="30" value="10"></label>
+                    <label>Glow <input id="vizGlow" type="range" min="0" max="35" value="14"></label>
+                    <label>Smoothness <input id="vizSmooth" type="range" min="0" max="95" value="70"></label>
+                </div>
+            </div>
+
         </div>
     </main>
     <footer class="player" id="player">
@@ -226,6 +246,7 @@
                 </div>
                 <button onclick="toggleAutoplay()" id="autoplayBtn" title="Toggle Autoplay">♬</button>
                 <button onclick="toggleFullscreen()" id="fullscreenBtn">⛶</button>
+                <button id="visualizerSettingsBtn" class="icon-btn" type="button" title="Visualizer Settings" aria-label="Visualizer settings">⚙</button>
             </div>
         </div>
         <audio id="audioPlayer"></audio>

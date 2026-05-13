@@ -1249,88 +1249,71 @@ function updateMusicHeader() {
     header.textContent = `My Music List (${total} ${total === 1 ? "song" : "songs"})`;
 }
 
+const vizConfig = { mode: 'Neon Wave', freq: 196, bass: 10, treble: 8, sensitivity: 125, bars: 72, speed: 10, glow: 14, smooth: 70, phase: 0 };
+
 function initVisualizer() {
-    if (!audioPlayer) return;
-
-    if (!audioContext) {
-        audioContext = new (window.AudioContext || window.webkitAudioContext)();
-        analyser = audioContext.createAnalyser();
-        analyser.fftSize = 256; // Adjust smoothness/detail
-        bufferLength = analyser.frequencyBinCount;
-        dataArray = new Uint8Array(bufferLength);
-
-        source = audioContext.createMediaElementSource(audioPlayer);
-        source.connect(analyser);
-        analyser.connect(audioContext.destination);
+    if (!audioPlayer || !canvas || !ctx) return;
+    if (!audioContext) audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    if (!source) source = audioContext.createMediaElementSource(audioPlayer);
+    if (!analyser) analyser = audioContext.createAnalyser();
+    if (!window.__vizBass) {
+        window.__vizBass = audioContext.createBiquadFilter(); window.__vizBass.type = 'lowshelf'; window.__vizBass.frequency.value = 200;
+        window.__vizTreble = audioContext.createBiquadFilter(); window.__vizTreble.type = 'highshelf'; window.__vizTreble.frequency.value = 2200;
+        source.connect(analyser); analyser.connect(window.__vizBass); window.__vizBass.connect(window.__vizTreble); window.__vizTreble.connect(audioContext.destination);
     }
-
+    applyMode(vizConfig.mode);
+    bindVisualizerSettings();
     resizeCanvas();
-    drawVisualizer();
 }
 
-function resizeCanvas() {
-    canvas.width = canvas.clientWidth;
-    canvas.height = canvas.clientHeight;
+function applyMode(mode) {
+    vizConfig.mode = mode;
+    const presets = {
+        Disco:{bars:80,speed:16,glow:20,sensitivity:115,smooth:65,bass:16,treble:11}, Jazz:{bars:56,speed:7,glow:8,sensitivity:135,smooth:82,bass:8,treble:9}, 'Neon Wave':{bars:72,speed:10,glow:14,sensitivity:125,smooth:70,bass:10,treble:8}, Cyberpunk:{bars:110,speed:18,glow:24,sensitivity:105,smooth:56,bass:18,treble:16}, 'Lo-fi':{bars:48,speed:4,glow:6,sensitivity:140,smooth:88,bass:6,treble:4}, EDM:{bars:96,speed:20,glow:26,sensitivity:95,smooth:52,bass:22,treble:12}, Chill:{bars:60,speed:6,glow:10,sensitivity:130,smooth:84,bass:9,treble:6}
+    };
+    if (mode !== 'Custom' && presets[mode]) Object.assign(vizConfig, presets[mode]);
+    syncVisualizerUI();
 }
 
-window.addEventListener("resize", resizeCanvas);
+function bindVisualizerSettings() {
+    const panel=document.getElementById('visualizerSettingsPanel'), openBtn=document.getElementById('visualizerSettingsBtn'), closeBtn=document.getElementById('visualizerCloseBtn');
+    if (openBtn && !openBtn.dataset.bound) { openBtn.dataset.bound='1'; openBtn.addEventListener('click', ()=> panel?.classList.add('open')); }
+    if (closeBtn && !closeBtn.dataset.bound) { closeBtn.dataset.bound='1'; closeBtn.addEventListener('click', ()=> panel?.classList.remove('open')); }
+    const modes=document.getElementById('visualizerModes'); if (modes && !modes.dataset.bound) { modes.dataset.bound='1'; modes.addEventListener('click',(e)=>{ const m=e.target?.dataset?.mode; if(!m) return; applyMode(m); }); }
+    [['vizFreq','freq'],['vizBass','bass'],['vizTreble','treble'],['vizSensitivity','sensitivity'],['vizBars','bars'],['vizSpeed','speed'],['vizGlow','glow'],['vizSmooth','smooth']].forEach(([id,k])=>{ const el=document.getElementById(id); if(!el||el.dataset.bound) return; el.dataset.bound='1'; el.addEventListener('input',()=>{ vizConfig[k]=Number(el.value); vizConfig.mode='Custom'; syncVisualizerUI(); }); });
+    syncVisualizerUI();
+}
+
+function syncVisualizerUI(){
+    const ids={vizFreq:'freq',vizBass:'bass',vizTreble:'treble',vizSensitivity:'sensitivity',vizBars:'bars',vizSpeed:'speed',vizGlow:'glow',vizSmooth:'smooth'};
+    Object.entries(ids).forEach(([id,k])=>{const el=document.getElementById(id); if(el && Number(el.value)!==Number(vizConfig[k])) el.value=vizConfig[k];});
+    document.querySelectorAll('#visualizerModes button').forEach(b=>b.classList.toggle('active', b.dataset.mode===vizConfig.mode));
+    if (analyser) analyser.smoothingTimeConstant = vizConfig.smooth/100;
+    if (window.__vizBass) window.__vizBass.gain.value = vizConfig.bass;
+    if (window.__vizTreble) window.__vizTreble.gain.value = vizConfig.treble;
+}
+
+function resizeCanvas() { canvas.width = canvas.clientWidth; canvas.height = canvas.clientHeight; }
+window.addEventListener('resize', resizeCanvas);
 
 function drawVisualizer() {
-    if (!visualizerRunning || !analyser) return; // stop cleanly
-
+    if (!visualizerRunning || !analyser) return;
     requestAnimationFrame(drawVisualizer);
+    analyser.fftSize = Math.max(64, vizConfig.freq * 2);
+    bufferLength = analyser.frequencyBinCount; dataArray = new Uint8Array(bufferLength);
     analyser.getByteFrequencyData(dataArray);
-
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    const barWidth = (canvas.width / bufferLength) * 2.5;
-    let x = 0;
-
-    for (let i = 0; i < bufferLength; i++) {
-        const barHeight = dataArray[i] * 0.6;
-        const gradient = ctx.createLinearGradient(0, canvas.height, 0, 0);
-        gradient.addColorStop(0, "#00b4ff");
-        gradient.addColorStop(0.5, "#009dff");
-        gradient.addColorStop(1, "#80eaff");
-        ctx.fillStyle = gradient;
-        ctx.fillRect(x, canvas.height - barHeight, barWidth, barHeight);
-        x += barWidth + 1;
-    }
+    const w=canvas.width,h=canvas.height; vizConfig.phase += vizConfig.speed*0.012;
+    const beat = dataArray.slice(0,20).reduce((a,b)=>a+b,0)/20;
+    ctx.clearRect(0,0,w,h); ctx.fillStyle='rgba(7,9,22,0.18)'; ctx.fillRect(0,0,w,h);
+    ctx.shadowBlur = vizConfig.glow + beat/20;
+    const modeColor = {Disco:'#ff2ad4',Jazz:'#f3d59e','Neon Wave':'#27d9ff',Cyberpunk:'#8e63ff','Lo-fi':'#90b0c5',EDM:'#26ff7f',Chill:'#7fd0ff',Custom:'#ffffff'};
+    ctx.fillStyle=modeColor[vizConfig.mode]||'#27d9ff'; ctx.shadowColor=ctx.fillStyle;
+    const count=Math.max(8,vizConfig.bars), step=Math.max(1,Math.floor(bufferLength/count)), bw=Math.max(2,w/count-2);
+    for(let i=0;i<count;i++){ const v=(dataArray[i*step]/255)*(h*0.74)*(vizConfig.sensitivity/100); const wave=Math.sin(vizConfig.phase+i*0.24)*(vizConfig.speed*0.6); ctx.fillRect(i*(bw+2), h-v-wave, bw, v+Math.max(0,wave)); }
 }
 
-function startVisualizer() {
-    if (!audioPlayer) return;
-
-    // 🔒 Initialize audio context and analyser only once
-    if (!audioContext) {
-        audioContext = new (window.AudioContext || window.webkitAudioContext)();
-        analyser = audioContext.createAnalyser();
-        analyser.fftSize = 256;
-        bufferLength = analyser.frequencyBinCount;
-        dataArray = new Uint8Array(bufferLength);
-
-        source = audioContext.createMediaElementSource(audioPlayer);
-        source.connect(analyser);
-        analyser.connect(audioContext.destination);
-    }
-
-    // ✅ Resume context if paused (required on Chrome mobile sometimes)
-    if (audioContext.state === "suspended") {
-        audioContext.resume();
-    }
-
-    // ✅ Only start drawing if not already running
-    if (!visualizerRunning) {
-        visualizerRunning = true;
-        resizeCanvas();
-        drawVisualizer();
-    }
-}
-
-function stopVisualizer() {
-    // 🚫 Do NOT touch audio context or source, only pause animation
-    visualizerRunning = false;
-}
+function startVisualizer() { initVisualizer(); if (audioContext?.state==='suspended') audioContext.resume(); if (!visualizerRunning) { visualizerRunning=true; drawVisualizer(); } }
+function stopVisualizer() { visualizerRunning = false; }
 
 
 window.handleSearch = handleSearch;

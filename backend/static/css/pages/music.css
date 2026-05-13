@@ -1981,3 +1981,5 @@ body.lyrics-modal-open {
 .visualizer-settings-backdrop.open{opacity:1;pointer-events:auto}
 
 @media (max-width:768px){#visualizerSettingsBtn,#visualizerSettingsPanel,#visualizerSettingsBackdrop{display:none !important}}
+
+@media (min-width:769px){.visualizer-settings{top:78px;right:18px;bottom:auto}}

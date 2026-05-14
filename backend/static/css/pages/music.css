@@ -2035,7 +2035,7 @@ body.lyrics-modal-open {
     flex-wrap: wrap;
     gap: 6px;
     margin: 4px 0 10px;
-    padding: 6px 0;
+    padding: 10px 0;
     border-top: 1px solid rgba(255, 255, 255, 0.75);
     border-bottom: 1px solid rgba(255, 255, 255, 0.75);
 }

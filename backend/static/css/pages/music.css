@@ -2165,8 +2165,7 @@ body.lyrics-modal-open {
     border-radius: 6px;
 }
 
-.media-megamenu__item:hover,
-.media-megamenu__item.active {
+.media-megamenu__item:hover {
     background: rgba(255, 255, 255, 0.12);
 }
 
@@ -2257,4 +2256,14 @@ body.lyrics-modal-open {
     .mobile-media-dropdown.is-open .mobile-media-submenu li {
         padding: 0 !important;
     }
+}
+
+
+#mobileNavList .mobile-media-submenu li {
+    transition: none !important;
+}
+
+#mobileNavList .mobile-media-submenu li:hover {
+    padding-left: 0 !important;
+    background: transparent !important;
 }

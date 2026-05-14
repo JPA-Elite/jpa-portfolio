@@ -1177,6 +1177,20 @@ document.getElementById("navbarToggle").addEventListener("click", () => {
     toggleButton.classList.toggle("active");
 });
 
+
+
+const mobileMediaDropdown = document.querySelector(".mobile-media-dropdown");
+const mobileMediaToggle = document.querySelector(".mobile-media-toggle");
+if (mobileMediaDropdown && mobileMediaToggle) {
+    if (mobileMediaDropdown.classList.contains("active")) {
+        mobileMediaDropdown.classList.add("open");
+    }
+    mobileMediaToggle.addEventListener("click", (event) => {
+        event.preventDefault();
+        mobileMediaDropdown.classList.toggle("open");
+    });
+}
+
 // Close sidebar when clicking outside
 document.addEventListener("click", function (e) {
     const sidebar = document.getElementById("sidebar");

@@ -562,7 +562,7 @@ body.music-mobile-fullscreen .player {
     min-height: 60px;
 }
 
-.navbar ul {
+.navbar > ul {
     list-style: none;
     display: flex;
     align-items: center;
@@ -571,7 +571,7 @@ body.music-mobile-fullscreen .player {
     padding: 0;
 }
 
-.navbar ul.active {
+.navbar > ul.active {
     display: flex;
     flex-direction: column;
     gap: 15px;
@@ -821,17 +821,17 @@ nav #navList li a {
     transition: all 0.3s ease;
 }
 
-nav ul li {
+nav #navbarMenu > li {
     position: relative;
     border-radius: 5px;
     padding: 2px;
 }
 
-nav ul li.active {
+nav #navbarMenu > li.active {
     border-bottom: 2px solid var(--accent-color);
 }
 
-nav ul li.active {
+nav #navbarMenu > li.active {
     color: var(--text-primary);
     pointer-events: none;
     /* font-style: italic; */

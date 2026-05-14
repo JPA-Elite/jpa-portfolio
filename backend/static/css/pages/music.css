@@ -2224,6 +2224,11 @@ body.lyrics-modal-open {
     width: 100%;
 }
 
+#mobileNavList .mobile-media-submenu a ion-icon {
+    font-size: 20px;
+    min-width: 20px;
+}
+
 .mobile-media-dropdown.is-open .mobile-media-chevron {
     transform: rotate(180deg);
 }

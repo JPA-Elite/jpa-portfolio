@@ -1193,6 +1193,23 @@ if (mobileMediaDropdown && mobileMediaToggle) {
     });
 }
 
+
+const desktopMediaDropdown = document.querySelector(".media-dropdown");
+const desktopMediaTrigger = document.querySelector(".media-dropdown-trigger");
+if (desktopMediaDropdown && desktopMediaTrigger) {
+    desktopMediaTrigger.addEventListener("click", (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        desktopMediaDropdown.classList.toggle("is-open");
+    });
+
+    document.addEventListener("click", (event) => {
+        if (!desktopMediaDropdown.contains(event.target)) {
+            desktopMediaDropdown.classList.remove("is-open");
+        }
+    });
+}
+
 // Close sidebar when clicking outside
 document.addEventListener("click", function (e) {
     const sidebar = document.getElementById("sidebar");

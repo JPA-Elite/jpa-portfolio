@@ -2288,3 +2288,11 @@ body.lyrics-modal-open {
         background: transparent !important;
     }
 }
+
+
+/* Align top-level mobile sidebar rows (Portfolio/Media/Concern) from the same left icon edge */
+#mobileNavList > li > a,
+#mobileNavList > li > .mobile-media-toggle {
+    padding: 0 !important;
+    margin: 0;
+}

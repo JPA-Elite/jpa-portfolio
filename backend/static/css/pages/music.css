@@ -2267,3 +2267,24 @@ body.lyrics-modal-open {
     padding-left: 0 !important;
     background: transparent !important;
 }
+
+
+/* Keep mobile media item sizing/alignment consistent with other sidebar tabs */
+#mobileNavList .mobile-media-toggle > ion-icon:first-child {
+    font-size: 24px;
+    min-width: 24px;
+}
+
+/* Remove left-shift hover animation for Media item and its submenu rows on mobile */
+@media (max-width: 768px) {
+    #mobileNavList .mobile-media-dropdown:hover {
+        padding-left: 20px !important;
+        background: transparent !important;
+    }
+
+    #mobileNavList .mobile-media-submenu li,
+    #mobileNavList .mobile-media-submenu li:hover {
+        padding-left: 0 !important;
+        background: transparent !important;
+    }
+}

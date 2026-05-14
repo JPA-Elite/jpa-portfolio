@@ -562,7 +562,7 @@ body.music-mobile-fullscreen .player {
     min-height: 60px;
 }
 
-.navbar ul {
+.navbar > ul {
     list-style: none;
     display: flex;
     align-items: center;
@@ -571,7 +571,7 @@ body.music-mobile-fullscreen .player {
     padding: 0;
 }
 
-.navbar ul.active {
+.navbar > ul.active {
     display: flex;
     flex-direction: column;
     gap: 15px;
@@ -821,20 +821,33 @@ nav #navList li a {
     transition: all 0.3s ease;
 }
 
-nav ul li {
+nav #navbarMenu > li {
     position: relative;
     border-radius: 5px;
     padding: 2px;
 }
 
-nav ul li.active {
+nav #navbarMenu > li.active {
     border-bottom: 2px solid var(--accent-color);
 }
 
-nav ul li.active {
+nav #navbarMenu > li.active {
     color: var(--text-primary);
     pointer-events: none;
     /* font-style: italic; */
+}
+
+
+/* Keep media dropdown interactive even when current page is inside media routes */
+#navbarMenu .media-dropdown.active,
+#mobileNavList .mobile-media-dropdown.active {
+    pointer-events: auto;
+}
+
+#navbarMenu .media-dropdown.active .media-dropdown-trigger,
+#mobileNavList .mobile-media-dropdown.active .mobile-media-toggle,
+#mobileNavList .mobile-media-dropdown.active .mobile-media-submenu a {
+    pointer-events: auto;
 }
 
 /* Remove the sidebar styles for desktop */
@@ -2109,4 +2122,177 @@ body.lyrics-modal-open {
         bottom: 18px;
         right: 18px;
     }
+}
+.media-dropdown {
+    position: relative;
+}
+
+.media-dropdown-trigger {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: transparent;
+    color: var(--text-primary);
+    border: none;
+    cursor: pointer;
+    font-size: 15px;
+    padding: 8px 12px;
+    border-radius: 5px;
+}
+
+.media-megamenu {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    min-width: 180px;
+    padding: 8px;
+    border-radius: 10px;
+    background: rgba(0, 0, 0, 0.95);
+    display: none;
+    flex-direction: column;
+    z-index: 1002;
+}
+
+.media-dropdown.is-open .media-megamenu {
+    display: flex;
+}
+
+.media-megamenu__item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 10px;
+    border-radius: 6px;
+}
+
+.media-megamenu__item:hover {
+    background: rgba(255, 255, 255, 0.12);
+}
+
+.mobile-media-toggle {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    background: transparent;
+    border: none;
+    color: var(--text-primary);
+    font-size: 16px;
+    font-weight: bold;
+    text-align: left;
+    cursor: pointer;
+}
+
+.mobile-media-chevron {
+    margin-left: auto;
+    transition: transform 0.2s ease;
+}
+
+.mobile-media-submenu {
+    display: none;
+    margin-top: 8px;
+    padding-left: 12px !important;
+    width: 100%;
+}
+
+.mobile-media-dropdown.is-open .mobile-media-submenu {
+    display: block;
+}
+
+#mobileNavList .mobile-media-submenu,
+#mobileNavList .mobile-media-submenu li {
+    list-style: none;
+}
+
+#mobileNavList .mobile-media-submenu li {
+    width: 100%;
+    border-bottom: none !important;
+    padding: 8px 0 !important;
+}
+
+#mobileNavList .mobile-media-submenu li:hover {
+    background: transparent;
+    padding-left: 0 !important;
+}
+
+#mobileNavList .mobile-media-submenu a {
+    display: flex !important;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+}
+
+#mobileNavList .mobile-media-submenu a ion-icon {
+    font-size: 20px;
+    min-width: 20px;
+}
+
+.mobile-media-dropdown.is-open .mobile-media-chevron {
+    transform: rotate(180deg);
+}
+
+@media (max-width: 768px) {
+    .media-dropdown {
+        display: none;
+    }
+}
+
+
+#mobileNavList .mobile-media-submenu a {
+    font-size: 14px;
+    font-weight: 600;
+    gap: 8px;
+    padding: 8px 10px;
+}
+
+@media (max-width: 768px) {
+    .mobile-media-dropdown.is-open .mobile-media-submenu {
+        display: flex;
+        flex-direction: column;
+        padding-left: 20px !important;
+        padding-top: 10px;
+    }
+
+    .mobile-media-dropdown.is-open .mobile-media-submenu li {
+        padding: 0 !important;
+    }
+}
+
+
+#mobileNavList .mobile-media-submenu li {
+    transition: none !important;
+}
+
+#mobileNavList .mobile-media-submenu li:hover {
+    padding-left: 0 !important;
+    background: transparent !important;
+}
+
+
+/* Keep mobile media item sizing/alignment consistent with other sidebar tabs */
+#mobileNavList .mobile-media-toggle > ion-icon:first-child {
+    font-size: 24px;
+    min-width: 24px;
+}
+
+/* Remove left-shift hover animation for Media item and its submenu rows on mobile */
+@media (max-width: 768px) {
+    #mobileNavList .mobile-media-dropdown:hover {
+        padding-left: 20px !important;
+        background: transparent !important;
+    }
+
+    #mobileNavList .mobile-media-submenu li,
+    #mobileNavList .mobile-media-submenu li:hover {
+        padding-left: 0 !important;
+        background: transparent !important;
+    }
+}
+
+
+/* Align top-level mobile sidebar rows (Portfolio/Media/Concern) from the same left icon edge */
+#mobileNavList > li > a,
+#mobileNavList > li > .mobile-media-toggle {
+    padding: 0 !important;
+    margin: 0;
 }

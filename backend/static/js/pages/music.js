@@ -1184,7 +1184,7 @@ const mobileMediaToggle = document.querySelector(".mobile-media-toggle");
 if (mobileMediaDropdown && mobileMediaToggle) {
     mobileMediaToggle.addEventListener("click", (event) => {
         event.preventDefault();
-        mobileMediaDropdown.classList.toggle("open");
+        mobileMediaDropdown.classList.toggle("is-open");
     });
 }
 

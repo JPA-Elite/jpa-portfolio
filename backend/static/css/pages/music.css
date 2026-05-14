@@ -2197,7 +2197,7 @@ body.lyrics-modal-open {
     width: 100%;
 }
 
-.mobile-media-dropdown.open .mobile-media-submenu {
+.mobile-media-dropdown.is-open .mobile-media-submenu {
     display: block;
 }
 
@@ -2224,7 +2224,7 @@ body.lyrics-modal-open {
     width: 100%;
 }
 
-.mobile-media-dropdown.open .mobile-media-chevron {
+.mobile-media-dropdown.is-open .mobile-media-chevron {
     transform: rotate(180deg);
 }
 

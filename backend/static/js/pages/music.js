@@ -1173,8 +1173,13 @@ volumeSlider.addEventListener("input", (e) => updateVolume(e.target.value));
 document.getElementById("navbarToggle").addEventListener("click", () => {
     const sidebar = document.getElementById("sidebar");
     const toggleButton = document.getElementById("navbarToggle");
+    const navIcon = toggleButton.querySelector(".navbar-toggle-icon");
+    const isOpen = !sidebar.classList.contains("active");
     sidebar.classList.toggle("active");
     toggleButton.classList.toggle("active");
+    if (navIcon) {
+        navIcon.setAttribute("name", isOpen ? "close-outline" : "menu-outline");
+    }
 });
 
 
@@ -1199,6 +1204,10 @@ document.addEventListener("click", function (e) {
     ) {
         sidebar.classList.remove("active");
         toggle.classList.remove("active");
+        const navIcon = toggle.querySelector(".navbar-toggle-icon");
+        if (navIcon) {
+            navIcon.setAttribute("name", "menu-outline");
+        }
     }
 });
 

@@ -2238,3 +2238,24 @@ body.lyrics-modal-open {
         display: none;
     }
 }
+
+
+#mobileNavList .mobile-media-submenu a {
+    font-size: 14px;
+    font-weight: 600;
+    gap: 8px;
+    padding: 8px 10px;
+}
+
+@media (max-width: 768px) {
+    .mobile-media-dropdown.is-open .mobile-media-submenu {
+        display: flex;
+        flex-direction: column;
+        padding-left: 20px !important;
+        padding-top: 10px;
+    }
+
+    .mobile-media-dropdown.is-open .mobile-media-submenu li {
+        padding: 0 !important;
+    }
+}

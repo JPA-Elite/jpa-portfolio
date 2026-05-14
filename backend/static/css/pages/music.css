@@ -837,6 +837,19 @@ nav ul li.active {
     /* font-style: italic; */
 }
 
+
+/* Keep media dropdown interactive even when current page is inside media routes */
+#navbarMenu .media-dropdown.active,
+#mobileNavList .mobile-media-dropdown.active {
+    pointer-events: auto;
+}
+
+#navbarMenu .media-dropdown.active .media-dropdown-trigger,
+#mobileNavList .mobile-media-dropdown.active .mobile-media-toggle,
+#mobileNavList .mobile-media-dropdown.active .mobile-media-submenu a {
+    pointer-events: auto;
+}
+
 /* Remove the sidebar styles for desktop */
 .sidebar {
     display: none;

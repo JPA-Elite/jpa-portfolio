@@ -2153,8 +2153,7 @@ body.lyrics-modal-open {
     z-index: 1002;
 }
 
-.media-dropdown:hover .media-megamenu,
-.media-dropdown:focus-within .media-megamenu {
+.media-dropdown.is-open .media-megamenu {
     display: flex;
 }
 

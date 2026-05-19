@@ -10,6 +10,7 @@ from backend.configurations import (
     ADMIN_COMPANY_ROADMAPS_PAGE,
     ADMIN_SETTINGS_PAGE,
     ADMIN_VIDEO_PAGE,
+    ADMIN_FACE_RECOGNITION_PAGE,
 )
 from backend.configurations import HTTPMethod as http
 from backend.constants.login_roles import ROLE_ADMIN
@@ -29,11 +30,17 @@ auth_service = AuthService(
 admin_login_security = AdminLoginSecurity()
 
 
-def _render_admin_login(form, errors=None, status_code=200):
+def _render_admin_login(form, errors=None, status_code=200, show_face_modal: bool = False):
     """Render admin login with one-time anti-automation fields and no-store headers."""
     security_context = admin_login_security.issue_form_challenge()
     response = make_response(
-        render_template(ADMIN_LOGIN_PAGE, form=form, errors=errors or {}, **security_context),
+        render_template(
+            ADMIN_LOGIN_PAGE,
+            form=form,
+            errors=errors or {},
+            show_face_modal=show_face_modal,
+            **security_context,
+        ),
         status_code,
     )
     response.headers["Cache-Control"] = "no-store, no-cache, must-revalidate, max-age=0, private"
@@ -43,14 +50,39 @@ def _render_admin_login(form, errors=None, status_code=200):
 
 # ************************** PAGES ********************************
 def admin_login_route():
-    # If already logged in as admin, redirect to dashboard
+    # If already logged in as admin, either skip face verification (if done),
+    # or (only when the last creds login succeeded) render the login page with a verification modal.
     if "user_id" in session and session.get("role") == ROLE_ADMIN:
-        return redirect(url_for("pages.admin_dashboard"))
+        if session.get("face_verified"):
+            return redirect(url_for("pages.admin_dashboard"))
+
+        # If the user is posting credentials again (even with stale session),
+        # treat it as a new login attempt: clear OTP pending gate so modal
+        # won't appear on incorrect creds.
+        if request.method == http.POST:
+            for key in ("face_verified", "_admin_otp_pending"):
+                session.pop(key, None)
+
+        # Only show modal when the previous username/password login succeeded.
+        if session.get("_admin_otp_pending"):
+            form = LoginForm()
+            return _render_admin_login(form, errors={}, status_code=200, show_face_modal=True)
+
+        # Stale session without pending flag -> show normal login page.
+        session.pop("user_id", None)
+        session.pop("role", None)
+
 
     form = LoginForm()
     if request.method == http.POST and not form.validate_on_submit():
         # Includes invalid CSRF/malformed submissions; count it as suspicious login traffic.
         admin_login_security.record_failure(request.form.get("username", ""))
+        # Ensure OTP modal does NOT appear on incorrect creds / stale sessions
+        session.pop("_admin_otp_pending", None)
+        session.pop("face_verified", None)
+        session.pop("user_id", None)
+        session.pop("role", None)
+
         flash("Invalid login request. Please try again.", "warning")
         return _render_admin_login(form, status_code=400)
 
@@ -95,6 +127,8 @@ def admin_login_route():
 
         if locked:
             admin_login_security.record_failure(username)
+            session.pop("_admin_otp_pending", None)
+            session.pop("face_verified", None)
             flash(message, "danger")
             return _render_admin_login(form, status_code=429)
 
@@ -111,6 +145,11 @@ def admin_login_route():
             session["user_id"] = str(user["_id"])
             session["role"] = user["role"]
             session["profile_image"] = user.get("profile_image")
+
+            # Only show OTP modal after a successful username/password login.
+            session["_admin_otp_pending"] = True
+            session.pop("face_verified", None)
+
             admin_login_security.record_success(username)
 
             if remember:
@@ -119,7 +158,7 @@ def admin_login_route():
             else:
                 session.permanent = False
 
-            return redirect(url_for("pages.admin_dashboard"))
+            return redirect(url_for("pages.admin_login"))
 
         # Invalid login
         admin_login_security.record_failure(username)
@@ -153,7 +192,36 @@ def admin_company_roadmaps_route():
     return render_template(ADMIN_COMPANY_ROADMAPS_PAGE, title="Admin Company Roadmaps")
 
 def admin_settings_route():
-    return render_template(ADMIN_SETTINGS_PAGE, title="Admin Settings")
+    response = make_response(render_template(ADMIN_SETTINGS_PAGE, title="Admin Settings"))
+    response.headers["Permissions-Policy"] = "camera=(self)"
+    response.headers["Cache-Control"] = "no-store, no-cache, must-revalidate, max-age=0, private"
+    response.headers["Pragma"] = "no-cache"
+    response.headers["Expires"] = "0"
+    return response
 
 def admin_login_attempts_route():
     return render_template(ADMIN_LOGIN_ATTEMPTS_PAGE, title="Login Attempts")
+
+
+def admin_face_recognition_route():
+    """
+    Face recognition step for admin login flow.
+
+    GET renders the camera capture UI.
+    POST is kept for backwards compatibility but actual verification is done via /admin/api/face/verify.
+    """
+    if request.method == http.POST:
+        session["face_verified"] = True
+        flash("Face recognition verified. Welcome, Admin!", "success")
+        return redirect(url_for("pages.admin_dashboard"))
+
+    if session.get("face_verified"):
+        return redirect(url_for("pages.admin_dashboard"))
+
+    response = make_response(
+        render_template(ADMIN_FACE_RECOGNITION_PAGE, title="Face Recognition")
+    )
+
+    # Allow camera for this document only (fixes: "Permissions policy violation: camera is not allowed in this document.")
+    response.headers["Permissions-Policy"] = "camera=(self)"
+    return response

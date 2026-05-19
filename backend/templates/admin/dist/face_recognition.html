@@ -1,0 +1,234 @@
+{% extends "admin/dist/layout.html" %}
+
+{% block title %}Admin | Face Recognition{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ static_asset('css/pages/admin/dashboard.css') }}" />
+{% endblock %}
+
+{% block content %}
+<div class="app-content-header">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-sm-6">
+        <h3 class="mb-0">Face Recognition</h3>
+      </div>
+      <div class="col-sm-6">
+        <ol class="breadcrumb float-sm-end">
+          <li class="breadcrumb-item"><a href="/admin/dashboard">Home</a></li>
+          <li class="breadcrumb-item active" aria-current="page">Face Recognition</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="app-content">
+  <div class="container-fluid">
+    <div class="row justify-content-center">
+      <div class="col-lg-8 col-md-10">
+        <div class="card shadow-sm mb-4">
+          <div class="card-header d-flex flex-wrap justify-content-between align-items-center gap-2">
+            <h3 class="card-title mb-0">Register / Verify Admin Face</h3>
+            <span class="badge text-bg-primary">Required</span>
+          </div>
+
+          <div class="card-body">
+            <p class="mb-3">
+              Register your face once, then verify it to unlock the rest of the admin panel.
+            </p>
+
+            <div id="faceStatus" class="alert alert-info mb-3" role="alert">
+              Loading camera... Please allow camera permission.
+            </div>
+
+            <div class="row g-3">
+              <div class="col-md-6">
+                <div class="border rounded-3 p-3 h-100">
+                  <div class="d-flex align-items-center gap-2 mb-2">
+                    <i class="bi bi-camera-video" style="font-size:1.4rem;"></i>
+                    <h5 class="mb-0">Camera</h5>
+                  </div>
+
+                  <video
+                    id="faceVideo"
+                    class="w-100 rounded-3 border"
+                    playsinline
+                    autoplay
+                    muted
+                    style="aspect-ratio: 4/3; object-fit: cover; background:#000;">
+                  </video>
+
+                  <canvas id="faceCanvas" class="d-none"></canvas>
+
+                  <div class="text-muted mt-2">
+                    Center your face in the frame.
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <div class="border rounded-3 p-3 h-100">
+                  <div class="d-flex align-items-center gap-2 mb-2">
+                    <i class="bi bi-shield-check" style="font-size:1.4rem;"></i>
+                    <h5 class="mb-0">Actions</h5>
+                  </div>
+
+                  <div class="d-grid gap-2">
+                    <button id="registerBtn" type="button" class="btn btn-outline-primary btn-lg" disabled>
+                      <i class="bi bi-person-plus me-2"></i>
+                      Register Face
+                    </button>
+
+                    <button id="verifyBtn" type="button" class="btn btn-success btn-lg" disabled>
+                      <i class="bi bi-shield-lock me-2"></i>
+                      Verify Face
+                    </button>
+                  </div>
+
+                  <div class="mt-3 text-muted">
+                    Server-side OpenCV face detection + a stored face hash.
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+<script>
+(function () {
+  const statusEl = document.getElementById("faceStatus");
+  const videoEl = document.getElementById("faceVideo");
+  const canvasEl = document.getElementById("faceCanvas");
+  const registerBtn = document.getElementById("registerBtn");
+  const verifyBtn = document.getElementById("verifyBtn");
+
+  const REGISTER_URL = "/admin/api/face/register";
+  const VERIFY_URL = "/admin/api/face/verify";
+
+  function setStatus(message, type) {
+    // type: info|success|warning|danger
+    statusEl.className = "alert alert-" + (type || "info");
+    statusEl.textContent = message;
+  }
+
+  function captureFrameAsB64() {
+    const w = videoEl.videoWidth;
+    const h = videoEl.videoHeight;
+    if (!w || !h) throw new Error("Camera not ready.");
+
+    canvasEl.width = w;
+    canvasEl.height = h;
+    const ctx = canvasEl.getContext("2d");
+    ctx.drawImage(videoEl, 0, 0, w, h);
+
+    // JPEG is fine for upload size.
+    return canvasEl.toDataURL("image/jpeg", 0.85);
+  }
+
+  function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
+  async function captureMultiFramesB64(count = 5, intervalMs = 150) {
+    const frames = [];
+    for (let i = 0; i < count; i++) {
+      frames.push(captureFrameAsB64());
+      if (i < count - 1) await sleep(intervalMs);
+    }
+    return frames;
+  }
+
+  async function postFace(url) {
+    // Multi-scan capture to be tolerant to position/lighting changes.
+    const frames = await captureMultiFramesB64(5, 150);
+
+    const res = await fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ image_b64_list: frames }),
+    });
+
+    let payload = null;
+    try { payload = await res.json(); } catch (_) {}
+
+    if (!res.ok || !payload || payload.ok !== true) {
+      const msg = (payload && payload.message) ? payload.message : "Request failed.";
+      throw new Error(msg);
+    }
+    return payload;
+  }
+
+  async function startCamera() {
+    try {
+      setStatus("Starting camera...", "info");
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: "user" },
+        audio: false
+      });
+      videoEl.srcObject = stream;
+
+      stream.getVideoTracks().forEach(t => t.enabled = true);
+
+      // Enable buttons once camera is ready
+      registerBtn.disabled = false;
+      verifyBtn.disabled = false;
+
+      setStatus("Camera ready. Register your face, then verify.", "success");
+    } catch (err) {
+      setStatus("Camera error: " + (err && err.message ? err.message : String(err)), "danger");
+      registerBtn.disabled = true;
+      verifyBtn.disabled = true;
+    }
+  }
+
+  registerBtn.addEventListener("click", async function () {
+    registerBtn.disabled = true;
+    verifyBtn.disabled = true;
+    try {
+      setStatus("Registering face... Please stay still.", "info");
+      const payload = await postFace(REGISTER_URL);
+      setStatus(payload.message || "Face registered successfully.", "success");
+      // Allow verify after register
+      verifyBtn.disabled = false;
+    } catch (err) {
+      setStatus(err && err.message ? err.message : "Failed to register face.", "danger");
+    } finally {
+      registerBtn.disabled = false;
+      // Keep verify enabled if camera is ready
+      verifyBtn.disabled = false;
+    }
+  });
+
+  verifyBtn.addEventListener("click", async function () {
+    registerBtn.disabled = true;
+    verifyBtn.disabled = true;
+    try {
+      setStatus("Verifying face... Please stay still.", "info");
+      const payload = await postFace(VERIFY_URL);
+      setStatus(payload.message || "Face verified. Unlocking...", "success");
+
+      // backend middleware will allow admin pages after session flag set
+      // redirect back to dashboard
+      window.location.href = "/admin/dashboard";
+    } catch (err) {
+      setStatus(err && err.message ? err.message : "Failed to verify face.", "danger");
+      // Keep user on page
+      registerBtn.disabled = false;
+      verifyBtn.disabled = false;
+    }
+  });
+
+  startCamera();
+})();
+</script>
+{% endblock %}

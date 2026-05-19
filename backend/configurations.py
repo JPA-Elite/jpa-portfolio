@@ -35,6 +35,7 @@ ADMIN_KEY_PROJECTS_PAGE = "admin/dist/key_projects.html"
 ADMIN_COMPANY_ROADMAPS_PAGE = "admin/dist/company_roadmaps.html"
 ADMIN_SETTINGS_PAGE = "admin/dist/settings.html"
 ADMIN_LOGIN_ATTEMPTS_PAGE = "admin/dist/login_attempts.html"
+ADMIN_FACE_RECOGNITION_PAGE = "admin/dist/face_recognition.html"
 
 LANGUAGES = {
     "en": "English",

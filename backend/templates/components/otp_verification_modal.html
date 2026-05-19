@@ -1,0 +1,67 @@
+{% set show_face_modal_value = show_face_modal if show_face_modal is defined else false %}
+<link rel="stylesheet" href="{{ static_asset('css/components/otp_verification_modal.css') }}" />
+<!-- OTP Verification Modal -->
+<div class="modal fade otp-verify-modal" id="otpVerifyModal" tabindex="-1" role="dialog"
+    aria-labelledby="otpVerifyModalLabel" aria-hidden="true" data-show-face-modal="{{ '1' if show_face_modal_value else '0' }}">
+
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content otp-verify-modal__content" style="border-radius: 0.5rem;">
+            <div class="modal-header otp-verify-modal__header">
+                <div class="d-flex align-items-center gap-2">
+                    <div class="otp-verify-modal__badge" aria-hidden="true">
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                    <h5 class="modal-title m-0" id="otpVerifyModalLabel">
+                        Email OTP Verification
+                    </h5>
+                </div>
+
+                <button type="button" class="close otp-verify-modal__close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body otp-verify-modal__body">
+                <div id="otpModalStatus" class="alert alert-info mb-3 otp-verify-modal__status" role="alert">
+                    Loading OTP flow...
+                </div>
+
+                <div class="otp-verify-modal__callout mb-3">
+                    <div class="otp-verify-modal__callout-title">Authorized Email</div>
+                    <div id="otpSavedEmail" class="otp-verify-modal__callout-value">OTP will be sent to the authorized email</div>
+                </div>
+
+                <div class="row g-3">
+                    <div class="col-12">
+                        <div class="d-grid gap-2">
+                            <button id="sendOtpBtn" type="button" class="btn otp-verify-modal__btn otp-verify-modal__btn--send btn-outline-primary btn-lg" disabled>
+                                <i class="fas fa-paper-plane mr-2"></i>Send OTP
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="col-12">
+                        <label for="otpCodeInput" class="form-label font-weight-bold">OTP code</label>
+                        <input id="otpCodeInput" type="text" inputmode="numeric" class="form-control otp-verify-modal__input"
+                            placeholder="6-digit code" disabled />
+                    </div>
+
+                    <div class="col-12">
+                        <div class="d-grid gap-2">
+                            <button id="verifyOtpBtn" type="button" class="btn otp-verify-modal__btn otp-verify-modal__btn--verify btn-success btn-lg" disabled>
+                                <i class="fas fa-check-circle mr-2"></i>Verify OTP
+                            </button>
+                        </div>
+                        <div class="mt-2 text-muted">
+                            OTP expires quickly. Please make sure you can access the email inbox.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer otp-verify-modal__footer">
+                <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

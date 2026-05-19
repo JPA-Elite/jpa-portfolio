@@ -18,10 +18,12 @@
     </div>
   </div>
 </div>
+
 <div class="app-content">
   <div class="container-fluid">
     <div class="row mt-4">
       <div class="col-md-12">
+
         <div class="card">
           <div class="card-header">
             <h3 class="card-title"><i class="bi bi-person-circle me-2"></i>Profile Settings</h3>
@@ -52,11 +54,13 @@
                       <input type="text" class="form-control" id="username" name="username" value="{{ session.get('username', '') }}">
                       <small id="usernameError" class="text-danger d-none"></small>
                     </div>
+
                     <div class="col-md-6">
                       <label for="password" class="form-label">Password</label>
                       <input type="password" class="form-control" id="password" name="password" placeholder="Enter new password">
                       <small id="passwordError" class="text-danger d-none"></small>
                     </div>
+
                     <div class="col-md-6">
                       <label for="confirmPassword" class="form-label">Confirm Password</label>
                       <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" placeholder="Confirm new password">
@@ -65,14 +69,228 @@
                   </div>
                 </div>
               </div>
+
               <button type="submit" class="btn btn-primary mt-3">Save Changes</button>
             </form>
+
             <div id="responseMessage" class="mt-3"></div>
           </div>
         </div>
+
+        <div class="card mt-4 shadow-sm">
+          <div class="card-header d-flex flex-wrap justify-content-between align-items-center gap-2 admin-table-toolbar">
+            <h3 class="card-title mb-0">
+              <i class="bi bi-envelope me-2"></i>
+              OTP Email Configuration
+            </h3>
+            <div class="d-flex flex-wrap align-items-center gap-2 ms-auto">
+              <button id="saveOtpEmailBtn" type="button" class="btn btn-primary btn-sm">
+                <i class="bi bi-save me-2"></i>Save OTP Email
+              </button>
+            </div>
+          </div>
+
+          <style>
+            /* OTP Email shimmer skeleton (matches other pages' skeleton style) */
+            .otp-email-skeleton .skeleton-panel{
+              display:flex;
+              flex-direction:column;
+              gap:12px;
+              padding:18px 0;
+            }
+            .otp-email-skeleton .skeleton-line{
+              height:18px;
+              border-radius:8px;
+              /* Much stronger contrast so it’s visible in screenshots */
+              background: linear-gradient(
+                90deg,
+                rgba(15,23,42,0.18) 0%,
+                rgba(15,23,42,0.30) 40%,
+                rgba(15,23,42,0.18) 80%
+              );
+              background-size:200% 100%;
+              animation: otp-shimmer 1s ease-in-out infinite;
+              opacity: 1;
+            }
+            .otp-email-skeleton .skeleton-line--short{ width:70%; }
+            .otp-email-skeleton .skeleton-line--medium{ width:90%; }
+            .otp-email-skeleton .skeleton-line--full{ width:100%; }
+
+            @keyframes otp-shimmer{
+              0% { background-position: 200% 0; }
+              100% { background-position: -200% 0; }
+            }
+          </style>
+
+          <div class="card-body">
+            <div id="otpEmailSkeleton" class="otp-email-skeleton">
+              <div class="skeleton-panel" aria-hidden="true">
+                <div class="skeleton-line skeleton-line--short"></div>
+                <div class="skeleton-line skeleton-line--full"></div>
+                <div class="skeleton-line skeleton-line--medium"></div>
+              </div>
+            </div>
+
+            <div id="otpEmailContent" class="d-none">
+              <div class="row g-3 align-items-end">
+                <div class="col-md-7">
+                  <label for="otpEmailInput" class="form-label fw-bold">Admin OTP email</label>
+                  <input
+                    id="otpEmailInput"
+                    type="email"
+                    class="form-control"
+                    placeholder="you@example.com"
+                    autocomplete="email"
+                  >
+                  <div id="otpEmailError" class="text-danger mt-2 d-none"></div>
+                </div>
+
+                <div class="col-md-5">
+                  <div id="otpEmailStatus" class="alert alert-info mb-0 d-none" role="alert"></div>
+                </div>
+              </div>
+
+              <div class="mt-3 text-muted">
+                The admin login OTP will be sent to this email. Only admins can edit this value.
+              </div>
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
   </div>
 </div>
+
 <script type="module" src="{{ static_asset('js/pages/admin/settings.js') }}"></script>
+
+<script>
+(function () {
+  const statusEl = document.getElementById("otpEmailStatus");
+  const emailInput = document.getElementById("otpEmailInput");
+  const saveBtn = document.getElementById("saveOtpEmailBtn");
+  const errorEl = document.getElementById("otpEmailError");
+  const skeletonEl = document.getElementById("otpEmailSkeleton");
+  const contentEl = document.getElementById("otpEmailContent");
+
+  const GET_EMAIL_URL = "/admin/api/otp/email";
+  const SAVE_EMAIL_URL = "/admin/api/otp/email";
+
+  if (!statusEl || !emailInput || !saveBtn || !errorEl || !skeletonEl || !contentEl) return;
+
+  function setStatus(message, type) {
+    statusEl.className = "alert alert-" + (type || "info");
+    statusEl.textContent = message;
+  }
+
+  function setError(message) {
+    if (!message) {
+      errorEl.textContent = "";
+      errorEl.classList.add("d-none");
+      return;
+    }
+    errorEl.textContent = message;
+    errorEl.classList.remove("d-none");
+  }
+
+  function isValidEmail(value) {
+    if (!value) return false;
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(value).trim());
+  }
+
+// Shows shimmer while loading, then swaps to real content (or shows errors).
+  function setOtpEmailLoading(isLoading) {
+    if (isLoading) {
+      skeletonEl.classList.remove("d-none");
+      contentEl.classList.add("d-none");
+      skeletonEl.style.display = "block";
+      contentEl.style.display = "none";
+      saveBtn.disabled = true;
+      return;
+    }
+    skeletonEl.classList.add("d-none");
+    contentEl.classList.remove("d-none");
+    skeletonEl.style.display = "none";
+    contentEl.style.display = "block";
+    saveBtn.disabled = false;
+  }
+
+  async function getOtpEmail() {
+    const startedAt = Date.now();
+    setOtpEmailLoading(true);
+
+    try {
+      const res = await fetch(GET_EMAIL_URL, { method: "GET" });
+      let payload = null;
+      try { payload = await res.json(); } catch (_) {}
+
+      if (!res.ok || !payload || payload.ok !== true) {
+        const msg = (payload && payload.message) ? payload.message : "Failed to load OTP email.";
+        setError(msg);
+        return;
+      }
+
+      emailInput.value = payload.email || "";
+      setError("");
+    } catch (e) {
+      setError("Failed to load OTP email.");
+    } finally {
+      // Ensure shimmer is visible even if the request is very fast
+      const MIN_MS = 1500;
+      const elapsed = Date.now() - startedAt;
+      const remaining = Math.max(0, MIN_MS - elapsed);
+      if (remaining > 0) {
+        await new Promise((r) => setTimeout(r, remaining));
+      }
+      setOtpEmailLoading(false);
+    }
+  }
+
+  async function saveOtpEmail() {
+    const email = (emailInput.value || "").trim();
+
+    setError("");
+    if (!isValidEmail(email)) {
+      setError("Please enter a valid email address.");
+      setStatus("Invalid email.", "danger");
+      return;
+    }
+
+    saveBtn.disabled = true;
+    const original = saveBtn.innerHTML;
+    saveBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Saving...';
+
+    try {
+      const res = await fetch(SAVE_EMAIL_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+
+      let payload = null;
+      try { payload = await res.json(); } catch (_) {}
+
+      if (!res.ok || !payload || payload.ok !== true) {
+        const msg = (payload && payload.message) ? payload.message : "Failed to save OTP email.";
+        setError(msg);
+        if (window.notify) window.notify(msg, "error");
+        return;
+      }
+
+      setError("");
+      if (window.notify) window.notify("OTP email updated successfully.", "success");
+    } catch (e) {
+      const msg = "Something went wrong while saving OTP email.";
+      setError(msg);
+      if (window.notify) window.notify(msg, "error");
+    } finally {
+      saveBtn.disabled = false;
+      saveBtn.innerHTML = original;
+    }
+  }
+
+  saveBtn.addEventListener("click", saveOtpEmail);
+  getOtpEmail();
+})();
+</script>
 {% endblock %}

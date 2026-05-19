@@ -1,0 +1,123 @@
+/* Minimal, professional OTP verification modal (component-scoped) */
+.otp-verify-modal__content {
+    border-radius: 12px !important;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.18);
+}
+
+.otp-verify-modal__header {
+    background: #f8fafc;
+    border-bottom: 1px solid #e5e7eb;
+    padding: 16px 18px;
+    border-radius: 12px 12px 0 0;
+}
+
+.otp-verify-modal__badge {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    border: 1px solid #dbeafe;
+    background: #eff6ff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #0284c7;
+    font-size: 18px;
+    margin-right: 14px; /* gap between badge icon and title */
+}
+
+.otp-verify-modal__close {
+    border: 1px solid #e5e7eb;
+    background: #ffffff !important;
+    border-radius: 10px;
+    width: 34px;
+    height: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 !important;
+    box-shadow: none;
+}
+
+.otp-verify-modal__close:hover {
+    background: #f3f4f6 !important;
+    border-color: #d1d5db;
+}
+
+.otp-verify-modal__body {
+    padding: 16px 18px;
+}
+
+.otp-verify-modal__status {
+    border-radius: 10px;
+    border: 1px solid transparent;
+    font-weight: 700;
+    box-shadow: none;
+}
+
+.otp-verify-modal__callout {
+    border-radius: 10px;
+    border: 1px solid #dbeafe;
+    background: #eff6ff;
+    padding: 14px 14px;
+}
+
+.otp-verify-modal__callout-title {
+    font-weight: 800;
+    letter-spacing: 0.01em;
+    text-transform: none;
+    font-size: 12px;
+    color: #0f172a;
+    margin-bottom: 4px;
+}
+
+.otp-verify-modal__callout-value {
+    color: #0b1220;
+    font-size: 14px;
+    line-height: 1.25;
+}
+
+.otp-verify-modal__btn {
+    border-radius: 10px !important;
+    font-weight: 800 !important;
+    box-shadow: none !important;
+    border-width: 1px !important;
+}
+
+.otp-verify-modal__btn--send {
+    background: #0ea5e9 !important;
+    color: #fff !important;
+    border-color: #0284c7 !important;
+    margin-top: 10px;
+}
+
+.otp-verify-modal__btn--send:hover {
+    background: #0284c7 !important;
+    border-color: #0369a1 !important;
+}
+
+.otp-verify-modal__btn--verify {
+    background: #22c55e !important;
+    color: #fff !important;
+    border-color: #16a34a !important;
+    margin-top: 10px;
+}
+
+.otp-verify-modal__btn--verify:hover {
+    background: #16a34a !important;
+    border-color: #15803d !important;
+}
+
+.otp-verify-modal__input {
+    border-radius: 10px !important;
+    border: 1px solid #d1d5db !important;
+    font-weight: 800 !important;
+    padding: 12px 14px !important;
+}
+
+.otp-verify-modal__footer {
+    border-top: 1px solid #e5e7eb;
+    padding: 12px 18px;
+    background: #f9fafb;
+}

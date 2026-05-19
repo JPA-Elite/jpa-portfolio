@@ -281,8 +281,14 @@ def init_ddos_guard(app) -> None:
         response.headers.setdefault("X-Content-Type-Options", "nosniff")
         response.headers.setdefault("X-Frame-Options", "SAMEORIGIN")
         response.headers.setdefault("Referrer-Policy", "strict-origin-when-cross-origin")
-        response.headers.setdefault(
-            "Permissions-Policy",
-            "camera=(), microphone=(), geolocation=()",
-        )
+
+        # Allow camera only for pages that actually need it.
+        # ddos_guard uses setdefault by default, so we explicitly override for camera UIs.
+        if request.path in {"/admin/settings", "/admin/face-recognition", "/admin/login"}:
+            response.headers["Permissions-Policy"] = "camera=(self)"
+        else:
+            response.headers.setdefault(
+                "Permissions-Policy",
+                "camera=(), microphone=(), geolocation=()",
+            )
         return response

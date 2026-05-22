@@ -59,6 +59,17 @@
 </head>
 
 <body class="layout-fixed sidebar-expand-lg sidebar-mini bg-body-tertiary">
+    <script>
+        (function () {
+            try {
+                var stored = localStorage.getItem("admin.sidebar.collapsed");
+                var collapsed = stored === "true";
+                // Sync immediately to avoid sidebar expand->collapse flicker between page navigations
+                document.body.classList.toggle("sidebar-collapse", collapsed);
+                document.body.classList.toggle("sidebar-open", !collapsed);
+            } catch (e) { }
+        })();
+    </script>
     {% set admin_avatar = session.get('profile_image') or url_for('static', filename='admin/assets/img/admin.webp') %}
     {% set admin_username = session.get('username') or 'Admin' %}
     <div class="app-wrapper">
@@ -122,14 +133,16 @@
                         aria-label="Main navigation" data-accordion="false" id="navigation">
                         <li class="nav-item">
                             <a href="/admin/dashboard"
-                                class="nav-link {% if request.path == '/admin/dashboard' %}active{% endif %}">
+                                class="nav-link {% if request.path == '/admin/dashboard' %}active{% endif %}"
+                                data-sidebar-tooltip="Dashboard">
                                 <i class="nav-icon bi bi-speedometer"></i>
                                 <p>Dashboard</p>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a href="/admin/login-attempts"
-                                class="nav-link {% if request.path == '/admin/login-attempts' %}active{% endif %}">
+                                class="nav-link {% if request.path == '/admin/login-attempts' %}active{% endif %}"
+                                data-sidebar-tooltip="Login Attempts">
                                 <i class="nav-icon bi bi-shield-lock"></i>
                                 <p>Login Attempts</p>
                             </a>
@@ -137,35 +150,40 @@
                         <li class="nav-header">MAINTENANCE</li>
                         <li class="nav-item">
                             <a href="/admin/music"
-                                class="nav-link {% if request.path == '/admin/music' %}active{% endif %}">
+                                class="nav-link {% if request.path == '/admin/music' %}active{% endif %}"
+                                data-sidebar-tooltip="Music">
                                 <i class="nav-icon bi bi-music-note"></i>
                                 <p>Music</p>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a href="/admin/gallery"
-                                class="nav-link {% if request.path == '/admin/gallery' %}active{% endif %}">
+                                class="nav-link {% if request.path == '/admin/gallery' %}active{% endif %}"
+                                data-sidebar-tooltip="Gallery">
                                 <i class="nav-icon bi bi-image"></i>
                                 <p>Gallery</p>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a href="/admin/video"
-                                class="nav-link {% if request.path == '/admin/video' %}active{% endif %}">
+                                class="nav-link {% if request.path == '/admin/video' %}active{% endif %}"
+                                data-sidebar-tooltip="Video">
                                 <i class="nav-icon bi bi-camera-video"></i>
                                 <p>Video</p>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a href="/admin/key-projects"
-                                class="nav-link {% if request.path == '/admin/key-projects' %}active{% endif %}">
+                                class="nav-link {% if request.path == '/admin/key-projects' %}active{% endif %}"
+                                data-sidebar-tooltip="Key Projects">
                                 <i class="nav-icon bi bi-kanban"></i>
                                 <p>Key Projects</p>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a href="/admin/company-roadmaps"
-                                class="nav-link {% if request.path == '/admin/company-roadmaps' %}active{% endif %}">
+                                class="nav-link {% if request.path == '/admin/company-roadmaps' %}active{% endif %}"
+                                data-sidebar-tooltip="Company Roadmaps">
                                 <i class="nav-icon bi bi-diagram-3"></i>
                                 <p>Company Roadmaps</p>
                             </a>
@@ -173,7 +191,8 @@
                         <li class="nav-header">SETTINGS</li>
                         <li class="nav-item">
                             <a href="/admin/settings"
-                                class="nav-link {% if request.path == '/admin/settings' %}active{% endif %}">
+                                class="nav-link {% if request.path == '/admin/settings' %}active{% endif %}"
+                                data-sidebar-tooltip="Settings">
                                 <i class="nav-icon bi bi-gear"></i>
                                 <p>Settings</p>
                             </a>

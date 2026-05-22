@@ -171,10 +171,109 @@
         });
     };
 
+    const initMiniCollapseSidebarTooltips = () => {
+        const links = document.querySelectorAll('#navigation .nav-link[data-sidebar-tooltip]');
+        if (!links.length) return;
+
+        const styleId = "adminMiniSidebarTooltipStyle";
+        if (!document.getElementById(styleId)) {
+            const styleEl = document.createElement("style");
+            styleEl.id = styleId;
+            styleEl.textContent = `
+#adminMiniSidebarTooltip{
+  position:fixed;
+  z-index:100000;
+  background:rgba(17,24,39,0.98);
+  color:#fff;
+  border-radius:10px;
+  padding:10px 12px;
+  font-size:13px;
+  line-height:1;
+  font-weight:600;
+  white-space:nowrap;
+  pointer-events:none;
+  transform:translateY(-50%);
+  box-shadow:0 10px 30px rgba(0,0,0,0.25);
+}
+#adminMiniSidebarTooltip::before{
+  content:"";
+  position:absolute;
+  top:50%;
+  left:-8px;
+  transform:translateY(-50%);
+  width:0;height:0;
+  border-top:8px solid transparent;
+  border-bottom:8px solid transparent;
+  border-right:8px solid rgba(17,24,39,0.98);
+}
+#adminMiniSidebarTooltip[data-bs-theme="dark"]{
+  background:rgba(17,24,39,0.98);
+}
+#adminMiniSidebarTooltip[data-bs-theme="dark"]::before{
+  border-right-color: rgba(17,24,39,0.98);
+}
+`;
+            document.head.appendChild(styleEl);
+        }
+
+        const tooltipEl = document.createElement("div");
+        tooltipEl.id = "adminMiniSidebarTooltip";
+        tooltipEl.setAttribute("role", "tooltip");
+        tooltipEl.style.display = "none";
+        document.body.appendChild(tooltipEl);
+
+        const isMiniCollapsedDesktop = () =>
+            !isMobileView() &&
+            body.classList.contains("sidebar-mini") &&
+            body.classList.contains("sidebar-collapse");
+
+        const positionTooltip = (linkEl) => {
+            const rect = linkEl.getBoundingClientRect();
+            const centerY = rect.top + rect.height / 2;
+
+            tooltipEl.style.left = `${rect.right + 12}px`;
+            tooltipEl.style.top = `${centerY}px`;
+        };
+
+        const showTooltip = (linkEl) => {
+            if (!isMiniCollapsedDesktop()) return;
+
+            const text = linkEl.getAttribute("data-sidebar-tooltip") || "";
+            if (!text) return;
+
+            const theme = root.getAttribute("data-bs-theme") || "light";
+            tooltipEl.setAttribute("data-bs-theme", theme);
+
+            tooltipEl.textContent = text;
+            tooltipEl.style.display = "block";
+            positionTooltip(linkEl);
+        };
+
+        const hideTooltip = () => {
+            tooltipEl.style.display = "none";
+        };
+
+        links.forEach((linkEl) => {
+            linkEl.addEventListener("mouseenter", () => showTooltip(linkEl));
+            linkEl.addEventListener("mouseleave", hideTooltip);
+
+            linkEl.addEventListener("focus", () => showTooltip(linkEl));
+            linkEl.addEventListener("blur", hideTooltip);
+        });
+
+        window.addEventListener("scroll", hideTooltip, { passive: true });
+        window.addEventListener("resize", hideTooltip);
+
+        // Hide tooltip when the sidebar state changes
+        const obs = new MutationObserver(() => {
+            if (!isMiniCollapsedDesktop()) hideTooltip();
+        });
+        obs.observe(body, { attributes: true, attributeFilter: ["class"] });
+    };
+
     const initFlashToasts = () => {
         const toasts = document.querySelectorAll(".flash-toast");
         toasts.forEach((toast) => {
-            // Auto-dismiss after 4 seconds with exit animation
             setTimeout(() => {
                 toast.classList.add("fade-out");
                 toast.addEventListener("animationend", () => toast.remove(), { once: true });
@@ -185,6 +284,7 @@
     const init = () => {
         initThemeToggle();
         initSidebarBehavior();
+        initMiniCollapseSidebarTooltips();
         initFlashToasts();
     };
 

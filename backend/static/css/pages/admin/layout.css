@@ -1,23 +1,30 @@
 /* Wrapper for horizontal scrolling */
 .table-responsive-wrapper {
     width: 100%;
-    overflow-x: auto; /* horizontal scroll if needed */
-    -webkit-overflow-scrolling: touch; /* smooth scrolling on mobile */
+    overflow-x: auto;
+    /* horizontal scroll if needed */
+    -webkit-overflow-scrolling: touch;
+    /* smooth scrolling on mobile */
 }
 
 /* Table styling */
 .table-responsive-wrapper table {
-    width: max-content; /* table width fits content */
-    min-width: 100%; /* always at least full container width */
+    width: max-content;
+    /* table width fits content */
+    min-width: 100%;
+    /* always at least full container width */
     border-collapse: collapse;
 }
 
 /* Ensure table cells break long text */
 .table-responsive-wrapper td,
 .table-responsive-wrapper th {
-    white-space: nowrap; /* prevents breaking unless necessary */
-    text-overflow: ellipsis; /* optional: shows ... if overflow */
-    overflow: hidden; /* prevents spill */
+    white-space: nowrap;
+    /* prevents breaking unless necessary */
+    text-overflow: ellipsis;
+    /* optional: shows ... if overflow */
+    overflow: hidden;
+    /* prevents spill */
 }
 
 .admin-table-toolbar {
@@ -102,7 +109,7 @@
     border-radius: 50%;
     transform: translateY(-50%);
     transition: left 0.3s, content 0s;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
     /* Sun icon on the thumb */
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' fill='%23f0ad4e' viewBox='0 0 16 16'%3E%3Cpath d='M8 11a3 3 0 1 1 0-6 3 3 0 0 1 0 6zm0 1a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM8 0a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 0zm0 13a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 13zm8-5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2a.5.5 0 0 1 .5.5zM3 8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2A.5.5 0 0 1 3 8zm10.657-5.657a.5.5 0 0 1 0 .707l-1.414 1.415a.5.5 0 1 1-.707-.708l1.414-1.414a.5.5 0 0 1 .707 0zm-9.193 9.193a.5.5 0 0 1 0 .707L3.05 13.657a.5.5 0 0 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0zm9.193 2.121a.5.5 0 0 1-.707 0l-1.414-1.414a.5.5 0 0 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .707zM4.464 4.465a.5.5 0 0 1-.707 0L2.343 3.05a.5.5 0 1 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .708z'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
@@ -111,7 +118,7 @@
 }
 
 /* Dark mode: slide thumb to right, swap to moon icon */
-html[data-bs-theme="dark"] .theme-switch > .form-check-input::before {
+html[data-bs-theme="dark"] .theme-switch>.form-check-input::before {
     left: calc(100% - 1.1rem - 3px);
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' fill='%239fb3c8' viewBox='0 0 16 16'%3E%3Cpath d='M6 .278a.5.5 0 0 1 .08.858 7.208 7.208 0 0 0-.878 3.46c0 4.021 3.278 7.277 7.318 7.277.527 0 1.04-.055 1.533-.16a.787.787 0 0 1 .81.316.733.733 0 0 1-.031.893A8.349 8.349 0 0 1 8.344 16C3.734 16 0 12.286 0 7.71 0 4.266 2.114 1.312 5.124.06A.5.5 0 0 1 6 .278z'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
@@ -152,7 +159,7 @@ html[data-bs-theme="dark"] .theme-switch > .form-check-input::before {
         line-height: 1;
     }
 
-    .app-header .navbar-nav > .user-menu > .nav-link {
+    .app-header .navbar-nav>.user-menu>.nav-link {
         display: inline-flex;
         align-items: center;
         justify-content: center;
@@ -160,7 +167,7 @@ html[data-bs-theme="dark"] .theme-switch > .form-check-input::before {
         padding: 0 0.25rem;
     }
 
-    .app-header .navbar-nav > .user-menu .user-image {
+    .app-header .navbar-nav>.user-menu .user-image {
         float: none;
         display: block;
         margin-top: 0;
@@ -246,7 +253,9 @@ html[data-bs-theme="dark"] .theme-switch > .form-check-input::before {
     background: rgba(255, 255, 255, 0.1) !important;
 }
 
-ion-icon { pointer-events: none !important; }
+ion-icon {
+    pointer-events: none !important;
+}
 
 /* Flash toast notifications rendered from server-side flash() */
 .flash-toasts {
@@ -274,19 +283,48 @@ ion-icon { pointer-events: none !important; }
     animation: flash-toast-in 0.3s ease-out;
 }
 
-.flash-toast--success { background: #d1e7dd; color: #0a3622; border-left: 4px solid #198754; }
-.flash-toast--danger  { background: #f8d7da; color: #58151c; border-left: 4px solid #dc3545; }
-.flash-toast--warning { background: #fff3cd; color: #664d03; border-left: 4px solid #ffc107; }
-.flash-toast--info    { background: #cff4fc; color: #05516b; border-left: 4px solid #0dcaf0; }
+.flash-toast--success {
+    background: #d1e7dd;
+    color: #0a3622;
+    border-left: 4px solid #198754;
+}
+
+.flash-toast--danger {
+    background: #f8d7da;
+    color: #58151c;
+    border-left: 4px solid #dc3545;
+}
+
+.flash-toast--warning {
+    background: #fff3cd;
+    color: #664d03;
+    border-left: 4px solid #ffc107;
+}
+
+.flash-toast--info {
+    background: #cff4fc;
+    color: #05516b;
+    border-left: 4px solid #0dcaf0;
+}
 
 @keyframes flash-toast-in {
-    from { opacity: 0; }
-    to   { opacity: 1; }
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
 }
 
 @keyframes flash-toast-out {
-    from { opacity: 1; }
-    to   { opacity: 0; }
+    from {
+        opacity: 1;
+    }
+
+    to {
+        opacity: 0;
+    }
 }
 
 .flash-toast.fade-out {
@@ -315,7 +353,7 @@ ion-icon { pointer-events: none !important; }
         min-width: 0;
     }
 
-    .admin-table-toolbar > .btn,
+    .admin-table-toolbar>.btn,
     .admin-table-action .btn {
         width: 100%;
     }
@@ -384,4 +422,146 @@ ion-icon { pointer-events: none !important; }
     .sidebar-mini.sidebar-collapse .app-sidebar:hover .sidebar-menu .nav-link p {
         padding-left: 0;
     }
+
+    /* ─────────────────────────────────────────────
+       Mini-collapse sidebar tooltips (desktop only)
+       Custom tooltip to the RIGHT of each icon tab
+       Arrow points back to the icon/tab
+       ───────────────────────────────────────────── */
+    .sidebar-mini.sidebar-collapse .app-sidebar .sidebar-menu .nav-link {
+        position: relative;
+    }
+
+    .sidebar-mini.sidebar-collapse .app-sidebar .sidebar-menu .nav-link[data-sidebar-tooltip]::after,
+    .sidebar-mini.sidebar-collapse .app-sidebar .sidebar-menu .nav-link[data-sidebar-tooltip]::before {
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+        transition: opacity 0.15s ease, visibility 0.15s ease;
+    }
+
+    .sidebar-mini.sidebar-collapse .app-sidebar .sidebar-menu .nav-link[data-sidebar-tooltip]::after {
+        content: attr(data-sidebar-tooltip);
+        position: absolute;
+        top: 50%;
+        left: calc(100% + 0.6rem);
+        transform: translateY(-50%);
+        background: rgba(17, 24, 39, 0.98);
+        color: #fff;
+        border-radius: 10px;
+        padding: 10px 12px;
+        font-size: 13px;
+        line-height: 1;
+        font-weight: 600;
+        white-space: nowrap;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+        z-index: 9999;
+    }
+
+    .sidebar-mini.sidebar-collapse .app-sidebar .sidebar-menu .nav-link[data-sidebar-tooltip]::before {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: calc(100% + 0.25rem);
+        transform: translateY(-50%);
+        width: 0;
+        height: 0;
+        border-top: 8px solid transparent;
+        border-bottom: 8px solid transparent;
+        border-right: 8px solid rgba(17, 24, 39, 0.98);
+        z-index: 10000;
+    }
+
+    .sidebar-mini.sidebar-collapse .app-sidebar .sidebar-menu .nav-link[data-sidebar-tooltip]:hover::after,
+    .sidebar-mini.sidebar-collapse .app-sidebar .sidebar-menu .nav-link[data-sidebar-tooltip]:hover::before,
+    .sidebar-mini.sidebar-collapse .app-sidebar .sidebar-menu .nav-link[data-sidebar-tooltip]:focus-visible::after,
+    .sidebar-mini.sidebar-collapse .app-sidebar .sidebar-menu .nav-link[data-sidebar-tooltip]:focus-visible::before,
+    .sidebar-mini.sidebar-collapse .app-sidebar .sidebar-menu .nav-link[data-sidebar-tooltip]:focus::after,
+    .sidebar-mini.sidebar-collapse .app-sidebar .sidebar-menu .nav-link[data-sidebar-tooltip]:focus::before {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    /* Dark mode tooltip tweaks */
+    [data-bs-theme="dark"].sidebar-mini.sidebar-collapse .app-sidebar .sidebar-menu .nav-link[data-sidebar-tooltip]::after {
+        background: rgba(17, 24, 39, 0.98);
+        color: #fff;
+    }
+
+    [data-bs-theme="dark"].sidebar-mini.sidebar-collapse .app-sidebar .sidebar-menu .nav-link[data-sidebar-tooltip]::before {
+        border-right-color: rgba(17, 24, 39, 0.98);
+    }
+}
+
+/* Mini-collapse sidebar tooltips (state-gated: only when .sidebar-mini.sidebar-collapse is active)
+   NOTE: Intentionally NOT wrapped in min-width media query; the sidebar mini-collapse classes
+   themselves should only occur on desktop in real layout. */
+.sidebar-mini.sidebar-collapse .app-sidebar,
+.sidebar-mini.sidebar-collapse .app-sidebar .sidebar-wrapper,
+.sidebar-mini.sidebar-collapse .app-sidebar .sidebar-menu {
+    overflow: visible !important;
+}
+
+.sidebar-mini.sidebar-collapse .app-sidebar .sidebar-menu .nav-link[data-sidebar-tooltip] {
+    position: relative;
+}
+
+.sidebar-mini.sidebar-collapse .app-sidebar .sidebar-menu .nav-link[data-sidebar-tooltip]::after,
+.sidebar-mini.sidebar-collapse .app-sidebar .sidebar-menu .nav-link[data-sidebar-tooltip]::before {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.15s ease, visibility 0.15s ease;
+}
+
+.sidebar-mini.sidebar-collapse .app-sidebar .sidebar-menu .nav-link[data-sidebar-tooltip]::after {
+    content: attr(data-sidebar-tooltip);
+    position: absolute;
+    top: 50%;
+    left: calc(100% + 0.6rem);
+    transform: translateY(-50%);
+    background: rgba(17, 24, 39, 0.98);
+    color: #fff;
+    border-radius: 10px;
+    padding: 10px 12px;
+    font-size: 13px;
+    line-height: 1;
+    font-weight: 600;
+    white-space: nowrap;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+    z-index: 9999;
+}
+
+.sidebar-mini.sidebar-collapse .app-sidebar .sidebar-menu .nav-link[data-sidebar-tooltip]::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: calc(100% + 0.25rem);
+    transform: translateY(-50%);
+    width: 0;
+    height: 0;
+    border-top: 8px solid transparent;
+    border-bottom: 8px solid transparent;
+    border-right: 8px solid rgba(17, 24, 39, 0.98);
+    z-index: 10000;
+}
+
+.sidebar-mini.sidebar-collapse .app-sidebar .sidebar-menu .nav-link[data-sidebar-tooltip]:hover::after,
+.sidebar-mini.sidebar-collapse .app-sidebar .sidebar-menu .nav-link[data-sidebar-tooltip]:hover::before,
+.sidebar-mini.sidebar-collapse .app-sidebar .sidebar-menu .nav-link[data-sidebar-tooltip]:focus-visible::after,
+.sidebar-mini.sidebar-collapse .app-sidebar .sidebar-menu .nav-link[data-sidebar-tooltip]:focus-visible::before,
+.sidebar-mini.sidebar-collapse .app-sidebar .sidebar-menu .nav-link[data-sidebar-tooltip]:focus::after,
+.sidebar-mini.sidebar-collapse .app-sidebar .sidebar-menu .nav-link[data-sidebar-tooltip]:focus::before {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Dark mode tooltip tweaks */
+[data-bs-theme="dark"].sidebar-mini.sidebar-collapse .app-sidebar .sidebar-menu .nav-link[data-sidebar-tooltip]::after {
+    background: rgba(17, 24, 39, 0.98);
+    color: #fff;
+}
+
+[data-bs-theme="dark"].sidebar-mini.sidebar-collapse .app-sidebar .sidebar-menu .nav-link[data-sidebar-tooltip]::before {
+    border-right-color: rgba(17, 24, 39, 0.98);
 }

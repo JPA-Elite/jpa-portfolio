@@ -1,4 +1,5 @@
 from datetime import timedelta
+import os
 from flask import current_app, flash, make_response, redirect, render_template, request, session, url_for
 from backend.configurations import (
     ADMIN_DASHBOARD_PAGE,
@@ -33,12 +34,22 @@ admin_login_security = AdminLoginSecurity()
 def _render_admin_login(form, errors=None, status_code=200, show_face_modal: bool = False):
     """Render admin login with one-time anti-automation fields and no-store headers."""
     security_context = admin_login_security.issue_form_challenge()
+
+    raw_len = os.getenv("ADMIN_OTP_LENGTH", "6")
+    try:
+        admin_otp_length = int(raw_len)
+        if admin_otp_length <= 0:
+            admin_otp_length = 6
+    except (TypeError, ValueError):
+        admin_otp_length = 6
+
     response = make_response(
-        render_template(
+            render_template(
             ADMIN_LOGIN_PAGE,
             form=form,
             errors=errors or {},
             show_face_modal=show_face_modal,
+            admin_otp_length=admin_otp_length,
             **security_context,
         ),
         status_code,

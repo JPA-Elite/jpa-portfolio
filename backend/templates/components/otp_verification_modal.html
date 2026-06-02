@@ -43,7 +43,7 @@
                     <div class="col-12">
                         <label for="otpCodeInput" class="form-label font-weight-bold">OTP code</label>
                         <input id="otpCodeInput" type="text" inputmode="numeric" class="form-control otp-verify-modal__input"
-                            placeholder="6-digit code" disabled />
+                            placeholder="{{ (admin_otp_length | default(6)) ~ '-digit code' }}" disabled />
                     </div>
 
                     <div class="col-12">

@@ -5,10 +5,9 @@ from backend.constants.db_collections import MongoCollections as mc
 
 class AuthRepository(IAuthRepository, BaseRepository):
     def __init__(self):
-        super().__init__(mc.USERS)  # use "users" collection
+        super().__init__(mc.USERS)
 
     def find_by_username(self, username: str):
-        """Find user by username"""
         return self.collection.find_one({"username": username, "role": "admin"})
 
     def find_by_id(self, id):

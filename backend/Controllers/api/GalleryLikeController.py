@@ -40,7 +40,6 @@ def get_gallery_likes_counts_batch_route():
     if not gallery_ids:
         return jsonify({"items": {}}), 200
 
-    # Guardrail to avoid abuse and overly large payloads
     gallery_ids = gallery_ids[:50]
 
     items = {}
@@ -70,7 +69,7 @@ def add_gallery_like_route():
         return jsonify({"error": "Missing gallery_id"}), 400
 
     try:
-        # Perform toggle logic (insert or update)
+
         result = gallery_like_service.toggle_gallery_like(
             gallery_id=json.loads(gallery_id),
             ip_address=client_ip
@@ -84,3 +83,4 @@ def add_gallery_like_route():
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+

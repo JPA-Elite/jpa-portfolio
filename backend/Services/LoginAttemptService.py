@@ -21,7 +21,7 @@ class LoginAttemptService:
 
             if lockout_value:
                 try:
-                    # Detect if it's string or datetime
+
                     if isinstance(lockout_value, str):
                         utc_dt = parser.isoparse(lockout_value)
                     elif isinstance(lockout_value, datetime):
@@ -29,10 +29,8 @@ class LoginAttemptService:
                     else:
                         raise TypeError(f"Unsupported type: {type(lockout_value)}")
 
-                    # ✅ Convert UTC → Philippine Time (UTC+8)
                     ph_dt = utc_dt + timedelta(hours=8)
 
-                    # Format cleanly
                     login_attempt["lockout_until"] = ph_dt.strftime("%Y-%m-%d %I:%M %p")
 
                 except Exception as e:

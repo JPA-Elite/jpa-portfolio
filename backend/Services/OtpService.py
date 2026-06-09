@@ -10,19 +10,9 @@ from email.message import EmailMessage
 from backend.extensions import cache
 from backend.Repositories.AuthRepository import AuthRepository
 
-
 class OtpService:
-    """
-    Email OTP verification for admin login.
-
-    IMPORTANT:
-    - OTP value is stored in cache (TTL-based) so verification is fast.
-    - Attempts + cooldown are persisted into the users collection so the cooldown survives page refresh.
-    """
-
-    # Mongo user document fields (in `users` collection)
     _FIELD_ATTEMPTS = "admin_otp_attempts"
-    _FIELD_COOLDOWN_UNTIL = "admin_otp_cooldown_until"  # unix timestamp (seconds)
+    _FIELD_COOLDOWN_UNTIL = "admin_otp_cooldown_until"
 
     def __init__(self) -> None:
         self.otp_ttl_seconds: int = self._env_int("ADMIN_OTP_TTL_SECONDS", 300)
@@ -35,7 +25,6 @@ class OtpService:
         self.smtp_from: str = os.getenv("SMTP_FROM", self.smtp_username)
         self.smtp_from_name: str = os.getenv("SMTP_FROM_NAME", "").strip()
 
-        # Security knobs
         self.smtp_use_tls: bool = self._env_bool("SMTP_USE_TLS", True)
         self.smtp_use_ssl: bool = self._env_bool("SMTP_USE_SSL", False)
 
@@ -115,13 +104,11 @@ class OtpService:
                 "SMTP is not configured. Please set SMTP_HOST, SMTP_PORT, SMTP_USERNAME, SMTP_PASSWORD, SMTP_FROM."
             )
 
-        # Persist email in DB for admin settings consistency
         AuthRepository().update_user(user_id, {"email": email})
 
         otp = self._generate_otp()
         cache.set(self._otp_key(user_id), otp, timeout=self.otp_ttl_seconds)
 
-        # Reset attempts/cooldown whenever a new OTP is sent (persistent in DB)
         self._set_user_otp_state(user_id, attempts=0, cooldown_until=0.0)
 
         subject = "Your JPA-Admin verification code"
@@ -135,14 +122,6 @@ class OtpService:
         return "OTP sent to your email."
 
     def verify_otp(self, user_id: str, otp: str) -> dict:
-        """
-        Returns a structured result:
-        - ok: bool
-        - reason: one of {"ok", "cooldown", "invalid", "expired"}
-        - message: user-facing string
-        - attempts_remaining: int | None
-        - retry_after_seconds: int | None
-        """
         if not user_id:
             return {
                 "ok": False,
@@ -165,7 +144,6 @@ class OtpService:
         attempts, cooldown_until = self._get_user_otp_state(user_id)
         now = self._now()
 
-        # Persistent cooldown survives refresh
         if cooldown_until > now:
             retry_after = max(0, int(round(cooldown_until - now)))
             return {
@@ -179,15 +157,12 @@ class OtpService:
         key = self._otp_key(user_id)
         expected = cache.get(key)
 
-        # OTP missing => treat as invalid/expired attempt
         if expected is None:
             return self._handle_invalid_attempt(user_id, attempts)
 
-        # Expected exists but mismatch => invalid attempt
         if str(expected) != otp:
             return self._handle_invalid_attempt(user_id, attempts)
 
-        # Success: one-time use + reset persistent state
         cache.delete(key)
         self._set_user_otp_state(user_id, attempts=0, cooldown_until=0.0)
 
@@ -204,7 +179,6 @@ class OtpService:
         attempts_remaining = max(0, self.otp_max_attempts - attempts)
         now = self._now()
 
-        # Update attempts persistently
         if attempts >= self.otp_max_attempts:
             cooldown_until_new = now + self.otp_cooldown_seconds
             self._set_user_otp_state(user_id, attempts=0, cooldown_until=cooldown_until_new)
@@ -217,7 +191,6 @@ class OtpService:
                 "retry_after_seconds": self.otp_cooldown_seconds,
             }
 
-        # Not maxed yet: persist attempts count, no cooldown
         self._set_user_otp_state(user_id, attempts=attempts, cooldown_until=0.0)
 
         return {
@@ -245,9 +218,9 @@ class OtpService:
                 server.send_message(msg)
             return
 
-        # TLS / STARTTLS
         with smtplib.SMTP(self.smtp_host, self.smtp_port, timeout=15) as server:
             if self.smtp_use_tls:
                 server.starttls(context=ssl.create_default_context())
             server.login(self.smtp_username, self.smtp_password)
             server.send_message(msg)
+

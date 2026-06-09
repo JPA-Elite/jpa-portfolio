@@ -33,7 +33,6 @@ def visits_list_route():
 
     documents, total_docs = visit_service.get_paginated_system_info(page, per_page, order)
 
-    # Apply client-side search across all fields
     if search:
         documents = [
             doc for doc in documents
@@ -113,3 +112,4 @@ def dashboard_summary_route(recent_limit: int = 20):
         else:
             summary = {}
     return jsonify(summary)
+

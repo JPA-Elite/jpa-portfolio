@@ -31,8 +31,8 @@ from backend.configurations import (
     SortOrder,
     get_locale,
 )
-from flask_babel import gettext  # type: ignore
-from markupsafe import escape  # type: ignore
+from flask_babel import gettext
+from markupsafe import escape
 import requests
 
 # Initialize Services
@@ -421,7 +421,6 @@ _CAREER_ROADMAP_SEED_I18N = {
     },
 }
 
-
 def _locale_key(locale_value):
     locale_str = str(locale_value or "en")
     if locale_str.startswith("fil"):
@@ -431,7 +430,6 @@ def _locale_key(locale_value):
     if locale_str.startswith("fr"):
         return "fr"
     return "en"
-
 
 def _normalized_project_text_map(value):
     if isinstance(value, dict):
@@ -451,7 +449,6 @@ def _normalized_project_text_map(value):
             }
 
     return {locale: "" for locale in _KEY_PROJECT_LOCALES}
-
 
 def _merge_seed_localized_map(value, seed_map=None):
     base = _normalized_project_text_map(value)
@@ -473,7 +470,6 @@ def _merge_seed_localized_map(value, seed_map=None):
             merged[locale] = seed_value
             continue
 
-        # Seeded records stored English text in all locale slots.
         if (
             locale != "en"
             and seed_value
@@ -487,7 +483,6 @@ def _merge_seed_localized_map(value, seed_map=None):
 
     return merged
 
-
 def _localized_value_from_map(value_map, locale_value, default_value=""):
     locale = _locale_key(locale_value)
     return (
@@ -495,7 +490,6 @@ def _localized_value_from_map(value_map, locale_value, default_value=""):
         or (value_map.get("en") or "").strip()
         or default_value
     )
-
 
 def _normalized_localized_list_map(value):
     if isinstance(value, dict):
@@ -530,7 +524,6 @@ def _normalized_localized_list_map(value):
 
     return {locale: [] for locale in _KEY_PROJECT_LOCALES}
 
-
 def _merge_seed_localized_list_map(value, seed_map=None):
     base = _normalized_localized_list_map(value)
     if not seed_map:
@@ -557,7 +550,6 @@ def _merge_seed_localized_list_map(value, seed_map=None):
             merged[locale] = seed_value
             continue
 
-        # Seeded records may have duplicated English list for all locales.
         if locale != "en" and seed_value and english_value and current == english_value:
             merged[locale] = seed_value
 
@@ -566,12 +558,10 @@ def _merge_seed_localized_list_map(value, seed_map=None):
 
     return merged
 
-
 def _localized_list_from_map(value_map, locale_value):
     locale = _locale_key(locale_value)
     selected = value_map.get(locale) or value_map.get("en") or []
     return [str(x).strip() for x in selected if str(x).strip()]
-
 
 def _localized_roadmap_employment_type(value):
     text = str(value or "").strip()
@@ -587,7 +577,6 @@ def _localized_roadmap_employment_type(value):
         "experience": gettext("Career_Roadmap_Employment_Experience"),
     }
     return label_map.get(normalized, text)
-
 
 def _resolve_project_stack_display(stack_value, locale_value, seed_stack_map=None):
     locale = _locale_key(locale_value)
@@ -612,7 +601,6 @@ def _resolve_project_stack_display(stack_value, locale_value, seed_stack_map=Non
 
     return stack_text
 
-
 def index_route():
     log_result = handle_log_parameter()
     if log_result is not None:
@@ -633,7 +621,7 @@ def profile_route():
     try:
         key_project_service.seed_default_projects_if_empty()
     except Exception as exc:
-        # Keep the profile page resilient if Cloudinary/network is unavailable during first seed.
+
         print(f"Key project default seed failed: {exc}")
 
     try:
@@ -700,8 +688,6 @@ def profile_route():
             status = "planned"
         key_project_columns[status].append(display_project)
 
-    # Build per-column modal galleries so single-image projects (common in Building/Planned)
-    # can still navigate across the other project snapshots in the same lane.
     for _column_key, _projects in key_project_columns.items():
         column_gallery = []
         for _project in _projects:
@@ -818,7 +804,6 @@ def gallery_route():
         SortOrder.DESC
     )
 
-    # Combine gallery data with like counts
     gallery_data = []
     for gallery in gallery_list:
         gallery_dict = gallery.to_dict()
@@ -883,7 +868,6 @@ def add_portfolio_form_route():
 def donation_route():
     return handle_log_parameter() or render_template(DONATION_PAGE)
 
-# ************************** PRIVATE FUNCTIONS ********************************
 def handle_log_parameter():
     if request.args.get('mode') and request.args.get('mode') not in MODES:
         return render_template(ERROR_404_PAGE, title="Not Found"), 404
@@ -901,10 +885,10 @@ def handle_log_parameter():
     return None
 
 def is_philippines():
-    # Use ipinfo.io for IP geolocation, allow localhost/private IPs
+
     try:
         ip = request.headers.get('X-Forwarded-For', request.remote_addr)
-        # Allow local development and private IPs
+
         if ip.startswith("127.") or ip.startswith("192.168.") or ip.startswith("10.") or ip == "localhost":
             return True
         geo_url = f"https://ipinfo.io/{ip}/json"
@@ -915,5 +899,6 @@ def is_philippines():
         return country_code == "PH"
     except Exception as e:
         print(f"GeoIP error: {e}")
-        # Default to allow if cannot determine
+
         return True
+

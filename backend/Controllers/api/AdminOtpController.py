@@ -4,7 +4,6 @@ from backend.Repositories.AuthRepository import AuthRepository
 from backend.Services.OtpService import OtpService
 from backend.auth.middleware import admin_login_required
 
-
 def admin_otp_send_route():
     try:
         payload = request.get_json(silent=True) or {}
@@ -16,7 +15,6 @@ def admin_otp_send_route():
 
         svc = OtpService()
 
-        # If the client doesn't provide an email, use the one saved on the admin user document.
         if not email:
             try:
                 user_doc = AuthRepository().find_by_id(str(user_id)) or {}
@@ -39,7 +37,6 @@ def admin_otp_send_route():
         return jsonify({"ok": True, "message": msg})
     except Exception as e:
         return jsonify({"ok": False, "message": str(e)}), 400
-
 
 def admin_otp_verify_route():
     try:
@@ -82,15 +79,13 @@ def admin_otp_verify_route():
     except Exception as e:
         return jsonify({"ok": False, "message": str(e)}), 400
 
-
 def admin_otp_reset_route():
     try:
-        # Clear OTP/face gate so the OTP modal can be shown again.
+
         session.pop("face_verified", None)
         return jsonify({"ok": True, "message": "OTP verification gate cleared"})
     except Exception as e:
         return jsonify({"ok": False, "message": str(e)}), 400
-
 
 def admin_otp_email_get_route():
     try:
@@ -119,7 +114,6 @@ def admin_otp_email_get_route():
     except Exception as e:
         return jsonify({"ok": False, "message": str(e)}), 400
 
-
 def admin_otp_email_save_route():
     try:
         payload = request.get_json(silent=True) or {}
@@ -136,3 +130,4 @@ def admin_otp_email_save_route():
         return jsonify({"ok": True, "message": "OTP email updated"})
     except Exception as e:
         return jsonify({"ok": False, "message": str(e)}), 400
+

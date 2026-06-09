@@ -48,7 +48,7 @@ def add_gallery_route():
     description = request.form.get("description")
     gallery_file = request.files.get("image_file")
     tags = request.form.get("tags")
-    # Pass raw request data + files to service
+
     data = {
         "title": json.loads(title) if title else {},
         "description": json.loads(description) if description else {},
@@ -90,3 +90,4 @@ def delete_gallery_route(gallery_id):
         return jsonify({"message": GALLERY_DELETE_MSG}), 200
     else:
         return jsonify({"message": GALLERY_NOT_FOUND_ERROR}), 404
+

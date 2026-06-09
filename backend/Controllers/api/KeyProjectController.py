@@ -8,9 +8,7 @@ from backend.configurations import SortOrder, SortOrderStr
 from backend.extensions import cache
 from backend.utils import clear_cache_by_prefix, get_cache_data
 
-
 key_project_service = KeyProjectService(repository=KeyProjectRepository())
-
 
 def key_project_list_route():
     cached_data, cache_key = get_cache_data("admin.api.key_project_list", request.args)
@@ -20,7 +18,7 @@ def key_project_list_route():
     try:
         key_project_service.seed_default_projects_if_empty()
     except Exception:
-        # Keep admin list functional even if Cloudinary/network is unavailable during seed.
+
         pass
 
     page = int(request.args.get("page", 1))
@@ -62,7 +60,6 @@ def key_project_list_route():
     cache.set(cache_key, response_data, timeout=300)
     return jsonify(response_data)
 
-
 def add_key_project_route():
     title = request.form.get("title")
     description = request.form.get("description")
@@ -92,7 +89,6 @@ def add_key_project_route():
     project_id = key_project_service.add_key_project(data)
     _clear_key_project_caches()
     return jsonify({"message": "Key project added successfully.", "project_id": project_id}), 201
-
 
 def update_key_project_route(project_id):
     title = request.form.get("title")
@@ -131,7 +127,6 @@ def update_key_project_route(project_id):
     _clear_key_project_caches()
     return jsonify({"message": "Key project updated successfully."}), 200
 
-
 def delete_key_project_route(project_id):
     success = key_project_service.delete_key_project(project_id)
     if not success:
@@ -140,7 +135,7 @@ def delete_key_project_route(project_id):
     _clear_key_project_caches()
     return jsonify({"message": "Key project deleted successfully."}), 200
 
-
 def _clear_key_project_caches():
     clear_cache_by_prefix("admin.api.key_project_list:")
     clear_cache_by_prefix("profile_ui_")
+

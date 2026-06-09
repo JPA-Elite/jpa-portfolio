@@ -22,13 +22,11 @@ def vlog_comments_route():
             "limit": limit
         })
 
-    # POST new comment
     data = request.json
     vlog_id = data.get("vlog_id")
     text = data.get("text")
     comment_id = vlog_comment_service.add_comment(vlog_id, ip_address, text)
     return jsonify({"status": "success", "comment_id": comment_id})
-
 
 def vlog_like_comment_route():
     data = request.json

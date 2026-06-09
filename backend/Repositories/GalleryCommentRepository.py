@@ -29,3 +29,4 @@ class GalleryCommentRepository(BaseRepository):
             {"_id": ObjectId(comment["_id"])},
             {"$set": comment}
         )
+

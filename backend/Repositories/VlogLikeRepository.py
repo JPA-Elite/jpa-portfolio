@@ -5,10 +5,9 @@ from backend.constants.db_collections import MongoCollections as mc
 from backend.Models.VlogLike import VlogLike
 class VlogLikeRepository(IVlogLikeRepository, BaseRepository):
     def __init__(self):
-        super().__init__(mc.VIDEO_LIKES)  # use "vlog" collection
+        super().__init__(mc.VIDEO_LIKES)
 
     def get_vlog_likes_count_by_id(self, vlog_id: str):
-        """Return total number of likes for a specific vlog item."""
         count = self.collection.count_documents({
             "vlog_id": vlog_id,
             "like": True
@@ -77,10 +76,8 @@ class VlogLikeRepository(IVlogLikeRepository, BaseRepository):
         if not regex_conditions:
             return None
 
-        # Combine with $or for MongoDB to check any match
         query = {"$or": regex_conditions}
 
-        # This will let MongoDB handle filtering efficiently
         return self.collection.find_one(query, projection)
 
     def _build_ip_regex_conditions(self, ip_address: str, vlog_id: str = None, vlog_ids: list[str] = None):
@@ -110,17 +107,11 @@ class VlogLikeRepository(IVlogLikeRepository, BaseRepository):
 
         return conditions
 
-
     def add_vlog_like(self, vlog_like: VlogLike):
-        """Insert a new vlog document into MongoDB."""
         result = self.collection.insert_one(vlog_like.to_dict())
         return str(result.inserted_id)
 
     def update_vlog_like(self, vlog_like: VlogLike):
-        """
-        Update a vlog like document by its vlog_id and ip_address.
-        This is safer since we identify likes by (vlog_id + ip_address).
-        """
         result = self.collection.update_one(
             {
                 "vlog_id": vlog_like.vlog_id,
@@ -133,6 +124,4 @@ class VlogLikeRepository(IVlogLikeRepository, BaseRepository):
             }
         )
         return result.modified_count > 0
-
-
 

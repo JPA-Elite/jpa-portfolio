@@ -10,7 +10,6 @@ class GalleryLikeService:
     def get_gallery_likes_count_by_id(self, gallery_id: str):
         return self.repository.get_gallery_likes_count_by_id(gallery_id)
 
-
     def get_gallery_likes_by_id_and_ip(self, gallery_id: str, ip_address: str, fields: dict = None):
         if ip_address and "," in ip_address:
             ip_address = ip_address.split(",")[0].strip()
@@ -21,10 +20,8 @@ class GalleryLikeService:
 
         return GalleryLike.from_dict(result)
 
-
     def add_gallery_like(self, data: dict):
         try:
-            # Normalize IP address (only take the first one if multiple exist)
             ip_address = data.get("ip_address")
             if ip_address and "," in ip_address:
                 data["ip_address"] = ip_address.split(",")[0].strip()
@@ -35,7 +32,6 @@ class GalleryLikeService:
         except Exception as e:
             raise e
 
-
     def toggle_gallery_like(self, gallery_id: str, ip_address: str):
         if ip_address and "," in ip_address:
             ip_address = ip_address.split(",")[0].strip()
@@ -44,7 +40,6 @@ class GalleryLikeService:
 
         if existing_like:
             gallery_like = GalleryLike.from_dict(existing_like)
-            # Flip the like value
             new_like_value = not gallery_like.like
             gallery_like.like = new_like_value
 
@@ -57,7 +52,6 @@ class GalleryLikeService:
                 "updated": updated
             }
 
-        # If not foundages → create new like = True
         new_like = GalleryLike(gallery_id=gallery_id, ip_address=ip_address, like=True)
         new_id = self.repository.add_gallery_like(new_like)
         return {

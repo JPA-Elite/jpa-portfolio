@@ -40,7 +40,6 @@ def get_vlog_likes_counts_batch_route():
     if not vlog_ids:
         return jsonify({"items": {}}), 200
 
-    # Guardrail to avoid abuse and overly large payloads
     vlog_ids = vlog_ids[:50]
 
     comment_counts_by_vlog = vlog_comment_service.count_comments_by_vlog_ids(vlog_ids)
@@ -65,7 +64,7 @@ def add_vlog_like_route():
         return jsonify({"error": "Missing vlog_id"}), 400
 
     try:
-        # Perform toggle logic (insert or update)
+
         result = vlog_like_service.toggle_vlog_like(
             vlog_id=json.loads(vlog_id),
             ip_address=client_ip
@@ -79,3 +78,4 @@ def add_vlog_like_route():
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+

@@ -4,10 +4,8 @@ from backend.Repositories.GalleryCommentRepository import GalleryCommentReposito
 from backend.configurations import HTTPMethod as http
 from backend.constants.messages import COMMENT_NOT_FOUND_ERROR
 
-# Initialize Services
 gallery_comment_service = GalleryCommentService(repository=GalleryCommentRepository())
 
-# Gallery Comment Controller
 def gallery_comments_route():
     ip_address = request.headers.get('X-Forwarded-For', request.remote_addr)
     if request.method == http.GET:
@@ -22,13 +20,11 @@ def gallery_comments_route():
             "limit": limit
         })
 
-    # POST new comment
     data = request.json
     gallery_id = data.get("gallery_id")
     text = data.get("text")
     comment_id = gallery_comment_service.add_comment(gallery_id, ip_address, text)
     return jsonify({"status": "success", "comment_id": comment_id})
-
 
 def gallery_like_comment_route():
     data = request.json

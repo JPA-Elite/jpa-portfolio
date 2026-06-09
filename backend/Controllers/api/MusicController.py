@@ -41,7 +41,6 @@ def add_music_route():
     music_file = request.files.get("music_file")
     image_file = request.files.get("image_file")
 
-    # Pass raw request data + files to service
     data = {
         "title": title,
         "artist": artist,
@@ -84,3 +83,4 @@ def delete_music_route(music_id):
         return jsonify({"message": MUSIC_DELETE_MSG}), 200
     else:
         return jsonify({"message": MUSIC_NOT_FOUND_ERROR}), 404
+

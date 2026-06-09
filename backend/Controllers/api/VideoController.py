@@ -48,7 +48,7 @@ def add_video_route():
     description = request.form.get("description")
     video_file = request.files.get("video_file")
     tags = request.form.get("tags")
-    # Pass raw request data + files to service
+
     data = {
         "title": json.loads(title) if title else {},
         "description": json.loads(description) if description else {},
@@ -90,3 +90,4 @@ def delete_video_route(video_id):
         return jsonify({"message": VIDEO_DELETE_MSG}), 200
     else:
         return jsonify({"message": VIDEO_NOT_FOUND_ERROR}), 404
+

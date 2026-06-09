@@ -11,7 +11,6 @@ import os
 import json
 from collections import deque
 
-
 class DashboardService:
     def __init__(self):
         self.music_repo = MusicRepository()
@@ -111,7 +110,6 @@ class DashboardService:
             raise
 
     def delete_activity_logs(self, record_ids: list) -> dict:
-        """Delete activity log entries by their _id values, or delete all if record_ids is empty."""
         try:
             from bson import ObjectId
             from bson.errors import InvalidId
@@ -133,7 +131,6 @@ class DashboardService:
             return {"status": "error", "message": str(e)}
 
     def get_recent_activity(self, limit: int = 50):
-        """Return recent activity entries, with file fallback."""
         try:
             items = []
             cursor = self.activity_repo.collection.find({}, projection={}).sort([("_id", -1)]).limit(limit)
@@ -173,3 +170,4 @@ class DashboardService:
                 except Exception:
                     current_app.logger.exception("Failed to read recent activity log file in DashboardService")
                     return []
+

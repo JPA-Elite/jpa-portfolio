@@ -34,7 +34,6 @@ class AuthService:
             remaining = MAX_ATTEMPTS - (attempt_info.get("attempts", 0) + 1)
             return None, INVALID_USE_OR_PASS_ERROR.format(attempts=remaining), False
 
-        # verify password hash
         if check_password_hash(user["password"], password):
             self.login_attempt_repo.update_attempt(success=True)
             return user, LOGIN_SUCCESS_MSG, False
@@ -44,7 +43,6 @@ class AuthService:
                 return None, MANY_FAILED_ATTEMPTS_ERROR, True
             remaining = MAX_ATTEMPTS - updated["attempts"]
             return None, INVALID_USE_OR_PASS_ERROR.format(attempts=remaining), False
-
 
     def update_profile(self):
         if 'user_id' not in session:
@@ -124,3 +122,4 @@ class AuthService:
                 cache.delete(key)
             except Exception:
                 pass
+

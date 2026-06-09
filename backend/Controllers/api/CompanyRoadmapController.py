@@ -1,7 +1,5 @@
 import json
-
 from flask import jsonify, request
-
 from backend.Repositories.CompanyRoadmapRepository import CompanyRoadmapRepository
 from backend.Services.CompanyRoadmapService import CompanyRoadmapService
 from backend.configurations import SortOrder, SortOrderStr

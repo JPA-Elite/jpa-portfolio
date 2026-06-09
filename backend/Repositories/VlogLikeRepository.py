@@ -3,6 +3,7 @@ from backend.Repositories.Interfaces.IVlogLikeRepository import IVlogLikeReposit
 from backend.Repositories.BaseRepository import BaseRepository
 from backend.constants.db_collections import MongoCollections as mc
 from backend.Models.VlogLike import VlogLike
+
 class VlogLikeRepository(IVlogLikeRepository, BaseRepository):
     def __init__(self):
         super().__init__(mc.VIDEO_LIKES)

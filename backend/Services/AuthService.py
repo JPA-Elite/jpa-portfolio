@@ -7,7 +7,6 @@ from werkzeug.security import generate_password_hash
 from datetime import datetime
 import os
 import tempfile
-
 from backend.constants.messages import INVALID_USE_OR_PASS_ERROR, LOGIN_ATTEMPT_LOCKED_MSG, LOGIN_SUCCESS_MSG, MANY_FAILED_ATTEMPTS_ERROR, PROFILE_UPDATE_MSG, UNAUTHORIZED_ACCESS_ERROR, USER_NAME_REQUIRED_ERROR, USER_NOT_FOUND_ERROR
 from backend.constants.cloudinary import CloudinaryFolders, CloudinaryResourceType
 from backend.utils import cleanup_uploaded_files, convert_to_webp, upload_file_to_cloudinary

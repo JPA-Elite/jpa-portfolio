@@ -6,7 +6,6 @@ import tempfile, os
 from backend.constants.cloudinary import CloudinaryFolders, CloudinaryResourceType
 from backend.utils import cleanup_uploaded_files, convert_to_webp, upload_file_to_cloudinary
 from mutagen import File as MutagenFile
-import requests
 
 class MusicService:
     def __init__(self, repository: IMusicRepository):

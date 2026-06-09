@@ -1,14 +1,10 @@
 import base64
 from datetime import datetime
-from typing import Optional
-
 import cv2
 import numpy as np
 from bson import ObjectId
 from flask import jsonify, request, session
-
 from backend.Repositories.AuthRepository import AuthRepository
-from backend.auth.middleware import admin_login_required
 
 _FACE_CASCADE = cv2.CascadeClassifier(cv2.data.haarcascades + "haarcascade_frontalface_default.xml")
 _auth_repo_for_faces = AuthRepository()

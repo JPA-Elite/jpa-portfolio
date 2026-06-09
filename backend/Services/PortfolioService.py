@@ -6,7 +6,6 @@ import platform
 from datetime import datetime
 import pytz
 import requests
-
 from backend.constants.messages import SYSTEM_INFO_ADD_MSG
 
 class PortfolioService:

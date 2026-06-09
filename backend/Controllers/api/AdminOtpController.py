@@ -1,8 +1,6 @@
 from flask import jsonify, request, session
-
 from backend.Repositories.AuthRepository import AuthRepository
 from backend.Services.OtpService import OtpService
-from backend.auth.middleware import admin_login_required
 
 def admin_otp_send_route():
     try:

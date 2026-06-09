@@ -5,6 +5,7 @@ from backend.constants.db_collections import MongoCollections as mc
 from bson import ObjectId
 from backend.Models.Gallery import Gallery
 from bson.regex import Regex
+
 class GalleryRepository(IGalleryRepository, BaseRepository):
     def __init__(self):
         super().__init__(mc.GALLERY)

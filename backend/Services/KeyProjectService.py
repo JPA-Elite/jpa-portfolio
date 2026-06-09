@@ -1,9 +1,7 @@
 import os
 import tempfile
 import uuid
-
 from flask import current_app
-
 from backend.Models.KeyProject import KeyProject
 from backend.Repositories.Interfaces.IKeyProjectRepository import IKeyProjectRepository
 from backend.configurations import SortOrder

@@ -1,9 +1,8 @@
-import types
 try:
     from unittest.mock import MagicMock
 except ImportError:
     MagicMock = None
-from flask import jsonify, current_app, request
+from flask import jsonify, request
 from backend.Services.VisitService import VisitService
 from backend.Repositories.VisitRepository import VisitRepository
 from backend.Services.DashboardService import DashboardService

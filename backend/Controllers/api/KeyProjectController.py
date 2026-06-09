@@ -1,7 +1,5 @@
 import json
-
 from flask import jsonify, request
-
 from backend.Repositories.KeyProjectRepository import KeyProjectRepository
 from backend.Services.KeyProjectService import KeyProjectService
 from backend.configurations import SortOrder, SortOrderStr

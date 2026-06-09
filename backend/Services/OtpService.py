@@ -1,12 +1,9 @@
-from __future__ import annotations
-
 import os
 import random
 import smtplib
 import ssl
 import time
 from email.message import EmailMessage
-
 from backend.extensions import cache
 from backend.Repositories.AuthRepository import AuthRepository
 

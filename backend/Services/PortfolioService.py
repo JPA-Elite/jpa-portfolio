@@ -1,10 +1,10 @@
 from backend.Repositories.Interfaces.IPortfolioRepository import IPortfolioRepository
 from backend.Models.SystemInfo import SystemInfo
 from flask import request, url_for
-from user_agents import parse  # type: ignore
+from user_agents import parse
 import platform
 from datetime import datetime
-import pytz  # type: ignore
+import pytz
 import requests
 
 from backend.constants.messages import SYSTEM_INFO_ADD_MSG
@@ -14,12 +14,10 @@ class PortfolioService:
         self.repository = repository
 
     def get_client_ip(self):
-        """Get the real client IP address (handling proxies)"""
         ip = request.headers.get("X-Forwarded-For", request.remote_addr)
-        return ip.split(",")[0]  # Extract first IP if behind proxies
+        return ip.split(",")[0]
 
     def get_ip_location(self, ip):
-        """Fetch location details using an IP Geolocation API"""
         try:
             response = requests.get(f"https://ipinfo.io/{ip}/json")
             data = response.json()
@@ -29,28 +27,23 @@ class PortfolioService:
                 "city": data.get("city", "Unknown"),
                 "region": data.get("region", "Unknown"),
                 "country": data.get("country", "Unknown"),
-                "location": data.get("loc", "Unknown"),  # Latitude & Longitude
+                "location": data.get("loc", "Unknown"),
             }
         except Exception:
             return {"ip": ip, "city": "Unknown", "region": "Unknown", "country": "Unknown", "location": "Unknown"}
 
     def add_system_info(self, cloudinary_url=None):
-        """Capture and store system information in the database."""
         try:
-            # Get user agent from request headers
             user_agent_string = request.headers.get("User-Agent")
             user_agent = parse(user_agent_string)
 
-            # Get user's IP address and location
             user_ip = self.get_client_ip()
             location_info = self.get_ip_location(user_ip)
 
-            # Get current date and time in Philippines timezone
             tz = pytz.timezone("Asia/Manila")
             current_time = datetime.now(tz)
             formatted_time = current_time.strftime("%m/%d/%Y - %I:%M %p")
 
-            # Get system information
             system_info = SystemInfo(
                 system=platform.system(),
                 node=platform.node(),
@@ -69,14 +62,13 @@ class PortfolioService:
                 page=url_for(request.endpoint),
                 timestamp=formatted_time,
                 image_capture=cloudinary_url,
-                ip_address=location_info["ip"],  # Add IP Address
-                city=location_info["city"],  # Add City
-                region=location_info["region"],  # Add Region
-                country=location_info["country"],  # Add Country
-                location=location_info["location"],  # Latitude & Longitude
+                ip_address=location_info["ip"],
+                city=location_info["city"],
+                region=location_info["region"],
+                country=location_info["country"],
+                location=location_info["location"],
             )
 
-            # Insert system information into the database
             result = self.repository.insert_system_info(system_info.to_dict())
             return {
                 "message": SYSTEM_INFO_ADD_MSG,
@@ -85,5 +77,5 @@ class PortfolioService:
             }
 
         except Exception as e:
-            # Catch any exceptions and return an error message
             return {"message": str(e), "status": "error"}
+

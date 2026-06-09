@@ -3,7 +3,6 @@ from abc import ABC, abstractmethod
 from backend.configurations import SortOrder
 from backend.Models.KeyProject import KeyProject
 
-
 class IKeyProjectRepository(ABC):
     @abstractmethod
     def get_key_project_by_id(self, project_id: str):
@@ -44,3 +43,4 @@ class IKeyProjectRepository(ABC):
     @abstractmethod
     def delete_key_project(self, project_id: str):
         pass
+

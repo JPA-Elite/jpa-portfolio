@@ -17,7 +17,6 @@ class VlogCommentService:
         total = self.repository.count_comments_by_vlog(vlog_id)
         comments = []
 
-        # Normalize IP address: take only the first valid one
         if ip_address and "," in ip_address:
             ip_address = ip_address.split(",")[0].strip()
 
@@ -25,12 +24,10 @@ class VlogCommentService:
             comment = VlogComment.from_dict(c)
             data = comment.to_dict()
 
-            # Convert author_name to readable form
             if "author_name" in data:
                 author_name = data.get("author_name", "").replace(".", "")
                 data["author_name"] = num_to_alpha_lower(author_name)
 
-            # Check if current user already liked the comment
             if ip_address:
                 liked_ips = data.get("liked_ips") or []
                 data["is_liked"] = any(
@@ -41,11 +38,9 @@ class VlogCommentService:
 
         return comments, total
 
-
     def add_comment(self, vlog_id: str, ip_address: str, text: str):
-        # Handle cases like "127.0.0.1, 12.1.1.1, 13.9.9.1"
         if ip_address and "," in ip_address:
-            ip_address = ip_address.split(",")[0].strip()  # take first IP only
+            ip_address = ip_address.split(",")[0].strip()
 
         author_name = f"user_{ip_address}"
         comment = VlogComment(
@@ -56,7 +51,6 @@ class VlogCommentService:
             liked_ips=[]
         )
         return self.repository.add_comment(comment)
-
 
     def toggle_like(self, comment_id: str, ip_address: str):
         if ip_address and "," in ip_address:
@@ -75,3 +69,4 @@ class VlogCommentService:
         comment["liked_ips"] = liked_ips
         self.repository.update_comment(comment)
         return {"liked": liked, "like_count": len(liked_ips)}
+

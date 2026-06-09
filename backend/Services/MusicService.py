@@ -20,7 +20,7 @@ class MusicService:
                 total_seconds = round(audio.info.length, 2)
                 minutes = int(total_seconds // 60)
                 seconds = int(total_seconds % 60)
-                # Format as mm:ss (e.g. "03:07")
+
                 duration_formatted = f"{minutes}:{seconds:02d}"
 
             return duration_formatted

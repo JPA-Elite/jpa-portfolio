@@ -29,10 +29,8 @@ class VlogLikeService:
 
         return VlogLike.from_dict(result)
 
-
     def add_vlog_like(self, data: dict):
         try:
-            # Normalize IP address (only take the first one if multiple exist)
             ip_address = data.get("ip_address")
             if ip_address and "," in ip_address:
                 data["ip_address"] = ip_address.split(",")[0].strip()
@@ -43,7 +41,6 @@ class VlogLikeService:
         except Exception as e:
             raise e
 
-
     def toggle_vlog_like(self, vlog_id: str, ip_address: str):
         if ip_address and "," in ip_address:
             ip_address = ip_address.split(",")[0].strip()
@@ -52,7 +49,6 @@ class VlogLikeService:
 
         if existing_like:
             vlog_like = VlogLike.from_dict(existing_like)
-            # Flip the like value
             new_like_value = not vlog_like.like
             vlog_like.like = new_like_value
 
@@ -65,7 +61,6 @@ class VlogLikeService:
                 "updated": updated
             }
 
-        # If not foundages → create new like = True
         new_like = VlogLike(vlog_id=vlog_id, ip_address=ip_address, like=True)
         new_id = self.repository.add_vlog_like(new_like)
         return {
@@ -75,3 +70,4 @@ class VlogLikeService:
             "like": True,
             "created": True
         }
+

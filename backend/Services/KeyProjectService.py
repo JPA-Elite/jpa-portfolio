@@ -10,7 +10,6 @@ from backend.configurations import SortOrder
 from backend.constants.cloudinary import CloudinaryFolders, CloudinaryResourceType
 from backend.utils import cleanup_uploaded_files, convert_to_webp, upload_file_to_cloudinary
 
-
 class KeyProjectService:
     def __init__(self, repository: IKeyProjectRepository):
         self.repository = repository
@@ -212,7 +211,7 @@ class KeyProjectService:
             if slide_file:
                 image_url = self._upload_image_file(slide_file)
                 uploaded_urls.append(image_url)
-                # remove replaced image only after successful new upload
+
                 if existing_image_url and existing_image_url != image_url:
                     self._cleanup_image_url(existing_image_url)
                     cleaned_urls.add(existing_image_url)
@@ -232,7 +231,6 @@ class KeyProjectService:
                 "description": self._localized_map(slide_meta.get("description"), previous.get("description")),
             })
 
-        # remove deleted slides (present before, absent now)
         for slide in existing_slides:
             url = (slide or {}).get("image_url")
             if not url:
@@ -387,3 +385,4 @@ class KeyProjectService:
                 "slides": [],
             },
         ]
+

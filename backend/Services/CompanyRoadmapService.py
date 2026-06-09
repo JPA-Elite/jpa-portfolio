@@ -10,7 +10,6 @@ from backend.utils import cleanup_uploaded_files, convert_to_webp, upload_file_t
 
 _ROADMAP_I18N_LOCALES = ("en", "ceb", "fil_PH")
 
-
 class CompanyRoadmapService:
     def __init__(self, repository: ICompanyRoadmapRepository):
         self.repository = repository
@@ -488,3 +487,4 @@ class CompanyRoadmapService:
         if not url or "res.cloudinary.com" not in str(url):
             return
         cleanup_uploaded_files(None, url)
+

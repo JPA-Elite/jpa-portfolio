@@ -7,7 +7,6 @@ from backend.constants.db_collections import MongoCollections as mc
 from backend.configurations import SortOrder
 from backend.Models.CompanyRoadmap import CompanyRoadmap
 
-
 class CompanyRoadmapRepository(ICompanyRoadmapRepository, BaseRepository):
     def __init__(self):
         super().__init__(mc.COMPANY_ROADMAPS)
@@ -109,3 +108,4 @@ class CompanyRoadmapRepository(ICompanyRoadmapRepository, BaseRepository):
     def delete_company_roadmap(self, roadmap_id: str):
         result = self.collection.delete_one({"_id": ObjectId(roadmap_id)})
         return result.deleted_count > 0
+

@@ -3,7 +3,6 @@ from abc import ABC, abstractmethod
 from backend.configurations import SortOrder
 from backend.Models.CompanyRoadmap import CompanyRoadmap
 
-
 class ICompanyRoadmapRepository(ABC):
     @abstractmethod
     def get_company_roadmap_by_id(self, roadmap_id: str):
@@ -44,3 +43,4 @@ class ICompanyRoadmapRepository(ABC):
     @abstractmethod
     def delete_company_roadmap(self, roadmap_id: str):
         pass
+

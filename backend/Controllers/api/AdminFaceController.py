@@ -2,18 +2,16 @@ import base64
 from datetime import datetime
 from typing import Optional
 
-import cv2  # type: ignore
-import numpy as np  # type: ignore
+import cv2
+import numpy as np
 from bson import ObjectId
 from flask import jsonify, request, session
 
 from backend.Repositories.AuthRepository import AuthRepository
-from backend.auth.middleware import admin_login_required  # imported for consistency (decorators live in api.py)
+from backend.auth.middleware import admin_login_required
 
-# OpenCV Haar cascade for face detection
 _FACE_CASCADE = cv2.CascadeClassifier(cv2.data.haarcascades + "haarcascade_frontalface_default.xml")
 _auth_repo_for_faces = AuthRepository()
-
 
 def _require_image_b64(payload: dict) -> str:
     if not payload:
@@ -23,9 +21,8 @@ def _require_image_b64(payload: dict) -> str:
         raise ValueError("Missing image_b64")
     return b64
 
-
 def _decode_b64_image(image_b64: str) -> np.ndarray:
-    # Accept either raw base64 or data URL format
+
     if "," in image_b64:
         image_b64 = image_b64.split(",", 1)[1]
     raw = base64.b64decode(image_b64)
@@ -35,14 +32,12 @@ def _decode_b64_image(image_b64: str) -> np.ndarray:
         raise ValueError("Could not decode image")
     return img
 
-
 def _detect_and_crop_face(img_bgr: np.ndarray) -> np.ndarray:
     gray = cv2.cvtColor(img_bgr, cv2.COLOR_BGR2GRAY)
     faces = _FACE_CASCADE.detectMultiScale(gray, scaleFactor=1.1, minNeighbors=5)
     if faces is None or len(faces) == 0:
         raise ValueError("No face detected")
 
-    # Take the largest face (then expand box slightly to be more tolerant to head position)
     x, y, w, h = max(faces, key=lambda r: r[2] * r[3])
 
     x0 = max(0, int(x - 0.15 * w))
@@ -54,32 +49,27 @@ def _detect_and_crop_face(img_bgr: np.ndarray) -> np.ndarray:
     if face.size == 0:
         raise ValueError("Invalid face crop")
 
-    # Resize to a stable representation for comparison
     face_resized = cv2.resize(face, (160, 160))
     return face_resized
 
-
 def _normalize_face(face_gray_160: np.ndarray) -> np.ndarray:
-    # Normalize size + blur to reduce sensitivity to noise.
+
     blur = cv2.GaussianBlur(face_gray_160, (5, 5), 0)
     normalized = cv2.resize(blur, (160, 160))
     return normalized.astype(np.uint8)
 
-
 def _encode_crop_to_b64(face_gray_160: np.ndarray) -> str:
-    # Encode cropped face to PNG bytes and base64 them for storage (optional)
+
     ok, png = cv2.imencode(".png", face_gray_160)
     if not ok:
         raise ValueError("Could not encode face crop")
     return base64.b64encode(png.tobytes()).decode("utf-8")
 
-
 def _face_l1_distance(a_gray_160: np.ndarray, b_gray_160: np.ndarray) -> float:
-    # Mean absolute difference in pixel space (0..255), lower is more similar.
+
     a = a_gray_160.astype(np.float32)
     b = b_gray_160.astype(np.float32)
     return float(np.mean(np.abs(a - b)))
-
 
 def _b64_png_to_gray_160(face_crop_b64: str) -> np.ndarray:
     if not face_crop_b64 or not isinstance(face_crop_b64, str):
@@ -94,19 +84,11 @@ def _b64_png_to_gray_160(face_crop_b64: str) -> np.ndarray:
         gray = cv2.resize(gray, (160, 160))
     return gray.astype(np.uint8)
 
-
 def admin_face_register_route():
-    """
-    POST /admin/api/face/register
-    Accepts either:
-    - { "image_b64": "<base64>" }
-    - { "image_b64_list": ["<base64>", ...] }
-    Stores a reference crop in the admin user document.
-    """
+
     try:
         payload = request.get_json(silent=True) or {}
 
-        # Accept either single capture (image_b64) or multiple captures (image_b64_list)
         image_b64_list = payload.get("image_b64_list")
         if isinstance(image_b64_list, list) and len(image_b64_list) > 0:
             b64_list = [x for x in image_b64_list if isinstance(x, str)]
@@ -119,14 +101,13 @@ def admin_face_register_route():
         crops = []
         for image_b64 in b64_list:
             img = _decode_b64_image(image_b64)
-            face_crop = _detect_and_crop_face(img)  # grayscale 160x160
+            face_crop = _detect_and_crop_face(img)
             face_crop_norm = _normalize_face(face_crop)
             crops.append(face_crop_norm)
 
         if not crops:
             return jsonify({"ok": False, "message": "No valid face crops captured"}), 400
 
-        # Robust reference: pixel-wise median across captures
         reference_gray_160 = np.median(np.stack(crops, axis=0), axis=0).astype(np.uint8)
         face_crop_b64 = _encode_crop_to_b64(reference_gray_160)
 
@@ -134,13 +115,12 @@ def admin_face_register_route():
         if not user_id:
             return jsonify({"ok": False, "message": "Not authenticated"}), 401
 
-        # Store only the reference crop (tolerant matching uses it)
         _auth_repo_for_faces.collection.update_one(
             {"_id": ObjectId(user_id)},
             {
                 "$set": {
                     "face_reference_crop_b64": face_crop_b64,
-                    # overwrite hash too for backwards compatibility / debugging
+
                     "face_reference_hash": "",
                     "face_last_registered_at": datetime.utcnow().isoformat() + "Z",
                 }
@@ -152,12 +132,8 @@ def admin_face_register_route():
     except Exception as e:
         return jsonify({"ok": False, "message": str(e)}), 400
 
-
 def admin_face_records_route():
-    """
-    GET /admin/api/face/records
-    Returns face verification records for the logged-in admin.
-    """
+
     try:
         user_id = session.get("user_id")
         if not user_id:
@@ -187,20 +163,12 @@ def admin_face_records_route():
                 }
             )
 
-        # Keep stable ordering: Registered first, then Verified
         return jsonify({"ok": True, "rows": rows})
     except Exception as e:
         return jsonify({"ok": False, "message": str(e)}), 400
 
-
 def admin_face_verify_route():
-    """
-    POST /admin/api/face/verify
-    Accepts either:
-    - { "image_b64": "<base64>" }
-    - { "image_b64_list": ["<base64>", ...] }
-    Compares captures to stored reference crop and toggles session face_verified on success.
-    """
+
     try:
         payload = request.get_json(silent=True) or {}
 
@@ -216,7 +184,7 @@ def admin_face_verify_route():
         crops = []
         for image_b64 in b64_list:
             img = _decode_b64_image(image_b64)
-            face_crop = _detect_and_crop_face(img)  # grayscale 160x160
+            face_crop = _detect_and_crop_face(img)
             face_crop_norm = _normalize_face(face_crop)
             crops.append(face_crop_norm)
 
@@ -234,7 +202,6 @@ def admin_face_verify_route():
 
         ref_gray_160 = _b64_png_to_gray_160(ref_crop_b64)
 
-        # Robust verify: take the minimum distance among captured frames
         distances = [_face_l1_distance(crop, ref_gray_160) for crop in crops]
         dist = float(min(distances))
 
@@ -266,3 +233,4 @@ def admin_face_verify_route():
         return jsonify({"ok": True, "message": "Face verified", "distance": dist})
     except Exception as e:
         return jsonify({"ok": False, "message": str(e)}), 400
+

@@ -8,9 +8,7 @@ from backend.configurations import SortOrder, SortOrderStr
 from backend.extensions import cache
 from backend.utils import clear_cache_by_prefix, get_cache_data
 
-
 company_roadmap_service = CompanyRoadmapService(repository=CompanyRoadmapRepository())
-
 
 def _get_i18n_text_map(field_name: str):
     return {
@@ -19,14 +17,12 @@ def _get_i18n_text_map(field_name: str):
         "fil_PH": request.form.get(f"{field_name}_fil", "").strip(),
     }
 
-
 def _get_i18n_highlights_map():
     return {
         "en": request.form.get("highlights", ""),
         "ceb": request.form.get("highlights_ceb", ""),
         "fil_PH": request.form.get("highlights_fil", ""),
     }
-
 
 def company_roadmap_list_route():
     cached_data, cache_key = get_cache_data("admin.api.company_roadmap_list", request.args)
@@ -75,7 +71,6 @@ def company_roadmap_list_route():
     cache.set(cache_key, response_data, timeout=300)
     return jsonify(response_data)
 
-
 def add_company_roadmap_route():
     activities_meta = request.form.get("activities_meta")
 
@@ -103,7 +98,6 @@ def add_company_roadmap_route():
     roadmap_id = company_roadmap_service.add_company_roadmap(data)
     _clear_company_roadmap_caches()
     return jsonify({"message": "Company roadmap entry added successfully.", "roadmap_id": roadmap_id}), 201
-
 
 def update_company_roadmap_route(roadmap_id):
     activities_meta = request.form.get("activities_meta")
@@ -142,7 +136,6 @@ def update_company_roadmap_route(roadmap_id):
     _clear_company_roadmap_caches()
     return jsonify({"message": "Company roadmap entry updated successfully."}), 200
 
-
 def delete_company_roadmap_route(roadmap_id):
     success = company_roadmap_service.delete_company_roadmap(roadmap_id)
     if not success:
@@ -151,7 +144,7 @@ def delete_company_roadmap_route(roadmap_id):
     _clear_company_roadmap_caches()
     return jsonify({"message": "Company roadmap entry deleted successfully."}), 200
 
-
 def _clear_company_roadmap_caches():
     clear_cache_by_prefix("admin.api.company_roadmap_list:")
     clear_cache_by_prefix("profile_ui_")
+

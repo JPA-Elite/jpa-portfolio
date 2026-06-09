@@ -13,14 +13,12 @@ LOCKOUT_HOURS = 1
 
 class LoginAttemptRepository(ILoginAttemptRepository, BaseRepository):
     def __init__(self):
-        super().__init__(mc.LOGIN_ATTEMPTS)  # use "login_attempts" collection
+        super().__init__(mc.LOGIN_ATTEMPTS)
 
     def _get_client_ip(self):
-        """Get client IP address safely (supports proxy environments)."""
         return get_request_ip() or (request.remote_addr or "unknown_ip")
 
     def get_attempt_info(self):
-        """Retrieve attempt info based on client IP."""
         client_ip = self._get_client_ip()
         data = self.collection.find_one({"_id": client_ip})
 
@@ -30,13 +28,12 @@ class LoginAttemptRepository(ILoginAttemptRepository, BaseRepository):
         return data
 
     def update_attempt(self, success=False):
-        """Update attempt count for a specific client IP."""
         now = datetime.utcnow()
         client_ip = self._get_client_ip()
         attempt = self.get_attempt_info()
 
         if success:
-            update_data = {"attempts": 0, "lockout_until": None}  # ✅ Reset on success
+            update_data = {"attempts": 0, "lockout_until": None}
         else:
             attempts = attempt.get("attempts", 0) + 1
             lockout_until = attempt.get("lockout_until")
@@ -55,7 +52,6 @@ class LoginAttemptRepository(ILoginAttemptRepository, BaseRepository):
         return update_data
 
     def get_login_attempt_by_id(self, login_attempt_id: str):
-        """Fetch a login_attempt document by _id (supports both ObjectId and string IP)."""
         try:
             query = {"_id": ObjectId(login_attempt_id)}
         except bson_errors.InvalidId:
@@ -70,7 +66,6 @@ class LoginAttemptRepository(ILoginAttemptRepository, BaseRepository):
         order: SortOrder,
         search_query: str = "",
     ):
-        # Mongo sort order by _id
         sort_order = -1 if order == SortOrder.DESC else 1
         query = {}
 
@@ -83,7 +78,6 @@ class LoginAttemptRepository(ILoginAttemptRepository, BaseRepository):
                 or_filters.append({"attempts": int(search_query.strip())})
             query = {"$or": or_filters}
 
-        # Use MongoDB skip + limit for pagination
         cursor = (
             self.collection.find(query)
             .sort("_id", sort_order)
@@ -97,7 +91,6 @@ class LoginAttemptRepository(ILoginAttemptRepository, BaseRepository):
         return data, total_data
 
     def delete_login_attempt(self, login_attempt_id: str):
-        """Delete a login_attempt document by _id (IP or ObjectId)."""
         try:
             query = {"_id": ObjectId(login_attempt_id)}
         except bson_errors.InvalidId:
@@ -105,3 +98,4 @@ class LoginAttemptRepository(ILoginAttemptRepository, BaseRepository):
 
         result = self.collection.delete_one(query)
         return result.deleted_count > 0
+

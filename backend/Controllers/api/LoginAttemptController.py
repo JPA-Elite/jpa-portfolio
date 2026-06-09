@@ -37,7 +37,6 @@ def login_attempt_list_route():
     cache.set(cache_key, response_data, timeout=300)
     return jsonify(response_data)
 
-
 def delete_login_attempt_route(login_attempt_id):
     success = login_attempt_service.delete_login_attempt(login_attempt_id)
     if success:
@@ -45,3 +44,4 @@ def delete_login_attempt_route(login_attempt_id):
         return jsonify({"message": LOGIN_ATTEMPT_DELETE_MSG}), 200
     else:
         return jsonify({"message": LOGIN_ATTEMPT_NOT_FOUND_ERROR}), 404
+

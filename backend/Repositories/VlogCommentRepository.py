@@ -52,3 +52,4 @@ class VlogCommentRepository(BaseRepository):
             {"_id": ObjectId(comment["_id"])},
             {"$set": comment}
         )
+

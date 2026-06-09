@@ -40,7 +40,7 @@ def change_language_route(lang_code=""):
     return response
 
 def delete_page_system_info_route():
-    """Delete only the records displayed on the current page."""
+
     data = request.json
     records = data.get("records", [])
 
@@ -86,15 +86,12 @@ def download_song_route():
     fallback_name = f"{fallback_base}.mp3"
     utf8_name = f"{utf8_quoted_base}.mp3"
 
-    # Download remote file
     r = requests.get(url, stream=True, timeout=30)
     if r.status_code != 200:
         return {"error": "Failed to download file"}, 500
 
     content_type = r.headers.get("Content-Type", "application/octet-stream")
 
-    # Compose a single Content-Disposition header that includes an ASCII fallback
-    # and the UTF-8 encoded filename*
     content_disposition = (
         f'attachment; filename="{fallback_name}"; filename*=UTF-8\'\'{utf8_name}'
     )
@@ -139,3 +136,4 @@ def proxy_audio_route():
         status=resp.status_code,
         headers=response_headers,
     )
+

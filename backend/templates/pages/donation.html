@@ -2,20 +2,213 @@
 
 {% block title %}My Donation | Joshua Algadipe{% endblock %}
 {% block head %}{% endblock %}
-<!-- SEO Meta Tags -->
+
 {% block meta_description %}Support the work of Joshua Algadipe by making a donation. Your contribution helps further the mission and impact of his projects.{% endblock %}
 {% block meta_keywords %}Joshua Algadipe, donation, support, contribution, charity, funding, mission, impact{% endblock %}
 {% block meta_author %}Joshua Algadipe{% endblock %}
 
 {% block content %}
-<!-- Link to the external CSS file for the donation -->
 <link rel="stylesheet" href="{{ static_asset('css/pages/donation.css') }}" />
 <section id="donation">
-    <h2>{{ _('donation_header') }}</h2>
-    <p>{{ _('donation_message') }}</p>
+    <div class="donation-header">
+        <div class="donation-icon">
+            <ion-icon name="heart-outline"></ion-icon>
+        </div>
+        <h2>{{ _('donation_header') }}</h2>
+        <p>{{ _('donation_message') }}</p>
+    </div>
 
-    <div class="donation-qr">
-        <img src="{{ url_for('static', filename='images/gcash_qr.webp') }}" alt="Qr Code">
+    <div class="payment-tabs">
+        <button class="payment-tab active" data-tab="gcash" onclick="switchPaymentTab('gcash')">
+            <span class="payment-tab-icon">
+                <ion-icon name="cash-outline"></ion-icon>
+            </span>
+            <span class="payment-tab-label">GCash</span>
+        </button>
+        <button class="payment-tab" data-tab="paymaya" onclick="switchPaymentTab('paymaya')">
+            <span class="payment-tab-icon">
+                <ion-icon name="card-outline"></ion-icon>
+            </span>
+            <span class="payment-tab-label">PayMaya</span>
+        </button>
+        <button class="payment-tab" data-tab="maribank" onclick="switchPaymentTab('maribank')">
+            <span class="payment-tab-icon">
+                <ion-icon name="wallet-outline"></ion-icon>
+            </span>
+            <span class="payment-tab-label">MariBank</span>
+        </button>
+        <button class="payment-tab" data-tab="tonik" onclick="switchPaymentTab('tonik')">
+            <span class="payment-tab-icon">
+                <ion-icon name="trending-up-outline"></ion-icon>
+            </span>
+            <span class="payment-tab-label">Tonik Bank</span>
+        </button>
+        <button class="payment-tab" data-tab="ownbank" onclick="switchPaymentTab('ownbank')">
+            <span class="payment-tab-icon">
+                <ion-icon name="business-outline"></ion-icon>
+            </span>
+            <span class="payment-tab-label">OwnBank</span>
+        </button>
+    </div>
+
+    <div class="payment-panels">
+        <div class="payment-panel active" id="panel-gcash">
+            <div class="panel-header">
+                <h3>GCash</h3>
+                <span class="panel-badge">QR Code</span>
+            </div>
+            <div class="panel-body">
+                <div class="qr-container" onclick="openQrModal(this.querySelector('.qr-image').src)">
+                    <img src="{{ url_for('static', filename='images/gcash_qr.webp') }}" alt="GCash QR Code" class="qr-image">
+                    <div class="qr-overlay">
+                        <ion-icon name="expand-outline"></ion-icon>
+                    </div>
+                </div>
+                <div class="payment-info">
+                    <div class="info-item">
+                        <ion-icon name="person-outline"></ion-icon>
+                        <span>Joshua P. Algadipe</span>
+                    </div>
+                    <div class="info-item">
+                        <ion-icon name="phone-portrait-outline"></ion-icon>
+                        <span>0945 123 4567</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="payment-panel" id="panel-paymaya">
+            <div class="panel-header">
+                <h3>PayMaya</h3>
+                <span class="panel-badge">QR Code</span>
+            </div>
+            <div class="panel-body">
+                <div class="qr-container" onclick="openQrModal(this.querySelector('.qr-image').src)">
+                    <img src="{{ url_for('static', filename='images/gcash_qr.webp') }}" alt="PayMaya QR Code" class="qr-image">
+                    <div class="qr-overlay">
+                        <ion-icon name="expand-outline"></ion-icon>
+                    </div>
+                </div>
+                <div class="payment-info">
+                    <div class="info-item">
+                        <ion-icon name="person-outline"></ion-icon>
+                        <span>Joshua P. Algadipe</span>
+                    </div>
+                    <div class="info-item">
+                        <ion-icon name="phone-portrait-outline"></ion-icon>
+                        <span>0945 123 4567</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="payment-panel" id="panel-maribank">
+            <div class="panel-header">
+                <h3>MariBank</h3>
+                <span class="panel-badge">QR Code</span>
+            </div>
+            <div class="panel-body">
+                <div class="qr-container" onclick="openQrModal(this.querySelector('.qr-image').src)">
+                    <img src="{{ url_for('static', filename='images/gcash_qr.webp') }}" alt="MariBank QR Code" class="qr-image">
+                    <div class="qr-overlay">
+                        <ion-icon name="expand-outline"></ion-icon>
+                    </div>
+                </div>
+                <div class="payment-info">
+                    <div class="info-item">
+                        <ion-icon name="person-outline"></ion-icon>
+                        <span>Joshua P. Algadipe</span>
+                    </div>
+                    <div class="info-item">
+                        <ion-icon name="phone-portrait-outline"></ion-icon>
+                        <span>0945 123 4567</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="payment-panel" id="panel-tonik">
+            <div class="panel-header">
+                <h3>Tonik Bank</h3>
+                <span class="panel-badge">QR Code</span>
+            </div>
+            <div class="panel-body">
+                <div class="qr-container" onclick="openQrModal(this.querySelector('.qr-image').src)">
+                    <img src="{{ url_for('static', filename='images/gcash_qr.webp') }}" alt="Tonik Bank QR Code" class="qr-image">
+                    <div class="qr-overlay">
+                        <ion-icon name="expand-outline"></ion-icon>
+                    </div>
+                </div>
+                <div class="payment-info">
+                    <div class="info-item">
+                        <ion-icon name="person-outline"></ion-icon>
+                        <span>Joshua P. Algadipe</span>
+                    </div>
+                    <div class="info-item">
+                        <ion-icon name="phone-portrait-outline"></ion-icon>
+                        <span>0945 123 4567</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="payment-panel" id="panel-ownbank">
+            <div class="panel-header">
+                <h3>OwnBank</h3>
+                <span class="panel-badge">QR Code</span>
+            </div>
+            <div class="panel-body">
+                <div class="qr-container" onclick="openQrModal(this.querySelector('.qr-image').src)">
+                    <img src="{{ url_for('static', filename='images/gcash_qr.webp') }}" alt="OwnBank QR Code" class="qr-image">
+                    <div class="qr-overlay">
+                        <ion-icon name="expand-outline"></ion-icon>
+                    </div>
+                </div>
+                <div class="payment-info">
+                    <div class="info-item">
+                        <ion-icon name="person-outline"></ion-icon>
+                        <span>Joshua P. Algadipe</span>
+                    </div>
+                    <div class="info-item">
+                        <ion-icon name="phone-portrait-outline"></ion-icon>
+                        <span>0945 123 4567</span>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </section>
+
+<div id="qrModal" class="qr-modal" onclick="closeQrModal(event)">
+    <div class="qr-modal-content">
+        <button class="qr-modal-close" onclick="closeQrModal()">
+            <ion-icon name="close-outline"></ion-icon>
+        </button>
+        <img id="qrModalImage" src="" alt="QR Code Preview">
+    </div>
+</div>
+
+<script>
+function switchPaymentTab(tabId) {
+    document.querySelectorAll('.payment-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.payment-panel').forEach(p => p.classList.remove('active'));
+    document.querySelector(`.payment-tab[data-tab="${tabId}"]`).classList.add('active');
+    document.getElementById(`panel-${tabId}`).classList.add('active');
+}
+
+function openQrModal(src) {
+    const modal = document.getElementById('qrModal');
+    const img = document.getElementById('qrModalImage');
+    img.src = src;
+    modal.classList.add('open');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeQrModal(event) {
+    if (event && event.target !== event.currentTarget) return;
+    const modal = document.getElementById('qrModal');
+    modal.classList.remove('open');
+    document.body.style.overflow = '';
+}
+</script>
 {% endblock %}

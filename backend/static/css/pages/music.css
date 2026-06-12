@@ -142,7 +142,7 @@ main {
 }
 
 .music-item.active {
-    background: #2962ff;
+    background: rgba(41, 98, 255, 0.75);
     color: white;
 }
 

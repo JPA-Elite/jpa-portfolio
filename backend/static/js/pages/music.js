@@ -1247,7 +1247,7 @@ function updateMusicHeader() {
     header.textContent = `My Music List (${total} ${total === 1 ? "song" : "songs"})`;
 }
 
-const vizConfig = { mode: 'Neon Wave', freq: 196, bass: 10, treble: 8, sensitivity: 125, bars: 72, speed: 10, glow: 14, smooth: 70, phase: 0 };
+const vizConfig = { mode: 'Neon Wave', freq: 196, bass: 10, treble: 8, sensitivity: 125, bars: 72, speed: 10, glow: 14, smooth: 70, phase: 0, off: false };
 
 function toNearestValidFftSize(value) {
     const min = 32; const max = 32768;
@@ -1258,17 +1258,17 @@ function toNearestValidFftSize(value) {
 
 function initVisualizer() {
     if (!audioPlayer || !canvas || !ctx) return;
-    if (!audioContext) audioContext = new (window.AudioContext || window.webkitAudioContext)();
-    if (!source) source = audioContext.createMediaElementSource(audioPlayer);
-    if (!analyser) analyser = audioContext.createAnalyser();
-    if (!window.__vizBass) {
+    if (!audioContext) {
+        audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        source = audioContext.createMediaElementSource(audioPlayer);
+        analyser = audioContext.createAnalyser();
         window.__vizBass = audioContext.createBiquadFilter(); window.__vizBass.type = 'lowshelf'; window.__vizBass.frequency.value = 200;
         window.__vizTreble = audioContext.createBiquadFilter(); window.__vizTreble.type = 'highshelf'; window.__vizTreble.frequency.value = 2200;
         source.connect(analyser); analyser.connect(window.__vizBass); window.__vizBass.connect(window.__vizTreble); window.__vizTreble.connect(audioContext.destination);
+        applyMode(vizConfig.mode);
+        bindVisualizerSettings();
+        resizeCanvas();
     }
-    applyMode(vizConfig.mode);
-    bindVisualizerSettings();
-    resizeCanvas();
 }
 
 function applyMode(mode) {
@@ -1282,12 +1282,14 @@ function applyMode(mode) {
 
 function bindVisualizerSettings() {
     const panel=document.getElementById('visualizerSettingsPanel'), openBtn=document.getElementById('visualizerSettingsBtn'), closeBtn=document.getElementById('visualizerCloseBtn'), backdrop=document.getElementById('visualizerSettingsBackdrop');
+    const offToggle = document.getElementById('vizOffToggle');
     const openPanel = ()=>{ panel?.classList.add('open'); backdrop?.classList.add('open'); panel?.setAttribute('aria-hidden','false'); backdrop?.setAttribute('aria-hidden','false'); };
     const closePanel = ()=>{ panel?.classList.remove('open'); backdrop?.classList.remove('open'); panel?.setAttribute('aria-hidden','true'); backdrop?.setAttribute('aria-hidden','true'); };
     const togglePanel = ()=>{ if (panel?.classList.contains('open')) closePanel(); else openPanel(); };
     if (openBtn && !openBtn.dataset.bound) { openBtn.dataset.bound='1'; openBtn.addEventListener('click', togglePanel); }
     if (closeBtn && !closeBtn.dataset.bound) { closeBtn.dataset.bound='1'; closeBtn.addEventListener('click', closePanel); }
     if (backdrop && !backdrop.dataset.bound) { backdrop.dataset.bound='1'; backdrop.addEventListener('click', closePanel); }
+    if (offToggle && !offToggle.dataset.bound) { offToggle.dataset.bound='1'; offToggle.addEventListener('change',()=>{ const shouldBeOn = offToggle.checked; vizConfig.off = !shouldBeOn; if(!shouldBeOn){ stopVisualizer(); ctx.clearRect(0,0,canvas.width,canvas.height); } else { visualizerRunning = false; startVisualizer(); } syncVisualizerUI(); }); }
     const modes=document.getElementById('visualizerModes'); if (modes && !modes.dataset.bound) { modes.dataset.bound='1'; modes.addEventListener('click',(e)=>{ const m=e.target?.dataset?.mode; if(!m) return; applyMode(m); }); }
     [['vizFreq','freq'],['vizBass','bass'],['vizTreble','treble'],['vizSensitivity','sensitivity'],['vizBars','bars'],['vizSpeed','speed'],['vizGlow','glow'],['vizSmooth','smooth']].forEach(([id,k])=>{ const el=document.getElementById(id); if(!el||el.dataset.bound) return; el.dataset.bound='1'; el.addEventListener('input',()=>{ vizConfig[k]=Number(el.value); vizConfig.mode='Custom'; syncVisualizerUI(); }); });
     syncVisualizerUI();
@@ -1297,6 +1299,7 @@ function syncVisualizerUI(){
     const ids={vizFreq:'freq',vizBass:'bass',vizTreble:'treble',vizSensitivity:'sensitivity',vizBars:'bars',vizSpeed:'speed',vizGlow:'glow',vizSmooth:'smooth'};
     Object.entries(ids).forEach(([id,k])=>{const el=document.getElementById(id); if(el && Number(el.value)!==Number(vizConfig[k])) el.value=vizConfig[k];});
     document.querySelectorAll('#visualizerModes button').forEach(b=>b.classList.toggle('active', b.dataset.mode===vizConfig.mode));
+    const offToggle=document.getElementById('vizOffToggle'); if(offToggle) offToggle.checked=!vizConfig.off;
     if (analyser) analyser.smoothingTimeConstant = vizConfig.smooth/100;
     if (window.__vizBass) window.__vizBass.gain.value = vizConfig.bass;
     if (window.__vizTreble) window.__vizTreble.gain.value = vizConfig.treble;
@@ -1307,6 +1310,7 @@ window.addEventListener('resize', resizeCanvas);
 
 function drawVisualizer() {
     if (!visualizerRunning || !analyser) return;
+    if (vizConfig.off) { requestAnimationFrame(drawVisualizer); return; }
     requestAnimationFrame(drawVisualizer);
     const nextFftSize = toNearestValidFftSize(vizConfig.freq * 2);
     if (analyser.fftSize !== nextFftSize) analyser.fftSize = nextFftSize;
@@ -1323,7 +1327,7 @@ function drawVisualizer() {
     for(let i=0;i<count;i++){ const v=(dataArray[i*step]/255)*(h*0.74)*(vizConfig.sensitivity/100); const wave=Math.sin(vizConfig.phase+i*0.24)*(vizConfig.speed*0.6); ctx.fillRect(i*(bw+2), h-v-wave, bw, v+Math.max(0,wave)); }
 }
 
-function startVisualizer() { initVisualizer(); if (audioContext?.state==='suspended') audioContext.resume(); if (!visualizerRunning) { visualizerRunning=true; drawVisualizer(); } }
+function startVisualizer() { if (!audioContext) initVisualizer(); else if (audioContext?.state==='suspended') audioContext.resume(); resizeCanvas(); if (!visualizerRunning) { visualizerRunning=true; drawVisualizer(); } }
 function stopVisualizer() { visualizerRunning = false; }
 
 

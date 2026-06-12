@@ -2,7 +2,6 @@ import { MusicService } from "../services/MusicService.js";
 
 const musicService = new MusicService();
 
-// Declare global variables
 let audioPlayer,
     playPauseBtn,
     currentSongIndex = 0;
@@ -20,8 +19,6 @@ const durationCache = JSON.parse(localStorage.getItem('audioDurationCache') || '
 let filteredResults = null;
 let musicDataLoaded = false;
 const durationPromiseCache = new Map();
-const MUSIC_DATA_CACHE_KEY = "musicPageDataCacheV3";
-const MUSIC_DATA_CACHE_TTL_MS = 5 * 60 * 1000;
 let activeSearchQuery = "";
 let totalMusicCount = 0;
 let totalPagesCount = 1;
@@ -339,7 +336,6 @@ syncFullscreenButton(false);
 
 document.addEventListener("DOMContentLoaded", async () => {
     const root = document.documentElement;
-    // Always force dark theme on the music page, regardless of saved preference from other pages
     root.setAttribute("data-theme", "dark");
 
     applyQueryParamsFromUrl();
@@ -477,27 +473,6 @@ async function playSongByGlobalIndex(globalIndex, { recordShuffleHistory = false
 }
 
 async function loadMusicData() {
-    const cacheKey = `${MUSIC_DATA_CACHE_KEY}:${currentPage}:${itemsPerPage}:${activeSearchQuery}`;
-    try {
-        const cachedRaw = sessionStorage.getItem(cacheKey);
-        if (cachedRaw) {
-            const cached = JSON.parse(cachedRaw);
-            if (
-                cached &&
-                Array.isArray(cached.music) &&
-                typeof cached.savedAt === "number" &&
-                Date.now() - cached.savedAt < MUSIC_DATA_CACHE_TTL_MS
-            ) {
-                totalMusicCount = Number(cached.totalMusic || cached.music.length || 0);
-                totalPagesCount = Math.max(1, Number(cached.totalPages || 1));
-                currentPage = Math.max(1, Number(cached.page || currentPage));
-                return cached.music;
-            }
-        }
-    } catch (error) {
-        console.warn("Music cache read failed:", error);
-    }
-
     const params = new URLSearchParams();
     params.set("page", String(currentPage));
     params.set("per_page", String(itemsPerPage));
@@ -510,21 +485,6 @@ async function loadMusicData() {
     totalMusicCount = Number(result?.total_music || 0);
     totalPagesCount = Math.max(1, Number(result?.total_pages || 1));
     currentPage = Math.max(1, Number(result?.page || currentPage));
-
-    try {
-        sessionStorage.setItem(
-            cacheKey,
-            JSON.stringify({
-                savedAt: Date.now(),
-                music: items,
-                totalMusic: totalMusicCount,
-                totalPages: totalPagesCount,
-                page: currentPage,
-            })
-        );
-    } catch (error) {
-        console.warn("Music cache write failed:", error);
-    }
 
     return items;
 }
@@ -559,7 +519,7 @@ function selectFirstSong() {
         return;
     }
 
-    currentSongIndex = Math.floor(Math.random() * musicData.length); // Randomly select an index
+    currentSongIndex = Math.floor(Math.random() * musicData.length);
     const song = musicData[currentSongIndex];
     currentSongData = song;
     setAudioSrcForSong(song);
@@ -589,7 +549,6 @@ function playSong(index) {
     syncPlayPauseButton();
     markGlobalSongAsPlayed(getCurrentGlobalSongIndex());
 
-    // ✅ Re-render the current page only
     renderList(song.id);
 }
 
@@ -714,7 +673,6 @@ function copyLink(url = null) {
         return;
     }
 
-    // ✅ Modern secure method
     if (navigator.clipboard && window.isSecureContext) {
         navigator.clipboard
             .writeText(textToCopy)
@@ -724,12 +682,10 @@ function copyLink(url = null) {
                 fallbackCopy(textToCopy);
             });
     } else {
-        // ✅ Fallback method for HTTP or unsupported browsers
         fallbackCopy(textToCopy);
     }
 }
 
-// Fallback using <textarea> + execCommand
 function fallbackCopy(text) {
     const textarea = document.createElement("textarea");
     textarea.value = text;
@@ -824,8 +780,7 @@ function setMusicMobileFullscreenMode(isActive) {
     }
 
     if (fullscreenBtn) {
-        // Legacy text fallback; syncFullscreenButton will render icon markup.
-        fullscreenBtn.textContent = isActive ? "â®Œ" : "â›¶";
+        fullscreenBtn.textContent = isActive ? "⮌" : "⛶";
     }
 
     syncFullscreenButton(Boolean(isActive));
@@ -946,11 +901,10 @@ function renderTracks(tracks, activeSongId = null) {
     for (let i = 0; i < tracks.length; i++) {
         const track = tracks[i];
 
-        // ✅ Detect whether this song is active (either by ID or index)
         const isActive =
             track.id === activeSongId ||
             (filteredResults
-                ? i === currentSongIndex // use filtered index
+                ? i === currentSongIndex
                 : musicData.indexOf(track) === currentSongIndex);
 
         const div = document.createElement("div");
@@ -1089,7 +1043,6 @@ function seek(event) {
     const wasPaused = audioPlayer.paused;
     audioPlayer.currentTime = seekTime;
 
-    // ✅ Only play if it was already playing
     if (wasPaused) {
         audioPlayer.pause();
     }
@@ -1128,7 +1081,6 @@ progressBar.addEventListener("mousedown", (event) => {
     seek(event);
 });
 
-// --- Desktop Mouse Events ---
 document.addEventListener("mousemove", (event) => {
     if (isDragging) {
         seek(event);
@@ -1140,11 +1092,10 @@ document.addEventListener("mouseup", () => {
     if (!isMobileDevice()) startVisualizer();
 });
 
-// --- Mobile Touch Events ---
 progressBar.addEventListener("touchstart", (event) => {
     isDragging = true;
     if (!isMobileDevice()) stopVisualizer();
-    seek(event.touches[0]); // First touch point
+    seek(event.touches[0]);
 });
 
 document.addEventListener("touchmove", (event) => {
@@ -1164,12 +1115,11 @@ audioPlayer.addEventListener("ended", () => {
         playNextSongOrNextPage();
     }
 });
-// Add volume control
+
 const volumeSlider = document.getElementById("volumeSlider");
 volumeSlider.addEventListener("input", (e) => updateVolume(e.target.value));
 
 
-// Toggle navbar menu visibility
 document.getElementById("navbarToggle").addEventListener("click", () => {
     const sidebar = document.getElementById("sidebar");
     const toggleButton = document.getElementById("navbarToggle");
@@ -1210,7 +1160,6 @@ if (desktopMediaDropdown && desktopMediaTrigger) {
     });
 }
 
-// Close sidebar when clicking outside
 document.addEventListener("click", function (e) {
     const sidebar = document.getElementById("sidebar");
     const toggle = document.getElementById("navbarToggle");
@@ -1228,7 +1177,6 @@ document.addEventListener("click", function (e) {
     }
 });
 
-// Initialize autoplay from localStorage
 autoplayEnabled = localStorage.getItem("autoplay") !== "false";
 shuffleEnabled = localStorage.getItem("musicShuffle") === "true";
 const autoplayBtn = document.getElementById("autoplayBtn");
@@ -1244,7 +1192,7 @@ async function handleSearch(query) {
     query = query.trim().toLowerCase();
 
     activeSearchQuery = query;
-    filteredResults = null; // server-side filtering now
+    filteredResults = null;
     currentPage = 1;
     requestUrlHistoryPush();
     showTripleLoading?.();
@@ -1378,4 +1326,3 @@ window.nextSong = nextSong;
 window.toggleShuffle = toggleShuffle;
 window.toggleAutoplay = toggleAutoplay;
 window.toggleFullscreen = toggleFullscreen;
-

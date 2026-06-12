@@ -23,6 +23,9 @@ let activeSearchQuery = "";
 let totalMusicCount = 0;
 let totalPagesCount = 1;
 let currentSongData = null;
+const voteStateCache = {};
+// Expose globally so music_like.js can read/write vote state
+window.voteStateCache = voteStateCache;
 musicList = document.getElementById("musicList");
 audioPlayer = document.getElementById("audioPlayer");
 const nowPlaying = document.getElementById("nowPlaying");
@@ -72,10 +75,10 @@ function persistActiveSongId(songId) {
     }
 }
 
-function updateActiveSongDisplay(song, { prefix = "Now Playing:" } = {}) {
+function updateActiveSongDisplay(song, { prefix = "" } = {}) {
     if (!song) return;
     if (nowPlaying) {
-        nowPlaying.textContent = `${prefix} ${song.title}`;
+        nowPlaying.innerHTML = `<ion-icon name="musical-notes-outline"></ion-icon> ${song.title}`;
     }
     if (coverImg) {
         coverImg.src = song.image;
@@ -900,6 +903,7 @@ function renderTracks(tracks, activeSongId = null) {
 
     for (let i = 0; i < tracks.length; i++) {
         const track = tracks[i];
+        const cachedVote = voteStateCache[track.id];
 
         const isActive =
             track.id === activeSongId ||
@@ -911,6 +915,10 @@ function renderTracks(tracks, activeSongId = null) {
         div.className = "music-item" + (isActive ? " active" : "");
 
         const cachedDuration = track.duration || durationCache[track.url] || 0;
+        const likeCount = cachedVote ? cachedVote.like_counts : 0;
+        const dislikeCount = cachedVote ? cachedVote.dislike_counts : 0;
+        const likeVoted = cachedVote && cachedVote.user_vote === true;
+        const dislikeVoted = cachedVote && cachedVote.user_vote === false;
 
         div.innerHTML = `
             <div class="left-content">
@@ -923,20 +931,25 @@ function renderTracks(tracks, activeSongId = null) {
                     <span class="artist">${track.artist}</span>
                 </div>
             </div>
-            <div class="share-section">
-                <span class="duration">${cachedDuration ? formatTime(cachedDuration) : "--:--"}</span>
-                <button class="copy-btn"><ion-icon name="copy-outline"></ion-icon></button>
+            <div class="music-item-actions">
+                <div class="vote-group">
+                    <button class="vote-btn like-btn${likeVoted ? " voted" : ""}" data-music-id="${track.id}" data-vote="1" type="button" aria-label="Like">
+                        <ion-icon name="thumbs-up-outline"></ion-icon>
+                        <span class="vote-count">${likeCount}</span>
+                    </button>
+                    <button class="vote-btn dislike-btn${dislikeVoted ? " voted" : ""}" data-music-id="${track.id}" data-vote="0" type="button" aria-label="Dislike">
+                        <ion-icon name="thumbs-down-outline"></ion-icon>
+                        <span class="vote-count">${dislikeCount}</span>
+                    </button>
+                </div>
+                <div class="duration-row">
+                    <span class="duration">${cachedDuration ? formatTime(cachedDuration) : "--:--"}</span>
+                </div>
             </div>
         `;
 
         div.addEventListener("click", () => {
             playSong(i);
-        });
-
-        const copyBtn = div.querySelector(".copy-btn");
-        copyBtn.addEventListener("click", (event) => {
-            event.stopPropagation();
-            copyLink(track.url);
         });
 
         const durationEl = div.querySelector(".duration");

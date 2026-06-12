@@ -15,6 +15,7 @@
 
     <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='images/favicon.ico') }}">
     <link rel="stylesheet" href="{{ static_asset('css/pages/music.css') }}" />
+    <link rel="stylesheet" href="{{ static_asset('css/pages/music_like.css') }}" />
     <link rel="stylesheet" href="{{ static_asset('css/themes.css') }}" />
     {{ vite_hmr() }}
     {{ template_livereload() }}
@@ -183,7 +184,7 @@
                     src="https://res.cloudinary.com/dviqx0o48/image/upload/v1744089628/o388ezfg1maax9dcrgpj_zd1zyc.jpg"
                     alt="Cover Art" />
             </div>
-            <div class="now-playing" id="nowPlaying">Select a song</div>
+            <div class="now-playing" id="nowPlaying"><ion-icon name="musical-notes-outline"></ion-icon> Select a song</div>
             <div id="visualizerSettingsPanel" class="visualizer-settings" aria-hidden="true">
                 <div class="visualizer-settings__header">
                     <h3>Visualizer Settings</h3>
@@ -287,6 +288,7 @@
         </aside>
     </div>
     <script type="module" src="{{ static_asset('js/pages/music.js') }}"></script>
+    <script src="{{ static_asset('js/pages/music_like.js') }}"></script>
 </body>
 
 </html>

@@ -1,7 +1,8 @@
 .music-item-actions {
     display: flex;
-    align-items: center;
-    gap: 8px;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 4px;
     flex-shrink: 0;
 }
 
@@ -62,6 +63,28 @@
     text-align: center;
 }
 
+.duration-row {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.duration-row .duration {
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.5);
+    font-weight: 500;
+    letter-spacing: 0.3px;
+}
+
+.vote-btn-spin {
+    animation: voteSpin 0.6s linear infinite;
+}
+
+@keyframes voteSpin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
 .share-section {
     display: flex;
     align-items: center;
@@ -72,7 +95,7 @@
 @media (max-width: 768px) {
     .music-item-actions {
         flex-wrap: wrap;
-        gap: 6px;
+        gap: 4px;
     }
     .vote-group {
         gap: 3px;
@@ -86,6 +109,9 @@
         font-size: 12px;
     }
     .vote-count {
+        font-size: 10px;
+    }
+    .duration-row .duration {
         font-size: 10px;
     }
 }

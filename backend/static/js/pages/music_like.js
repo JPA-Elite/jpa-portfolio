@@ -1,43 +1,147 @@
 (function() {
     var list = document.getElementById("musicList") || document.querySelector(".music-list-items");
-    function initVotes() {
-        var btns = document.querySelectorAll(".vote-btn");
-        if (!btns.length) return;
+
+    var initInFlight = false;
+    var initQueued = false;
+    var lastInitKey = "";
+    var initDebounceTimer = null;
+
+    function getCurrentVoteButtonsKey() {
+        // Used to avoid re-syncing counts for the same rendered set.
+        var btns = document.querySelectorAll(".vote-btn, .dislike-btn");
+        if (!btns || !btns.length) return "";
         var ids = [];
         btns.forEach(function(b) {
-            b.removeEventListener("click", handleVote);
-            b.addEventListener("click", handleVote);
+            var mid = b.dataset && b.dataset.musicId;
+            if (mid) ids.push(String(mid));
+        });
+        ids.sort();
+        // Deduplicate
+        var out = [];
+        for (var i = 0; i < ids.length; i++) {
+            if (ids[i] !== ids[i - 1]) out.push(ids[i]);
+        }
+        return out.join(",");
+    }
+
+    function initVotes() {
+        if (initInFlight) {
+            initQueued = true;
+            return;
+        }
+
+        if (!list || !list.isConnected) return;
+
+        var currentKey = getCurrentVoteButtonsKey();
+        if (!currentKey) return;
+        if (currentKey === lastInitKey) return;
+
+        initInFlight = true;
+        initQueued = false;
+        lastInitKey = currentKey;
+
+        var btns = document.querySelectorAll(".vote-btn");
+        if (!btns.length) {
+            initInFlight = false;
+            return;
+        }
+
+        var ids = [];
+        btns.forEach(function(b) {
             var mid = b.dataset.musicId;
             if (mid && ids.indexOf(mid) === -1) ids.push(mid);
         });
-        if (!ids.length) return;
+        if (!ids.length) {
+            initInFlight = false;
+            return;
+        }
+
         fetch("/api/music-like/counts/batch?music_ids=" + encodeURIComponent(ids.join(",")))
             .then(function(r) { return r.json(); })
             .then(function(d) {
                 var items = d.items || {};
+
+                // Update counts & voted state, but do it only once per sync.
+                // Also store in voteStateCache for when music.js re-renders the list.
+                var voteStateCache = window.voteStateCache || {};
+                var cacheChanged = false;
                 Object.entries(items).forEach(function(entry) {
                     var id = entry[0], data = entry[1];
-                    document.querySelectorAll('.like-btn[data-music-id="' + id + '"]').forEach(function(b) {
-                        var c = b.querySelector(".vote-count");
-                        if (c) c.textContent = data.like_counts || 0;
-                        b.classList.toggle("voted", data.user_vote === true);
-                    });
-                    document.querySelectorAll('.dislike-btn[data-music-id="' + id + '"]').forEach(function(b) {
-                        var c = b.querySelector(".vote-count");
-                        if (c) c.textContent = data.dislike_counts || 0;
-                        b.classList.toggle("voted", data.user_vote === false);
-                    });
+
+                    // Store in cache for music.js to use on re-render
+                    if (voteStateCache) {
+                        voteStateCache[id] = data;
+                        cacheChanged = true;
+                    }
+
+                    document.querySelectorAll('.like-btn[data-music-id="' + id + '"]')
+                        .forEach(function(b) {
+                            var c = b.querySelector(".vote-count");
+                            if (c) c.textContent = data.like_counts || 0;
+                            b.classList.toggle("voted", data.user_vote === true);
+                        });
+
+                    document.querySelectorAll('.dislike-btn[data-music-id="' + id + '"]')
+                        .forEach(function(b) {
+                            var c = b.querySelector(".vote-count");
+                            if (c) c.textContent = data.dislike_counts || 0;
+                            b.classList.toggle("voted", data.user_vote === false);
+                        });
                 });
+                if (cacheChanged && window.voteStateCache) {
+                    window.voteStateCache = voteStateCache;
+                }
             })
-            .catch(function() {});
+            .catch(function() {
+                // Keep UI stable on failures.
+            })
+            .finally(function() {
+                initInFlight = false;
+                if (initQueued) {
+                    // If DOM changed during request, sync again once.
+                    initVotes();
+                }
+            });
     }
+
+    function scheduleInitVotes(reason) {
+        if (initDebounceTimer) clearTimeout(initDebounceTimer);
+        initDebounceTimer = setTimeout(function() {
+            initDebounceTimer = null;
+            initVotes();
+        }, 300);
+    }
+
+    function setLoading(btn, loading) {
+        var icon = btn.querySelector("ion-icon");
+        if (!icon) return;
+
+        if (loading) {
+            btn._origIcon = icon.getAttribute("name");
+            icon.setAttribute("name", "reload-outline");
+            icon.classList.add("vote-btn-spin");
+            btn.disabled = true;
+        } else {
+            if (btn._origIcon) icon.setAttribute("name", btn._origIcon);
+            icon.classList.remove("vote-btn-spin");
+            btn.disabled = false;
+        }
+    }
+
     function handleVote(e) {
+        e.stopPropagation();
+
         var btn = e.currentTarget;
         var musicId = btn.dataset.musicId;
         var isLike = btn.dataset.vote === "1";
+
         var parent = btn.parentElement;
         var likeBtn = parent.querySelector(".like-btn");
         var dislikeBtn = parent.querySelector(".dislike-btn");
+
+        setLoading(btn, true);
+
+        // Keep immediate UI update path, then refresh counts for this item set.
         fetch("/api/music-like/vote", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -47,23 +151,70 @@
         .then(function() {
             var params = new URLSearchParams();
             params.set("music_id", musicId);
-            fetch("/api/music-like/counts?" + params)
-                .then(function(r) { return r.json(); })
-                .then(function(data) {
-                    var lc = likeBtn.querySelector(".vote-count");
-                    var dc = dislikeBtn.querySelector(".vote-count");
-                    if (lc) lc.textContent = data.like_counts || 0;
-                    if (dc) dc.textContent = data.dislike_counts || 0;
-                    likeBtn.classList.toggle("voted", data.user_vote === true);
-                    dislikeBtn.classList.toggle("voted", data.user_vote === false);
-                })
-                .catch(function() {});
+            return fetch("/api/music-like/counts?" + params).then(function(r) { return r.json(); });
         })
-        .catch(function() {});
+        .then(function(data) {
+            var lc = likeBtn && likeBtn.querySelector(".vote-count");
+            var dc = dislikeBtn && dislikeBtn.querySelector(".vote-count");
+            if (lc) lc.textContent = data.like_counts || 0;
+            if (dc) dc.textContent = data.dislike_counts || 0;
+
+            if (likeBtn) likeBtn.classList.toggle("voted", data.user_vote === true);
+            if (dislikeBtn) dislikeBtn.classList.toggle("voted", data.user_vote === false);
+
+            // Store in voteStateCache so music.js uses cached values on re-render
+            var voteStateCache = window.voteStateCache;
+            if (voteStateCache && data.music_id) {
+                voteStateCache[data.music_id] = data;
+            }
+
+            // Counts are now correct for the updated item; refresh batch after a short debounce.
+            scheduleInitVotes("vote-completed");
+
+            setLoading(btn, false);
+        })
+        .catch(function() {
+            setLoading(btn, false);
+        });
     }
+
+    // Attach click handlers once when buttons are present.
+    function ensureHandlers() {
+        var btns = document.querySelectorAll(".vote-btn");
+        if (!btns.length) return;
+        btns.forEach(function(b) {
+            b.removeEventListener("click", handleVote);
+            b.addEventListener("click", handleVote);
+        });
+    }
+
+    function maybeStartObserver() {
+        if (!list) return;
+
+        var obs = new MutationObserver(function() {
+            // DOM changes happen on selection/pagination; debounce to avoid flicker.
+            ensureHandlers();
+            scheduleInitVotes("dom-change");
+        });
+
+        obs.observe(list, { childList: true, subtree: true });
+    }
+
     if (list) {
-        new MutationObserver(function() { setTimeout(initVotes, 100); }).observe(list, { childList: true, subtree: true });
+        ensureHandlers();
+        maybeStartObserver();
     }
-    document.addEventListener("DOMContentLoaded", function() { setTimeout(initVotes, 600); });
-    setTimeout(initVotes, 1000);
+
+    document.addEventListener("DOMContentLoaded", function() {
+        ensureHandlers();
+        initVotes();
+    });
+
+    // Fallback if script runs after list already rendered.
+    setTimeout(function() {
+        ensureHandlers();
+        scheduleInitVotes("fallback");
+    }, 800);
 })();
+
+

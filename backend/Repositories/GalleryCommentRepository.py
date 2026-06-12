@@ -1,9 +1,10 @@
 from backend.Repositories.BaseRepository import BaseRepository
+from backend.Repositories.Interfaces.IGalleryCommentRepository import IGalleryCommentRepository
 from backend.constants.db_collections import MongoCollections as mc
 from bson import ObjectId
 from backend.Models.GalleryComment import GalleryComment
 
-class GalleryCommentRepository(BaseRepository):
+class GalleryCommentRepository(IGalleryCommentRepository, BaseRepository):
     def __init__(self):
         super().__init__(mc.GALLERY_COMMENTS)
 
@@ -29,4 +30,3 @@ class GalleryCommentRepository(BaseRepository):
             {"_id": ObjectId(comment["_id"])},
             {"$set": comment}
         )
-

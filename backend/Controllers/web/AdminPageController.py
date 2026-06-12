@@ -23,7 +23,7 @@ from backend.utils import verify_hcaptcha
 from backend.forms.LoginForm import LoginForm
 from backend.security import AdminLoginSecurity, get_request_ip
 
-# Initialize Services
+# Initialize Services 
 auth_service = AuthService(
     repository=AuthRepository(),
     attempt_repository=LoginAttemptRepository()

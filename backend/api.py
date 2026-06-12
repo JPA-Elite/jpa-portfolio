@@ -33,6 +33,11 @@ from backend.Controllers.api.GalleryLikeController import (
     get_gallery_likes_count_route,
     get_gallery_likes_counts_batch_route,
 )
+from backend.Controllers.api.MusicLikeController import (
+    music_like_counts_route,
+    music_like_counts_batch_route,
+    music_toggle_vote_route,
+)
 from backend.Controllers.api.DashboardController import visits_info_route, recent_activity_route, dashboard_summary_route, visits_list_route, visits_delete_route, recent_activity_delete_route, clear_all_visitors_route, clear_all_activity_route
 from backend.Repositories.ActivityLogRepository import ActivityLogRepository
 from backend.Controllers.api.LoginAttemptController import login_attempt_list_route, delete_login_attempt_route
@@ -145,6 +150,19 @@ def get_vlog_likes_count_batch():
 @api_bp.route("/api/vlog-like", methods=[http.POST])
 def add_vlog_like():
     return add_vlog_like_route()
+
+# Music Likes API
+@api_bp.route("/api/music-like/counts", methods=[http.GET])
+def music_like_counts():
+    return music_like_counts_route()
+
+@api_bp.route("/api/music-like/counts/batch", methods=[http.GET])
+def music_like_counts_batch():
+    return music_like_counts_batch_route()
+
+@api_bp.route("/api/music-like/vote", methods=[http.POST])
+def music_toggle_vote():
+    return music_toggle_vote_route()
 
 # Gallery Comments API
 @api_bp.route("/api/gallery-comments", methods=[http.GET, http.POST])

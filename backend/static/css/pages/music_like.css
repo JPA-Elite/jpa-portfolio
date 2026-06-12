@@ -1,0 +1,91 @@
+.music-item-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+.vote-group {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.vote-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 6px 8px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.04);
+    color: rgba(255, 255, 255, 0.7);
+    cursor: pointer;
+    font-size: 12px;
+    transition: all 0.2s ease;
+    font-family: inherit;
+    min-width: 48px;
+    justify-content: center;
+}
+
+.vote-btn:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.25);
+    transform: translateY(-1px);
+}
+
+.vote-btn.voted {
+    border-color: transparent;
+}
+
+.vote-btn.like-btn.voted {
+    background: linear-gradient(135deg, #2962ff, #1565c0);
+    color: #fff;
+    box-shadow: 0 4px 12px rgba(41, 98, 255, 0.3);
+}
+
+.vote-btn.dislike-btn.voted {
+    background: linear-gradient(135deg, #dc3545, #b02a37);
+    color: #fff;
+    box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);
+}
+
+.vote-btn ion-icon {
+    font-size: 14px;
+    pointer-events: none;
+}
+
+.vote-count {
+    font-weight: 600;
+    font-size: 11px;
+    min-width: 1.2em;
+    text-align: center;
+}
+
+.share-section {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 0;
+}
+
+@media (max-width: 768px) {
+    .music-item-actions {
+        flex-wrap: wrap;
+        gap: 6px;
+    }
+    .vote-group {
+        gap: 3px;
+    }
+    .vote-btn {
+        padding: 5px 6px;
+        font-size: 11px;
+        min-width: 40px;
+    }
+    .vote-btn ion-icon {
+        font-size: 12px;
+    }
+    .vote-count {
+        font-size: 10px;
+    }
+}

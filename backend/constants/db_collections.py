@@ -18,3 +18,4 @@ class MongoCollections:
     VIDEO_COMMENTS = "video_comments"
     LOGIN_ATTEMPTS = "login_attempts"
     ACTIVITY_LOGS = "activity_logs"
+    MUSIC_LIKES = "music_likes"

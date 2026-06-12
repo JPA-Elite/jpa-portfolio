@@ -1,9 +1,10 @@
 from backend.Repositories.BaseRepository import BaseRepository
+from backend.Repositories.Interfaces.IVlogCommentRepository import IVlogCommentRepository
 from backend.constants.db_collections import MongoCollections as mc
 from bson import ObjectId
 from backend.Models.VlogComment import VlogComment
 
-class VlogCommentRepository(BaseRepository):
+class VlogCommentRepository(IVlogCommentRepository, BaseRepository):
     def __init__(self):
         super().__init__(mc.VIDEO_COMMENTS)
 
@@ -52,4 +53,3 @@ class VlogCommentRepository(BaseRepository):
             {"_id": ObjectId(comment["_id"])},
             {"$set": comment}
         )
-

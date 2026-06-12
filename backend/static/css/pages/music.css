@@ -393,12 +393,15 @@ main {
 
 .now-playing {
     font-size: 22px;
-    color: #000;
+    color: white;
     margin-bottom: 10px;
-    background: white;
+    background: transparent;
     padding: 10px 20px;
     border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
 }
 
 #playerNowPlaying {

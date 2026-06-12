@@ -45,3 +45,6 @@ backend/dist/frontend/
 
 # Continue package-specific ignores
 .continue/
+
+#Ignore rule file from blackbox
+.blackboxrules

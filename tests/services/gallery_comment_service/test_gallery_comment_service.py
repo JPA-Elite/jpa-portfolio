@@ -1,7 +1,7 @@
 import unittest
 from unittest.mock import MagicMock
 
-from backend.Services.GalleryCommentService import GalleryCommentService
+from app.Services.GalleryCommentService import GalleryCommentService
 
 from tests.services._service_fixtures import comment_doc
 from tests.test_support import VALID_OBJECT_ID

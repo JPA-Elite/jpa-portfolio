@@ -1,7 +1,7 @@
 import unittest
 from unittest.mock import MagicMock
 
-from backend.Services.CompanyRoadmapService import CompanyRoadmapService
+from app.Services.CompanyRoadmapService import CompanyRoadmapService
 
 
 class CompanyRoadmapServiceI18nTests(unittest.TestCase):

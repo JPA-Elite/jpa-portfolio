@@ -1,8 +1,8 @@
 import unittest
 from unittest.mock import MagicMock, patch
 
-from backend.Services.VideoService import VideoService
-from backend.configurations import SortOrder
+from app.Services.VideoService import VideoService
+from app.configurations import SortOrder
 
 from tests.services._service_fixtures import video_doc
 
@@ -66,7 +66,7 @@ class VideoServiceTests(unittest.TestCase):
         self.assertEqual(updated["title"]["en"], "Updated")
         self.assertEqual(updated["tags"], ["x"])
 
-    @patch("backend.Services.VideoService.cleanup_uploaded_files")
+    @patch("app.Services.VideoService.cleanup_uploaded_files")
     def test_delete_video_cleans_up_and_deletes(self, mock_cleanup):
         self.repo.get_video_by_id.return_value = video_doc()
         self.repo.delete_video.return_value = True

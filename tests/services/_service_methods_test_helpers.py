@@ -141,7 +141,7 @@ def _service_public_methods(service_cls):
 
 
 def _load_service_class(module_name: str, class_name: str):
-    module = importlib.import_module(f"backend.Services.{module_name}")
+    module = importlib.import_module(f"app.Services.{module_name}")
     return module, getattr(module, class_name)
 
 
@@ -247,7 +247,7 @@ def _dummy_service_arg(service_name, method_name, param_name):
     if param_name in {"per_page", "limit"}:
         return 5
     if param_name == "order":
-        from backend.configurations import SortOrder
+        from app.configurations import SortOrder
         return SortOrder.ASC
     if param_name == "search_query":
         return "test"
@@ -316,34 +316,34 @@ def _dummy_service_arg(service_name, method_name, param_name):
 
 def _patch_targets():
     return [
-        ("backend.Services.AuthService.check_password_hash", lambda *_args, **_kwargs: True),
-        ("backend.Services.AuthService.generate_password_hash", lambda value: f"hashed:{value}"),
-        ("backend.Services.GalleryService.cleanup_uploaded_files", lambda *a, **k: None),
-        ("backend.Services.GalleryService.convert_to_webp", lambda path: path),
-        ("backend.Services.GalleryService.upload_file_to_cloudinary", lambda *a, **k: "/uploaded.webp"),
-        ("backend.Services.VideoService.cleanup_uploaded_files", lambda *a, **k: None),
-        ("backend.Services.VideoService.upload_file_to_cloudinary", lambda *a, **k: "/uploaded.mp4"),
-        ("backend.Services.MusicService.cleanup_uploaded_files", lambda *a, **k: None),
-        ("backend.Services.MusicService.convert_to_webp", lambda path: path),
-        ("backend.Services.MusicService.upload_file_to_cloudinary", lambda *a, **k: "/uploaded"),
-        ("backend.Services.MusicService.MutagenFile", lambda *_a, **_k: SimpleNamespace(info=SimpleNamespace(length=61.2))),
-        ("backend.Services.KeyProjectService.cleanup_uploaded_files", lambda *a, **k: None),
-        ("backend.Services.KeyProjectService.convert_to_webp", lambda path: path),
-        ("backend.Services.KeyProjectService.upload_file_to_cloudinary", lambda *a, **k: "/uploaded.webp"),
-        ("backend.Services.CompanyRoadmapService.cleanup_uploaded_files", lambda *a, **k: None),
-        ("backend.Services.CompanyRoadmapService.convert_to_webp", lambda path: path),
-        ("backend.Services.CompanyRoadmapService.upload_file_to_cloudinary", lambda *a, **k: "/uploaded.webp"),
-        ("backend.Services.VisitService.delete_image_from_cloudinary", lambda *a, **k: None),
-        ("backend.Services.PortfolioService.parse", lambda *_a, **_k: _fake_user_agent()),
-        ("backend.Services.PortfolioService.url_for", lambda *_a, **_k: "/profile"),
-        ("backend.Services.PortfolioService.requests.get", lambda *_a, **_k: SimpleNamespace(json=lambda: {})),
-        ("backend.Services.PortfolioService.pytz.timezone", lambda *_a, **_k: timezone.utc),
-        ("backend.Services.PortfolioService.platform.system", lambda: "Windows"),
-        ("backend.Services.PortfolioService.platform.node", lambda: "PC"),
-        ("backend.Services.PortfolioService.platform.release", lambda: "11"),
-        ("backend.Services.PortfolioService.platform.version", lambda: "Version"),
-        ("backend.Services.PortfolioService.platform.platform", lambda: "Windows"),
-        ("backend.Services.PortfolioService.platform.architecture", lambda: ("64bit", "")),
+        ("app.Services.AuthService.check_password_hash", lambda *_args, **_kwargs: True),
+        ("app.Services.AuthService.generate_password_hash", lambda value: f"hashed:{value}"),
+        ("app.Services.GalleryService.cleanup_uploaded_files", lambda *a, **k: None),
+        ("app.Services.GalleryService.convert_to_webp", lambda path: path),
+        ("app.Services.GalleryService.upload_file_to_cloudinary", lambda *a, **k: "/uploaded.webp"),
+        ("app.Services.VideoService.cleanup_uploaded_files", lambda *a, **k: None),
+        ("app.Services.VideoService.upload_file_to_cloudinary", lambda *a, **k: "/uploaded.mp4"),
+        ("app.Services.MusicService.cleanup_uploaded_files", lambda *a, **k: None),
+        ("app.Services.MusicService.convert_to_webp", lambda path: path),
+        ("app.Services.MusicService.upload_file_to_cloudinary", lambda *a, **k: "/uploaded"),
+        ("app.Services.MusicService.MutagenFile", lambda *_a, **_k: SimpleNamespace(info=SimpleNamespace(length=61.2))),
+        ("app.Services.KeyProjectService.cleanup_uploaded_files", lambda *a, **k: None),
+        ("app.Services.KeyProjectService.convert_to_webp", lambda path: path),
+        ("app.Services.KeyProjectService.upload_file_to_cloudinary", lambda *a, **k: "/uploaded.webp"),
+        ("app.Services.CompanyRoadmapService.cleanup_uploaded_files", lambda *a, **k: None),
+        ("app.Services.CompanyRoadmapService.convert_to_webp", lambda path: path),
+        ("app.Services.CompanyRoadmapService.upload_file_to_cloudinary", lambda *a, **k: "/uploaded.webp"),
+        ("app.Services.VisitService.delete_image_from_cloudinary", lambda *a, **k: None),
+        ("app.Services.PortfolioService.parse", lambda *_a, **_k: _fake_user_agent()),
+        ("app.Services.PortfolioService.url_for", lambda *_a, **_k: "/profile"),
+        ("app.Services.PortfolioService.requests.get", lambda *_a, **_k: SimpleNamespace(json=lambda: {})),
+        ("app.Services.PortfolioService.pytz.timezone", lambda *_a, **_k: timezone.utc),
+        ("app.Services.PortfolioService.platform.system", lambda: "Windows"),
+        ("app.Services.PortfolioService.platform.node", lambda: "PC"),
+        ("app.Services.PortfolioService.platform.release", lambda: "11"),
+        ("app.Services.PortfolioService.platform.version", lambda: "Version"),
+        ("app.Services.PortfolioService.platform.platform", lambda: "Windows"),
+        ("app.Services.PortfolioService.platform.architecture", lambda: ("64bit", "")),
     ]
 
 

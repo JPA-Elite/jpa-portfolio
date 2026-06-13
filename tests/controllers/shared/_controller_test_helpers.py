@@ -6,7 +6,7 @@ from unittest.mock import MagicMock, patch
 
 from flask import Flask, Response
 
-from backend.Repositories.BaseRepository import BaseRepository
+from app.Repositories.BaseRepository import BaseRepository
 from tests.test_support import VALID_OBJECT_ID
 
 
@@ -375,24 +375,24 @@ def _request_context_kwargs(module_path: str, function_name: str):
     }
 
     json_routes = {
-        "backend.Controllers.api.BaseController.delete_page_system_info_route",
-        "backend.Controllers.api.AuthController.update_profile_route",
-        "backend.Controllers.api.GalleryCommentController.gallery_like_comment_route",
-        "backend.Controllers.api.VlogCommentController.vlog_like_comment_route",
+        "app.Controllers.api.BaseController.delete_page_system_info_route",
+        "app.Controllers.api.AuthController.update_profile_route",
+        "app.Controllers.api.GalleryCommentController.gallery_like_comment_route",
+        "app.Controllers.api.VlogCommentController.vlog_like_comment_route",
     }
     form_post_routes = {
-        "backend.Controllers.api.GalleryLikeController.add_gallery_like_route",
-        "backend.Controllers.api.VlogLikeController.add_vlog_like_route",
-        "backend.Controllers.api.GalleryController.add_gallery_route",
-        "backend.Controllers.api.GalleryController.update_gallery_route",
-        "backend.Controllers.api.VideoController.add_video_route",
-        "backend.Controllers.api.VideoController.update_video_route",
-        "backend.Controllers.api.MusicController.add_music_route",
-        "backend.Controllers.api.MusicController.update_music_route",
-        "backend.Controllers.api.KeyProjectController.add_key_project_route",
-        "backend.Controllers.api.KeyProjectController.update_key_project_route",
-        "backend.Controllers.api.CompanyRoadmapController.add_company_roadmap_route",
-        "backend.Controllers.api.CompanyRoadmapController.update_company_roadmap_route",
+        "app.Controllers.api.GalleryLikeController.add_gallery_like_route",
+        "app.Controllers.api.VlogLikeController.add_vlog_like_route",
+        "app.Controllers.api.GalleryController.add_gallery_route",
+        "app.Controllers.api.GalleryController.update_gallery_route",
+        "app.Controllers.api.VideoController.add_video_route",
+        "app.Controllers.api.VideoController.update_video_route",
+        "app.Controllers.api.MusicController.add_music_route",
+        "app.Controllers.api.MusicController.update_music_route",
+        "app.Controllers.api.KeyProjectController.add_key_project_route",
+        "app.Controllers.api.KeyProjectController.update_key_project_route",
+        "app.Controllers.api.CompanyRoadmapController.add_company_roadmap_route",
+        "app.Controllers.api.CompanyRoadmapController.update_company_roadmap_route",
     }
 
     route_key = f"{module_path}.{function_name}"

@@ -1,0 +1,582 @@
+# Filipino (Philippines) translations for PROJECT.
+# Copyright (C) 2024 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2024.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2024-10-15 11:53+0800\n"
+"PO-Revision-Date: 2024-10-15 22:00+0800\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: fil_PH\n"
+"Language-Team: fil_PH <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.16.0\n"
+
+msgid "Contact_Me"
+msgstr "Makipag-ugnay"
+
+msgid "Certifications"
+msgstr "Mga Sertipikasyon"
+
+msgid "Certifications_Description"
+msgstr "Ang mga sertipikasyong ito ay nagpapakita ng aking dedikasyon sa patuloy na pagkatuto at propesyonal na pag-unlad sa larangan ng software development."
+
+msgid "Contact_Description"
+msgstr "Kung nais mong makipag-ugnay, mangyaring makipag-ugnay sa pamamagitan ng mga pamamaraan sa ibaba:"
+
+msgid "Portfolio"
+msgstr "Portfolio"
+
+msgid "Gallery"
+msgstr "Gallery"
+
+msgid "Vlog"
+msgstr "Vlog"
+
+msgid "Concern"
+msgstr "Concern"
+
+msgid "Summary"
+msgstr "Buod"
+
+msgid "Software_Expertise_Description"
+msgstr "Sa paglipas ng mga taon, nakapag-develop ako ng malalim at malawak na kaalaman sa software development sa pamamagitan ng pagtatrabaho sa iba't ibang posisyon, industriya, at teknikal na kapaligiran. Ang paglalakbay na ito ay hindi lamang nagpahusay sa aking coding at problem-solving skills kundi nagbigay din sa akin ng malawakang pang-unawa kung paano nakakatulong ang teknolohiya sa pagpapalago ng negosyo."
+
+msgid "Technology_Adaptability_Description"
+msgstr "Ako ay mabilis makaangkop pagdating sa pag-aaral at paggamit ng mga bagong teknolohiya. Maging sa paggamit ng mga lumang sistema o modernong framework, mabilis kong naiintindihan ang mga pangunahing prinsipyo at isinasama ang mga ito sa mga solusyong tumutugma sa mga layunin ng negosyo at nagpapahusay sa karanasan ng mga gumagamit. Ang aking kakayahang umangkop ay nakatulong sa akin na magkaroon ng makabuluhang ambag sa mga proyektong may kinalaman sa frontend development, app architecture, cloud infrastructure at automation."
+
+msgid "Experience_Share_Description"
+msgstr "Ako ay masigasig sa pakikipagtulungan at patuloy na nagsisikap na mag-ambag ng aking mga kasanayan sa paraang nagtataguyod ng inobasyon, nagpapahusay ng kahusayan, at nagpapabilis ng tagumpay. Sabik akong ibahagi ang aking karanasan, dedikasyon, at aktibong pag-iisip sa mga pangkat na nagpapahalaga sa pag-unlad, pagkamalikhain, at makabuluhang resulta."
+
+msgid "Key_Projects"
+msgstr "Pangunahing Proyekto"
+
+msgid "Project_A"
+msgstr "Proyekto A"
+
+msgid "Project_A_Description"
+msgstr "Deskripsyon: Nag-develop ng web application gamit ang React at Node.js."
+
+msgid "Project_A_Technologies"
+msgstr "Pangunahing Teknolohiya: React, Node.js, MongoDB."
+
+msgid "Project_B"
+msgstr "Proyekto B"
+
+msgid "Project_B_Description"
+msgstr "Deskripsyon: Nagtayo ng mobile application na tumutulong sa mga user na subaybayan ang kanilang mga fitness goals."
+
+msgid "Project_B_Technologies"
+msgstr "Pangunahing Teknolohiya: Flutter, Firebase."
+
+msgid "Project_C"
+msgstr "Proyekto C"
+
+msgid "Project_C_Description"
+msgstr "Deskripsyon: Lumikha ng isang e-commerce platform na may responsive na disenyo."
+
+msgid "Project_C_Technologies"
+msgstr "Pangunahing Teknolohiya: HTML, CSS, JavaScript, PHP, MySQL."
+
+msgid "About_Me"
+msgstr "Tungkol sa Akin"
+
+msgid "Highlights_Description"
+msgstr "Narito ang ilang mga tampok tungkol sa akin at sa aking mga kasanayan:"
+
+msgid "Passionate_Software_Developer"
+msgstr "Mahilig sa Pagde-develop ng Software"
+
+msgid "Programming_Foundation_Description"
+msgstr "Malakas ang aking pundasyon sa programming at paglutas ng problema."
+
+msgid "Solution_Creation_Description"
+msgstr "Gusto kong lumikha ng mga solusyon na nagpapadali ng buhay ng mga tao."
+
+msgid "Development_Experience"
+msgstr "Pag-develop ng Front-end at Back-end"
+
+msgid "Development_Experience_Description"
+msgstr "Mayroon akong karanasan sa parehong front-end at back-end development."
+
+msgid "User_Friendly_Applications_Description"
+msgstr "Ang paggawa ng user-friendly na mga application ang aking husay."
+
+msgid "Goal_Oriented"
+msgstr "Nakatuon sa Layunin"
+
+msgid "Leverage_Technology_Description"
+msgstr "Ang aking layunin ay gamitin ang teknolohiya upang bumuo ng makabuluhang karanasan."
+
+msgid "Eager_to_Learn_Description"
+msgstr "Lagi akong masigasig na matuto ng mga bagong teknolohiya at mag-adapt sa mga nagbabagong kapaligiran."
+
+msgid "Resume"
+msgstr "Resume"
+
+msgid "Professional_Highlights_Description"
+msgstr "Narito ang ilang mga tampok mula sa aking karanasang propesyonal:"
+
+msgid "Repair_Service_Experience"
+msgstr "Electrical & Electronic Repair Service, Cabulihan, Vallehermoso, Negros Oriental (2019 - 2020)"
+
+msgid "Repair_Service_Description"
+msgstr "Nag-ayos ng mga sirang electronics at appliances."
+
+msgid "Business_Intern_Experience"
+msgstr "Business Intern, Vallehermoso, Negros Oriental (2019 - 2020)"
+
+msgid "Business_Intern_Description"
+msgstr "Gumawa ng mga magandang bagay, nakipag-usap nang pormal upang ayusin ang mga problema, at sumagot ng mga tanong."
+
+msgid "TrustArc_Internship"
+msgstr "Software Development Intern sa TrustArc, Bohol Ave, Cebu City (2023)"
+
+msgid "API_Security_Description"
+msgstr "Tumulong na gawing ligtas at maaasahan ang mga API requests."
+
+msgid "app_Frontend_Description"
+msgstr "Nagtrabaho sa app gamit ang Spring Boot at frontend gamit ang Angular."
+
+msgid "Chronostep_Internship"
+msgstr "app Development Intern sa Chronostep, 6th Floor, Gagfa Building, Cebu City (2023)"
+
+msgid "Internal_Projects_Description"
+msgstr "Nag-develop ng mga internal projects para sa paggamit ng kumpanya."
+
+msgid "Primary_Technologies_Description"
+msgstr "Gumamit ng Laravel at Vue bilang pangunahing teknolohiya."
+
+msgid "Chronostep_Employee"
+msgstr "Naging Software Engineer sa Chronostep (2024)"
+
+msgid "Job_Projects_Description"
+msgstr "Nakagawa ng iba't ibang mga proyekto gamit ang iba't ibang teknolohiya na iniayon upang matugunan ang mga partikular na pangangailangan ng kliyente."
+
+msgid "Detailed_Resume_Description"
+msgstr "Para sa mas detalyadong view, maaari mong tingnan at i-download ang aking resume"
+
+msgid "Here_Link"
+msgstr "dito"
+
+msgid "concern_title"
+msgstr "Aking Concern"
+
+msgid "concern_header"
+msgstr "Concern"
+
+msgid "concern_feedback_message"
+msgstr "Kung mayroon kang feedback o mga ideya na nais mong ibahagi tungkol sa akin, huwag mag-atubiling i-click ang button na ito—huwag mahiya!"
+
+msgid "concern_button"
+msgstr "Kunin ang survey"
+
+msgid "pagination_previous"
+msgstr "Nakaraan"
+
+msgid "pagination_page"
+msgstr "Pahina"
+
+msgid "not_found_page"
+msgstr "Walang natagpuang resulta!"
+
+msgid "pagination_of"
+msgstr "ng"
+
+msgid "pagination_next"
+msgstr "Susunod"
+
+msgid "chat_icon_alt"
+msgstr "Chat"
+
+msgid "chat_title"
+msgstr "Makipag-chat sa Akin?"
+
+msgid "chat_help_message"
+msgstr "Paano kita matutulungan?"
+
+msgid "chat_clear_button"
+msgstr "I-clear ang Chat"
+
+msgid "chat_status_online"
+msgstr "Online"
+
+msgid "chat_close_aria"
+msgstr "Isara ang chat"
+
+msgid "chat_quick_questions"
+msgstr "Mabilis na mga Tanong"
+
+msgid "chat_input_placeholder"
+msgstr "Magtanong ka..."
+
+msgid "chat_send_button"
+msgstr "Ipadala"
+
+msgid "chat_role_you"
+msgstr "Ikaw"
+
+msgid "chat_role_bot"
+msgstr "AI Assistant"
+
+msgid "chat_typing_aria"
+msgstr "Nagta-type"
+
+msgid "chat_greeting_fallback"
+msgstr "Hi! Welcome sa portfolio chat ko. Pwede kang magtanong diretso o pumili sa mga mabilis na tanong sa ibaba."
+
+msgid "chat_unknown_fallback"
+msgstr "Nasasagot ko ang mga mungkahing tanong sa ibaba. Subukan mong pumili ng isa sa mga quick options."
+
+msgid "chat_question_prefix"
+msgstr "T: "
+
+msgid "qa_name"
+msgstr "Ano ang pangalan mo?"
+
+msgid "qa_name_answer"
+msgstr "Joshua P. Algadipe ang pangalan ko."
+
+msgid "qa_age"
+msgstr "Ilang taon ka na?"
+
+msgid "qa_age_answer"
+msgstr "Ako ay {age} taong gulang."
+
+msgid "qa_nickname"
+msgstr "Ano ang tawag mo sa sarili mo?"
+
+msgid "qa_nickname_answer"
+msgstr "Pwede mo akong tawaging JJ, Josh, o Wang."
+
+msgid "qa_behaviour"
+msgstr "Paano mo ilalarawan ang ugali mo?"  
+
+msgid "qa_behaviour_answer"
+msgstr "Medyo introvert ako at mas gusto kong manatili sa loob ng bahay kaysa lumabas."
+
+msgid "qa_song"
+msgstr "Anong klaseng kanta ang gusto mo?"  
+
+msgid "qa_song_answer"
+msgstr "Gusto ko ng modernong kanta tulad ng rap."
+
+msgid "qa_job"
+msgstr "Ano ang trabaho mo?"
+
+msgid "qa_job_answer"
+msgstr "Ako ay isang Software Engineer."
+
+msgid "qa_favorite_sport"
+msgstr "Ano ang paborito mong sport?"
+
+msgid "qa_favorite_sport_answer"
+msgstr "Gusto ko ang basketball."
+
+msgid "qa_crush"
+msgstr "Sino ang crush mo?"
+
+msgid "qa_crush_answer"
+msgstr "Secret! Di ko sasabihin! Haha."
+
+msgid "qa_favorite_subject"
+msgstr "Ano ang paborito mong subject?"
+
+msgid "qa_favorite_subject_answer"
+msgstr "Paborito kong subject ay Math."
+
+msgid "qa_live"
+msgstr "Saan ka nakatira?"
+
+msgid "qa_live_answer"
+msgstr "Nakatira ako sa Cabulihan, Vallehermoso, Negros Oriental."
+
+msgid "qa_dream_job"
+msgstr "Ano ang pangarap mong trabaho?"
+
+msgid "qa_dream_job_answer"
+msgstr "Ang pangunahing pangarap ko ay maging Electrical Engineer, ngunit ang kasalukuyan kong trabaho ay Software Engineer."
+
+msgid "qa_type_of_person"
+msgstr "Anong uri ng tao ka?"
+
+msgid "qa_type_of_person_answer"
+msgstr "Ako ay medyo mahiwaga at hindi tatawa kung hindi ko kapareho ng vibes ang isang tao, pero kapag komportable na ako, ako ang pinaka-maingay at palatawa."
+
+msgid "qa_favorite_programming_language"
+msgstr "Ano ang paborito mong programming language?"
+
+msgid "qa_favorite_programming_language_answer"
+msgstr "Ang paborito kong programming language ay Python dahil focused siya sa hardware integration, tulad ng pagbuo ng robotics at IoT devices, hindi lang software tulad ng websites o apps sa ibat-ibang platforms."
+
+msgid "profile_name"
+msgstr "Aking Profile"
+
+msgid "profile_intro"
+msgstr "Ang pangalan ko ay Joshua P. Algadipe,"
+
+msgid "profile_age"
+msgstr "Ako ay {age} taong gulang mula sa Vallehermoso, Negros Oriental."
+
+msgid "profile_introvert"
+msgstr "Ako ay isang introvert at hindi mahusay sa pagsisimula ng mga pag-uusap, kaya huwag mag-atubiling i-message ako muna—mag-chat tayo!"
+
+msgid "profile_job"
+msgstr "Kasalukuyan akong nagtatrabaho bilang isang Software Engineer,"
+
+msgid "profile_goals"
+msgstr "at may malalaking layunin ako para sa hinaharap, nais kong bumuo ng kayamanan at makamit ang tagumpay."
+
+msgid "search_placeholder"
+msgstr "Mag search if meron..."
+
+msgid "donation_header"
+msgstr "Donasyon"
+
+msgid "donation_message"
+msgstr "Maaari mo bang pag-isipan ang pagbibigay ng isang regalo na mula sa iyong puso? Ang iyong mabuting gawa, gaano man kaliit, ay napakalaking halaga para sa akin. Maaari mong ipadala ang iyong suporta sa pamamagitan ng pag-scan sa GCash QR code na ibinigay. Anumang halaga na iyong maibigay ay taos-pusong pasasalamatan at ituturing na simbolo ng iyong kabutihan at pagkabukas-palad. Maraming salamat sa pagsasaalang-alang sa makataong gawaing ito—tunay itong nagbibigay-init sa aking puso."
+
+
+msgid "KP_Column_Shipped"
+msgstr "Nailunsad"
+
+msgid "KP_Column_Building"
+msgstr "Ginagawa"
+
+msgid "KP_Column_Planned"
+msgstr "Plano"
+
+msgid "KP_Desc_Shipped"
+msgstr "Mga natapos o na-deploy na proyekto."
+
+msgid "KP_Desc_Building"
+msgstr "Mga proyektong kasalukuyang ginagawa."
+
+msgid "KP_Desc_Planned"
+msgstr "Mga paparating na ideya at konsepto."
+
+msgid "KP_Action_Demo"
+msgstr "Demo"
+
+msgid "KP_Action_Repo"
+msgstr "Repo"
+
+msgid "KP_Action_Preview"
+msgstr "Preview"
+
+msgid "KP_Empty_Title"
+msgstr "Wala pang proyekto"
+
+msgid "KP_Empty_Description"
+msgstr "Magdagdag ng mga proyekto sa admin panel para mapunan ang column na ito."
+
+msgid "KP_Preview_Aria"
+msgstr "I-preview ang %(title)s"
+
+msgid "Tech_Stack_Eyebrow"
+msgstr "Tech Stack"
+
+msgid "Tech_Stack_Heading"
+msgstr "Mga Wika at Framework na Ginagamit Ko"
+
+msgid "Tech_Stack_Description"
+msgstr "Mabilis na tingin sa mga tool na gamit ko sa mga proyektong binubuo ko."
+
+msgid "Languages"
+msgstr "Mga Wika"
+
+msgid "Frameworks"
+msgstr "Mga Framework"
+
+msgid "Footer_Eyebrow"
+msgstr "Kumonekta at Makipagtulungan"
+
+msgid "Footer_Title"
+msgstr "Gumawa tayo ng kapaki-pakinabang"
+
+msgid "Footer_Subtitle"
+msgstr "Mga quick link, theme switch, at credit sa co-developer."
+
+msgid "Footer_Theme_Label"
+msgstr "Tema"
+
+msgid "Footer_Call_Label"
+msgstr "Tawag"
+
+msgid "Footer_Co_Developer"
+msgstr "Co-developer"
+
+msgid "Footer_All_Rights_Reserved"
+msgstr "Lahat ng karapatan ay nakalaan."
+
+msgid "Slider_Prev"
+msgstr "Balik"
+
+msgid "Slider_Next"
+msgstr "Susunod"
+
+msgid "Slider_Previous_Image"
+msgstr "Nakaraang larawan"
+
+msgid "Slider_Next_Image"
+msgstr "Susunod na larawan"
+
+msgid "Slider_Navigation_Label"
+msgstr "Navigation ng slider ng {label}"
+
+msgid "Slider_Go_To_Image"
+msgstr "Pumunta sa larawan {index}"
+
+msgid "Slider_Default_Label"
+msgstr "Larawan"
+
+
+msgid "Pages_Label"
+msgstr "Mga Pahina"
+
+msgid "Tags_Label"
+msgstr "tags"
+
+msgid "Action_Like"
+msgstr "Like"
+
+msgid "Action_Comment"
+msgstr "Comment"
+
+msgid "Action_Share"
+msgstr "Share"
+
+msgid "Email"
+msgstr "Email"
+
+msgid "Share_State_Shared"
+msgstr "Na-share"
+
+msgid "Share_State_Copied"
+msgstr "Nakopya"
+
+msgid "Share_State_Error"
+msgstr "Error"
+
+msgid "Share_Copy_Link_Prompt"
+msgstr "Kopyahin ang link na ito:"
+
+msgid "Gallery_Channel_Badge"
+msgstr "Gallery Channel"
+
+msgid "Gallery_Header_Subtitle"
+msgstr "I-browse ang mga snapshots, highlights, at creative moments mula sa koleksyon ko. I-tap ang anumang image para buksan ang full view at mag-iwan ng comment."
+
+msgid "Gallery_Stats_Aria"
+msgstr "Stats ng gallery page"
+
+msgid "Gallery_Badge_Label"
+msgstr "GALLERY"
+
+msgid "Gallery_Engagement_Aria"
+msgstr "Gallery engagement"
+
+msgid "Gallery_Share_Default_Title"
+msgstr "Gallery"
+
+msgid "Gallery_Share_Default_Text"
+msgstr "Tingnan ang gallery item na ito."
+
+msgid "Vlog_Channel_Badge"
+msgstr "Vlog Channel"
+
+msgid "Vlog_Header_Subtitle"
+msgstr "Welcome sa vlog space ko. Feel free na i-explore ang mga video dito at i-enjoy ang mga kuwento, moments, at experiences na shine-share ko."
+
+msgid "Vlog_Stats_Aria"
+msgstr "Stats ng vlog page"
+
+msgid "Vlog_Badge_Label"
+msgstr "VLOG"
+
+msgid "Vlog_Engagement_Aria"
+msgstr "Vlog engagement"
+
+msgid "Vlog_Share_Default_Title"
+msgstr "Vlog"
+
+msgid "Vlog_Share_Default_Text"
+msgstr "Tingnan ang vlog na ito."
+
+msgid "Modal_Comments_Label"
+msgstr "Mga Comment"
+
+msgid "Modal_Comment_Placeholder"
+msgstr "Mag-type ng comment..."
+
+msgid "Modal_Insert_Emoji"
+msgstr "Maglagay ng emoji"
+
+msgid "Modal_Send"
+msgstr "Ipadala"
+
+msgid "Modal_Load_Previous"
+msgstr "Previous"
+
+msgid "Modal_Loading"
+msgstr "Naglo-load..."
+
+msgid "Modal_No_Comments"
+msgstr "Wala pang comments."
+
+msgid "Modal_Failed_To_Load_Comments"
+msgstr "Hindi ma-load ang comments."
+
+msgid "Modal_Comment_Too_Long"
+msgstr "Hindi puwedeng lumampas sa {max} characters ang comment."
+
+msgid "Modal_Author_You"
+msgstr "Ikaw"
+
+msgid "Modal_Project_Preview"
+msgstr "Project Preview"
+
+msgid "Career_Journey"
+msgstr "Career Journey"
+
+msgid "Company_Roadmap"
+msgstr "Company Roadmap"
+
+msgid "Career_Roadmap_Description"
+msgstr "Isang visual na paglalakbay mula sa internship foundations hanggang sa professional software engineering work, kasama ang role definitions at activity snapshots."
+
+msgid "Career_Roadmap_Cover_Image_Aria"
+msgstr "Buksan ang cover image ng %(company)s"
+
+msgid "Career_Roadmap_Definition_Label"
+msgstr "Depinisyon"
+
+msgid "Career_Roadmap_Activity_Snapshots"
+msgstr "Mga Activity Snapshot"
+
+msgid "Career_Roadmap_Empty"
+msgstr "Wala pang company roadmap entries."
+
+msgid "Career_Roadmap_Work_Highlight"
+msgstr "Work Highlight"
+
+msgid "Career_Roadmap_Employment_Internship"
+msgstr "Internship"
+
+msgid "Career_Roadmap_Employment_Full_Time"
+msgstr "Full-time"
+
+msgid "Career_Roadmap_Employment_Contract"
+msgstr "Contract"
+
+msgid "Career_Roadmap_Employment_Freelance"
+msgstr "Freelance"
+
+msgid "Career_Roadmap_Employment_Experience"
+msgstr "Karanasan"

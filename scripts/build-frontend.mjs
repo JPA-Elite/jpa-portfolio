@@ -4,8 +4,8 @@ import path from "path";
 import { build as viteBuild } from "vite";
 
 const repoRoot = process.cwd();
-const staticRoot = path.resolve(repoRoot, "backend", "static");
-const distRoot = path.resolve(repoRoot, "backend", "dist", "frontend");
+const staticRoot = path.resolve(repoRoot, "app", "static");
+const distRoot = path.resolve(repoRoot, "app", "dist", "frontend");
 const outDir = path.resolve(distRoot, "static");
 
 const HASH_EXTENSIONS = new Set([".css", ".js"]);

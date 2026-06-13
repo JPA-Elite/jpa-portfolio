@@ -1,8 +1,8 @@
 import unittest
 from unittest.mock import MagicMock, patch
 
-from backend.Services.AuthService import AuthService
-from backend.constants.messages import (
+from app.Services.AuthService import AuthService
+from app.constants.messages import (
     PROFILE_UPDATE_MSG,
     UNAUTHORIZED_ACCESS_ERROR,
     USER_NOT_FOUND_ERROR,
@@ -57,7 +57,7 @@ class AuthServiceTests(unittest.TestCase):
         self.assertEqual(response.get_json()["message"], PROFILE_UPDATE_MSG)
         repo.update_user.assert_called_once_with("user-1", {"username": "new-admin"})
 
-    @patch("backend.Services.AuthService.generate_password_hash", return_value="hashed:newpass")
+    @patch("app.Services.AuthService.generate_password_hash", return_value="hashed:newpass")
     def test_update_profile_hashes_password_when_provided(self, mock_generate_password_hash):
         repo = MagicMock()
         repo.find_by_id.return_value = {"_id": "user-1", "username": "admin"}

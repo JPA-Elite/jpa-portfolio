@@ -4,7 +4,7 @@ import pkgutil
 import unittest
 from unittest.mock import MagicMock
 
-import backend.Services as services_pkg
+import app.Services as services_pkg
 
 
 class ServiceSmokeTests(unittest.TestCase):

@@ -2,9 +2,9 @@ import unittest
 from datetime import datetime, timedelta
 from unittest.mock import MagicMock, patch
 
-from backend.Repositories.LoginAttemptRepository import MAX_ATTEMPTS
-from backend.Services.AuthService import AuthService
-from backend.constants.messages import (
+from app.Repositories.LoginAttemptRepository import MAX_ATTEMPTS
+from app.Services.AuthService import AuthService
+from app.constants.messages import (
     INVALID_USE_OR_PASS_ERROR,
     LOGIN_ATTEMPT_LOCKED_MSG,
     LOGIN_SUCCESS_MSG,
@@ -32,7 +32,7 @@ class AuthServiceLoginTests(unittest.TestCase):
         self.auth_repo.find_by_username.assert_not_called()
         self.attempt_repo.update_attempt.assert_not_called()
 
-    @patch("backend.Services.AuthService.check_password_hash", return_value=True)
+    @patch("app.Services.AuthService.check_password_hash", return_value=True)
     def test_authenticate_admin_ignores_expired_lockout_and_allows_login(self, _mock_check_password):
         self.attempt_repo.get_attempt_info.return_value = {
             "attempts": MAX_ATTEMPTS,
@@ -60,7 +60,7 @@ class AuthServiceLoginTests(unittest.TestCase):
         self.assertEqual(message, INVALID_USE_OR_PASS_ERROR.format(attempts=1))
         self.attempt_repo.update_attempt.assert_called_once_with(success=False)
 
-    @patch("backend.Services.AuthService.check_password_hash", return_value=True)
+    @patch("app.Services.AuthService.check_password_hash", return_value=True)
     def test_authenticate_admin_success_resets_attempts(self, _mock_check_password):
         self.attempt_repo.get_attempt_info.return_value = {"attempts": 2, "lockout_until": None}
         user_doc = {"_id": "u1", "username": "admin", "password": "hashed"}
@@ -73,7 +73,7 @@ class AuthServiceLoginTests(unittest.TestCase):
         self.assertFalse(is_locked)
         self.attempt_repo.update_attempt.assert_called_once_with(success=True)
 
-    @patch("backend.Services.AuthService.check_password_hash", return_value=False)
+    @patch("app.Services.AuthService.check_password_hash", return_value=False)
     def test_authenticate_admin_failed_password_locks_when_threshold_reached(self, _mock_check_password):
         self.attempt_repo.get_attempt_info.return_value = {"attempts": 2, "lockout_until": None}
         self.auth_repo.find_by_username.return_value = {"username": "admin", "password": "hashed"}
@@ -89,7 +89,7 @@ class AuthServiceLoginTests(unittest.TestCase):
         self.assertTrue(is_locked)
         self.attempt_repo.update_attempt.assert_called_once_with(success=False)
 
-    @patch("backend.Services.AuthService.check_password_hash", return_value=False)
+    @patch("app.Services.AuthService.check_password_hash", return_value=False)
     def test_authenticate_admin_failed_password_returns_remaining_attempts(self, _mock_check_password):
         self.attempt_repo.get_attempt_info.return_value = {"attempts": 0, "lockout_until": None}
         self.auth_repo.find_by_username.return_value = {"username": "admin", "password": "hashed"}

@@ -2,8 +2,8 @@ import unittest
 from types import SimpleNamespace
 from unittest.mock import MagicMock, patch
 
-from backend.Services.PortfolioService import PortfolioService
-from backend.constants.messages import SYSTEM_INFO_ADD_MSG
+from app.Services.PortfolioService import PortfolioService
+from app.constants.messages import SYSTEM_INFO_ADD_MSG
 
 from tests.services._service_fixtures import build_test_app
 from tests.test_support import VALID_OBJECT_ID
@@ -21,7 +21,7 @@ class PortfolioServiceTests(unittest.TestCase):
 
         self.assertEqual(client_ip, "1.2.3.4")
 
-    @patch("backend.Services.PortfolioService.requests.get")
+    @patch("app.Services.PortfolioService.requests.get")
     def test_get_ip_location_returns_api_data(self, mock_get):
         mock_get.return_value = SimpleNamespace(
             json=lambda: {"city": "Cebu", "region": "Central Visayas", "country": "PH", "loc": "10,20"}
@@ -33,7 +33,7 @@ class PortfolioServiceTests(unittest.TestCase):
         self.assertEqual(result["city"], "Cebu")
         self.assertEqual(result["location"], "10,20")
 
-    @patch("backend.Services.PortfolioService.requests.get", side_effect=Exception("network"))
+    @patch("app.Services.PortfolioService.requests.get", side_effect=Exception("network"))
     def test_get_ip_location_returns_unknown_when_request_fails(self, _mock_get):
         result = self.service.get_ip_location("1.2.3.4")
 
@@ -41,14 +41,14 @@ class PortfolioServiceTests(unittest.TestCase):
         self.assertEqual(result["city"], "Unknown")
         self.assertEqual(result["country"], "Unknown")
 
-    @patch("backend.Services.PortfolioService.url_for", return_value="/profile")
-    @patch("backend.Services.PortfolioService.platform.architecture", return_value=("64bit", ""))
-    @patch("backend.Services.PortfolioService.platform.platform", return_value="Windows-11")
-    @patch("backend.Services.PortfolioService.platform.version", return_value="Version")
-    @patch("backend.Services.PortfolioService.platform.release", return_value="11")
-    @patch("backend.Services.PortfolioService.platform.node", return_value="PC")
-    @patch("backend.Services.PortfolioService.platform.system", return_value="Windows")
-    @patch("backend.Services.PortfolioService.parse")
+    @patch("app.Services.PortfolioService.url_for", return_value="/profile")
+    @patch("app.Services.PortfolioService.platform.architecture", return_value=("64bit", ""))
+    @patch("app.Services.PortfolioService.platform.platform", return_value="Windows-11")
+    @patch("app.Services.PortfolioService.platform.version", return_value="Version")
+    @patch("app.Services.PortfolioService.platform.release", return_value="11")
+    @patch("app.Services.PortfolioService.platform.node", return_value="PC")
+    @patch("app.Services.PortfolioService.platform.system", return_value="Windows")
+    @patch("app.Services.PortfolioService.parse")
     @patch.object(PortfolioService, "get_ip_location")
     @patch.object(PortfolioService, "get_client_ip")
     def test_add_system_info_returns_success_payload_and_saves_record(

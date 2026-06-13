@@ -1,7 +1,7 @@
 # Define variables
 APP_NAME := flask_app
 DOCKER_IMAGE := flask_image
-DOCKERFILE_DIR := ./backend  # Path to the folder containing Dockerfile
+DOCKERFILE_DIR := ./app  # Path to the folder containing Dockerfile
 PORT := 5000
 
 # Build the Docker image
@@ -10,7 +10,7 @@ build:
 
 # Install Package
 package-install:
-	cd backend && pip install -r requirements.txt
+	cd app && pip install -r requirements.txt
 
 # Run the Docker container
 run:
@@ -29,21 +29,21 @@ frontend-dev:
 	npm run dev:frontend
 
 clean-frontend:
-	python -c "import shutil; shutil.rmtree('backend/dist/frontend', ignore_errors=True)"
+	python -c "import shutil; shutil.rmtree('app/dist/frontend', ignore_errors=True)"
 
 run-local:
-	python -m backend.app
+	python -m app.app
 
 start-local:
-	python -m backend.app
+	python -m app.app
 
 # Build frontend assets + run locally using dist
 start-local-dist:
-	FRONTEND_DIST=1 FRONTEND_DIST_TEMPLATES=1 python -m backend.app
+	FRONTEND_DIST=1 FRONTEND_DIST_TEMPLATES=1 python -m app.app
 
 # Build frontend assets + run locally using dist (cmd/PowerShell friendly)
 start-local-dist-cmd:
-	cmd /C "set FRONTEND_DIST=1 && set FRONTEND_DIST_TEMPLATES=1 && python -m backend.app"
+	cmd /C "set FRONTEND_DIST=1 && set FRONTEND_DIST_TEMPLATES=1 && python -m app.app"
 
 start-build: build-frontend start-local-dist
 
@@ -52,10 +52,10 @@ dev:
 
 # Run Flask with Vite dev server assets (same-origin via proxy)
 start-local-vite:
-	VITE_DEV_SERVER=http://127.0.0.1:5173 python -m backend.app
+	VITE_DEV_SERVER=http://127.0.0.1:5173 python -m app.app
 
 start-local-vite-cmd:
-	cmd /C "set VITE_DEV_SERVER=http://127.0.0.1:5173 && python -m backend.app"
+	cmd /C "set VITE_DEV_SERVER=http://127.0.0.1:5173 && python -m app.app"
 
 # Stop the Docker container
 stop:
@@ -82,7 +82,7 @@ shell:
 
 # Compile the translations
 compile-translations:
-	cd backend && pybabel compile -d translations
+	cd app && pybabel compile -d translations
 
 # Run unit tests (controllers/services/repositories)
 test:

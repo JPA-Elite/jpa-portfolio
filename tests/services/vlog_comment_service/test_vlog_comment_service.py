@@ -1,7 +1,7 @@
 import unittest
 from unittest.mock import MagicMock
 
-from backend.Services.VlogCommentService import VlogCommentService
+from app.Services.VlogCommentService import VlogCommentService
 
 from tests.services._service_fixtures import comment_doc
 from tests.test_support import VALID_OBJECT_ID

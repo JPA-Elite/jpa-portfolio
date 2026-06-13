@@ -1,7 +1,7 @@
 import unittest
 from unittest.mock import MagicMock
 
-from backend.Services.GalleryLikeService import GalleryLikeService
+from app.Services.GalleryLikeService import GalleryLikeService
 from tests.test_support import VALID_OBJECT_ID
 
 

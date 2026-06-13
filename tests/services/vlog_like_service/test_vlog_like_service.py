@@ -1,7 +1,7 @@
 import unittest
 from unittest.mock import MagicMock
 
-from backend.Services.VlogLikeService import VlogLikeService
+from app.Services.VlogLikeService import VlogLikeService
 from tests.test_support import VALID_OBJECT_ID
 
 

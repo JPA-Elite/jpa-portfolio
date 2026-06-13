@@ -8,10 +8,10 @@ from tests.controllers.shared._controller_test_helpers import (
 
 class ApiBaseControllerModuleTests(unittest.TestCase):
     def test_module_import_and_public_functions(self):
-        run_controller_module_smoke_test(self, "backend.Controllers.api.BaseController")
+        run_controller_module_smoke_test(self, "app.Controllers.api.BaseController")
 
     def test_all_public_functions_execute(self):
-        run_controller_module_functions_test(self, "backend.Controllers.api.BaseController")
+        run_controller_module_functions_test(self, "app.Controllers.api.BaseController")
 
 
 if __name__ == "__main__":

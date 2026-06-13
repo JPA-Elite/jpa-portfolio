@@ -24,7 +24,6 @@ let totalMusicCount = 0;
 let totalPagesCount = 1;
 let currentSongData = null;
 const voteStateCache = {};
-// Expose globally so music_like.js can read/write vote state
 window.voteStateCache = voteStateCache;
 musicList = document.getElementById("musicList");
 audioPlayer = document.getElementById("audioPlayer");
@@ -907,9 +906,7 @@ function renderTracks(tracks, activeSongId = null) {
 
         const isActive =
             track.id === activeSongId ||
-            (filteredResults
-                ? i === currentSongIndex
-                : musicData.indexOf(track) === currentSongIndex);
+            (currentSongData && track.id === currentSongData.id);
 
         const div = document.createElement("div");
         div.className = "music-item" + (isActive ? " active" : "");

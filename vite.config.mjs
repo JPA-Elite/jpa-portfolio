@@ -3,8 +3,8 @@ import path from "path";
 import { defineConfig } from "vite";
 
 const repoRoot = process.cwd();
-const staticRoot = path.resolve(repoRoot, "backend", "static");
-const outDir = path.resolve(repoRoot, "backend", "dist", "frontend", "static");
+const staticRoot = path.resolve(repoRoot, "app", "static");
+const outDir = path.resolve(repoRoot, "app", "dist", "frontend", "static");
 
 const TEXT_EXTENSIONS = new Set([".js", ".css"]);
 const SKIP_EXTENSIONS = new Set([".map"]);

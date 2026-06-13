@@ -3,7 +3,7 @@ from types import SimpleNamespace
 
 from bson import ObjectId
 
-from backend.configurations import SortOrder
+from app.configurations import SortOrder
 
 
 VALID_OBJECT_ID = "507f1f77bcf86cd799439011"

@@ -1,8 +1,8 @@
 import unittest
 from unittest.mock import MagicMock, patch
 
-from backend.Services.GalleryService import GalleryService
-from backend.configurations import SortOrder
+from app.Services.GalleryService import GalleryService
+from app.configurations import SortOrder
 
 from tests.services._service_fixtures import gallery_doc
 
@@ -67,7 +67,7 @@ class GalleryServiceTests(unittest.TestCase):
         self.assertEqual(updated["title"]["en"], "Updated")
         self.assertEqual(updated["tags"], ["x"])
 
-    @patch("backend.Services.GalleryService.cleanup_uploaded_files")
+    @patch("app.Services.GalleryService.cleanup_uploaded_files")
     def test_delete_gallery_deletes_when_found(self, mock_cleanup):
         self.repo.get_gallery_by_id.return_value = gallery_doc()
         self.repo.delete_gallery.return_value = True

@@ -2,8 +2,8 @@ import unittest
 from types import SimpleNamespace
 from unittest.mock import MagicMock, patch
 
-from backend.Services.MusicService import MusicService
-from backend.configurations import SortOrder
+from app.Services.MusicService import MusicService
+from app.configurations import SortOrder
 
 from tests.services._service_fixtures import music_doc
 
@@ -13,7 +13,7 @@ class MusicServiceTests(unittest.TestCase):
         self.repo = MagicMock()
         self.service = MusicService(repository=self.repo)
 
-    @patch("backend.Services.MusicService.MutagenFile")
+    @patch("app.Services.MusicService.MutagenFile")
     def test_get_duration_formats_mm_ss(self, mock_mutagen):
         mock_mutagen.return_value = SimpleNamespace(info=SimpleNamespace(length=125.8))
 
@@ -21,7 +21,7 @@ class MusicServiceTests(unittest.TestCase):
 
         self.assertEqual(duration, "2:05")
 
-    @patch("backend.Services.MusicService.MutagenFile", side_effect=Exception("bad file"))
+    @patch("app.Services.MusicService.MutagenFile", side_effect=Exception("bad file"))
     def test_get_duration_returns_none_on_error(self, _mock_mutagen):
         self.assertIsNone(self.service.get_duration("dummy.mp3"))
 
@@ -89,7 +89,7 @@ class MusicServiceTests(unittest.TestCase):
         self.assertEqual(updated["image"], "/cover.jpg")
         self.assertEqual(updated["duration"], "1:23")
 
-    @patch("backend.Services.MusicService.cleanup_uploaded_files")
+    @patch("app.Services.MusicService.cleanup_uploaded_files")
     def test_delete_music_cleans_up_and_deletes(self, mock_cleanup):
         self.repo.get_music_by_id.return_value = music_doc()
         self.repo.delete_music.return_value = True

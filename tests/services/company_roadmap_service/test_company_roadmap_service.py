@@ -1,8 +1,8 @@
 import unittest
 from unittest.mock import MagicMock, patch
 
-from backend.Services.CompanyRoadmapService import CompanyRoadmapService
-from backend.configurations import SortOrder
+from app.Services.CompanyRoadmapService import CompanyRoadmapService
+from app.configurations import SortOrder
 
 from tests.services._service_fixtures import roadmap_doc
 

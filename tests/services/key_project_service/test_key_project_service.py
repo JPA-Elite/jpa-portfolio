@@ -1,8 +1,8 @@
 import unittest
 from unittest.mock import MagicMock, patch
 
-from backend.Services.KeyProjectService import KeyProjectService
-from backend.configurations import SortOrder
+from app.Services.KeyProjectService import KeyProjectService
+from app.configurations import SortOrder
 
 from tests.services._service_fixtures import key_project_doc
 

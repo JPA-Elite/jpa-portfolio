@@ -5,7 +5,7 @@ from unittest.mock import patch
 
 from flask import Flask
 
-from backend.Repositories.BaseRepository import BaseRepository
+from app.Repositories.BaseRepository import BaseRepository
 from tests.test_support import FakeCollection, dummy_repo_param
 
 
@@ -14,7 +14,7 @@ def _fake_get_mongo_client(self, collection_name):
 
 
 def load_repository_class(module_name: str, class_name: str):
-    module = importlib.import_module(f"backend.Repositories.{module_name}")
+    module = importlib.import_module(f"app.Repositories.{module_name}")
     return module, getattr(module, class_name)
 
 
@@ -44,7 +44,7 @@ def _execute_repository_method(module_name: str, class_name: str, method_name: s
 
     with ExitStack() as stack:
         stack.enter_context(patch.object(BaseRepository, "get_mongo_client", new=_fake_get_mongo_client))
-        stack.enter_context(patch("backend.Repositories.LoginAttemptRepository.get_request_ip", return_value="127.0.0.1"))
+        stack.enter_context(patch("app.Repositories.LoginAttemptRepository.get_request_ip", return_value="127.0.0.1"))
 
         repo = repo_class()
         method = getattr(repo, method_name)
@@ -164,7 +164,7 @@ def run_repository_methods_test(testcase, module_name: str, class_name: str):
 
     with ExitStack() as stack:
         stack.enter_context(patch.object(BaseRepository, "get_mongo_client", new=_fake_get_mongo_client))
-        stack.enter_context(patch("backend.Repositories.LoginAttemptRepository.get_request_ip", return_value="127.0.0.1"))
+        stack.enter_context(patch("app.Repositories.LoginAttemptRepository.get_request_ip", return_value="127.0.0.1"))
 
         repo = repo_class()
         for method_name, method in iter_repository_methods(repo_class):

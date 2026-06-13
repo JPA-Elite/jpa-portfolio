@@ -35,13 +35,13 @@ config.py
 *.egg
 
 # Inside Flask Folder
-backend/__pycache__/
-backend/.env
+app/__pycache__/
+app/.env
 .env
 
 # Frontend build artifacts
 node_modules/
-backend/dist/frontend/
+app/dist/frontend/
 
 # Continue package-specific ignores
 .continue/

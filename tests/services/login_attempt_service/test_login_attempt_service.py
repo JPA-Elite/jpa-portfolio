@@ -1,8 +1,8 @@
 import unittest
 from unittest.mock import MagicMock
 
-from backend.Services.LoginAttemptService import LoginAttemptService
-from backend.configurations import SortOrder
+from app.Services.LoginAttemptService import LoginAttemptService
+from app.configurations import SortOrder
 
 
 class LoginAttemptServiceTests(unittest.TestCase):

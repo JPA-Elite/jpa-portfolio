@@ -111,7 +111,10 @@ function restoreActiveSongFromStorage() {
         const track = musicData[index];
         currentSongIndex = index;
         currentSongData = track;
-        setAudioSrcForSong(track);
+        const sameSongAlreadyLoaded = audioPlayer?.src && currentSongData && String(currentSongData.id) === storedId;
+        if (!sameSongAlreadyLoaded) {
+            setAudioSrcForSong(track);
+        }
         updateActiveSongDisplay(track);
         return track.id;
     } catch (error) {

@@ -989,93 +989,6 @@ body.loading-done .admin-float-btn {
     font-size: 14px;
 }
 
-/* Mobile Navigation */
-@media only screen and (max-width: 768px) {
-    body.loading-done .admin-float-btn {
-        visibility: hidden;
-    }
-
-    .admin-float-btn {
-        top: auto;
-        bottom: 15px;
-        left: 15px;
-        transform: none;
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        justify-content: center;
-        text-align: center;
-        padding: 0;
-        visibility: hidden;
-    }
-
-    .admin-float-btn ion-icon {
-        font-size: 22px;
-        margin: 0;
-    }
-
-    .admin-float-btn::before {
-        display: none;
-    }
-
-    .admin-float-btn:hover {
-        transform: scale(1.1);
-    }
-
-    .admin-float-btn span {
-        display: none;
-    }
-
-    body.nav-active .admin-float-btn {
-        opacity: 1;
-        visibility: visible;
-        pointer-events: auto;
-    }
-
-    nav #navList {
-        display: none;
-        /* Hide desktop nav */
-    }
-
-    nav ul {
-        gap: 0 !important;
-    }
-
-    .sidebar {
-        display: block;
-        position: fixed;
-        left: -250px;
-        top: 0;
-        width: 250px;
-        height: 100vh;
-        background: rgba(0, 0, 0, 0.95);
-        backdrop-filter: blur(10px);
-        transition: 0.3s ease-in-out;
-        z-index: 1001;
-        padding-top: 60px;
-    }
-
-    .sidebar.active {
-        left: 0;
-        box-shadow: 2px 0 5px rgba(0, 0, 0, 0.3);
-    }
-
-    .sidebar #navList {
-        display: flex !important;
-        flex-direction: column;
-        padding: 0;
-        margin: 0;
-    }
-
-    .nav-toggle {
-        display: block;
-    }
-
-    .sidebar ul li, .sidebar ul li:hover {
-        padding-left: 0 !important;
-    }
-}
-
 /* =============================================
     PAGE LOADING OVERLAY — 3-dot wave animation
    ============================================= */
@@ -1161,3 +1074,102 @@ body.loading-done .admin-float-btn {
 
 /* Suppress Ion Icons default SVG title tooltips */
 ion-icon { pointer-events: none !important; }
+
+/* Mobile Navigation */
+@media only screen and (max-width: 768px) {
+    body.loading-done .admin-float-btn {
+        visibility: hidden;
+    }
+
+    .admin-float-btn {
+        top: auto;
+        bottom: 15px;
+        left: 15px;
+        transform: none;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        justify-content: center;
+        text-align: center;
+        padding: 0;
+        visibility: hidden;
+    }
+
+    .admin-float-btn ion-icon {
+        font-size: 22px;
+        margin: 0;
+    }
+
+    .admin-float-btn::before {
+        display: none;
+    }
+
+    .admin-float-btn:hover {
+        transform: scale(1.1);
+    }
+
+    .admin-float-btn span {
+        display: none;
+    }
+
+    body.nav-active .admin-float-btn {
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+    }
+
+    nav #navList {
+        display: none;
+        /* Hide desktop nav */
+    }
+
+    nav ul {
+        gap: 0 !important;
+    }
+
+    .sidebar {
+        display: block;
+        position: fixed;
+        left: -250px;
+        top: 0;
+        width: 250px;
+        height: 100vh;
+        background: rgba(0, 0, 0, 0.95);
+        backdrop-filter: blur(10px);
+        transition: 0.3s ease-in-out;
+        z-index: 1001;
+        padding-top: 60px;
+    }
+
+    .sidebar.active {
+        left: 0;
+        box-shadow: 2px 0 5px rgba(0, 0, 0, 0.3);
+    }
+
+    .sidebar #navList {
+        display: flex !important;
+        flex-direction: column;
+        padding: 0;
+        margin: 0;
+    }
+
+    .nav-toggle {
+        display: block;
+    }
+
+    .sidebar ul li, .sidebar ul li:hover {
+        padding-left: 0 !important;
+    }
+
+    .sidebar ul li {
+        border-bottom: none !important;
+    }
+
+    #mobileNavList li {
+        padding: 12px 12px 12px 0 !important;
+    }
+
+    #mobileNavList .mobile-media-submenu li {
+        padding: 2px 0 !important;
+    }
+}

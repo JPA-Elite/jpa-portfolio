@@ -2346,7 +2346,6 @@ body.lyrics-modal-open {
 /* Remove left-shift hover animation for Media item and its submenu rows on mobile */
 @media (max-width: 768px) {
     #mobileNavList .mobile-media-dropdown:hover {
-        padding-left: 20px !important;
         background: transparent !important;
     }
 
@@ -2354,6 +2353,14 @@ body.lyrics-modal-open {
     #mobileNavList .mobile-media-submenu li:hover {
         padding-left: 0 !important;
         background: transparent !important;
+    }
+
+    .sidebar ul li {
+        border-bottom: none !important;
+    }
+
+    #mobileNavList li {
+        padding: 12px 12px 12px 0 !important;
     }
 }
 

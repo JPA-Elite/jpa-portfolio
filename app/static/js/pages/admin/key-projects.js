@@ -271,6 +271,27 @@ function playKeyProjectPreview(url, title = "Key Project Image") {
     window.openAdminImagePreview(url, title || "Key Project Image");
 }
 
+function toggleKeyProjectModalMaximize(btn) {
+    const modalId = btn.dataset.targetModal || btn.closest(".modal")?.id;
+    if (!modalId) return;
+    const dialog = document.querySelector("#" + modalId + " .modal-dialog");
+    const modalBody = dialog?.querySelector(".modal-body");
+    if (!dialog) return;
+    dialog.classList.toggle("modal-fullscreen");
+    const isFull = dialog.classList.contains("modal-fullscreen");
+
+    // Adjust modal-body max-height for better fullscreen experience
+    if (modalBody) {
+        modalBody.style.maxHeight = isFull ? "calc(100vh - 120px)" : "";
+    }
+
+    btn.innerHTML = isFull
+        ? '<i class="bi bi-fullscreen-exit"></i>'
+        : '<i class="bi bi-arrows-fullscreen"></i>';
+    btn.setAttribute("title", isFull ? "Restore" : "Maximize");
+    btn.setAttribute("aria-label", isFull ? "Restore" : "Maximize");
+}
+
 function buildEditModal(project, modalId, page, index) {
     const suffix = `_${page}_${index}`;
     const p = {
@@ -285,8 +306,15 @@ function buildEditModal(project, modalId, page, index) {
       <div class="modal-dialog modal-lg">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title">Edit Key Project</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <h5 class="modal-title me-auto">Edit Key Project</h5>
+            <div class="d-flex align-items-center gap-1">
+              <button type="button" class="btn p-1 preview-header-btn edit-maximize-btn" data-target-modal="${modalId}" aria-label="Maximize" title="Maximize">
+                <i class="bi bi-arrows-fullscreen"></i>
+              </button>
+              <button type="button" class="btn p-1 preview-header-btn" data-bs-dismiss="modal" aria-label="Close">
+                <i class="bi bi-x-lg"></i>
+              </button>
+            </div>
           </div>
           <div class="modal-body">
             <form id="editProjectForm${suffix}">
@@ -472,6 +500,26 @@ async function deleteKeyProject(projectId) {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+    // Add Key Project maximize handler
+    const addMaxBtn = document.getElementById("addKeyProjectMaximizeBtn");
+    if (addMaxBtn) {
+        addMaxBtn.dataset.targetModal = "addProjectModal";
+        addMaxBtn.addEventListener("click", function () {
+            toggleKeyProjectModalMaximize(this);
+        });
+    }
+
+    // Delegated handler for edit maximize buttons (dynamically created)
+    document.addEventListener("click", function (e) {
+        const btn = e.target.closest(".edit-maximize-btn");
+        if (btn) {
+            const modalId = btn.dataset.targetModal;
+            if (modalId) {
+                toggleKeyProjectModalMaximize(btn);
+            }
+        }
+    });
+
     const perPageSelect = document.getElementById("perPageSelect");
     const searchInput = document.getElementById("searchInput");
     const orderSelect = document.getElementById("orderSelect");

@@ -184,8 +184,15 @@ async function loadMusic(page = 1) {
             <div class="modal-dialog">
                 <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="${modalIdEdit}Label">Edit Music</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <h5 class="modal-title me-auto" id="${modalIdEdit}Label">Edit Music</h5>
+                    <div class="d-flex align-items-center gap-1">
+                        <button type="button" class="btn p-1 preview-header-btn edit-maximize-btn" data-target-modal="${modalIdEdit}" aria-label="Maximize" title="Maximize">
+                            <i class="bi bi-arrows-fullscreen"></i>
+                        </button>
+                        <button type="button" class="btn p-1 preview-header-btn" data-bs-dismiss="modal" aria-label="Close">
+                            <i class="bi bi-x-lg"></i>
+                        </button>
+                    </div>
                 </div>
                 <div class="modal-body">
                     <form id="editForm${page}_${index}">
@@ -422,7 +429,47 @@ async function deleteMusic(musicId) {
     }
 }
 
+function toggleMusicModalMaximize(btn) {
+    const modalId = btn.dataset.targetModal || btn.closest(".modal")?.id;
+    if (!modalId) return;
+    const dialog = document.querySelector("#" + modalId + " .modal-dialog");
+    const modalBody = dialog?.querySelector(".modal-body");
+    if (!dialog) return;
+    dialog.classList.toggle("modal-fullscreen");
+    const isFull = dialog.classList.contains("modal-fullscreen");
+
+    // Adjust modal-body max-height for better fullscreen experience
+    if (modalBody) {
+        modalBody.style.maxHeight = isFull ? "calc(100vh - 120px)" : "";
+    }
+
+    btn.innerHTML = isFull
+        ? '<i class="bi bi-fullscreen-exit"></i>'
+        : '<i class="bi bi-arrows-fullscreen"></i>';
+    btn.setAttribute("title", isFull ? "Restore" : "Maximize");
+    btn.setAttribute("aria-label", isFull ? "Restore" : "Maximize");
+}
+
 document.addEventListener("DOMContentLoaded", () => {
+    // Add Music maximize handler
+    const addMaxBtn = document.getElementById("addMusicMaximizeBtn");
+    if (addMaxBtn) {
+        addMaxBtn.dataset.targetModal = "addMusicModal";
+        addMaxBtn.addEventListener("click", function () {
+            toggleMusicModalMaximize(this);
+        });
+    }
+
+    // Delegated handler for edit maximize buttons (dynamically created)
+    document.addEventListener("click", function (e) {
+        const btn = e.target.closest(".edit-maximize-btn");
+        if (btn) {
+            const modalId = btn.dataset.targetModal;
+            if (modalId) {
+                toggleMusicModalMaximize(btn);
+            }
+        }
+    });
     loadMusic(currentPage);
     initDropZone("addDropZone", "addImageFile");
 
@@ -481,4 +528,3 @@ window.updateMusic = updateMusic;
 window.deleteMusic = deleteMusic;
 window.togglePreview = togglePreview;
 window.playMusicPreview = playMusicPreview;
-

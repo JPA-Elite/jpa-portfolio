@@ -300,6 +300,27 @@ function playCompanyRoadmapPreview(url, title = "Company Roadmap Image") {
     window.openAdminImagePreview(url, title || "Company Roadmap Image");
 }
 
+function toggleCompanyRoadmapModalMaximize(btn) {
+    const modalId = btn.dataset.targetModal || btn.closest(".modal")?.id;
+    if (!modalId) return;
+    const dialog = document.querySelector("#" + modalId + " .modal-dialog");
+    const modalBody = dialog?.querySelector(".modal-body");
+    if (!dialog) return;
+    dialog.classList.toggle("modal-fullscreen");
+    const isFull = dialog.classList.contains("modal-fullscreen");
+
+    // Adjust modal-body max-height for better fullscreen experience
+    if (modalBody) {
+        modalBody.style.maxHeight = isFull ? "calc(100vh - 120px)" : "";
+    }
+
+    btn.innerHTML = isFull
+        ? '<i class="bi bi-fullscreen-exit"></i>'
+        : '<i class="bi bi-arrows-fullscreen"></i>';
+    btn.setAttribute("title", isFull ? "Restore" : "Maximize");
+    btn.setAttribute("aria-label", isFull ? "Restore" : "Maximize");
+}
+
 function buildEditModal(entry, modalId, page, index) {
     const suffix = `_${page}_${index}`;
     const activities = Array.isArray(entry.activities) ? entry.activities : [];
@@ -317,8 +338,15 @@ function buildEditModal(entry, modalId, page, index) {
       <div class="modal-dialog modal-xl">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title">Edit Company Roadmap Entry</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <h5 class="modal-title me-auto">Edit Company Roadmap Entry</h5>
+            <div class="d-flex align-items-center gap-1">
+              <button type="button" class="btn p-1 preview-header-btn edit-maximize-btn" data-target-modal="${modalId}" aria-label="Maximize" title="Maximize">
+                <i class="bi bi-arrows-fullscreen"></i>
+              </button>
+              <button type="button" class="btn p-1 preview-header-btn" data-bs-dismiss="modal" aria-label="Close">
+                <i class="bi bi-x-lg"></i>
+              </button>
+            </div>
           </div>
           <div class="modal-body">
             <form id="editRoadmapForm${suffix}">
@@ -526,6 +554,26 @@ async function deleteCompanyRoadmap(roadmapId) {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+    // Add Company Roadmap maximize handler
+    const addMaxBtn = document.getElementById("addCompanyRoadmapMaximizeBtn");
+    if (addMaxBtn) {
+        addMaxBtn.dataset.targetModal = "addRoadmapModal";
+        addMaxBtn.addEventListener("click", function () {
+            toggleCompanyRoadmapModalMaximize(this);
+        });
+    }
+
+    // Delegated handler for edit maximize buttons (dynamically created)
+    document.addEventListener("click", function (e) {
+        const btn = e.target.closest(".edit-maximize-btn");
+        if (btn) {
+            const modalId = btn.dataset.targetModal;
+            if (modalId) {
+                toggleCompanyRoadmapModalMaximize(btn);
+            }
+        }
+    });
+
     const perPageSelect = document.getElementById("perPageSelect");
     const searchInput = document.getElementById("searchInput");
     const orderSelect = document.getElementById("orderSelect");

@@ -55,8 +55,15 @@
                 <div class="modal-dialog">
                   <div class="modal-content">
                     <div class="modal-header">
-                      <h5 class="modal-title">Add New Video</h5>
-                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      <h5 class="modal-title me-auto">Add New Video</h5>
+                      <div class="d-flex align-items-center gap-1">
+                        <button type="button" class="btn p-1 preview-header-btn" id="addVideoMaximizeBtn" aria-label="Maximize" title="Maximize">
+                          <i class="bi bi-arrows-fullscreen"></i>
+                        </button>
+                        <button type="button" class="btn p-1 preview-header-btn" data-bs-dismiss="modal" aria-label="Close">
+                          <i class="bi bi-x-lg"></i>
+                        </button>
+                      </div>
                     </div>
                     <div class="modal-body">
                       <form id="addVideoForm">

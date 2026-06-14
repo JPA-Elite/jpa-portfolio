@@ -164,8 +164,8 @@
 
             // Store in voteStateCache so music.js uses cached values on re-render
             var voteStateCache = window.voteStateCache;
-            if (voteStateCache && data.music_id) {
-                voteStateCache[data.music_id] = data;
+            if (voteStateCache && musicId) {
+                voteStateCache[musicId] = data;
             }
 
             // Counts are now correct for the updated item; refresh batch after a short debounce.
@@ -216,5 +216,3 @@
         scheduleInitVotes("fallback");
     }, 800);
 })();
-
-

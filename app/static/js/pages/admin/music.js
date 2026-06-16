@@ -159,13 +159,11 @@ async function loadMusic(page = 1) {
                 onclick="togglePreview('${music._id}', '${music.url}')">
                 <i class="bi bi-music-note-beamed"></i> Play
                 </button>
-                <audio id="audio_${
-                music._id
+                <audio id="audio_${music._id
                 }" style="display:none; width:100%; margin-top:5px;"></audio>
             </td>
             <td>
-                <img src="${music.image}" onclick="playMusicPreview('${music.image}')" alt="${
-                safeTitle}" style="cursor: pointer; width: 60px; height: auto; border-radius:4px;">
+                <img src="${music.image}" onclick="playMusicPreview('${music.image}')" alt="${safeTitle}" style="cursor: pointer; width: 60px; height: auto; border-radius:4px;">
             </td>
             <td>
                 <button class="btn btn-sm btn-primary me-1" data-bs-toggle="modal" data-bs-target="#${modalIdEdit}">
@@ -209,8 +207,20 @@ async function loadMusic(page = 1) {
                         <textarea class="form-control" id="editLyrics${page}_${index}" rows="6" placeholder="Enter song lyrics (optional)">${safeLyrics}</textarea>
                     </div>
                     <div class="mb-3">
-                    <label class="form-label">Music File (leave blank to keep current)</label>
-                    <input type="file" class="form-control" id="editMusicFile${page}_${index}" accept="audio/*">
+                        <label class="form-label">Music Source</label>
+                        <div class="form-check form-switch mb-2">
+                            <input class="form-check-input" type="checkbox" role="switch" id="editMusicSourceToggle${page}_${index}">
+                            <label class="form-check-label" for="editMusicSourceToggle${page}_${index}" id="editMusicSourceLabel${page}_${index}">Upload MP3 File</label>
+                        </div>
+                    </div>
+                    <div class="mb-3" id="editMusicFileGroup${page}_${index}">
+                        <label class="form-label">Music File (leave blank to keep current)</label>
+                        <input type="file" class="form-control" id="editMusicFile${page}_${index}" accept="audio/*">
+                    </div>
+                    <div class="mb-3 d-none" id="editMusicUrlGroup${page}_${index}">
+                        <label class="form-label">Music URL (leave blank to keep current)</label>
+                        <input type="url" class="form-control" id="editMusicUrl${page}_${index}" placeholder="https://example.com/song.mp3 or YouTube/SoundCloud link">
+                        <div class="form-text">Paste a direct audio URL or a YouTube/SoundCloud link. yt-dlp will convert it to MP3.</div>
                     </div>
                     <!-- Desktop (Drag & Drop) -->
                     <div class="mb-3 d-none d-md-block">
@@ -246,6 +256,12 @@ async function loadMusic(page = 1) {
                 initDropZone(
                     `editDropZone${page}_${index}`,
                     `editImageFile${page}_${index}`
+                );
+                initMusicSourceToggle(
+                    `editMusicSourceToggle${page}_${index}`,
+                    `editMusicFileGroup${page}_${index}`,
+                    `editMusicUrlGroup${page}_${index}`,
+                    `editMusicSourceLabel${page}_${index}`
                 );
             }, 0);
         });
@@ -297,6 +313,8 @@ async function addMusic() {
     const title = document.getElementById("addTitle").value.trim();
     const artist = document.getElementById("addArtist").value.trim();
     const lyrics = document.getElementById("addLyrics").value;
+    const isUrlMode = document.getElementById("addMusicSourceToggle").checked;
+    const musicUrl = document.getElementById("addMusicUrl").value.trim();
     const musicFile = document.getElementById("addMusicFile").files[0];
     const imageFileDesktop = document.getElementById("addImageFile").files[0];
     const imageFileMobile =
@@ -304,18 +322,31 @@ async function addMusic() {
     const imageFile = imageFileDesktop || imageFileMobile;
 
     // ✅ Required field checks
-    if (!title || !artist || !musicFile || !imageFile) {
+    if (!title || !artist || !imageFile) {
         window.notify("All fields are required.", "warning");
         setButtonLoading(btn, false);
         return;
     }
 
-    // ✅ File type validation
-    if (!musicFile.type.startsWith("audio/")) {
-        window.notify("Please upload a valid music file.", "warning");
-        setButtonLoading(btn, false);
-        return;
+    if (isUrlMode) {
+        if (!musicUrl) {
+            window.notify("Please enter a music URL.", "warning");
+            setButtonLoading(btn, false);
+            return;
+        }
+    } else {
+        if (!musicFile) {
+            window.notify("Please select a music file.", "warning");
+            setButtonLoading(btn, false);
+            return;
+        }
+        if (!musicFile.type.startsWith("audio/")) {
+            window.notify("Please upload a valid music file.", "warning");
+            setButtonLoading(btn, false);
+            return;
+        }
     }
+
     if (!imageFile.type.startsWith("image/")) {
         window.notify("Please upload a valid image file.", "warning");
         setButtonLoading(btn, false);
@@ -326,7 +357,12 @@ async function addMusic() {
     formData.append("title", title);
     formData.append("artist", artist);
     formData.append("lyrics", lyrics);
-    formData.append("music_file", musicFile);
+    formData.append("music_source_type", isUrlMode ? "url" : "file");
+    if (isUrlMode) {
+        formData.append("music_url_input", musicUrl);
+    } else {
+        formData.append("music_file", musicFile);
+    }
     formData.append("image_file", imageFile);
 
     try {
@@ -348,6 +384,18 @@ async function addMusic() {
     }
 }
 
+function initMusicSourceToggle(toggleId, fileGroupId, urlGroupId, labelId) {
+    const toggle = document.getElementById(toggleId);
+    if (!toggle) return;
+    toggle.addEventListener("change", function () {
+        const isUrl = this.checked;
+        document.getElementById(fileGroupId)?.classList.toggle("d-none", isUrl);
+        document.getElementById(urlGroupId)?.classList.toggle("d-none", !isUrl);
+        const label = document.getElementById(labelId);
+        if (label) label.textContent = isUrl ? "From URL (convert to MP3)" : "Upload MP3 File";
+    });
+}
+
 async function updateMusic(musicId, formId) {
     const btn = document.getElementById(`editMusicBtn_${musicId}`);
     setButtonLoading(btn, true);
@@ -362,6 +410,11 @@ async function updateMusic(musicId, formId) {
     const lyrics = form
         .querySelector(`#${formId} textarea[id^='editLyrics']`)
         .value;
+
+    const prefix = formId.replace("editForm", "");
+    const toggle = document.getElementById(`editMusicSourceToggle${prefix}`);
+    const isUrlMode = toggle ? toggle.checked : false;
+    const musicUrl = form.querySelector(`#editMusicUrl${prefix}`)?.value.trim();
     const musicFile = form.querySelector(`#${formId} input[id^='editMusicFile']`)
         .files[0];
     const imageFileDesktop = form.querySelector(
@@ -380,7 +433,7 @@ async function updateMusic(musicId, formId) {
     }
 
     // ✅ File type validation (only if provided)
-    if (musicFile && !musicFile.type.startsWith("audio/")) {
+    if (!isUrlMode && musicFile && !musicFile.type.startsWith("audio/")) {
         window.notify("Please upload a valid music file.", "warning");
         setButtonLoading(btn, false);
         return;
@@ -395,7 +448,12 @@ async function updateMusic(musicId, formId) {
     formData.append("title", title);
     formData.append("artist", artist);
     formData.append("lyrics", lyrics);
-    if (musicFile) formData.append("music_file", musicFile);
+    formData.append("music_source_type", isUrlMode ? "url" : "file");
+    if (isUrlMode) {
+        if (musicUrl) formData.append("music_url_input", musicUrl);
+    } else {
+        if (musicFile) formData.append("music_file", musicFile);
+    }
     if (imageFile) formData.append("image_file", imageFile);
 
     try {
@@ -472,6 +530,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
     loadMusic(currentPage);
     initDropZone("addDropZone", "addImageFile");
+    initMusicSourceToggle("addMusicSourceToggle", "addMusicFileGroup", "addMusicUrlGroup", "addMusicSourceLabel");
 
     const addMusicModal = document.getElementById("addMusicModal");
     addMusicModal.addEventListener("show.bs.modal", () => {

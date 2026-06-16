@@ -80,8 +80,20 @@
                             placeholder="Enter song lyrics (optional)"></textarea>
                         </div>
                         <div class="mb-3">
+                          <label class="form-label">Music Source</label>
+                          <div class="form-check form-switch mb-2">
+                            <input class="form-check-input" type="checkbox" role="switch" id="addMusicSourceToggle">
+                            <label class="form-check-label" for="addMusicSourceToggle" id="addMusicSourceLabel">Upload MP3 File</label>
+                          </div>
+                        </div>
+                        <div class="mb-3" id="addMusicFileGroup">
                           <label class="form-label">Music File <span class="text-danger">*</span></label>
-                          <input type="file" class="form-control" id="addMusicFile" accept="audio/*" required>
+                          <input type="file" class="form-control" id="addMusicFile" accept="audio/*">
+                        </div>
+                        <div class="mb-3 d-none" id="addMusicUrlGroup">
+                          <label class="form-label">Music URL <span class="text-danger">*</span></label>
+                          <input type="url" class="form-control" id="addMusicUrl" placeholder="https://example.com/song.mp3 or YouTube/SoundCloud link">
+                          <div class="form-text">Paste a direct audio URL or a YouTube/SoundCloud link. yt-dlp will convert it to MP3.</div>
                         </div>
                         <!-- Desktop (Drag & Drop) -->
                         <div class="mb-3 d-none d-md-block">

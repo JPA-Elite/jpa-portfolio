@@ -8,7 +8,6 @@ class GalleryLike:
         self.like = bool(like)
 
     def to_dict(self):
-        """Convert GalleryLike object to a dictionary for MongoDB storage."""
         data = {
             "gallery_id": self.gallery_id,
             "ip_address": self.ip_address,
@@ -20,7 +19,6 @@ class GalleryLike:
 
     @staticmethod
     def from_dict(data):
-        """Create a GalleryLike object from a MongoDB document."""
         _id = data.get("_id")
         if isinstance(_id, dict) and "$oid" in _id:
             _id = str(_id["$oid"])

@@ -1,19 +1,14 @@
 <link rel="stylesheet" href="{{ static_asset('css/components/searchbar.css') }}" />
 <form action="{{ base_url }}" method="GET">
     <div class="search-container">
-        <!-- Section for displaying selected tags -->
         <div id="selected-tags-container" class="selected-tags-container"></div>
-        <!-- Hidden input to hold selected tags -->
         <input type="hidden" name="tags" id="tags-input">
         <div>
             <div class="search-bar">
-                <!-- Search input -->
                 <input type="text" name="search" placeholder="{{ _('search_placeholder') }}" class="search-input"
                     id="search-input" autocomplete="off">
                 <button type="submit" class="search-next">{{ _('pagination_next') }}<span>&rarr;</span></button>
             </div>
-
-            <!-- Modal for Tags -->
             <div class="tags-modal" id="tags-modal">
                 <div class="tags-modal-content">
                     {% if random_tags %}

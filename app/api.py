@@ -1,4 +1,3 @@
-# pages.py
 from app.Controllers.api.VlogCommentController import vlog_comments_route, vlog_like_comment_route
 from app.Controllers.api.VlogLikeController import (
     add_vlog_like_route,
@@ -57,7 +56,6 @@ from app.Controllers.api.AdminOtpController import (
     admin_otp_email_save_route,
 )
 
-# Create a Blueprint for api
 api_bp = Blueprint("api", __name__)
 
 
@@ -217,7 +215,6 @@ def clear_all_activity():
     return clear_all_activity_route()
 
 # Music API
-
 @api_bp.route("/admin/api/music-list", methods=[http.GET])
 @admin_login_required
 def music_list():
@@ -361,9 +358,6 @@ def admin_face_register():
 
 
 # ********************* Admin OTP (Email) *********************
-# OTP is used to replace face verification in the admin login flow.
-from app.Services.OtpService import OtpService
-
 
 @api_bp.route("/admin/api/otp/send", methods=[http.POST])
 @admin_login_required

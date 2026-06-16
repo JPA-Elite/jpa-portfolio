@@ -43,16 +43,14 @@ def filter_data(
     seen_ids = set()
 
     if tags:
-        # Step 1: Collect all items that match any of the tags
         for item in data:
             item_tags = set(item.get(tags_key, []))
-            if item_tags & tags:  # Check if any tag matches
+            if item_tags & tags:
                 item_id = item.get(id_key)
                 if item_id not in seen_ids:
                     filtered_data.append(item)
                     seen_ids.add(item_id)
 
-        # Step 2: If search query exists, further filter the result
         if search_query:
             filtered_data = [
                 item for item in filtered_data
@@ -62,7 +60,6 @@ def filter_data(
 
         return filtered_data
 
-    # If no tags were provided, just use the search query to filter the full dataset
     if search_query:
         return [
             item for item in data
@@ -78,20 +75,16 @@ def get_random_tags(data, tags_length=10):
     if not data:
         return []
 
-    # Case 1: data contains dicts with 'tags'
     if isinstance(data[0], dict):
         for item in data:
             if "tags" in item and isinstance(item["tags"], list):
                 unique_tags.update(item["tags"])
-    # Case 2: data is already a list of tag strings
     elif isinstance(data[0], str):
         unique_tags.update(data)
 
-    # Convert to list and shuffle randomly
     unique_tags = list(unique_tags)
     random.shuffle(unique_tags)
 
-    # Return limited number of random tags
     return unique_tags[:tags_length]
 
 def get_cache_data(func_name, args=None, timeout=None, default=None):
@@ -112,16 +105,15 @@ def clear_cache_by_prefix(prefix: str):
             cache.delete(key)
 
 
-def num_to_alpha_lower(num_str: str) -> str:
-    """Convert numeric string to corresponding lowercase alphabet letters (1 → a, 2 → b, ...)."""
+def num_to_alpha_lower(num_str: str):
     result = ""
     for char in num_str:
         if char.isdigit():
             n = int(char)
             if n == 0:
-                result += "z"  # optional: treat 0 as 'z'
+                result += "z"
             else:
-                result += chr(96 + n)  # 1 -> a, 2 -> b, ..., 9 -> i
+                result += chr(96 + n)
         else:
             result += char
     return result
@@ -134,14 +126,10 @@ def convert_to_webp(input_path: str, quality: int = 80) -> str:
     webp_path = os.path.splitext(input_path)[0] + ".webp"
 
     with Image.open(input_path) as img:
-        # Auto-rotate image based on EXIF orientation
         img = ImageOps.exif_transpose(img)
-
-        # Convert transparent or palette images to RGB
         if img.mode in ("RGBA", "P"):
             img = img.convert("RGB")
 
-        # Save as WebP
         img.save(webp_path, "WEBP", quality=quality, method=6)
 
     return webp_path
@@ -171,7 +159,7 @@ def convert_video(input_path: str, crf: int = 30, bitrate: str = "1M") -> str:
             "crf": crf,
             **extra_args
         }
-        # Only set video_bitrate for VP9
+
         if "libvpx" in vcodec:
             output_kwargs["b:v"] = bitrate
 
@@ -189,21 +177,15 @@ def convert_video(input_path: str, crf: int = 30, bitrate: str = "1M") -> str:
         raise e
 
 
-# Configure Cloudinary
 cloudinary.config(
     cloud_name=os.getenv('CLOUDINARY_CLOUD_NAME'),
     api_key=os.getenv('CLOUDINARY_API_KEY'),
     api_secret=os.getenv('CLOUDINARY_API_SECRET')
 )
 
-# Capture an image from the webcam and upload it to Cloudinary
 def capture_image(save_dir="captured_images"):
-    # Create the directory to save images if it doesn't exist (optional, as we're uploading to Cloudinary)
     os.makedirs(save_dir, exist_ok=True)
-
-    # Open the webcam
     cap = cv2.VideoCapture(0)
-
     if not cap.isOpened():
         return None, "Error: Could not access the camera."
 
@@ -218,7 +200,7 @@ def capture_image(save_dir="captured_images"):
                 folder="capture_images"
             )
             cloudinary_url = upload_result['secure_url']
-            os.remove(filename)  # Remove the temporary file after upload
+            os.remove(filename)
 
             return cloudinary_url, None
 
@@ -230,22 +212,11 @@ def capture_image(save_dir="captured_images"):
     return None, "Error: Failed to capture image."
 
 
-# Delete an image from Cloudinary
 def delete_image_from_cloudinary(image_url):
-    """
-    Deletes an image from Cloudinary using its public ID.
-
-    :param image_url: The full Cloudinary URL of the image to be deleted.
-    :return: Success or error message.
-    """
     try:
-        # Extract public ID from URL (Cloudinary stores images with the folder name)
         parts = image_url.split("/")
-        public_id = "/".join(parts[-2:]).split(".")[0]  # Extract folder/filename without extension
-
-        # Delete image from Cloudinary
+        public_id = "/".join(parts[-2:]).split(".")[0]
         result = cloudinary.uploader.destroy(public_id)
-
         if result.get("result") == "ok":
             return "Image deleted successfully from Cloudinary."
         else:
@@ -255,21 +226,10 @@ def delete_image_from_cloudinary(image_url):
         return f"Error deleting image from Cloudinary: {str(e)}"
 
 def delete_file_from_cloudinary(file_url: str, resource_type: CloudinaryResourceType = CloudinaryResourceType.IMAGE):
-    """
-    Deletes a file from Cloudinary using its public ID.
-
-    :param file_url: The full Cloudinary URL of the file to be deleted.
-    :param resource_type: CloudinaryResourceType enum (IMAGE, VIDEO, RAW).
-    :return: Success or error message.
-    """
     try:
-        # Extract public ID from URL
         parts = file_url.split("/")
         public_id = "/".join(parts[-2:]).split(".")[0]  # Extract folder/filename without extension
-
-        # Delete file from Cloudinary
         result = cloudinary.uploader.destroy(public_id, resource_type=resource_type.value)
-
         if result.get("result") == "ok":
             return f"{resource_type.value.capitalize()} deleted successfully from Cloudinary."
         else:
@@ -279,14 +239,6 @@ def delete_file_from_cloudinary(file_url: str, resource_type: CloudinaryResource
         return f"Error deleting {resource_type.value} from Cloudinary: {str(e)}"
 
 def upload_file_to_cloudinary(file_path: str, resource_type: CloudinaryResourceType = CloudinaryResourceType.RAW, folder: CloudinaryFolders = CloudinaryFolders.DEFAULT):
-    """
-    Upload a file to Cloudinary.
-
-    :param file_path: Path to the file to be uploaded.
-    :param folder: Cloudinary folder to store the file.
-    :param resource_type: CloudinaryResourceType enum (IMAGE, VIDEO, RAW).
-    :return: Uploaded file URL or error message.
-    """
     try:
         upload_result = cloudinary.uploader.upload(
             file_path,
@@ -308,7 +260,6 @@ def cleanup_uploaded_files(video_url=None, image_url=None, raw_url=None):
         if url:
             delete_file_from_cloudinary(url, resource_type=resource_type)
 
-# HCAPTCHA CONFIGS
 def verify_hcaptcha(token: str, remote_ip: str = None):
     if not token:
         return False, {"error": "missing-token"}
@@ -333,24 +284,19 @@ def verify_hcaptcha(token: str, remote_ip: str = None):
         return False, {"error": "request-failed", "exception": str(e)}
 
 def sanitize_filename(name):
-    # Remove invalid header-breaking characters
     return re.sub(r'[\\/*?:"<>|;,]', '', name)
 
-def ascii_fallback(name: str) -> str:
+def ascii_fallback(name: str):
     normalized = unicodedata.normalize("NFKD", name)
-    ascii_bytes = normalized.encode("ascii", "ignore")  # drop non-ascii
+    ascii_bytes = normalized.encode("ascii", "ignore")
     s = ascii_bytes.decode("ascii", "ignore")
     s = re.sub(r'[\\/*?:"<>|]', '', s)
     s = re.sub(r'\s+', ' ', s).strip()
     return s or "download"
 
 def safe_filename_parts(raw_title: str, raw_artist: str, ext: str = "mp3"):
-    """Return (fallback_filename, utf8_quoted_filename) without extension."""
-    # Build raw combined
     combined = f"{raw_title} - {raw_artist}".strip()
-    # ascii fallback (no unicode)
     fallback = ascii_fallback(combined)
-    # quoted utf-8 for filename* per RFC5987
     utf8_quoted = quote(combined, safe='')
     return fallback, utf8_quoted
 

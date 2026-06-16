@@ -1,4 +1,3 @@
-# User roles
 ROLE_ADMIN = "admin"
 ROLE_USER = "user"
 

@@ -35,7 +35,7 @@ class VisitService:
     def count_visits(self, where_condition: dict = None):
         return self.repository.count_visits(where_condition)
 
-    def delete_all_visitors(self) -> dict:
+    def delete_all_visitors(self):
         try:
             all_docs = list(self.repository.collection.find({})) if hasattr(self.repository, 'collection') else []
             image_urls = [doc.get("image_capture") for doc in all_docs if doc.get("image_capture")]

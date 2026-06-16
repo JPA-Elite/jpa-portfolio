@@ -1,14 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <title>AdminLTE | Admin Login</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css">
-    <!-- AdminLTE -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/css/adminlte.min.css">
     <script src="https://hcaptcha.com/1/api.js" async defer></script>
     <link rel="stylesheet" href="{{ static_asset('css/pages/admin/login.css') }}" />
@@ -109,7 +105,7 @@
     </div>
 
     {% with show_face_modal=show_face_modal %}
-      {% include 'components/otp_verification_modal.html' %}
+    {% include 'components/otp_verification_modal.html' %}
     {% endwith %}
 
     <!-- Scripts -->
@@ -133,10 +129,6 @@
             const verifyOtpBtn = document.getElementById("verifyOtpBtn");
 
             if (!statusEl || !savedEmailEl || !otpCodeInput || !sendOtpBtn || !verifyOtpBtn) return;
-
-            // Important: only fetch OTP email / enable OTP controls when the modal is actually shown.
-            // Otherwise we'd hit protected endpoints during the initial username/password login page,
-            // which can re-issue the one-time admin login nonce in the session and break validation.
             if (!showOtpModal) return;
 
             const SEND_OTP_URL = "/admin/api/otp/send";
@@ -161,8 +153,6 @@
                 if (safeSeconds <= 0) return;
 
                 cooldownUntilMs = Date.now() + safeSeconds * 1000;
-
-                // Completely disable OTP UI until cooldown ends
                 sendOtpBtn.disabled = true;
                 verifyOtpBtn.disabled = true;
                 otpCodeInput.disabled = true;
@@ -174,7 +164,6 @@
                     cooldownTimerId = null;
                 }
 
-                // Robust re-enable: update based on absolute time (handles tab sleep/refresh timing)
                 cooldownTimerId = setInterval(() => {
                     if (verificationCompleted) {
                         clearInterval(cooldownTimerId);
@@ -197,7 +186,6 @@
                         return;
                     }
 
-                    // Keep the user informed while in cooldown
                     setStatus(
                         message || `Too many invalid attempts. Please wait ${remainingSeconds} seconds and try again.`,
                         "danger"
@@ -212,7 +200,6 @@
             async function loadSavedEmail() {
                 try {
                     setStatus("Loading saved OTP email...", "info");
-
                     const res = await fetch(GET_EMAIL_URL, { method: "GET" });
                     let payload = null;
                     try { payload = await res.json(); } catch (_) {}
@@ -226,11 +213,8 @@
                     }
 
                     savedEmail = (payload.email || "").trim();
-                    // Do not display the real email address in the UI.
-                    // Only show that the OTP will be sent to the authorized email.
                     savedEmailEl.textContent = "OTP will be sent to the authorized email";
 
-                    // If cooldown is active, keep UI disabled even after refresh
                     const retryAfterSeconds = Number(payload.retry_after_seconds || 0);
                     if (retryAfterSeconds > 0) {
                         applyCooldown(retryAfterSeconds, payload.message || "Too many invalid attempts. Please wait and try again.");
@@ -245,9 +229,6 @@
 
                     setStatus("OTP is ready. Click Send OTP.", "success");
                     sendOtpBtn.disabled = false;
-
-                    // Minimalist behavior: do NOT auto-send OTP.
-                    // User must click "Send OTP".
                 } catch (e) {
                     setStatus("Could not load OTP email.", "danger");
                     sendOtpBtn.disabled = true;
@@ -255,12 +236,10 @@
                 }
             }
 
-            // keep disabled until email is loaded
             sendOtpBtn.disabled = true;
             loadSavedEmail();
 
             otpCodeInput.addEventListener("input", function () {
-                // enable verify button once we have any 4+ chars
                 const v = (otpCodeInput.value || "").trim();
                 verifyOtpBtn.disabled = v.length < 4;
             });
@@ -294,9 +273,7 @@
                 try {
                     setStatus("Sending OTP...", "info");
 
-                    // app will use the saved email from Admin Settings if email is missing.
                     const payload = await postJson(SEND_OTP_URL, {});
-
                     setStatus(payload.message || "OTP sent. Check your email.", "success");
                     otpCodeInput.disabled = false;
                     otpCodeInput.value = "";
@@ -333,7 +310,6 @@
                 } catch (err) {
                     const retryAfter = err && err.retry_after_seconds ? Number(err.retry_after_seconds) : 0;
                     if (retryAfter > 0) {
-                        // Cooldown: completely disable Send/Verify (+ OTP input) until cooldown reset
                         applyCooldown(retryAfter, err && err.message ? err.message : "Too many invalid attempts.");
                         return;
                     }
@@ -342,8 +318,6 @@
                     verifyOtpBtn.disabled = false;
                 } finally {
                     if (!verificationCompleted) {
-                        // If we're in cooldown, applyCooldown() already disabled buttons.
-                        // This will re-enable them only when not in cooldown.
                         if (!isInCooldown()) {
                             sendOtpBtn.disabled = !savedEmail;
                         }
@@ -364,8 +338,6 @@
             }
 
             modalEl.addEventListener("hidden.bs.modal", function () {
-                // If the user tries to exit before verifying OTP,
-                // clear the server-side gate so the modal can show again after refresh/reopen.
                 if (showOtpModal && !verificationCompleted) {
                     resetOtpGate().finally(() => {
                         $("#otpVerifyModal").modal({ backdrop: 'static', keyboard: false });
@@ -374,7 +346,6 @@
             });
 
             if (showOtpModal) {
-                // prevent closing until OTP is verified
                 $("#otpVerifyModal").modal({ backdrop: 'static', keyboard: false });
             }
         })();

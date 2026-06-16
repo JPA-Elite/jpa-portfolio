@@ -4,14 +4,12 @@ import os
 import secrets
 import time
 from dataclasses import dataclass
-
 from flask import request, session
-
 from app.extensions import cache
 from .ddos_guard import get_request_ip
 
 
-def _safe_int_env(name: str, default: int) -> int:
+def _safe_int_env(name: str, default: int):
     raw_value = os.getenv(name)
     if raw_value is None:
         return default
@@ -21,18 +19,18 @@ def _safe_int_env(name: str, default: int) -> int:
         return default
 
 
-def _safe_bool_env(name: str, default: bool) -> bool:
+def _safe_bool_env(name: str, default: bool):
     raw_value = os.getenv(name)
     if raw_value is None:
         return default
     return raw_value.strip().lower() in {"1", "true", "yes", "on"}
 
 
-def _hash_key(value: str) -> str:
+def _hash_key(value: str):
     return hashlib.sha256(value.encode("utf-8")).hexdigest()[:24]
 
 
-def _cache_get_int(key: str) -> int:
+def _cache_get_int(key: str):
     value = cache.get(key)
     try:
         return int(value or 0)
@@ -40,21 +38,20 @@ def _cache_get_int(key: str) -> int:
         return 0
 
 
-def _cache_set_int(key: str, value: int, timeout: int) -> None:
+def _cache_set_int(key: str, value: int, timeout: int):
     cache.set(key, int(value), timeout=max(1, timeout))
 
 
-def _cache_get_lock_seconds(key: str) -> int:
+def _cache_get_lock_seconds(key: str):
     expires_at = _cache_get_int(key)
     if not expires_at:
         return 0
     return max(0, expires_at - int(time.time()))
 
 
-def _set_lock(key: str, seconds: int) -> None:
+def _set_lock(key: str, seconds: int):
     seconds = max(1, seconds)
     expires_at = int(time.time()) + seconds
-    # Store absolute expiry to avoid relying on app-specific TTL introspection.
     cache.set(key, expires_at, timeout=seconds + 5)
 
 
@@ -63,7 +60,6 @@ class AdminLoginGateResult:
     allowed: bool
     message: str = ""
     retry_after_seconds: int = 0
-
 
 class AdminLoginSecurity:
     SESSION_NONCE_KEY = "_admin_login_nonce"
@@ -75,41 +71,35 @@ class AdminLoginSecurity:
         self.enabled = _safe_bool_env("ADMIN_LOGIN_GUARD_ENABLED", True)
         self.min_form_age_seconds = _safe_int_env("ADMIN_LOGIN_MIN_FORM_AGE_SECONDS", 1)
         self.max_form_age_seconds = _safe_int_env("ADMIN_LOGIN_MAX_FORM_AGE_SECONDS", 1800)
-
-        # Sliding-window counters (cache TTL-based)
         self.window_seconds = _safe_int_env("ADMIN_LOGIN_FAIL_WINDOW_SECONDS", 900)
         self.max_failures_per_ip = _safe_int_env("ADMIN_LOGIN_MAX_FAILURES_PER_IP", 8)
         self.max_failures_per_username = _safe_int_env("ADMIN_LOGIN_MAX_FAILURES_PER_USERNAME", 10)
         self.max_failures_per_ip_username = _safe_int_env("ADMIN_LOGIN_MAX_FAILURES_PER_IP_USERNAME", 5)
-
-        # Progressive cooldown (IP + username)
         self.cooldown_base_seconds = _safe_int_env("ADMIN_LOGIN_COOLDOWN_BASE_SECONDS", 2)
         self.cooldown_max_seconds = _safe_int_env("ADMIN_LOGIN_COOLDOWN_MAX_SECONDS", 60)
-
-        # Hard locks
         self.lock_seconds_ip = _safe_int_env("ADMIN_LOGIN_LOCK_SECONDS_IP", 1800)  # 30 min
         self.lock_seconds_username = _safe_int_env("ADMIN_LOGIN_LOCK_SECONDS_USERNAME", 3600)  # 60 min
         self.lock_seconds_ip_username = _safe_int_env("ADMIN_LOGIN_LOCK_SECONDS_IP_USERNAME", 3600)
 
-    def _username_key(self, username: str) -> str:
+    def _username_key(self, username: str):
         return _hash_key((username or "").strip().lower() or "unknown")
 
-    def _ip_key(self) -> str:
+    def _ip_key(self):
         return _hash_key(get_request_ip())
 
-    def _ip_user_key(self, username: str) -> str:
+    def _ip_user_key(self, username: str):
         return _hash_key(f"{get_request_ip()}|{(username or '').strip().lower()}")
 
-    def _counter_key(self, scope: str, identity_key: str) -> str:
+    def _counter_key(self, scope: str, identity_key: str):
         return f"admin_login:fail:{scope}:{identity_key}"
 
-    def _lock_key(self, scope: str, identity_key: str) -> str:
+    def _lock_key(self, scope: str, identity_key: str):
         return f"admin_login:lock:{scope}:{identity_key}"
 
-    def _cooldown_key(self, identity_key: str) -> str:
+    def _cooldown_key(self, identity_key: str):
         return f"admin_login:cooldown:{identity_key}"
 
-    def issue_form_challenge(self) -> dict:
+    def issue_form_challenge(self):
         nonce = secrets.token_urlsafe(24)
         issued_at = int(time.time())
         session[self.SESSION_NONCE_KEY] = nonce
@@ -119,7 +109,7 @@ class AdminLoginSecurity:
             "admin_login_honeypot_field": self.HONEYPOT_FIELD,
         }
 
-    def validate_form_submission(self) -> AdminLoginGateResult:
+    def validate_form_submission(self):
         if not self.enabled:
             return AdminLoginGateResult(True)
 
@@ -130,8 +120,6 @@ class AdminLoginSecurity:
         provided_nonce = request.form.get(self.NONCE_FIELD, "")
         expected_nonce = session.get(self.SESSION_NONCE_KEY, "")
         issued_at = session.get(self.SESSION_ISSUED_AT_KEY)
-
-        # One-time use form challenge (similar to double-submit anti-bot token).
         session.pop(self.SESSION_NONCE_KEY, None)
         session.pop(self.SESSION_ISSUED_AT_KEY, None)
 
@@ -155,7 +143,7 @@ class AdminLoginSecurity:
 
         return AdminLoginGateResult(True)
 
-    def check_before_auth(self, username: str) -> AdminLoginGateResult:
+    def check_before_auth(self, username: str):
         if not self.enabled:
             return AdminLoginGateResult(True)
 
@@ -185,19 +173,17 @@ class AdminLoginSecurity:
 
         return AdminLoginGateResult(True)
 
-    def record_failure(self, username: str) -> None:
+    def record_failure(self, username: str):
         if not self.enabled:
             return
 
         username_key = self._username_key(username)
         ip_key = self._ip_key()
         ip_user_key = self._ip_user_key(username)
-
         ip_count = self._increment_counter("ip", ip_key)
         user_count = self._increment_counter("username", username_key)
         ip_user_count = self._increment_counter("ip_user", ip_user_key)
 
-        # Progressive cooldown on the exact IP+username pair to slow brute force loops.
         cooldown_delay = min(
             self.cooldown_max_seconds,
             max(0, self.cooldown_base_seconds * (2 ** max(0, ip_user_count - 1))),
@@ -205,7 +191,6 @@ class AdminLoginSecurity:
         if cooldown_delay > 0:
             _set_lock(self._cooldown_key(ip_user_key), cooldown_delay)
 
-        # Hard lock by scope if thresholds are exceeded.
         if ip_count >= self.max_failures_per_ip:
             _set_lock(self._lock_key("ip", ip_key), self.lock_seconds_ip)
 
@@ -230,17 +215,16 @@ class AdminLoginSecurity:
         ):
             cache.delete(key)
 
-        # Keep broader IP/username counters but reduce them to allow recovery without instantly re-locking.
         self._decay_counter(self._counter_key("ip", ip_key))
         self._decay_counter(self._counter_key("username", username_key))
 
-    def _increment_counter(self, scope: str, identity_key: str) -> int:
+    def _increment_counter(self, scope: str, identity_key: str):
         cache_key = self._counter_key(scope, identity_key)
         current = _cache_get_int(cache_key) + 1
         _cache_set_int(cache_key, current, self.window_seconds)
         return current
 
-    def _decay_counter(self, cache_key: str) -> None:
+    def _decay_counter(self, cache_key: str):
         current = _cache_get_int(cache_key)
         if current <= 1:
             cache.delete(cache_key)

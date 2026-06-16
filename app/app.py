@@ -1,4 +1,4 @@
-from flask import Flask, render_template, send_from_directory, url_for, Response, abort # type: ignore
+from flask import Flask, render_template, send_from_directory, url_for, Response, abort
 from app.configurations import (
     ERROR_404_PAGE,
     LANGUAGES,
@@ -8,21 +8,21 @@ from app.configurations import (
     TL_LOCALE,
     get_locale,
 )
-from flask_babel import Babel  # type: ignore
+from flask_babel import Babel
 from app.pages import pages_bp
 from app.api import api_bp
 from datetime import datetime, timedelta
 import json
-from app.sitemap import sitemap_bp  # Import the sitemap blueprint
+from app.sitemap import sitemap_bp
 import os
 import requests
-from markupsafe import Markup  # type: ignore
+from markupsafe import Markup
 import time
 from app.extensions import cache
 from app.security import init_ddos_guard
 from dotenv import load_dotenv
 
-def _env_bool(name: str, default: bool) -> bool:
+def _env_bool(name: str, default: bool):
     raw = os.getenv(name)
     if raw is None:
         return default
@@ -30,7 +30,6 @@ def _env_bool(name: str, default: bool) -> bool:
 
 load_dotenv()
 
-# Flask 2.3 warns on FLASK_ENV; normalize to FLASK_DEBUG for local compatibility.
 if os.getenv("FLASK_DEBUG") is None and os.getenv("FLASK_ENV"):
     os.environ["FLASK_DEBUG"] = "1" if os.getenv("FLASK_ENV", "").lower() == "development" else "0"
 os.environ.pop("FLASK_ENV", None)
@@ -38,11 +37,9 @@ os.environ.pop("FLASK_ENV", None)
 app_root = os.path.dirname(__file__)
 default_templates = os.path.join(app_root, "templates")
 default_static = os.path.join(app_root, "static")
-
 dist_root = os.path.join(app_root, "dist", "frontend")
 dist_templates = os.path.join(dist_root, "templates")
 dist_static = os.path.join(dist_root, "static")
-
 use_frontend_dist = _env_bool("FRONTEND_DIST", False)
 use_dist_static = use_frontend_dist and os.path.isdir(dist_static)
 use_dist_templates = (
@@ -56,11 +53,9 @@ app = Flask(
     template_folder=dist_templates if use_dist_templates else default_templates,
     static_folder=dist_static if use_dist_static else default_static,
 )
-
 app.config["SECRET_KEY"] = os.getenv('SECRET_KEY')
 app.config["LANGUAGES"] = LANGUAGES
 app.config["BABEL_DEFAULT_LOCALE"] = BABEL_DEFAULT_LOCALE
-
 app.config["SESSION_TYPE"] = "filesystem"
 app.config["SESSION_PERMANENT"] = True
 app.config["PERMANENT_SESSION_LIFETIME"] = timedelta(days=30)
@@ -71,7 +66,6 @@ app.config["SESSION_COOKIE_SECURE"] = _env_bool(
     not _env_bool("FLASK_DEBUG", False),
 )
 
-# ✅ Configure cache globally
 app.config["CACHE_TYPE"] = os.getenv("CACHE_TYPE", "simple")
 try:
     app.config["CACHE_DEFAULT_TIMEOUT"] = int(os.getenv("CACHE_DEFAULT_TIMEOUT", "86400"))
@@ -96,13 +90,12 @@ _vite_proxy_assets = _env_bool("VITE_PROXY_ASSETS", False)
 _template_livereload = _env_bool("TEMPLATE_LIVERELOAD", False) or bool(_vite_dev_server)
 _template_mtime_cache = {"checked": 0.0, "mtime": 0.0}
 
-
-def _vite_asset_url(path: str) -> str:
+def _vite_asset_url(path: str):
     base = _vite_dev_server.rstrip("/")
     return f"{base}/{path.lstrip('/')}"
 
 
-def _load_asset_manifest() -> dict:
+def _load_asset_manifest():
     manifest_path = os.path.join(app.static_folder or "", "manifest.json")
     if not os.path.isfile(manifest_path):
         _asset_manifest_cache["mtime"] = None
@@ -135,7 +128,7 @@ def _load_asset_manifest() -> dict:
     return asset_map
 
 
-def static_asset(path: str) -> str:
+def static_asset(path: str):
     if not path:
         return ""
     clean_path = path.lstrip("/")
@@ -150,14 +143,14 @@ def static_asset(path: str) -> str:
     return url_for("static", filename=clean_path)
 
 
-def vite_hmr() -> str:
+def vite_hmr():
     if not _vite_dev_server:
         return ""
     src = static_asset("@vite/client")
     return Markup(f'<script type="module" src="{src}"></script>')
 
 
-def _latest_template_mtime() -> float:
+def _latest_template_mtime():
     root = app.template_folder or ""
     if not root or not os.path.isdir(root):
         return 0.0
@@ -182,7 +175,7 @@ def _latest_template_mtime() -> float:
     return latest
 
 
-def template_livereload() -> str:
+def template_livereload():
     if not _template_livereload:
         return ""
     return Markup(
@@ -205,13 +198,9 @@ def template_livereload() -> str:
     )
 
 
-# ✅ Initialize cache
 cache.init_app(app)
-
-# ✅ App-level abuse throttling / basic DDoS guard (best-effort; edge protection still required)
 init_ddos_guard(app)
 
-# ✅ Initialize Babel
 babel = Babel(app)
 babel.init_app(app, locale_selector=get_locale)
 

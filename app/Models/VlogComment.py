@@ -1,19 +1,17 @@
-# Models/VlogComment.py
 from bson import ObjectId
 from datetime import datetime
 
 
 class VlogComment:
     def __init__(self, vlog_id, author_name, text, ip_address, liked_ips=None, _id=None, created_at=None):
-        self._id = _id  # MongoDB ObjectId (string)
+        self._id = _id
 
-        # ✅ Handle both Mongo Int and UUID/String IDs
         if isinstance(id, dict) and "$numberInt" in id:
             self.id = int(id["$numberInt"])
         elif isinstance(id, str) and id.isdigit():
             self.id = int(id)
         else:
-            self.id = id  # UUID or None
+            self.id = id
 
         self.vlog_id = vlog_id
         self.author_name = author_name
@@ -23,7 +21,6 @@ class VlogComment:
         self.created_at = created_at if created_at else datetime.utcnow()
 
     def to_dict(self):
-        """Convert this object into a MongoDB-friendly dict."""
         data = {
             "vlog_id": self.vlog_id,
             "author_name": self.author_name,
@@ -40,7 +37,6 @@ class VlogComment:
 
     @staticmethod
     def from_dict(data):
-        """Convert a MongoDB document into a VlogComment object."""
         if not data:
             return None
 

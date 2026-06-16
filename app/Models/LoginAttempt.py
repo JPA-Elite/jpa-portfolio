@@ -5,7 +5,6 @@ class LoginAttempt:
         self.lockout_until = lockout_until
 
     def to_dict(self):
-        """Convert the LoginAttempt object to a dictionary for database storage."""
         data = {
             "attempts": self.attempts,
             "lockout_until": self.lockout_until,
@@ -18,7 +17,6 @@ class LoginAttempt:
 
     @staticmethod
     def from_dict(data):
-        """Create a LoginAttempt object from a MongoDB document."""
         return LoginAttempt(
             _id=data.get("_id"),
             attempts=data.get("attempts"),

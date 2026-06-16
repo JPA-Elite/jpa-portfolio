@@ -11,32 +11,29 @@ class OtpService:
     _FIELD_ATTEMPTS = "admin_otp_attempts"
     _FIELD_COOLDOWN_UNTIL = "admin_otp_cooldown_until"
 
-    def __init__(self) -> None:
+    def __init__(self):
         self.otp_ttl_seconds: int = self._env_int("ADMIN_OTP_TTL_SECONDS", 300)
         self.otp_length: int = self._env_int("ADMIN_OTP_LENGTH", 6)
-
         self.smtp_host: str = os.getenv("SMTP_HOST", "")
         self.smtp_port: int = self._env_int("SMTP_PORT", 587)
         self.smtp_username: str = os.getenv("SMTP_USERNAME", "")
         self.smtp_password: str = os.getenv("SMTP_PASSWORD", "")
         self.smtp_from: str = os.getenv("SMTP_FROM", self.smtp_username)
         self.smtp_from_name: str = os.getenv("SMTP_FROM_NAME", "").strip()
-
         self.smtp_use_tls: bool = self._env_bool("SMTP_USE_TLS", True)
         self.smtp_use_ssl: bool = self._env_bool("SMTP_USE_SSL", False)
-
         self.otp_cooldown_seconds: int = self._env_int("ADMIN_OTP_COOLDOWN_SECONDS", 60)
         self.otp_max_attempts: int = self._env_int("ADMIN_OTP_MAX_ATTEMPTS", 5)
 
     @staticmethod
-    def _env_bool(name: str, default: bool) -> bool:
+    def _env_bool(name: str, default: bool):
         raw = os.getenv(name)
         if raw is None:
             return default
         return raw.strip().lower() in {"1", "true", "yes", "on"}
 
     @staticmethod
-    def _env_int(name: str, default: int) -> int:
+    def _env_int(name: str, default: int):
         raw = os.getenv(name)
         if raw is None:
             return default
@@ -45,18 +42,18 @@ class OtpService:
         except (TypeError, ValueError):
             return default
 
-    def _otp_key(self, user_id: str) -> str:
+    def _otp_key(self, user_id: str):
         return f"admin_otp:{user_id}"
 
-    def _now(self) -> float:
+    def _now(self):
         return time.time()
 
-    def _generate_otp(self) -> str:
+    def _generate_otp(self):
         upper = 10 ** self.otp_length
         otp = random.randint(0, upper - 1)
         return str(otp).zfill(self.otp_length)
 
-    def _get_user_otp_state(self, user_id: str) -> tuple[int, float]:
+    def _get_user_otp_state(self, user_id: str):
         user_doc = AuthRepository().find_by_id(str(user_id)) or {}
         attempts_raw = user_doc.get(self._FIELD_ATTEMPTS, 0)
         cooldown_until_raw = user_doc.get(self._FIELD_COOLDOWN_UNTIL, 0)
@@ -73,7 +70,7 @@ class OtpService:
 
         return attempts_int, cooldown_until
 
-    def _set_user_otp_state(self, user_id: str, attempts: int, cooldown_until: float) -> None:
+    def _set_user_otp_state(self, user_id: str, attempts: int, cooldown_until: float):
         AuthRepository().update_user(
             str(user_id),
             {
@@ -82,14 +79,14 @@ class OtpService:
             },
         )
 
-    def get_cooldown_remaining_seconds(self, user_id: str) -> int:
+    def get_cooldown_remaining_seconds(self, user_id: str):
         attempts, cooldown_until = self._get_user_otp_state(user_id)
         now = self._now()
         if cooldown_until > now:
             return max(0, int(round(cooldown_until - now)))
         return 0
 
-    def send_otp(self, user_id: str, email: str) -> str:
+    def send_otp(self, user_id: str, email: str):
         if not user_id:
             raise ValueError("Missing user_id")
         email = (email or "").strip()
@@ -118,7 +115,7 @@ class OtpService:
         self._send_email_smtp(to_email=email, subject=subject, body=body)
         return "OTP sent to your email."
 
-    def verify_otp(self, user_id: str, otp: str) -> dict:
+    def verify_otp(self, user_id: str, otp: str):
         if not user_id:
             return {
                 "ok": False,
@@ -171,7 +168,7 @@ class OtpService:
             "retry_after_seconds": None,
         }
 
-    def _handle_invalid_attempt(self, user_id: str, attempts: int) -> dict:
+    def _handle_invalid_attempt(self, user_id: str, attempts: int):
         attempts = attempts + 1
         attempts_remaining = max(0, self.otp_max_attempts - attempts)
         now = self._now()
@@ -198,7 +195,7 @@ class OtpService:
             "retry_after_seconds": None,
         }
 
-    def _send_email_smtp(self, to_email: str, subject: str, body: str) -> None:
+    def _send_email_smtp(self, to_email: str, subject: str, body: str):
         msg = EmailMessage()
         msg["Subject"] = subject
         if self.smtp_from_name:

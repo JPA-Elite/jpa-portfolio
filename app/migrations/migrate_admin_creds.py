@@ -1,4 +1,3 @@
-import os
 from flask import current_app
 from pymongo import MongoClient
 from werkzeug.security import generate_password_hash
@@ -13,18 +12,16 @@ def migrate_admin_creds(collection_name: str, username: str, password: str, rese
         users_collection.delete_many({"role": "admin"})
         print("⚠️ Reset mode enabled: old admin accounts deleted.")
 
-    # Check if user already exists
     existing_user = users_collection.find_one({"username": username})
     if existing_user:
         print(f"ℹ️ User '{username}' already exists in database. Skipping insert.")
         return
 
-    # Encrypt password before storing
     hashed_password = generate_password_hash(password)
 
     admin_doc = {
         "username": username,
-        "password": hashed_password,  # hashed, not plain
+        "password": hashed_password,
         "role": "admin"
     }
 

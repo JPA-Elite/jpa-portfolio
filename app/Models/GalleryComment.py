@@ -1,19 +1,17 @@
-# Models/GalleryComment.py
 from bson import ObjectId
 from datetime import datetime
 
 
 class GalleryComment:
     def __init__(self, gallery_id, author_name, text, ip_address, liked_ips=None, _id=None, created_at=None):
-        self._id = _id  # MongoDB ObjectId (string)
+        self._id = _id
 
-        # ✅ Handle both Mongo Int and UUID/String IDs
         if isinstance(id, dict) and "$numberInt" in id:
             self.id = int(id["$numberInt"])
         elif isinstance(id, str) and id.isdigit():
             self.id = int(id)
         else:
-            self.id = id  # UUID or None
+            self.id = id
 
         self.gallery_id = gallery_id
         self.author_name = author_name
@@ -23,7 +21,6 @@ class GalleryComment:
         self.created_at = created_at if created_at else datetime.utcnow()
 
     def to_dict(self):
-        """Convert this object into a MongoDB-friendly dict."""
         data = {
             "gallery_id": self.gallery_id,
             "author_name": self.author_name,
@@ -40,7 +37,6 @@ class GalleryComment:
 
     @staticmethod
     def from_dict(data):
-        """Convert a MongoDB document into a GalleryComment object."""
         if not data:
             return None
 

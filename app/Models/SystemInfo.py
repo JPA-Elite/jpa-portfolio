@@ -43,8 +43,6 @@ class SystemInfo:
         self.page = page
         self.timestamp = timestamp
         self.image_capture = image_capture
-
-        # New: Location-related attributes
         self.ip_address = ip_address
         self.city = city
         self.region = region
@@ -52,7 +50,6 @@ class SystemInfo:
         self.location = location
 
     def to_dict(self):
-        """Convert the object to a dictionary for database storage."""
         data = {
             "system": self.system,
             "node": self.node,
@@ -78,7 +75,6 @@ class SystemInfo:
             "location": self.location
         }
 
-        # Include _id if present (convert ObjectId to string for JSON serialization)
         if self._id is not None:
             data["_id"] = str(self._id)
 

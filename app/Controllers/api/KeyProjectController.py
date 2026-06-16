@@ -16,7 +16,6 @@ def key_project_list_route():
     try:
         key_project_service.seed_default_projects_if_empty()
     except Exception:
-
         pass
 
     page = int(request.args.get("page", 1))

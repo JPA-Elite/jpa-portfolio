@@ -8,7 +8,6 @@ class VlogLike:
         self.like = bool(like)
 
     def to_dict(self):
-        """Convert VlogLike object to a dictionary for MongoDB storage."""
         data = {
             "vlog_id": self.vlog_id,
             "ip_address": self.ip_address,
@@ -20,7 +19,6 @@ class VlogLike:
 
     @staticmethod
     def from_dict(data):
-        """Create a VlogLike object from a MongoDB document."""
         _id = data.get("_id")
         if isinstance(_id, dict) and "$oid" in _id:
             _id = str(_id["$oid"])

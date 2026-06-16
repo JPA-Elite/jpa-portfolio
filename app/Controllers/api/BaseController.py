@@ -53,15 +53,12 @@ def profile_config_route():
         { "question": gettext("qa_age"), "answer": gettext("qa_age_answer") },
         { "question": gettext("qa_job"), "answer": gettext("qa_job_answer") },
         { "question": gettext("qa_favorite_sport"), "answer": gettext("qa_favorite_sport_answer") },
-        # { "question": gettext("qa_crush"), "answer": gettext("qa_crush_answer") },
         { "question": gettext("qa_favorite_subject"), "answer": gettext("qa_favorite_subject_answer") },
         { "question": gettext("qa_live"), "answer": gettext("qa_live_answer") },
         { "question": gettext("qa_dream_job"), "answer": gettext("qa_dream_job_answer") },
         { "question": gettext("qa_type_of_person"), "answer": gettext("qa_type_of_person_answer") },
         { "question": gettext("qa_nickname"), "answer": gettext("qa_nickname_answer") },
         { "question": gettext("qa_favorite_programming_language"), "answer": gettext("qa_favorite_programming_language_answer") },
-        # { "question": gettext("qa_behaviour"), "answer": gettext("qa_behaviour_answer") },
-        # { "question": gettext("qa_song"), "answer": gettext("qa_song_answer") }
     ]
 
     return jsonify({

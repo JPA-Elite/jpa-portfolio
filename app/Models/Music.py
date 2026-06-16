@@ -10,7 +10,6 @@ class Music:
         self.lyrics = lyrics or ""
 
     def to_dict(self):
-        """Convert the Music object to a dictionary for database storage."""
         data = {
             "id": self.id,
             "title": self.title,
@@ -28,7 +27,6 @@ class Music:
 
     @staticmethod
     def from_dict(data):
-        """Create a Music object from a MongoDB document."""
         return Music(
             _id=data.get("_id"),
             id=data.get("id"),

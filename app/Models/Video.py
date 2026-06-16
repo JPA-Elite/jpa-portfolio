@@ -11,7 +11,7 @@ class Video:
 
         self.title = title or {}
         self.description = description or {}
-        self.file = file()
+        self.file = file
         self.video_url = video_url
         self.tags = tags or []
 

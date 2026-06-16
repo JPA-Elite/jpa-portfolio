@@ -18,3 +18,4 @@ gunicorn==23.0.0
 Flask-WTF==1.2.2
 WTForms==3.2.1
 redis==5.2.1
+yt-dlp>=2024.12.0

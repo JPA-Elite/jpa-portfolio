@@ -40,6 +40,8 @@ def add_music_route():
     lyrics = request.form.get("lyrics", "")
     music_file = request.files.get("music_file")
     image_file = request.files.get("image_file")
+    music_url_input = request.form.get("music_url_input")
+    music_source_type = request.form.get("music_source_type", "file")
 
     data = {
         "title": title,
@@ -47,6 +49,8 @@ def add_music_route():
         "lyrics": lyrics,
         "music_file": music_file,
         "image_file": image_file,
+        "music_url_input": music_url_input,
+        "music_source_type": music_source_type,
     }
 
     music_id = music_service.add_music(data)
@@ -60,6 +64,8 @@ def update_music_route(music_id):
     lyrics = request.form.get("lyrics")
     music_file = request.files.get("music_file")
     image_file = request.files.get("image_file")
+    music_url_input = request.form.get("music_url_input")
+    music_source_type = request.form.get("music_source_type", "file")
 
     update_data = {
         "title": title,
@@ -67,6 +73,8 @@ def update_music_route(music_id):
         "lyrics": lyrics,
         "music_file": music_file,
         "image_file": image_file,
+        "music_url_input": music_url_input,
+        "music_source_type": music_source_type,
     }
 
     success = music_service.update_music(music_id, update_data)

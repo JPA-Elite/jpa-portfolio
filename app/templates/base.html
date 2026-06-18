@@ -110,8 +110,8 @@
                 <!-- Desktop Navigation -->
                 <ul id="navList">
                     {% if request.args.get('mode') != 'professional' %}
-                        <li class="{% if request.endpoint == 'pages.profile' %}active{% endif %}">
-                            <a href="{{ url_for('pages.profile') }}">
+                        <li class="{% if request.endpoint == 'pages.portfolio' %}active{% endif %}">
+                            <a href="{{ url_for('pages.portfolio') }}">
                                 <ion-icon name="person-outline"></ion-icon>
                                 Portfolio
                             </a>
@@ -139,31 +139,31 @@
                         </li>
                     {% else %}
                         <li>
-                            <a href="{{ url_for('pages.profile') }}?mode=professional#portfolio">
+                            <a href="{{ url_for('pages.portfolio') }}?mode=professional#portfolio">
                                 <ion-icon name="document-text-outline"></ion-icon>
                                 Summary
                             </a>
                         </li>
                         <li>
-                            <a href="{{ url_for('pages.profile') }}?mode=professional#about">
+                            <a href="{{ url_for('pages.portfolio') }}?mode=professional#about">
                                 <ion-icon name="person-outline"></ion-icon>
                                 About Me
                             </a>
                         </li>
                         <li>
-                            <a href="{{ url_for('pages.profile') }}?mode=professional#resume">
+                            <a href="{{ url_for('pages.portfolio') }}?mode=professional#resume">
                                 <ion-icon name="reader-outline"></ion-icon>
                                 Resume
                             </a>
                         </li>
                         <li>
-                            <a href="{{ url_for('pages.profile') }}?mode=professional#key-projects">
+                            <a href="{{ url_for('pages.portfolio') }}?mode=professional#key-projects">
                                 <ion-icon name="rocket-outline"></ion-icon>
                                 Projects
                             </a>
                         </li>
                         <li>
-                            <a href="{{ url_for('pages.profile') }}?mode=professional#contact">
+                            <a href="{{ url_for('pages.portfolio') }}?mode=professional#contact">
                                 <ion-icon name="mail-outline"></ion-icon>
                                 Contact
                             </a>
@@ -181,8 +181,8 @@
                 <div class="sidebar" id="sidebar">
                     <ul id="mobileNavList">
                         {% if request.args.get('mode') != 'professional' %}
-                            <li class="{% if request.endpoint == 'pages.profile' %}active{% endif %}">
-                                <a href="{{ url_for('pages.profile') }}">
+                            <li class="{% if request.endpoint == 'pages.portfolio' %}active{% endif %}">
+                                <a href="{{ url_for('pages.portfolio') }}">
                                     <ion-icon name="person-outline"></ion-icon>
                                     Portfolio
                                 </a>
@@ -222,31 +222,31 @@
                             </li>
                         {% else %}
                             <li>
-                                <a href="{{ url_for('pages.profile') }}?mode=professional#portfolio">
+                                <a href="{{ url_for('pages.portfolio') }}?mode=professional#portfolio">
                                     <ion-icon name="document-text-outline"></ion-icon>
                                     Summary
                                 </a>
                             </li>
                             <li>
-                                <a href="{{ url_for('pages.profile') }}?mode=professional#about">
+                                <a href="{{ url_for('pages.portfolio') }}?mode=professional#about">
                                     <ion-icon name="person-circle-outline"></ion-icon>
                                     About Me
                                 </a>
                             </li>
                             <li>
-                                <a href="{{ url_for('pages.profile') }}?mode=professional#resume">
+                                <a href="{{ url_for('pages.portfolio') }}?mode=professional#resume">
                                     <ion-icon name="file-tray-full-outline"></ion-icon>
                                     Resume
                                 </a>
                             </li>
                             <li>
-                                <a href="{{ url_for('pages.profile') }}?mode=professional#key-projects">
+                                <a href="{{ url_for('pages.portfolio') }}?mode=professional#key-projects">
                                     <ion-icon name="briefcase-outline"></ion-icon>
                                     Projects
                                 </a>
                             </li>
                             <li>
-                                <a href="{{ url_for('pages.profile') }}?mode=professional#contact">
+                                <a href="{{ url_for('pages.portfolio') }}?mode=professional#contact">
                                     <ion-icon name="mail-outline"></ion-icon>
                                     Contact
                                 </a>

@@ -32,8 +32,8 @@
         <!-- Mobile Sidebar -->
         <div class="sidebar" id="sidebar">
             <ul id="mobileNavList">
-                <li class="{% if request.endpoint == 'pages.profile' %}active{% endif %}">
-                    <a href="{{ url_for('pages.profile') }}">
+                <li class="{% if request.endpoint == 'pages.portfolio' %}active{% endif %}">
+                    <a href="{{ url_for('pages.portfolio') }}">
                         <ion-icon name="person-outline"></ion-icon>
                         Portfolio
                     </a>
@@ -74,8 +74,8 @@
             </ul>
         </div>
         <ul id="navbarMenu">
-            <li class="{% if request.endpoint == 'pages.profile' %}active{% endif %}">
-                <a href="{{ url_for('pages.profile') }}">
+            <li class="{% if request.endpoint == 'pages.portfolio' %}active{% endif %}">
+                <a href="{{ url_for('pages.portfolio') }}">
                     <ion-icon name="person-outline"></ion-icon>
                     Portfolio
                 </a>

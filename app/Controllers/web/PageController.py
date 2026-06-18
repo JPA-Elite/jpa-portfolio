@@ -868,6 +868,10 @@ def add_portfolio_form_route():
 def donation_route():
     return handle_log_parameter() or render_template(DONATION_PAGE)
 
+def portfolio_redirect():
+    from flask import redirect
+    return redirect("/portfolio", code=301)
+
 def handle_log_parameter():
     if request.args.get('mode') and request.args.get('mode') not in MODES:
         return render_template(ERROR_404_PAGE, title="Not Found"), 404

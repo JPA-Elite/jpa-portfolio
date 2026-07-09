@@ -2,12 +2,13 @@ from app.Repositories.Interfaces.IGalleryLikeRepository import IGalleryLikeRepos
 from app.Repositories.BaseRepository import BaseRepository
 from app.constants.db_collections import MongoCollections as mc
 from app.Models.GalleryLike import GalleryLike
+
 class GalleryLikeRepository(IGalleryLikeRepository, BaseRepository):
     def __init__(self):
         super().__init__(mc.GALLERY_LIKES)
 
     def get_gallery_likes_count_by_id(self, gallery_id: str):
-        count = self.collection.count_documents({
+        count = self.count_documents({
             "gallery_id": gallery_id,
             "like": True
         })
@@ -33,14 +34,14 @@ class GalleryLikeRepository(IGalleryLikeRepository, BaseRepository):
 
         query = {"$or": regex_conditions}
 
-        return self.collection.find_one(query, projection)
+        return self.find_one(query, projection)
 
     def add_gallery_like(self, gallery_like: GalleryLike):
-        result = self.collection.insert_one(gallery_like.to_dict())
+        result = self.insert_one(gallery_like.to_dict())
         return str(result.inserted_id)
 
     def update_gallery_like(self, gallery_like: GalleryLike):
-        result = self.collection.update_one(
+        result = self.update_one(
             {
                 "gallery_id": gallery_like.gallery_id,
                 "ip_address": gallery_like.ip_address

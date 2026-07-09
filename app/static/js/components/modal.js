@@ -80,24 +80,28 @@ if (!window.__modal_js_loaded__) {
     function updateCarousel() {
         const carouselInner = document.getElementById('carouselInner');
         const carouselIndicators = document.getElementById('carouselIndicators');
-        carouselIndicators && (carouselIndicators.innerHTML = '');
-        carouselInner && (carouselInner.innerHTML = '');
+        const boxContainer = document.querySelector(".box-modal-container");
+        const carouselInnerQuery = document.querySelector(".carousel-inner");
+
+        if (!carouselInner || !carouselIndicators || !boxContainer || !carouselInnerQuery) {
+            return;
+        }
+
+        carouselIndicators.innerHTML = '';
+        carouselInner.innerHTML = '';
 
         if (!slideData.length) {
-            const boxContainer = document.querySelector(".box-modal-container");
-            boxContainer && (boxContainer.style.display = "none");
+            boxContainer.style.display = "none";
             return;
         }
 
         slideData.forEach((slide, index) => {
-            // Create indicator
             const indicator = document.createElement('span');
             indicator.classList.add('indicator');
             indicator.dataset.slideTo = index;
             if (index === 0) indicator.classList.add('active');
-            carouselIndicators && carouselIndicators.appendChild(indicator);
+            carouselIndicators.appendChild(indicator);
 
-            // Create carousel item
             const carouselItem = document.createElement('div');
             carouselItem.classList.add('carousel-item');
             if (index === 0) carouselItem.classList.add('active');
@@ -107,51 +111,39 @@ if (!window.__modal_js_loaded__) {
             img.src = slide.src;
             carouselItem.appendChild(img);
 
-            carouselInner && carouselInner.appendChild(carouselItem);
+            carouselInner.appendChild(carouselItem);
         });
 
-        // Call updateCarousel function to set the first slide
         const indicators = document.querySelectorAll('.indicator');
         const slides = document.querySelectorAll('.carousel-item');
 
         function setActiveSlide() {
-            // Update the active class on slides
             slides.forEach((slide, index) => {
                 slide.classList.toggle("active", index === currentSlide);
             });
 
-            // Update the active class on indicators
             indicators.forEach((indicator, index) => {
                 indicator.classList.toggle("active", index === currentSlide);
             });
 
-            // Move carousel
             const offset = -currentSlide * 100;
-            document.querySelector(".carousel-inner").style.transform = `translateX(${offset}%)`;
+            carouselInnerQuery.style.transform = `translateX(${offset}%)`;
 
-            // Update title and description with multilingual support
             const currentSlideTitle = slideData[currentSlide].titles;
             const currentSlideDescription = slideData[currentSlide].descriptions;
 
             const titleText = currentSlideTitle[currentLocale] || currentSlideTitle["en"];
             const descriptionText = currentSlideDescription[currentLocale] || currentSlideDescription["en"];
 
-            document.getElementById("descriptionTitle").textContent = titleText;
-            document.getElementById("descriptionText").textContent = descriptionText;
+            const descriptionTitle = document.getElementById("descriptionTitle");
+            const descriptionTextEl = document.getElementById("descriptionText");
 
-            // Display the modal container
-            document.querySelector(".box-modal-container").style.display = "block";
+            if (descriptionTitle) descriptionTitle.textContent = titleText;
+            if (descriptionTextEl) descriptionTextEl.textContent = descriptionText;
+
+            boxContainer.style.display = "block";
         }
 
-        // Set up click event for indicators
-        indicators.forEach((indicator, index) => {
-            indicator.addEventListener("click", () => {
-                currentSlide = index;
-                setActiveSlide();
-            });
-        });
-
-        // Initial update when the data is ready
         setActiveSlide();
     }
 

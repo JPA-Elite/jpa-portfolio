@@ -19,6 +19,7 @@ from app.Services.AuthService import AuthService
 from app.Repositories.AuthRepository import AuthRepository
 from app.Repositories.LoginAttemptRepository import LoginAttemptRepository
 from app.constants.messages import CAPTCHA_VERIFICATION_ERROR, LOGOUT_SUCCESS_MSG, WELCOME_ADMIN_MSG
+from app.Requests.web.AdminPageRequest import AdminPageRequest
 from app.utils import verify_hcaptcha
 from app.forms.LoginForm import LoginForm
 from app.security import AdminLoginSecurity, get_request_ip
@@ -112,7 +113,12 @@ def admin_login_route():
             flash(pre_auth_gate.message, "danger")
             return _render_admin_login(form, status_code=429)
 
-        hcaptcha_token = request.form.get("h-captcha-response", None)
+        page_form = AdminPageRequest()
+        form_data, error_response, status_code = page_form.validated()
+        if error_response:
+            return _render_admin_login(form, status_code=status_code)
+
+        hcaptcha_token = form_data.get("hcaptcha_token")
         client_ip = get_request_ip()
         ok, details = verify_hcaptcha(hcaptcha_token, remote_ip=client_ip)
         if not ok:
@@ -200,6 +206,11 @@ def admin_login_attempts_route():
     return render_template(ADMIN_LOGIN_ATTEMPTS_PAGE, title="Login Attempts")
 
 def admin_face_recognition_route():
+
+    form = AdminPageRequest()
+    _, error_response, status_code = form.validated()
+    if error_response:
+        return error_response, status_code
 
     if request.method == http.POST:
         session["face_verified"] = True

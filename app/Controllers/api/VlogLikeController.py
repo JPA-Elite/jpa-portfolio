@@ -3,7 +3,7 @@ from app.Services.VlogLikeService import VlogLikeService
 from app.Repositories.VlogLikeRepository import VlogLikeRepository
 from app.Services.VlogCommentService import VlogCommentService
 from app.Repositories.VlogCommentRepository import VlogCommentRepository
-import json
+from app.Requests.api.VlogLikeRequest import VlogLikeRequest
 from app.constants.messages import VIDEO_LIKE_TOGGLE_MSG
 from app.utils import clear_cache_by_prefix
 
@@ -13,8 +13,13 @@ vlog_comment_service = VlogCommentService(repository=VlogCommentRepository())
 
 # Vlog Like Controller
 def get_vlog_likes_count_route():
-    client_ip = request.headers.get('X-Forwarded-For', request.remote_addr)
-    vlog_id = request.args.get("vlog_id", "")
+    form = VlogLikeRequest()
+    data, error_response, status_code = form.validated()
+    if error_response:
+        return error_response, status_code
+
+    vlog_id = data["vlog_id"]
+    client_ip = data["client_ip"]
 
     comment_counts = vlog_comment_service.count_comments_by_vlog(vlog_id)
     like_counts = vlog_like_service.get_vlog_likes_count_by_id(vlog_id)
@@ -28,19 +33,16 @@ def get_vlog_likes_count_route():
         }), 200
 
 def get_vlog_likes_counts_batch_route():
-    client_ip = request.headers.get('X-Forwarded-For', request.remote_addr)
-    raw_vlog_ids = request.args.get("vlog_ids", "")
+    form = VlogLikeRequest()
+    data, error_response, status_code = form.validated()
+    if error_response:
+        return error_response, status_code
 
-    vlog_ids = []
-    for vlog_id in raw_vlog_ids.split(","):
-        normalized = vlog_id.strip()
-        if normalized and normalized not in vlog_ids:
-            vlog_ids.append(normalized)
+    vlog_ids = data["vlog_ids"]
+    client_ip = data["client_ip"]
 
     if not vlog_ids:
         return jsonify({"items": {}}), 200
-
-    vlog_ids = vlog_ids[:50]
 
     comment_counts_by_vlog = vlog_comment_service.count_comments_by_vlog_ids(vlog_ids)
     like_counts_by_vlog = vlog_like_service.get_vlog_likes_counts_by_ids(vlog_ids)
@@ -57,16 +59,17 @@ def get_vlog_likes_counts_batch_route():
     return jsonify({"items": items}), 200
 
 def add_vlog_like_route():
-    vlog_id = request.form.get("vlog_id")
-    client_ip = request.headers.get('X-Forwarded-For', request.remote_addr)
+    form = VlogLikeRequest()
+    data, error_response, status_code = form.validated()
+    if error_response:
+        return error_response, status_code
 
-    if not vlog_id:
-        return jsonify({"error": "Missing vlog_id"}), 400
+    vlog_id = data["vlog_id"]
+    client_ip = data["client_ip"]
 
     try:
-
         result = vlog_like_service.toggle_vlog_like(
-            vlog_id=json.loads(vlog_id),
+            vlog_id=vlog_id,
             ip_address=client_ip
         )
 

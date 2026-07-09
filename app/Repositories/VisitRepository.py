@@ -9,7 +9,7 @@ class VisitRepository(IVisitRepository, BaseRepository):
         super().__init__(mc.VISITORS)
 
     def get_paginated_documents(self, page, per_page, order: SortOrder):
-        all_documents = list(self.collection.find())
+        all_documents = list(self.find())
         for doc in all_documents:
             if isinstance(doc.get("timestamp"), str):
                 try:
@@ -32,7 +32,7 @@ class VisitRepository(IVisitRepository, BaseRepository):
         return paginated_documents, total_docs
 
     def delete_system_info_by_id(self, object_id):
-        self.collection.delete_one({"_id": object_id})
+        self.delete_one({"_id": object_id})
 
     def count_visits(self, where_condition: dict = None):
         if where_condition is None:
@@ -40,12 +40,12 @@ class VisitRepository(IVisitRepository, BaseRepository):
 
         other_filter = {"$regex": "^other$", "$options": "i"}
 
-        visitor_total_count = self.collection.count_documents({
+        visitor_total_count = self.count_documents({
             **where_condition,
             "os": {"$not": other_filter}
         })
 
-        bot_total_count = self.collection.count_documents({
+        bot_total_count = self.count_documents({
             **where_condition,
             "os": other_filter
         })
@@ -58,14 +58,14 @@ class VisitRepository(IVisitRepository, BaseRepository):
     def delete_all_visitors(self) -> bool:
 
         try:
-            delete_many = getattr(self.collection, "delete_many", None)
+            delete_many = getattr(self, "delete_many", None)
             if callable(delete_many):
                 result = delete_many({})
                 _ = getattr(result, "deleted_count", None)
                 return True
 
-            if hasattr(self.collection, "delete_all"):
-                self.collection.delete_all({})
+            if hasattr(self, "delete_all"):
+                self.delete_all({})
                 return True
 
             return False

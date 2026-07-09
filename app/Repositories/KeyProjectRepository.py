@@ -11,7 +11,7 @@ class KeyProjectRepository(IKeyProjectRepository, BaseRepository):
         super().__init__(mc.KEY_PROJECTS)
 
     def get_key_project_by_id(self, project_id: str):
-        return self.collection.find_one({"_id": ObjectId(project_id)})
+        return self.find_one({"_id": ObjectId(project_id)})
 
     def get_paginated_key_projects(
         self,
@@ -58,44 +58,42 @@ class KeyProjectRepository(IKeyProjectRepository, BaseRepository):
         else:
             query = {"$and": query_conditions}
 
-        cursor = (
-            self.collection.find(query)
-            .sort([("sort_order", 1), ("_id", sort_direction)])
-            .skip((page - 1) * per_page)
-            .limit(per_page)
+        data = self.find(
+            query,
+            sort=[("sort_order", 1), ("_id", sort_direction)],
+            skip=(page - 1) * per_page,
+            limit=per_page,
         )
-        data = list(cursor)
-        total = self.collection.count_documents(query)
+        total = self.count_documents(query)
         return data, total
 
     def get_active_key_projects(self):
-        cursor = (
-            self.collection.find({"is_active": {"$ne": False}})
-            .sort([("sort_order", 1), ("_id", -1)])
+        return self.find(
+            {"is_active": {"$ne": False}},
+            sort=[("sort_order", 1), ("_id", -1)],
         )
-        return list(cursor)
 
     def count_key_projects(self):
-        return self.collection.count_documents({})
+        return self.count_documents({})
 
     def add_key_project(self, key_project: KeyProject):
-        result = self.collection.insert_one(key_project.to_dict())
+        result = self.insert_one(key_project.to_dict())
         return str(result.inserted_id)
 
     def add_many_key_projects(self, key_projects: list[KeyProject]):
         if not key_projects:
             return []
-        result = self.collection.insert_many([p.to_dict() for p in key_projects])
+        result = self.insert_many([p.to_dict() for p in key_projects])
         return [str(x) for x in result.inserted_ids]
 
     def update_key_project(self, project_id: str, key_project: KeyProject):
-        result = self.collection.update_one(
+        result = self.update_one(
             {"_id": ObjectId(project_id)},
             {"$set": key_project.to_dict()},
         )
         return result.matched_count > 0
 
     def delete_key_project(self, project_id: str):
-        result = self.collection.delete_one({"_id": ObjectId(project_id)})
+        result = self.delete_one({"_id": ObjectId(project_id)})
         return result.deleted_count > 0
 

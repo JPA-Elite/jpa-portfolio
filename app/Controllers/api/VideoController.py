@@ -2,7 +2,7 @@ from flask import request, jsonify
 from app.Services.VideoService import VideoService
 from app.Repositories.VideoRepository import VideoRepository
 from app.configurations import SortOrder, SortOrderStr
-import json
+from app.Requests.api.VideoRequest import VideoRequest
 from app.constants.messages import VIDEO_ADD_MSG, VIDEO_DELETE_MSG, VIDEO_NOT_FOUND_ERROR, VIDEO_UPDATE_FAILED_ERROR, VIDEO_UPDATE_MSG
 from app.utils import clear_cache_by_prefix, get_cache_data
 from app.extensions import cache
@@ -17,10 +17,16 @@ def video_list_route():
     if cached_data:
         return jsonify(cached_data)
 
-    page = int(request.args.get("page", 1))
-    per_page = int(request.args.get("per_page", 10))
-    search_query = (request.args.get("search") or "").strip()
-    order = SortOrder.DESC if request.args.get("order", "desc").upper() == SortOrderStr.DESC else SortOrder.ASC
+    form = VideoRequest()
+    data, error_response, status_code = form.validated()
+    if error_response:
+        return error_response, status_code
+
+    page = data["page"]
+    per_page = data["per_page"]
+    search_query = data["search_query"]
+    order = data["order"]
+
     if search_query:
         video_list, total_video = video_service.search_video_paginated(
             search_query,
@@ -44,17 +50,10 @@ def video_list_route():
     return jsonify(response_data)
 
 def add_video_route():
-    title = request.form.get("title")
-    description = request.form.get("description")
-    video_file = request.files.get("video_file")
-    tags = request.form.get("tags")
-
-    data = {
-        "title": json.loads(title) if title else {},
-        "description": json.loads(description) if description else {},
-        "video_file": video_file,
-        "tags": json.loads(tags) if tags else [],
-    }
+    form = VideoRequest()
+    data, error_response, status_code = form.validated()
+    if error_response:
+        return error_response, status_code
 
     video_id = video_service.add_video(data)
     clear_cache_by_prefix("admin.api.video_list:")
@@ -62,19 +61,12 @@ def add_video_route():
     return jsonify({"message": VIDEO_ADD_MSG, "video_id": video_id}), 201
 
 def update_video_route(video_id):
-    title = request.form.get("title")
-    description = request.form.get("description")
-    video_file = request.files.get("video_file")
-    tags = request.form.get("tags")
+    form = VideoRequest()
+    data, error_response, status_code = form.validated()
+    if error_response:
+        return error_response, status_code
 
-    update_data = {
-        "title": json.loads(title) if title else {},
-        "description": json.loads(description) if description else {},
-        "video_file": video_file,
-        "tags": json.loads(tags) if tags else [],
-    }
-
-    success = video_service.update_video(video_id, update_data)
+    success = video_service.update_video(video_id, data)
     if success:
         clear_cache_by_prefix("admin.api.video_list:")
         clear_cache_by_prefix("vlog_")
@@ -83,6 +75,11 @@ def update_video_route(video_id):
         return jsonify({"message": VIDEO_UPDATE_FAILED_ERROR}), 400
 
 def delete_video_route(video_id):
+    form = VideoRequest()
+    _, error_response, status_code = form.validated()
+    if error_response:
+        return error_response, status_code
+
     success = video_service.delete_video(video_id)
     if success:
         clear_cache_by_prefix("admin.api.video_list:")

@@ -8,10 +8,10 @@ class AuthRepository(IAuthRepository, BaseRepository):
         super().__init__(mc.USERS)
 
     def find_by_username(self, username: str):
-        return self.collection.find_one({"username": username, "role": "admin"})
+        return self.find_one({"username": username, "role": "admin"})
 
     def find_by_id(self, id):
-        return self.collection.find_one({"_id": ObjectId(id)})
+        return self.find_one({"_id": ObjectId(id)})
 
     def update_user(self, id, data: dict):
-        return self.collection.update_one({"_id": ObjectId(id)}, {"$set": data})
+        return self.update_one({"_id": ObjectId(id)}, {"$set": data})

@@ -1,12 +1,18 @@
 from flask import request, jsonify
 from app.Services.MusicLikeService import MusicLikeService
 from app.Repositories.MusicLikeRepository import MusicLikeRepository
+from app.Requests.api.MusicLikeRequest import MusicLikeRequest
 
 music_like_service = MusicLikeService(repository=MusicLikeRepository())
 
 def music_like_counts_route():
-    client_ip = request.headers.get('X-Forwarded-For', request.remote_addr)
-    music_id = request.args.get("music_id", "")
+    form = MusicLikeRequest()
+    data, error_response, status_code = form.validated()
+    if error_response:
+        return error_response, status_code
+
+    client_ip = data["client_ip"]
+    music_id = data["music_id"]
 
     like_counts = music_like_service.get_likes_count(music_id)
     dislike_counts = music_like_service.get_dislikes_count(music_id)
@@ -19,9 +25,13 @@ def music_like_counts_route():
     }), 200
 
 def music_like_counts_batch_route():
-    client_ip = request.headers.get('X-Forwarded-For', request.remote_addr)
-    raw_ids = request.args.get("music_ids", "")
-    music_ids = [mid.strip() for mid in raw_ids.split(",") if mid.strip()][:50]
+    form = MusicLikeRequest()
+    data, error_response, status_code = form.validated()
+    if error_response:
+        return error_response, status_code
+
+    client_ip = data["client_ip"]
+    music_ids = data["music_ids"]
 
     if not music_ids:
         return jsonify({"items": {}}), 200
@@ -41,13 +51,14 @@ def music_like_counts_batch_route():
     return jsonify({"items": items}), 200
 
 def music_toggle_vote_route():
-    data = request.get_json(silent=True) or {}
-    music_id = data.get("music_id")
-    is_like = data.get("is_like", True)
-    client_ip = request.headers.get('X-Forwarded-For', request.remote_addr)
+    form = MusicLikeRequest()
+    data, error_response, status_code = form.validated()
+    if error_response:
+        return error_response, status_code
 
-    if not music_id:
-        return jsonify({"error": "Missing music_id"}), 400
+    music_id = data["music_id"]
+    is_like = data["is_like"]
+    client_ip = data["client_ip"]
 
     result = music_like_service.toggle_vote(music_id, client_ip, bool(is_like))
     return jsonify({"message": "Vote updated", "data": result}), 200

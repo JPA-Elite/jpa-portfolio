@@ -8,7 +8,7 @@ from app.Services.MusicService import MusicService
 from app.Repositories.MusicRepository import MusicRepository
 from flask_babel import gettext
 from urllib.parse import urlparse, parse_qs, urlencode, urlunparse
-
+from app.Requests.api.BaseControllerRequest import BaseControllerRequest
 from app.utils import safe_filename_parts, stream_generator
 
 # Initialize Services
@@ -19,6 +19,11 @@ music_service = MusicService(repository=MusicRepository())
 # ************************** API Controller ********************************
 
 def change_language_route(lang_code=""):
+    form = BaseControllerRequest()
+    _, error_response, status_code = form.validated()
+    if error_response:
+        return error_response, status_code
+
     referrer_url = request.referrer or url_for("index")
 
     parsed = urlparse(referrer_url)
@@ -40,9 +45,12 @@ def change_language_route(lang_code=""):
     return response
 
 def delete_page_system_info_route():
+    form = BaseControllerRequest()
+    data, error_response, status_code = form.validated()
+    if error_response:
+        return error_response, status_code
 
-    data = request.json
-    records = data.get("records", [])
+    records = data["records"]
 
     result = visit_service.delete_page_system_info(records)
     return jsonify(result)
@@ -66,10 +74,12 @@ def profile_config_route():
     })
 
 def download_song_route():
-    url = request.args.get('url')
-    if not url:
-        return {"error": "Missing URL"}, 400
+    form = BaseControllerRequest()
+    data, error_response, status_code = form.validated()
+    if error_response:
+        return error_response, status_code
 
+    url = data["url"]
     music = music_service.get_music_by_url(url)
 
     if music:
@@ -104,12 +114,22 @@ def download_song_route():
     )
 
 def get_client_ip_route():
+    form = BaseControllerRequest()
+    _, error_response, status_code = form.validated()
+    if error_response:
+        return error_response, status_code
+
     client_ip = request.headers.get('X-Forwarded-For', request.remote_addr)
     return jsonify({"ip": client_ip})
 
 def proxy_audio_route():
-    url = request.args.get("url")
-    range_header = request.headers.get('Range', None)
+    form = BaseControllerRequest()
+    data, error_response, status_code = form.validated()
+    if error_response:
+        return error_response, status_code
+
+    url = data["url"]
+    range_header = data["range_header"]
     headers = {}
 
     if range_header:

@@ -2,7 +2,7 @@ from flask import request, jsonify
 from app.Services.GalleryService import GalleryService
 from app.Repositories.GalleryRepository import GalleryRepository
 from app.configurations import SortOrder, SortOrderStr
-import json
+from app.Requests.api.GalleryRequest import GalleryRequest
 from app.constants.messages import GALLERY_ADD_MSG, GALLERY_DELETE_MSG, GALLERY_NOT_FOUND_ERROR, GALLERY_UPDATE_ERROR, GALLERY_UPDATE_MSG
 from app.utils import clear_cache_by_prefix, get_cache_data
 from app.extensions import cache
@@ -17,10 +17,16 @@ def gallery_list_route():
     if cached_data:
         return jsonify(cached_data)
 
-    page = int(request.args.get("page", 1))
-    per_page = int(request.args.get("per_page", 10))
-    search_query = (request.args.get("search") or "").strip()
-    order = SortOrder.DESC if request.args.get("order", "desc").upper() == SortOrderStr.DESC else SortOrder.ASC
+    form = GalleryRequest()
+    data, error_response, status_code = form.validated()
+    if error_response:
+        return error_response, status_code
+
+    page = data["page"]
+    per_page = data["per_page"]
+    search_query = data["search_query"]
+    order = data["order"]
+
     if search_query:
         gallery_list, total_gallery = gallery_service.search_gallery_paginated(
             search_query,
@@ -44,17 +50,10 @@ def gallery_list_route():
     return jsonify(response_data)
 
 def add_gallery_route():
-    title = request.form.get("title")
-    description = request.form.get("description")
-    gallery_file = request.files.get("image_file")
-    tags = request.form.get("tags")
-
-    data = {
-        "title": json.loads(title) if title else {},
-        "description": json.loads(description) if description else {},
-        "gallery_file": gallery_file,
-        "tags": json.loads(tags) if tags else [],
-    }
+    form = GalleryRequest()
+    data, error_response, status_code = form.validated()
+    if error_response:
+        return error_response, status_code
 
     gallery_id = gallery_service.add_gallery(data)
     clear_cache_by_prefix("admin.api.gallery_list:")
@@ -62,19 +61,12 @@ def add_gallery_route():
     return jsonify({"message": GALLERY_ADD_MSG, "gallery_id": gallery_id}), 201
 
 def update_gallery_route(gallery_id):
-    title = request.form.get("title")
-    description = request.form.get("description")
-    gallery_file = request.files.get("image_file")
-    tags = request.form.get("tags")
+    form = GalleryRequest()
+    data, error_response, status_code = form.validated()
+    if error_response:
+        return error_response, status_code
 
-    update_data = {
-        "title": json.loads(title) if title else {},
-        "description": json.loads(description) if description else {},
-        "gallery_file": gallery_file,
-        "tags": json.loads(tags) if tags else [],
-    }
-
-    success = gallery_service.update_gallery(gallery_id, update_data)
+    success = gallery_service.update_gallery(gallery_id, data)
     if success:
         clear_cache_by_prefix("admin.api.gallery_list:")
         clear_cache_by_prefix("gallery_")
@@ -83,6 +75,11 @@ def update_gallery_route(gallery_id):
         return jsonify({"message": GALLERY_UPDATE_ERROR}), 400
 
 def delete_gallery_route(gallery_id):
+    form = GalleryRequest()
+    _, error_response, status_code = form.validated()
+    if error_response:
+        return error_response, status_code
+
     success = gallery_service.delete_gallery(gallery_id)
     if success:
         clear_cache_by_prefix("admin.api.gallery_list:")

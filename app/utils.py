@@ -21,6 +21,7 @@ load_dotenv()
 
 HCAPTCHA_VERIFY_URL = "https://hcaptcha.com/siteverify"
 HCAPTCHA_SECRET = os.getenv("HCAPTCHA_SECRET_KEY")
+HCAPTCHA_ENABLED = os.getenv("HCAPTCHA_ENABLED", "true").lower() not in ("false", "0", "no", "off")
 
 def paginate_data(data, page, items_per_page):
     total_items = len(data)
@@ -261,6 +262,9 @@ def cleanup_uploaded_files(video_url=None, image_url=None, raw_url=None):
             delete_file_from_cloudinary(url, resource_type=resource_type)
 
 def verify_hcaptcha(token: str, remote_ip: str = None):
+    if not HCAPTCHA_ENABLED:
+        return True, {"success": True, "bypass": True}
+
     if not token:
         return False, {"error": "missing-token"}
 

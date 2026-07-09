@@ -1,11 +1,16 @@
 from flask import jsonify, request, session
 from app.Repositories.AuthRepository import AuthRepository
 from app.Services.OtpService import OtpService
+from app.Requests.api.AdminOtpRequest import AdminOtpRequest
 
 def admin_otp_send_route():
+    form = AdminOtpRequest()
+    data, error_response, status_code = form.validated()
+    if error_response:
+        return error_response, status_code
+
     try:
-        payload = request.get_json(silent=True) or {}
-        email = (payload.get("email") or "").strip()
+        email = data["email"]
 
         user_id = session.get("user_id")
         if not user_id:
@@ -37,16 +42,17 @@ def admin_otp_send_route():
         return jsonify({"ok": False, "message": str(e)}), 400
 
 def admin_otp_verify_route():
+    form = AdminOtpRequest()
+    data, error_response, status_code = form.validated()
+    if error_response:
+        return error_response, status_code
+
     try:
-        payload = request.get_json(silent=True) or {}
-        otp = (payload.get("otp") or "").strip()
+        otp = data["otp"]
 
         user_id = session.get("user_id")
         if not user_id:
             return jsonify({"ok": False, "message": "Not authenticated"}), 401
-
-        if not otp:
-            return jsonify({"ok": False, "message": "Missing otp."}), 400
 
         svc = OtpService()
         result = svc.verify_otp(user_id=str(user_id), otp=otp)
@@ -78,6 +84,11 @@ def admin_otp_verify_route():
         return jsonify({"ok": False, "message": str(e)}), 400
 
 def admin_otp_reset_route():
+    form = AdminOtpRequest()
+    _, error_response, status_code = form.validated()
+    if error_response:
+        return error_response, status_code
+
     try:
 
         session.pop("face_verified", None)
@@ -86,6 +97,11 @@ def admin_otp_reset_route():
         return jsonify({"ok": False, "message": str(e)}), 400
 
 def admin_otp_email_get_route():
+    form = AdminOtpRequest()
+    _, error_response, status_code = form.validated()
+    if error_response:
+        return error_response, status_code
+
     try:
         user_id = session.get("user_id")
         if not user_id:
@@ -113,16 +129,17 @@ def admin_otp_email_get_route():
         return jsonify({"ok": False, "message": str(e)}), 400
 
 def admin_otp_email_save_route():
+    form = AdminOtpRequest()
+    data, error_response, status_code = form.validated()
+    if error_response:
+        return error_response, status_code
+
     try:
-        payload = request.get_json(silent=True) or {}
-        email = (payload.get("email") or "").strip()
+        email = data["email"]
 
         user_id = session.get("user_id")
         if not user_id:
             return jsonify({"ok": False, "message": "Not authenticated"}), 401
-
-        if not email:
-            return jsonify({"ok": False, "message": "Missing email."}), 400
 
         AuthRepository().update_user(str(user_id), {"email": email})
         return jsonify({"ok": True, "message": "OTP email updated"})

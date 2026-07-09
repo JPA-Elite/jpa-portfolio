@@ -11,7 +11,7 @@ class CompanyRoadmapRepository(ICompanyRoadmapRepository, BaseRepository):
         super().__init__(mc.COMPANY_ROADMAPS)
 
     def get_company_roadmap_by_id(self, roadmap_id: str):
-        return self.collection.find_one({"_id": ObjectId(roadmap_id)})
+        return self.find_one({"_id": ObjectId(roadmap_id)})
 
     def get_paginated_company_roadmaps(
         self,
@@ -67,44 +67,41 @@ class CompanyRoadmapRepository(ICompanyRoadmapRepository, BaseRepository):
         else:
             query = {"$and": query_conditions}
 
-        cursor = (
-            self.collection.find(query)
-            .sort([("sort_order", 1), ("_id", sort_direction)])
-            .skip((page - 1) * per_page)
-            .limit(per_page)
+        data = self.find(
+            query,
+            sort=[("sort_order", 1), ("_id", sort_direction)],
+            skip=(page - 1) * per_page,
+            limit=per_page,
         )
-        data = list(cursor)
-        total = self.collection.count_documents(query)
+        total = self.count_documents(query)
         return data, total
 
     def get_active_company_roadmaps(self):
-        cursor = (
-            self.collection.find({"is_active": {"$ne": False}})
-            .sort([("sort_order", 1), ("_id", -1)])
+        return self.find(
+            {"is_active": {"$ne": False}},
+            sort=[("sort_order", 1), ("_id", -1)],
         )
-        return list(cursor)
 
     def count_company_roadmaps(self):
-        return self.collection.count_documents({})
+        return self.count_documents({})
 
     def add_company_roadmap(self, roadmap: CompanyRoadmap):
-        result = self.collection.insert_one(roadmap.to_dict())
+        result = self.insert_one(roadmap.to_dict())
         return str(result.inserted_id)
 
     def add_many_company_roadmaps(self, roadmaps: list[CompanyRoadmap]):
         if not roadmaps:
             return []
-        result = self.collection.insert_many([r.to_dict() for r in roadmaps])
+        result = self.insert_many([r.to_dict() for r in roadmaps])
         return [str(x) for x in result.inserted_ids]
 
     def update_company_roadmap(self, roadmap_id: str, roadmap: CompanyRoadmap):
-        result = self.collection.update_one(
+        result = self.update_one(
             {"_id": ObjectId(roadmap_id)},
             {"$set": roadmap.to_dict()},
         )
         return result.matched_count > 0
 
     def delete_company_roadmap(self, roadmap_id: str):
-        result = self.collection.delete_one({"_id": ObjectId(roadmap_id)})
+        result = self.delete_one({"_id": ObjectId(roadmap_id)})
         return result.deleted_count > 0
-

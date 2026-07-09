@@ -9,14 +9,19 @@ class VlogCommentRepository(IVlogCommentRepository, BaseRepository):
         super().__init__(mc.VIDEO_COMMENTS)
 
     def find_comments_by_vlog(self, vlog_id: str):
-        return list(self.collection.find({"vlog_id": vlog_id}))
+        return self.find({"vlog_id": vlog_id})
 
     def find__paginate_comments_by_vlog(self, vlog_id: str, page: int, limit: int):
         skip = (page - 1) * limit
-        return list(self.collection.find({"vlog_id": vlog_id}).sort("created_at", -1).skip(skip).limit(limit))
+        return self.find(
+            {"vlog_id": vlog_id},
+            sort=[("created_at", -1)],
+            skip=skip,
+            limit=limit,
+        )
 
     def count_comments_by_vlog(self, vlog_id: str):
-        return self.collection.count_documents({"vlog_id": vlog_id})
+        return self.count_documents({"vlog_id": vlog_id})
 
     def count_comments_by_vlog_ids(self, vlog_ids: list[str]):
         if not vlog_ids:
@@ -38,18 +43,18 @@ class VlogCommentRepository(IVlogCommentRepository, BaseRepository):
 
         return {
             str(item["_id"]): int(item.get("count", 0))
-            for item in self.collection.aggregate(pipeline)
+            for item in self.aggregate(pipeline)
         }
 
     def add_comment(self, comment: VlogComment):
-        result = self.collection.insert_one(comment.to_dict())
+        result = self.insert_one(comment.to_dict())
         return str(result.inserted_id)
 
     def find_by_id(self, comment_id: str):
-        return self.collection.find_one({"_id": ObjectId(comment_id)})
+        return self.find_one({"_id": ObjectId(comment_id)})
 
     def update_comment(self, comment):
-        return self.collection.update_one(
+        return self.update_one(
             {"_id": ObjectId(comment["_id"])},
             {"$set": comment}
         )

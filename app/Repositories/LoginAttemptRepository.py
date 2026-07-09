@@ -20,11 +20,11 @@ class LoginAttemptRepository(ILoginAttemptRepository, BaseRepository):
 
     def get_attempt_info(self):
         client_ip = self._get_client_ip()
-        data = self.collection.find_one({"_id": client_ip})
+        data = self.find_one({"_id": client_ip})
 
         if not data:
             data = {"_id": client_ip, "attempts": 0, "lockout_until": None}
-            self.collection.insert_one(data)
+            self.insert_one(data)
         return data
 
     def update_attempt(self, success=False):
@@ -43,7 +43,7 @@ class LoginAttemptRepository(ILoginAttemptRepository, BaseRepository):
 
             update_data = {"attempts": attempts, "lockout_until": lockout_until}
 
-        self.collection.update_one(
+        self.update_one(
             {"_id": client_ip},
             {"$set": update_data},
             upsert=True
@@ -57,7 +57,7 @@ class LoginAttemptRepository(ILoginAttemptRepository, BaseRepository):
         except bson_errors.InvalidId:
             query = {"_id": login_attempt_id}
 
-        return self.collection.find_one(query)
+        return self.find_one(query)
 
     def get_paginated_login_attempt_list(
         self,
@@ -78,15 +78,14 @@ class LoginAttemptRepository(ILoginAttemptRepository, BaseRepository):
                 or_filters.append({"attempts": int(search_query.strip())})
             query = {"$or": or_filters}
 
-        cursor = (
-            self.collection.find(query)
-            .sort("_id", sort_order)
-            .skip((page - 1) * per_page)
-            .limit(per_page)
+        data = self.find(
+            query,
+            sort=[("_id", sort_order)],
+            skip=(page - 1) * per_page,
+            limit=per_page,
         )
 
-        data = list(cursor)
-        total_data = self.collection.count_documents(query)
+        total_data = self.count_documents(query)
 
         return data, total_data
 
@@ -96,6 +95,6 @@ class LoginAttemptRepository(ILoginAttemptRepository, BaseRepository):
         except bson_errors.InvalidId:
             query = {"_id": login_attempt_id}
 
-        result = self.collection.delete_one(query)
+        result = self.delete_one(query)
         return result.deleted_count > 0
 

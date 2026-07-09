@@ -9,7 +9,7 @@ class VlogLikeRepository(IVlogLikeRepository, BaseRepository):
         super().__init__(mc.VIDEO_LIKES)
 
     def get_vlog_likes_count_by_id(self, vlog_id: str):
-        count = self.collection.count_documents({
+        count = self.count_documents({
             "vlog_id": vlog_id,
             "like": True
         })
@@ -36,7 +36,7 @@ class VlogLikeRepository(IVlogLikeRepository, BaseRepository):
 
         return {
             str(item["_id"]): int(item.get("count", 0))
-            for item in self.collection.aggregate(pipeline)
+            for item in self.aggregate(pipeline)
         }
 
     def get_vlog_liked_states_by_ids_and_ip(self, vlog_ids: list[str], ip_address: str):
@@ -67,7 +67,7 @@ class VlogLikeRepository(IVlogLikeRepository, BaseRepository):
 
         return {
             str(item["_id"]): bool(item.get("is_liked"))
-            for item in self.collection.aggregate(pipeline)
+            for item in self.aggregate(pipeline)
         }
 
     def get_vlog_likes_by_id_and_ip(self, vlog_id: str, ip_address: str, fields: dict = None):
@@ -79,7 +79,7 @@ class VlogLikeRepository(IVlogLikeRepository, BaseRepository):
 
         query = {"$or": regex_conditions}
 
-        return self.collection.find_one(query, projection)
+        return self.find_one(query, projection)
 
     def _build_ip_regex_conditions(self, ip_address: str, vlog_id: str = None, vlog_ids: list[str] = None):
         if not ip_address:
@@ -109,11 +109,11 @@ class VlogLikeRepository(IVlogLikeRepository, BaseRepository):
         return conditions
 
     def add_vlog_like(self, vlog_like: VlogLike):
-        result = self.collection.insert_one(vlog_like.to_dict())
+        result = self.insert_one(vlog_like.to_dict())
         return str(result.inserted_id)
 
     def update_vlog_like(self, vlog_like: VlogLike):
-        result = self.collection.update_one(
+        result = self.update_one(
             {
                 "vlog_id": vlog_like.vlog_id,
                 "ip_address": vlog_like.ip_address

@@ -12,6 +12,7 @@ from app.Services.CompanyRoadmapService import CompanyRoadmapService
 from app.Repositories.CompanyRoadmapRepository import CompanyRoadmapRepository
 from app.Services.GalleryLikeService import GalleryLikeService
 from app.Repositories.GalleryLikeRepository import GalleryLikeRepository
+from app.Requests.web.PageRequest import PageRequest
 from app.utils import capture_image, get_random_tags
 from app.configurations import (
     ADD_PORTFOLIO_PAGE,
@@ -790,10 +791,15 @@ def profile_route():
     )
 
 def gallery_route():
-    search_query = request.args.get("search", "")
-    tags_query = request.args.get("tags", "")
+    form = PageRequest()
+    data, error_response, status_code = form.validated()
+    if error_response:
+        return error_response, status_code
+
+    search_query = data["search_query"]
+    tags_query = data["tags_query"]
     items_per_page = 6
-    page = request.args.get("page", 1, type=int)
+    page = data["page"]
 
     gallery_list, total = gallery_service.search_gallery_paginated(
         search_query,
@@ -827,10 +833,15 @@ def gallery_route():
     )
 
 def vlog_route():
-    search_query = request.args.get("search", "")
-    tags_query = request.args.get("tags", "")
-    page = request.args.get("page", 1, type=int)
+    form = PageRequest()
+    data, error_response, status_code = form.validated()
+    if error_response:
+        return error_response, status_code
+
+    search_query = data["search_query"]
+    tags_query = data["tags_query"]
     items_per_page = 3
+    page = data["page"]
 
     video_list, total = video_service.search_video_paginated(
         search_query,

@@ -228,7 +228,10 @@ def inject_template_livereload():
 
 @app.context_processor
 def inject_hcaptcha():
-    return dict(HCAPTCHA_SITE_KEY=os.getenv("HCAPTCHA_SITE_KEY"))
+    return dict(
+        HCAPTCHA_SITE_KEY=os.getenv("HCAPTCHA_SITE_KEY"),
+        HCAPTCHA_ENABLED=os.getenv("HCAPTCHA_ENABLED", "true").lower() not in ("false", "0", "no", "off"),
+    )
 
 
 if _vite_dev_server:

@@ -11,36 +11,34 @@ class VideoRepository(IVideoRepository, BaseRepository):
         super().__init__(mc.VIDEO)
 
     def get_video_by_id(self, video_id: str):
-        return self.collection.find_one({"_id": ObjectId(video_id)})
+        return self.find_one({"_id": ObjectId(video_id)})
 
     def get_paginated_video_list(self, page: int, per_page: int, order: SortOrder):
         sort_order = -1 if order == SortOrder.DESC else 1
 
-        cursor = (
-            self.collection.find()
-            .sort("_id", sort_order)
-            .skip((page - 1) * per_page)
-            .limit(per_page)
+        data = self.find(
+            sort=[("_id", sort_order)],
+            skip=(page - 1) * per_page,
+            limit=per_page,
         )
 
-        data = list(cursor)
-        total_data = self.collection.count_documents({})
+        total_data = self.count_documents({})
 
         return data, total_data
 
     def add_video(self, video: Video):
-        result = self.collection.insert_one(video.to_dict())
+        result = self.insert_one(video.to_dict())
         return str(result.inserted_id)
 
     def update_video(self, video_id: str, video: Video):
-        result = self.collection.update_one(
+        result = self.update_one(
             {"_id": ObjectId(video_id)},
             {"$set": video.to_dict()}
         )
         return result.matched_count > 0
 
     def delete_video(self, video_id: str):
-        result = self.collection.delete_one({"_id": ObjectId(video_id)})
+        result = self.delete_one({"_id": ObjectId(video_id)})
         return result.deleted_count > 0
 
     def search_video_paginated(
@@ -70,16 +68,15 @@ class VideoRepository(IVideoRepository, BaseRepository):
 
         sort_order = -1 if order == SortOrder.DESC else 1
 
-        total_data = self.collection.count_documents(query)
+        total_data = self.count_documents(query)
 
-        cursor = (
-            self.collection.find(query)
-            .sort("_id", sort_order)
-            .skip((page - 1) * per_page)
-            .limit(per_page)
+        data = self.find(
+            query,
+            sort=[("_id", sort_order)],
+            skip=(page - 1) * per_page,
+            limit=per_page,
         )
 
-        data = list(cursor)
         return data, total_data
 
     def get_all_tags(self, limit: int = 50):
@@ -89,7 +86,7 @@ class VideoRepository(IVideoRepository, BaseRepository):
             {"$sample": {"size": limit}}
         ]
 
-        results = list(self.collection.aggregate(pipeline))
+        results = list(self.aggregate(pipeline))
         tags = [r["_id"] for r in results]
         return tags
 

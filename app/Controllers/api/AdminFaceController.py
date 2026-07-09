@@ -5,6 +5,7 @@ import numpy as np
 from bson import ObjectId
 from flask import jsonify, request, session
 from app.Repositories.AuthRepository import AuthRepository
+from app.Requests.api.AdminFaceRequest import AdminFaceRequest
 
 _FACE_CASCADE = cv2.CascadeClassifier(cv2.data.haarcascades + "haarcascade_frontalface_default.xml")
 _auth_repo_for_faces = AuthRepository()
@@ -82,17 +83,13 @@ def _b64_png_to_gray_160(face_crop_b64: str) -> np.ndarray:
 
 def admin_face_register_route():
 
+    form = AdminFaceRequest()
+    data, error_response, status_code = form.validated()
+    if error_response:
+        return error_response, status_code
+
     try:
-        payload = request.get_json(silent=True) or {}
-
-        image_b64_list = payload.get("image_b64_list")
-        if isinstance(image_b64_list, list) and len(image_b64_list) > 0:
-            b64_list = [x for x in image_b64_list if isinstance(x, str)]
-        else:
-            b64_list = [_require_image_b64(payload)]
-
-        if not b64_list:
-            return jsonify({"ok": False, "message": "Missing image captures"}), 400
+        b64_list = data["image_b64_list"]
 
         crops = []
         for image_b64 in b64_list:
@@ -130,6 +127,11 @@ def admin_face_register_route():
 
 def admin_face_records_route():
 
+    form = AdminFaceRequest()
+    _, error_response, status_code = form.validated()
+    if error_response:
+        return error_response, status_code
+
     try:
         user_id = session.get("user_id")
         if not user_id:
@@ -165,17 +167,13 @@ def admin_face_records_route():
 
 def admin_face_verify_route():
 
+    form = AdminFaceRequest()
+    data, error_response, status_code = form.validated()
+    if error_response:
+        return error_response, status_code
+
     try:
-        payload = request.get_json(silent=True) or {}
-
-        image_b64_list = payload.get("image_b64_list")
-        if isinstance(image_b64_list, list) and len(image_b64_list) > 0:
-            b64_list = [x for x in image_b64_list if isinstance(x, str)]
-        else:
-            b64_list = [_require_image_b64(payload)]
-
-        if not b64_list:
-            return jsonify({"ok": False, "message": "Missing image captures"}), 400
+        b64_list = data["image_b64_list"]
 
         crops = []
         for image_b64 in b64_list:

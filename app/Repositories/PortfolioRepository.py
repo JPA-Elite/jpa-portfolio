@@ -7,8 +7,8 @@ class PortfolioRepository(IPortfolioRepository, BaseRepository):
         super().__init__(mc.VISITORS)
 
     def insert_portfolio(self, portfolio_data):
-        return self.collection.insert_one(portfolio_data)
+        return self.insert_one(portfolio_data)
 
     def insert_system_info(self, system_info):
-        return self.collection.insert_one(system_info)
+        return self.insert_one(system_info)
 

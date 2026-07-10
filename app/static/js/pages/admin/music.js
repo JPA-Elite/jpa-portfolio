@@ -220,8 +220,27 @@ async function loadMusic(page = 1) {
                         </select>
                     </div>
                     <div class="mb-3">
-                        <label for="editLyrics${page}_${index}" class="form-label">Lyrics</label>
-                        <textarea class="form-control" id="editLyrics${page}_${index}" rows="6" placeholder="Enter song lyrics (optional)">${safeLyrics}</textarea>
+                        <label for="editLyrics${page}_${index}" class="form-label d-flex justify-content-between align-items-center gap-2">
+                            <span>Lyrics <small class="text-muted fw-normal">(supports LRC timestamps)</small></span>
+                            <button type="button" class="btn btn-sm btn-outline-secondary" id="lyricsSyncToggle_${page}_${index}" onclick="toggleLyricsSync('${page}_${index}')">
+                                <i class="bi bi-stopwatch"></i> Sync timestamps
+                            </button>
+                        </label>
+                        <textarea class="form-control" id="editLyrics${page}_${index}" rows="6"
+                            placeholder="Enter song lyrics or LRC, e.g. [00:12.00] Line one">${safeLyrics}</textarea>
+                        <div class="lyrics-sync-toolbar d-none mt-2" id="lyricsSyncToolbar_${page}_${index}">
+                            <div class="d-flex flex-wrap align-items-center gap-2">
+                                <button type="button" class="btn btn-sm btn-outline-primary" id="lyricsSyncPreview_${page}_${index}" onclick="toggleSyncPreview('${page}_${index}')">
+                                    <i class="bi bi-play-circle"></i> Preview
+                                </button>
+                                <button type="button" class="btn btn-sm btn-outline-secondary" onclick="stampNextEditorLine('${page}_${index}')">
+                                    <i class="bi bi-bookmark"></i> Stamp next
+                                </button>
+                                <span class="text-muted small">Play the song, then click a line's clock to stamp the current time.</span>
+                            </div>
+                            <audio id="lyricsSyncAudio_${page}_${index}" data-music-url="${music.url}" style="display:none; width:100%; margin-top:6px;"></audio>
+                        </div>
+                        <div class="lyrics-sync-editor d-none mt-2" id="lyricsEditor_${page}_${index}"></div>
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Music Source</label>
@@ -323,6 +342,173 @@ function playMusicPreview(url) {
     window.openAdminImagePreview(url, "Music Image");
 }
 
+const LRC_TIME_RE = /\[(\d{1,2}):(\d{1,2})(?:[.:](\d{1,3}))?\]/g;
+
+function formatLrcTime(seconds) {
+    if (!Number.isFinite(seconds) || seconds < 0) seconds = 0;
+    const minutes = Math.floor(seconds / 60);
+    const secs = Math.floor(seconds % 60);
+    const centis = Math.floor((seconds - Math.floor(seconds)) * 100);
+    return `[${String(minutes).padStart(2, "0")}:${String(secs).padStart(2, "0")}.${String(centis).padStart(2, "0")}]`;
+}
+
+function parseLrc(raw) {
+    if (typeof raw !== "string" || !raw.trim()) return { isLrc: false, lines: [] };
+    if (!/\[\d{1,2}:\d{1,2}/.test(raw)) return { isLrc: false, lines: [] };
+
+    const rows = raw.split(/\r\n|\r|\n/);
+    const lines = [];
+    for (const row of rows) {
+        const times = [];
+        let match;
+        LRC_TIME_RE.lastIndex = 0;
+        while ((match = LRC_TIME_RE.exec(row)) !== null) {
+            const minutes = Number(match[1]);
+            const seconds = Number(match[2]);
+            const fractionRaw = match[3] ? match[3].padEnd(3, "0") : "0";
+            const fraction = Number(fractionRaw) / 1000;
+            times.push(minutes * 60 + seconds + fraction);
+        }
+        const text = row.replace(LRC_TIME_RE, "").trim();
+        if (!times.length) continue;
+        for (const time of times) lines.push({ time, text });
+    }
+    lines.sort((a, b) => a.time - b.time);
+    return { isLrc: true, lines };
+}
+
+function buildEditorLinesFromLyrics(raw) {
+    const parsed = parseLrc(raw);
+    if (parsed.isLrc) {
+        return parsed.lines.map((line) => ({ time: line.time, text: line.text }));
+    }
+    return String(raw)
+        .replace(/\r\n/g, "\n")
+        .replace(/\r/g, "\n")
+        .split("\n")
+        .map((text) => ({ time: null, text }));
+}
+
+function getSyncAudio(prefix) {
+    return document.getElementById(`lyricsSyncAudio_${prefix}`);
+}
+
+function getMusicUrl(prefix) {
+    const audioEl = getSyncAudio(prefix);
+    return audioEl?.dataset.musicUrl || "";
+}
+
+let lyricsSyncState = null;
+
+function renderLyricsEditor(prefix) {
+    const state = lyricsSyncState;
+    const container = document.getElementById(`lyricsEditor_${prefix}`);
+    if (!state || !container) return;
+
+    container.innerHTML = "";
+
+    state.lines.forEach((line, index) => {
+        const row = document.createElement("div");
+        row.className = "lyrics-sync-row";
+
+        const timeBtn = document.createElement("button");
+        timeBtn.type = "button";
+        timeBtn.className = "lyrics-sync-time";
+        timeBtn.textContent =
+            line.time != null ? formatLrcTime(line.time).replace(/[\[\]]/g, "") : "--:--.--";
+        timeBtn.title = "Stamp current playback time";
+        timeBtn.addEventListener("click", () => stampEditorLine(prefix, index));
+
+        const textEl = document.createElement("div");
+        textEl.className = "lyrics-sync-text";
+        textEl.contentEditable = "true";
+        textEl.spellcheck = false;
+        textEl.textContent = line.text;
+        textEl.addEventListener("input", () => {
+            state.lines[index].text = textEl.textContent;
+        });
+
+        row.appendChild(timeBtn);
+        row.appendChild(textEl);
+        container.appendChild(row);
+    });
+}
+
+function stampEditorLine(prefix, index) {
+    const state = lyricsSyncState;
+    const audioEl = getSyncAudio(prefix);
+    if (!state || !state.lines[index] || !audioEl) return;
+    state.lines[index].time = audioEl.currentTime || 0;
+    renderLyricsEditor(prefix);
+}
+
+function stampNextEditorLine(prefix) {
+    const state = lyricsSyncState;
+    if (!state) return;
+    const target = state.lines.findIndex((line) => line.time == null);
+    if (target === -1) {
+        window.notify?.("All lines already have a timestamp.", "info");
+        return;
+    }
+    stampEditorLine(prefix, target);
+    const rows = document.getElementById(`lyricsEditor_${prefix}`)?.querySelectorAll(".lyrics-sync-row");
+    if (rows && rows[target]) {
+        rows[target].scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+}
+
+function toggleLyricsSync(prefix) {
+    const textarea = document.getElementById(`editLyrics${prefix}`);
+    const editor = document.getElementById(`lyricsEditor_${prefix}`);
+    const toolbar = document.getElementById(`lyricsSyncToolbar_${prefix}`);
+    const toggleBtn = document.getElementById(`lyricsSyncToggle_${prefix}`);
+    if (!textarea || !editor || !toolbar || !toggleBtn) return;
+
+    if (!lyricsSyncState || lyricsSyncState.prefix !== prefix) {
+        const audioEl = getSyncAudio(prefix);
+        if (audioEl && !audioEl.src) audioEl.src = getMusicUrl(prefix);
+
+        lyricsSyncState = {
+            prefix,
+            lines: buildEditorLinesFromLyrics(textarea.value),
+            audioEl,
+        };
+
+        editor.classList.remove("d-none");
+        toolbar.classList.remove("d-none");
+        textarea.classList.add("d-none");
+        toggleBtn.classList.add("active");
+        renderLyricsEditor(prefix);
+    } else {
+        const lrc = lyricsSyncState.lines
+            .map((line) => `${line.time != null ? formatLrcTime(line.time) : ""}${line.text}`)
+            .join("\n");
+        textarea.value = lrc;
+
+        editor.classList.add("d-none");
+        toolbar.classList.add("d-none");
+        textarea.classList.remove("d-none");
+        toggleBtn.classList.remove("active");
+        lyricsSyncState = null;
+    }
+}
+
+function toggleSyncPreview(prefix) {
+    const audioEl = getSyncAudio(prefix);
+    const btn = document.getElementById(`lyricsSyncPreview_${prefix}`);
+    if (!audioEl || !btn) return;
+    if (!audioEl.src) audioEl.src = getMusicUrl(prefix);
+
+    if (audioEl.paused) {
+        audioEl.play();
+        btn.innerHTML = '<i class="bi bi-stop-circle"></i> Stop';
+    } else {
+        audioEl.pause();
+        audioEl.currentTime = 0;
+        btn.innerHTML = '<i class="bi bi-play-circle"></i> Preview';
+    }
+}
+
 async function addMusic() {
     const btn = document.getElementById("addMusicBtn");
     setButtonLoading(btn, true);
@@ -420,6 +606,20 @@ async function updateMusic(musicId, formId) {
     setButtonLoading(btn, true);
 
     const form = document.getElementById(formId);
+    const prefix = formId.replace("editForm", "");
+
+    // If the lyrics sync editor is still open, flush the generated LRC
+    // into the textarea so the timestamps are saved to the database.
+    if (lyricsSyncState && lyricsSyncState.prefix === prefix) {
+        const textarea = document.getElementById(`editLyrics${prefix}`);
+        if (textarea) {
+            textarea.value = lyricsSyncState.lines
+                .map((line) => `${line.time != null ? formatLrcTime(line.time) : ""}${line.text}`)
+                .join("\n");
+        }
+        lyricsSyncState = null;
+    }
+
     const title = form
         .querySelector(`#${formId} input[id^='editTitle']`)
         .value.trim();
@@ -433,7 +633,6 @@ async function updateMusic(musicId, formId) {
         .querySelector(`#${formId} textarea[id^='editLyrics']`)
         .value;
 
-    const prefix = formId.replace("editForm", "");
     const toggle = document.getElementById(`editMusicSourceToggle${prefix}`);
     const isUrlMode = toggle ? toggle.checked : false;
     const musicUrl = form.querySelector(`#editMusicUrl${prefix}`)?.value.trim();
@@ -640,3 +839,7 @@ window.updateMusic = updateMusic;
 window.deleteMusic = deleteMusic;
 window.togglePreview = togglePreview;
 window.playMusicPreview = playMusicPreview;
+window.toggleLyricsSync = toggleLyricsSync;
+window.toggleSyncPreview = toggleSyncPreview;
+window.stampNextEditorLine = stampNextEditorLine;
+window.stampEditorLine = stampEditorLine;

@@ -252,6 +252,122 @@ function renderLyricsContent(text = "", { isEmptyState = false } = {}) {
     });
 }
 
+const LRC_TIME_RE = /\[(\d{1,2}):(\d{1,2})(?:[.:](\d{1,3}))?\]/g;
+
+let currentLyrics = { isLrc: false, lines: [] };
+let activeLyricIndex = -1;
+let isLyricsModalOpen = false;
+
+function parseLrc(raw) {
+    if (typeof raw !== "string" || !raw.trim()) {
+        return { isLrc: false, lines: [] };
+    }
+    if (!/\[\d{1,2}:\d{1,2}/.test(raw)) {
+        return { isLrc: false, lines: [] };
+    }
+
+    const rows = raw.split(/\r\n|\r|\n/);
+    const lines = [];
+
+    for (const row of rows) {
+        const times = [];
+        let match;
+        LRC_TIME_RE.lastIndex = 0;
+        while ((match = LRC_TIME_RE.exec(row)) !== null) {
+            const minutes = Number(match[1]);
+            const seconds = Number(match[2]);
+            const fractionRaw = match[3] ? match[3].padEnd(3, "0") : "0";
+            const fraction = Number(fractionRaw) / 1000;
+            times.push(minutes * 60 + seconds + fraction);
+        }
+
+        const text = row.replace(LRC_TIME_RE, "").trim();
+        if (!times.length) continue;
+
+        for (const time of times) {
+            lines.push({ time, text });
+        }
+    }
+
+    lines.sort((a, b) => a.time - b.time);
+    return { isLrc: true, lines };
+}
+
+function renderLrcLyrics(lines) {
+    if (!lyricsModalContentEl) return;
+
+    lyricsModalContentEl.innerHTML = "";
+    lyricsModalContentEl.classList.remove("is-empty");
+
+    if (!lines.length) {
+        renderLyricsContent("No lyrics added for this song yet.", { isEmptyState: true });
+        return;
+    }
+
+    lines.forEach((line, index) => {
+        const lineEl = document.createElement("div");
+        lineEl.className = "lyrics-modal__line";
+        lineEl.dataset.index = String(index);
+        lineEl.dataset.time = String(line.time);
+        lineEl.setAttribute("role", "button");
+        lineEl.setAttribute("tabindex", "0");
+
+        if (!line.text) {
+            lineEl.classList.add("lyrics-modal__line--blank");
+            lineEl.innerHTML = "&nbsp;";
+        } else {
+            lineEl.textContent = line.text;
+        }
+
+        const seekToLine = () => {
+            if (!audioPlayer || Number.isNaN(line.time)) return;
+            audioPlayer.currentTime = line.time;
+            updateActiveLyric(line.time, true);
+        };
+
+        lineEl.addEventListener("click", seekToLine);
+        lineEl.addEventListener("keydown", (event) => {
+            if (event.key === "Enter" || event.key === " ") {
+                event.preventDefault();
+                seekToLine();
+            }
+        });
+
+        lyricsModalContentEl.appendChild(lineEl);
+    });
+}
+
+function findActiveLyricIndex(time) {
+    const lines = currentLyrics.lines;
+    if (!lines.length || Number.isNaN(time)) return -1;
+
+    let index = -1;
+    for (let i = 0; i < lines.length; i++) {
+        if (lines[i].time <= time) {
+            index = i;
+        } else {
+            break;
+        }
+    }
+    return index;
+}
+
+function updateActiveLyric(time = audioPlayer?.currentTime || 0, scroll = false) {
+    if (!currentLyrics.isLrc || !lyricsModalContentEl) return;
+
+    const index = findActiveLyricIndex(time);
+    if (index === activeLyricIndex) return;
+    activeLyricIndex = index;
+
+    const allLines = lyricsModalContentEl.querySelectorAll(".lyrics-modal__line");
+    allLines.forEach((el, i) => el.classList.toggle("is-active", i === index));
+
+    const activeEl = index >= 0 ? allLines[index] : null;
+    if (activeEl && (scroll || isLyricsModalOpen)) {
+        activeEl.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+}
+
 function syncLyricsPanel(song = getCurrentSong()) {
     if (lyricsBtn) {
         const disabled = !song;
@@ -270,15 +386,26 @@ function syncLyricsPanel(song = getCurrentSong()) {
         return;
     }
 
-    const lyrics = typeof song.lyrics === "string" ? song.lyrics.trim() : "";
+    const lyrics = (typeof song.lyrics === "string" ? song.lyrics : "").trim();
     lyricsModalTitleEl.textContent = song.title || "Lyrics";
     lyricsModalArtistEl.textContent = song.artist || "";
     if (!lyrics) {
+        currentLyrics = { isLrc: false, lines: [] };
+        activeLyricIndex = -1;
         renderLyricsContent("No lyrics added for this song yet.", { isEmptyState: true });
         return;
     }
 
-    renderLyricsContent(lyrics, { isEmptyState: false });
+    const parsed = parseLrc(lyrics);
+    currentLyrics = parsed;
+    activeLyricIndex = -1;
+
+    if (parsed.isLrc) {
+        renderLrcLyrics(parsed.lines);
+        updateActiveLyric(audioPlayer?.currentTime || 0, isLyricsModalOpen);
+    } else {
+        renderLyricsContent(lyrics, { isEmptyState: false });
+    }
 }
 
 function openLyricsModal() {
@@ -287,13 +414,16 @@ function openLyricsModal() {
     if (!song) return;
 
     syncLyricsPanel(song);
+    isLyricsModalOpen = true;
     lyricsModal.classList.add("is-open");
     lyricsModal.setAttribute("aria-hidden", "false");
     document.body.classList.add("lyrics-modal-open");
+    updateActiveLyric(audioPlayer?.currentTime || 0, true);
 }
 
 function closeLyricsModal() {
     if (!lyricsModal) return;
+    isLyricsModalOpen = false;
     lyricsModal.classList.remove("is-open");
     lyricsModal.setAttribute("aria-hidden", "true");
     document.body.classList.remove("lyrics-modal-open");
@@ -1202,6 +1332,7 @@ function toggleShuffle() {
 }
 
 audioPlayer.addEventListener("timeupdate", updateProgress);
+audioPlayer.addEventListener("timeupdate", () => updateActiveLyric());
 audioPlayer.addEventListener("loadedmetadata", updateDuration);
 audioPlayer.addEventListener("play", syncPlayPauseButton);
 audioPlayer.addEventListener("pause", syncPlayPauseButton);

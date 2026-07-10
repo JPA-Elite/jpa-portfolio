@@ -26,3 +26,7 @@ class IMusicRepository(ABC):
     @abstractmethod
     def delete_music(self, music_id: str):
         pass
+
+    @abstractmethod
+    def get_total_music_count(self) -> int:
+        pass

@@ -6,6 +6,7 @@ from app.Requests.api.MusicRequest import MusicRequest
 from app.constants.messages import MUSIC_ADD_MSG, MUSIC_DELETE_MSG, MUSIC_NOT_FOUND_ERROR, MUSIC_UPDATE_FAILED_ERROR, MUSIC_UPDATE_MSG
 from app.utils import clear_cache_by_prefix, get_cache_data
 from app.extensions import cache
+from app.Models.Music import Music
 
 # Initialize Services
 music_service = MusicService(repository=MusicRepository())
@@ -26,8 +27,9 @@ def music_list_route():
     per_page = data["per_page"]
     search_query = data["search_query"]
     order = data["order"]
+    category = data["category"]
 
-    music_list, total_music = music_service.get_paginated_music_list(page, per_page, order, search_query)
+    music_list, total_music = music_service.get_paginated_music_list(page, per_page, order, search_query, category)
 
     response_data = {
         "music": [music.to_dict() for music in music_list],
@@ -36,6 +38,7 @@ def music_list_route():
         "page": page,
         "per_page": per_page,
         "search": search_query,
+        "category": category,
     }
 
     cache.set(cache_key, response_data, timeout=300)
@@ -78,3 +81,11 @@ def delete_music_route(music_id):
     else:
         return jsonify({"message": MUSIC_NOT_FOUND_ERROR}), 404
 
+def music_categories_route():
+    """Get all categories with counts"""
+    all_categories = Music.CATEGORIES
+    counts = music_service.get_category_counts()
+    categories = [c for c in all_categories if c]
+    counts = {k: v for k, v in counts.items() if k}
+    counts["All"] = music_service.get_total_music_count()
+    return jsonify({"categories": categories, "counts": counts})

@@ -15,4 +15,13 @@ export class MusicService {
             throw error;
         }
     }
+
+    async fetchCategories() {
+        try {
+            return await this.repository.fetchCategories();
+        } catch (error) {
+            console.error("MusicService Error:", error);
+            throw error;
+        }
+    }
 }

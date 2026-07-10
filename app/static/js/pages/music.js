@@ -2,6 +2,34 @@ import { MusicService } from "../services/MusicService.js";
 
 const musicService = new MusicService();
 
+const CATEGORY_ICONS = {
+    "All": "🎵",
+    "Rap": "🎤",
+    "Love Song": "💖",
+    "Pop": "🎧",
+    "R&B": "🕺",
+    "Rock": "🎸",
+    "Chill": "🌊",
+    "Party": "🎉",
+    "Workout": "💪",
+    "Mood": "😌",
+    "Focus": "🎯"
+};
+
+const CATEGORY_COLORS = {
+    "All": "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+    "Rap": "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)",
+    "Love Song": "linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%)",
+    "Pop": "linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%)",
+    "R&B": "linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%)",
+    "Rock": "linear-gradient(135deg, #ff0844 0%, #ffb199 100%)",
+    "Chill": "linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)",
+    "Party": "linear-gradient(135deg, #f6d365 0%, #fda085 100%)",
+    "Workout": "linear-gradient(135deg, #fa709a 0%, #fee140 100%)",
+    "Mood": "linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)",
+    "Focus": "linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%)"
+};
+
 let audioPlayer,
     playPauseBtn,
     currentSongIndex = 0;
@@ -20,6 +48,8 @@ let filteredResults = null;
 let musicDataLoaded = false;
 const durationPromiseCache = new Map();
 let activeSearchQuery = "";
+let currentCategory = "All";
+let availableCategories = [];
 let totalMusicCount = 0;
 let totalPagesCount = 1;
 let currentSongData = null;
@@ -359,8 +389,14 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
     }
 
+    const categoryToggleBtn = document.getElementById("categoryToggle");
+    if (categoryToggleBtn) {
+        categoryToggleBtn.addEventListener("click", toggleCategories);
+    }
+
     showTripleLoading?.();
     try {
+        await loadCategories();
         await loadAndRenderMusicPage({ resetSelection: true });
         musicDataLoaded = true;
     } catch (err) {
@@ -484,6 +520,9 @@ async function loadMusicData() {
     if (activeSearchQuery) {
         params.set("search", activeSearchQuery);
     }
+    if (currentCategory && currentCategory !== "All") {
+        params.set("category", currentCategory);
+    }
 
     const result = await musicService.fetchMusicList(params);
     const items = result?.music || [];
@@ -493,6 +532,81 @@ async function loadMusicData() {
 
     return items;
 }
+
+async function loadCategories() {
+    try {
+        const result = await musicService.fetchCategories();
+        const categories = result?.categories || ["All"];
+        const counts = result?.counts || {};
+
+        availableCategories = categories;
+
+        const container = document.getElementById("categoryTabs");
+        if (!container || categories.length === 0) return;
+
+        const row = document.createElement("div");
+        row.className = "category-tag-row";
+
+        categories.forEach((cat) => {
+            const count = counts[cat] || 0;
+            const isActive = cat === currentCategory;
+            const icon = CATEGORY_ICONS[cat] || "🎵";
+
+            const tag = document.createElement("button");
+            tag.type = "button";
+            tag.className = `category-tag${isActive ? " active" : ""}`;
+            tag.setAttribute("data-category", cat);
+            tag.setAttribute("aria-pressed", String(isActive));
+            tag.innerHTML = `${icon} ${cat} <span class="category-tag__count">${count}</span>`;
+            tag.addEventListener("click", () => filterByCategory(cat));
+            row.appendChild(tag);
+        });
+
+        container.innerHTML = "";
+        container.appendChild(row);
+    } catch (err) {
+        console.error("Failed to load categories:", err);
+    }
+}
+
+function filterByCategory(category) {
+    currentCategory = category || "All";
+    currentPage = 1;
+
+    document.querySelectorAll(".category-tag").forEach((tag) => {
+        const cat = tag.getAttribute("data-category");
+        const isActive = cat === currentCategory;
+        tag.classList.toggle("active", isActive);
+        tag.setAttribute("aria-pressed", String(isActive));
+    });
+
+    showTripleLoading?.();
+    loadAndRenderMusicPage({ resetSelection: false }).finally(() => {
+        hideTripleLoading?.();
+    });
+    toggleCategories();
+}
+
+function setCategoriesCollapsed(collapsed) {
+    const container = document.getElementById("categoryTabs");
+    const btn = document.getElementById("categoryToggle");
+    if (!container || !btn) return;
+
+    const expanded = btn.getAttribute("aria-expanded") !== "false";
+    if (expanded === !collapsed) return;
+
+    btn.setAttribute("aria-expanded", String(!collapsed));
+    container.classList.toggle("category-tabs--collapsed", collapsed);
+    btn.querySelector(".category-toggle__icon").setAttribute("name", collapsed ? "chevron-up-outline" : "chevron-down-outline");
+}
+
+function toggleCategories() {
+    const btn = document.getElementById("categoryToggle");
+    if (!btn) return;
+    setCategoriesCollapsed(btn.getAttribute("aria-expanded") === "true");
+}
+
+window.toggleCategories = toggleCategories;
 
 async function loadAndRenderMusicPage({ resetSelection = false, activeSongId = null } = {}) {
     const pushUrlState = pendingUrlHistoryPush;
@@ -547,6 +661,8 @@ function playSong(index) {
     setAudioSrcForSong(song);
     updateActiveSongDisplay(song);
     persistActiveSongId(song.id);
+
+    setCategoriesCollapsed(true);
 
     coverImg.classList.add("spin");
     audioPlayer.play();
@@ -968,7 +1084,9 @@ function renderList(activeSongId = null) {
     const source = musicData || [];
 
     if (!source || source.length === 0) {
-        musicList.innerHTML = `<p class="no-results">No songs found.</p>`;
+        musicList.innerHTML = currentCategory !== "All"
+            ? `<div class="empty-category-state"><span class="empty-category-state__icon">${CATEGORY_ICONS[currentCategory] || "🎵"}</span><p class="empty-category-state__text">There is no music in <strong>${currentCategory}</strong></p></div>`
+            : `<p class="no-results">No songs found.</p>`;
         currentSongData = null;
         syncLyricsPanel(null);
         closeLyricsModal();
@@ -1244,7 +1362,7 @@ function updateMusicHeader() {
 
     const total = Number(totalMusicCount || 0);
 
-    header.textContent = `My Music List (${total} ${total === 1 ? "song" : "songs"})`;
+    header.textContent = `My Tracks (${total} ${total === 1 ? "song" : "songs"})`;
 }
 
 const vizConfig = { mode: 'Neon Wave', freq: 196, bass: 10, treble: 8, sensitivity: 125, bars: 72, speed: 10, glow: 14, smooth: 70, phase: 0, off: false };

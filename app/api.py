@@ -12,7 +12,7 @@ import os
 from app.Controllers.api.BaseController import change_language_route, delete_page_system_info_route, download_song_route, get_client_ip_route, profile_config_route, proxy_audio_route
 from app.Repositories.ActivityLogRepository import ActivityLogRepository
 from flask import session
-from app.Controllers.api.MusicController import add_music_route, delete_music_route, music_list_route, update_music_route
+from app.Controllers.api.MusicController import add_music_route, delete_music_route, music_categories_route, music_list_route, update_music_route
 from app.Controllers.api.KeyProjectController import (
     add_key_project_route,
     delete_key_project_route,
@@ -234,6 +234,15 @@ def update_music(music_id):
 @admin_login_required
 def delete_music(music_id):
     return delete_music_route(music_id)
+
+@api_bp.route("/api/music-categories", methods=[http.GET])
+def music_categories():
+    return music_categories_route()
+
+@api_bp.route("/admin/api/music-categories", methods=[http.GET])
+@admin_login_required
+def admin_music_categories():
+    return music_categories_route()
 
 # Key Projects API
 @api_bp.route("/admin/api/key-project-list", methods=[http.GET])

@@ -27,12 +27,14 @@ class MusicRequest(BaseRequest):
             if str(self._get_args("order", "desc")).upper() == SortOrderStr.DESC
             else SortOrder.ASC
         )
+        category = str(self._get_args("category", "")).strip()
 
         return self._success_response({
             "page": page,
             "per_page": per_page,
             "search_query": search_query,
             "order": order,
+            "category": category,
         })
 
     def _validate_store(self):
@@ -40,6 +42,7 @@ class MusicRequest(BaseRequest):
             "title": str(self._get_form("title", "")).strip(),
             "artist": str(self._get_form("artist", "")).strip(),
             "lyrics": str(self._get_form("lyrics", "")).strip(),
+            "category": str(self._get_form("category", "All")).strip(),
             "music_file": self._get_file("music_file"),
             "image_file": self._get_file("image_file"),
             "music_url_input": str(self._get_form("music_url_input", "")).strip(),
@@ -53,6 +56,7 @@ class MusicRequest(BaseRequest):
             "title": self._get_form("title"),
             "artist": self._get_form("artist"),
             "lyrics": self._get_form("lyrics"),
+            "category": self._get_form("category"),
             "music_file": self._get_file("music_file"),
             "image_file": self._get_file("image_file"),
             "music_url_input": self._get_form("music_url_input"),

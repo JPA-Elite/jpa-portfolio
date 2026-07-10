@@ -145,10 +145,18 @@ class MusicService:
     def get_music_by_url(self, music_url: str):
         return self.repository.get_music_by_url(music_url)
 
-    def get_paginated_music_list(self, page, per_page, order: SortOrder = SortOrder.DESC, search_query: str = ""):
-        data, total_data = self.repository.get_paginated_music_list(page, per_page, order, search_query)
+    def get_paginated_music_list(self, page, per_page, order: SortOrder = SortOrder.DESC, search_query: str = "", category: str = ""):
+        data, total_data = self.repository.get_paginated_music_list(page, per_page, order, search_query, category)
         system_info_list = [Music.from_dict(music) for music in data]
         return system_info_list, total_data
+
+    def get_all_categories(self):
+        """Get all unique categories from the database"""
+        return self.repository.get_all_categories()
+
+    def get_category_counts(self):
+        """Get count of music grouped by category"""
+        return self.repository.get_category_counts()
 
     def _resolve_music_file(self, data: dict):
         music_file = data.pop("music_file", None)
@@ -168,6 +176,7 @@ class MusicService:
         if "id" not in data or not data["id"]:
             data["id"] = str(uuid.uuid4())
         data["lyrics"] = data.get("lyrics") if isinstance(data.get("lyrics"), str) else ""
+        data["category"] = data.get("category", "All")
 
         music_url, image_url = None, None
         duration = None
@@ -225,6 +234,7 @@ class MusicService:
             "title": data.get("title") or existing_music["title"],
             "artist": data.get("artist") or existing_music["artist"],
             "lyrics": data["lyrics"] if data.get("lyrics") is not None else existing_music.get("lyrics", ""),
+            "category": data.get("category") or existing_music.get("category", "All"),
         }
 
         new_music_url, new_image_url = None, None
@@ -295,3 +305,6 @@ class MusicService:
 
         cleanup_uploaded_files(existing_music.get("url"), existing_music.get("image"))
         return self.repository.delete_music(music_id)
+
+    def get_total_music_count(self) -> int:
+        return self.repository.get_total_music_count()

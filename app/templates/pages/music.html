@@ -166,7 +166,16 @@
     </nav>
     <main>
         <div class="music-list">
-            <h2 id="music-header">My Music List</h2>
+            <div style="display:flex; align-items:center; justify-content:space-between;">
+                <h2 id="music-header">My Tracks</h2>
+                <button id="categoryToggle" type="button" class="category-toggle-btn" aria-expanded="false" title="Toggle categories">
+                    <span class="category-toggle__label">Categories</span>
+                    <ion-icon name="chevron-up-outline" class="category-toggle__icon"></ion-icon>
+                </button>
+            </div>
+            <div class="category-tabs category-tabs--collapsed" id="categoryTabs">
+                <!-- Category pills loaded via JS -->
+            </div>
             {% include 'spinners/triple_loading.html' %}
             <div class="music-list-items" id="musicList"></div>
             <div class="pagination-controls">

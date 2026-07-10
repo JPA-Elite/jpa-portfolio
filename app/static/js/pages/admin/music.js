@@ -121,7 +121,7 @@ async function loadMusic(page = 1) {
     const modalContainer = document.getElementById("musicModals");
     const pageInfo = document.getElementById("pageInfo");
 
-    tbody.innerHTML = `<tr><td colspan="6" class="text-center">Loading...</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="7" class="text-center">Loading...</td></tr>`;
 
     try {
         const data = await adminMusicService.fetchList({
@@ -135,7 +135,7 @@ async function loadMusic(page = 1) {
         modalContainer.innerHTML = "";
 
         if (!data.music || data.music.length === 0) {
-            tbody.innerHTML = `<tr><td colspan="6" class="text-center">No music found</td></tr>`;
+            tbody.innerHTML = `<tr><td colspan="7" class="text-center">No music found</td></tr>`;
             pageInfo.textContent = `Page ${page} | ${data.total_pages}`;
             return;
         }
@@ -152,6 +152,7 @@ async function loadMusic(page = 1) {
             <td>${(page - 1) * perPage + (index + 1)}</td>
             <td>${safeTitle}</td>
             <td>${safeArtist}</td>
+            <td>${music.category || "All"}</td>
             <td>
                 <button
                 id="previewBtn_${music._id}"
@@ -201,6 +202,22 @@ async function loadMusic(page = 1) {
                     <div class="mb-3">
                         <label for="editArtist${page}_${index}" class="form-label">Artist <span class="text-danger">*</label>
                         <input type="text" class="form-control" id="editArtist${page}_${index}" value="${safeArtist}">
+                    </div>
+                    <div class="mb-3">
+                        <label for="editCategory${page}_${index}" class="form-label">Category</label>
+                        <select class="form-select" id="editCategory${page}_${index}">
+                            <option value="All" ${music.category === "All" ? "selected" : ""}>All</option>
+                            <option value="Rap" ${music.category === "Rap" ? "selected" : ""}>Rap</option>
+                            <option value="Love Song" ${music.category === "Love Song" ? "selected" : ""}>Love Song</option>
+                            <option value="Pop" ${music.category === "Pop" ? "selected" : ""}>Pop</option>
+                            <option value="R&B" ${music.category === "R&B" ? "selected" : ""}>R&B</option>
+                            <option value="Rock" ${music.category === "Rock" ? "selected" : ""}>Rock</option>
+                            <option value="Chill" ${music.category === "Chill" ? "selected" : ""}>Chill</option>
+                            <option value="Party" ${music.category === "Party" ? "selected" : ""}>Party</option>
+                            <option value="Workout" ${music.category === "Workout" ? "selected" : ""}>Workout</option>
+                            <option value="Mood" ${music.category === "Mood" ? "selected" : ""}>Mood</option>
+                            <option value="Focus" ${music.category === "Focus" ? "selected" : ""}>Focus</option>
+                        </select>
                     </div>
                     <div class="mb-3">
                         <label for="editLyrics${page}_${index}" class="form-label">Lyrics</label>
@@ -294,7 +311,7 @@ async function loadMusic(page = 1) {
         });
     } catch (error) {
         console.error("Error fetching music list:", error);
-        tbody.innerHTML = `<tr><td colspan="6" class="text-center text-danger">Error loading data</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="7" class="text-center text-danger">Error loading data</td></tr>`;
     }
 }
 
@@ -312,6 +329,7 @@ async function addMusic() {
 
     const title = document.getElementById("addTitle").value.trim();
     const artist = document.getElementById("addArtist").value.trim();
+    const category = document.getElementById("addCategory").value;
     const lyrics = document.getElementById("addLyrics").value;
     const isUrlMode = document.getElementById("addMusicSourceToggle").checked;
     const musicUrl = document.getElementById("addMusicUrl").value.trim();
@@ -356,6 +374,7 @@ async function addMusic() {
     const formData = new FormData();
     formData.append("title", title);
     formData.append("artist", artist);
+    formData.append("category", category);
     formData.append("lyrics", lyrics);
     formData.append("music_source_type", isUrlMode ? "url" : "file");
     if (isUrlMode) {
@@ -407,6 +426,9 @@ async function updateMusic(musicId, formId) {
     const artist = form
         .querySelector(`#${formId} input[id^='editArtist']`)
         .value.trim();
+    const category = form
+        .querySelector(`#${formId} select[id^='editCategory']`)
+        .value;
     const lyrics = form
         .querySelector(`#${formId} textarea[id^='editLyrics']`)
         .value;
@@ -447,6 +469,7 @@ async function updateMusic(musicId, formId) {
     const formData = new FormData();
     formData.append("title", title);
     formData.append("artist", artist);
+    formData.append("category", category);
     formData.append("lyrics", lyrics);
     formData.append("music_source_type", isUrlMode ? "url" : "file");
     if (isUrlMode) {
@@ -541,6 +564,36 @@ document.addEventListener("DOMContentLoaded", () => {
         if (addDropZone) {
             const p = addDropZone.querySelector("p");
             if (p) p.textContent = "Drag & Drop image here, or click to select";
+        }
+    });
+
+    document.addEventListener("show.bs.modal", (e) => {
+        const modal = e.target;
+        if (!modal.id || !modal.id.startsWith("editModal")) return;
+
+        const form = modal.querySelector("form");
+        if (form) {
+            form.reset();
+            form.querySelectorAll('input[type="file"]').forEach((input) => {
+                input.value = "";
+            });
+        }
+
+        const dropZone = modal.querySelector(".dropzone p");
+        if (dropZone) {
+            dropZone.textContent = "Drag & Drop image here, or click to select";
+        }
+
+        const toggle = modal.querySelector('input[type="checkbox"][role="switch"]');
+        if (toggle) {
+            toggle.checked = false;
+            const prefix = toggle.id.replace("editMusicSourceToggle", "");
+            const fileGroup = document.getElementById(`editMusicFileGroup${prefix}`);
+            const urlGroup = document.getElementById(`editMusicUrlGroup${prefix}`);
+            const label = document.getElementById(`editMusicSourceLabel${prefix}`);
+            if (fileGroup) fileGroup.classList.remove("d-none");
+            if (urlGroup) urlGroup.classList.add("d-none");
+            if (label) label.textContent = "Upload MP3 File";
         }
     });
 

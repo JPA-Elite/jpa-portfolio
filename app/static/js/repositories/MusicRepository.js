@@ -20,4 +20,12 @@ export class MusicRepository extends IMusicRepository {
 
         return response.json();
     }
+
+    async fetchCategories() {
+        const response = await fetch("/api/music-categories");
+        if (!response.ok) {
+            throw new Error(`Failed to fetch categories: ${response.status}`);
+        }
+        return response.json();
+    }
 }

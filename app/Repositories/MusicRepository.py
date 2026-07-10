@@ -16,18 +16,29 @@ class MusicRepository(IMusicRepository, BaseRepository):
     def get_music_by_url(self, music_url: str):
         return self.find_one({"url": music_url})
 
-    def get_paginated_music_list(self, page: int, per_page: int, order: SortOrder, search_query: str = ""):
+    def get_paginated_music_list(self, page: int, per_page: int, order: SortOrder, search_query: str = "", category: str = ""):
         sort_order = -1 if order == SortOrder.DESC else 1
         query = {}
 
-        if search_query:
-            escaped = re.escape(search_query.strip())
-            query = {
-                "$or": [
-                    {"title": {"$regex": escaped, "$options": "i"}},
-                    {"artist": {"$regex": escaped, "$options": "i"}},
-                ]
-            }
+        # Build query based on search and category filters
+        if search_query or category:
+            query = {}
+            conditions = []
+
+            if search_query:
+                escaped = re.escape(search_query.strip())
+                conditions.append({
+                    "$or": [
+                        {"title": {"$regex": escaped, "$options": "i"}},
+                        {"artist": {"$regex": escaped, "$options": "i"}},
+                    ]
+                })
+
+            if category and category != "All":
+                conditions.append({"category": category})
+
+            if conditions:
+                query = {"$and": conditions} if len(conditions) > 1 else conditions[0]
 
         data = self.find(
             query,
@@ -39,6 +50,19 @@ class MusicRepository(IMusicRepository, BaseRepository):
         total_data = self.count_documents(query)
 
         return data, total_data
+
+    def get_all_categories(self):
+        """Get all unique categories from the database"""
+        return self.collection.distinct("category")
+
+    def get_category_counts(self):
+        """Get count of music grouped by category"""
+        pipeline = [
+            {"$group": {"_id": "$category", "count": {"$sum": 1}}},
+            {"$sort": {"_id": 1}}
+        ]
+        result = self.aggregate(pipeline)
+        return {item["_id"]: item["count"] for item in result}
 
     def add_music(self, music: Music):
         result = self.insert_one(music.to_dict())
@@ -54,4 +78,7 @@ class MusicRepository(IMusicRepository, BaseRepository):
     def delete_music(self, music_id: str):
         result = self.delete_one({"_id": ObjectId(music_id)})
         return result.deleted_count > 0
+
+    def get_total_music_count(self) -> int:
+        return self.count_documents({})
 

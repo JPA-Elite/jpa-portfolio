@@ -75,6 +75,22 @@
                           <input type="text" class="form-control" id="addArtist" required>
                         </div>
                         <div class="mb-3">
+                          <label class="form-label">Category</label>
+                          <select class="form-select" id="addCategory">
+                            <option value="All" selected>All</option>
+                            <option value="Rap">Rap</option>
+                            <option value="Love Song">Love Song</option>
+                            <option value="Pop">Pop</option>
+                            <option value="R&B">R&B</option>
+                            <option value="Rock">Rock</option>
+                            <option value="Chill">Chill</option>
+                            <option value="Party">Party</option>
+                            <option value="Workout">Workout</option>
+                            <option value="Mood">Mood</option>
+                            <option value="Focus">Focus</option>
+                          </select>
+                        </div>
+                        <div class="mb-3">
                           <label class="form-label">Lyrics</label>
                           <textarea class="form-control" id="addLyrics" rows="6"
                             placeholder="Enter song lyrics (optional)"></textarea>
@@ -131,6 +147,7 @@
                     <th>#</th>
                     <th>Title</th>
                     <th>Artist</th>
+                    <th>Category</th>
                     <th>Play</th>
                     <th>Image</th>
                     <th>Actions</th>

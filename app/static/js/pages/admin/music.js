@@ -796,6 +796,36 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
+    document.addEventListener("hide.bs.modal", (e) => {
+        const modal = e.target;
+        if (!modal.id || !modal.id.startsWith("editModal")) return;
+
+        const syncAudio = modal.querySelector("audio[id^='lyricsSyncAudio_']");
+        if (syncAudio) {
+            syncAudio.pause();
+            syncAudio.currentTime = 0;
+        }
+
+        const previewBtn = modal.querySelector("[id^='lyricsSyncPreview_']");
+        if (previewBtn) {
+            previewBtn.innerHTML = '<i class="bi bi-play-circle"></i> Preview';
+        }
+
+        const prefix = modal.id.replace("editModal", "");
+        if (lyricsSyncState && lyricsSyncState.prefix === prefix) {
+            lyricsSyncState = null;
+        }
+
+        const editor = modal.querySelector("[id^='lyricsEditor_']");
+        const toolbar = modal.querySelector("[id^='lyricsSyncToolbar_']");
+        const textarea = modal.querySelector("textarea[id^='editLyrics']");
+        const syncToggle = modal.querySelector("[id^='lyricsSyncToggle_']");
+        if (editor) editor.classList.add("d-none");
+        if (toolbar) toolbar.classList.add("d-none");
+        if (textarea) textarea.classList.remove("d-none");
+        if (syncToggle) syncToggle.classList.remove("active");
+    });
+
     document.getElementById("prevPage").addEventListener("click", () => {
         if (currentPage > 1) {
             currentPage--;

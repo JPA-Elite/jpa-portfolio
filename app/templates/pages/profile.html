@@ -34,12 +34,12 @@ endblock %}
         </button>
     </div>
     {% if get_locale() == en_locale %}
-    <img src="{{ voice_icon }}" alt="Voice Image" class="voice-icon" onclick="speak(
+    <ion-icon name="mic-outline" size="18" class="voice-icon" onclick="speak(
         document.querySelector('#project-details').textContent,
         getVoiceLocale('{{ get_locale() }}'),
         this,
         '#project-details'
-    )" />
+    )"></ion-icon>
     {% endif %}
 </section>
 
@@ -81,12 +81,12 @@ endblock %}
     </ul>
     </div>
     {% if get_locale() == en_locale %}
-    <img src="{{ voice_icon }}" alt="Voice Image" class="voice-icon" onclick="speak(
+    <ion-icon name="mic-outline" size="18" class="voice-icon" onclick="speak(
         document.querySelector('#about').textContent,
         getVoiceLocale('{{ get_locale() }}'),
         this,
         '#about'
-    )" />
+    )"></ion-icon>
     {% endif %}
 </section>
 
@@ -138,12 +138,12 @@ endblock %}
     </p>
     </div>
     {% if get_locale() == en_locale %}
-    <img src="{{ voice_icon }}" alt="Voice Image" class="voice-icon" onclick="speak(
+    <ion-icon name="mic-outline" size="18" class="voice-icon" onclick="speak(
         document.querySelector('#resume').textContent,
         getVoiceLocale('{{ get_locale() }}'),
         this,
         '#resume'
-    )" />
+    )"></ion-icon>
     {% endif %}
 </section>
 
@@ -243,12 +243,12 @@ endblock %}
         {% endfor %}
     </div>
     {% if get_locale() == en_locale %}
-    <img src="{{ voice_icon }}" alt="Voice Image" class="voice-icon" onclick="speak(
+    <ion-icon name="mic-outline" size="18" class="voice-icon" onclick="speak(
         document.querySelector('#company-roadmap').textContent,
         getVoiceLocale('{{ get_locale() }}'),
         this,
         '#company-roadmap'
-    )" />
+    )"></ion-icon>
     {% endif %}
 </section>
 
@@ -852,12 +852,12 @@ endblock %}
         </ul>
     </div>
     {% if get_locale() == en_locale %}
-    <img src="{{ voice_icon }}" alt="Voice Image" class="voice-icon" onclick="speak(
+    <ion-icon name="mic-outline" size="18" class="voice-icon" onclick="speak(
         document.querySelector('#contact').textContent,
         getVoiceLocale('{{ get_locale() }}'),
         this,
         '#contact'
-    )" />
+    )"></ion-icon>
     {% endif %}
 </section>
 <script>

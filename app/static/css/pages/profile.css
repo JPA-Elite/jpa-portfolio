@@ -1372,7 +1372,7 @@ section>*+* {
 
     .cta-button {
         background-color: transparent !important;
-        color: #333 !important;
+        color: var(--accent-color, #2563eb) !important;
         text-decoration: underline;
         padding: 0;
     }
@@ -2324,19 +2324,33 @@ section>*+* {
 #resume .cta-button {
     display: inline-flex;
     align-items: center;
-    justify-content: center;
     gap: 6px;
-    padding: 8px 14px;
-    border-radius: 10px;
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    background: linear-gradient(135deg, rgba(255, 86, 154, 0.95), rgba(59, 130, 246, 0.95));
-    color: #fff;
-    text-decoration: none;
-    box-shadow: 0 8px 20px rgba(37, 99, 235, 0.18);
+    padding: 0;
+    border-radius: 0;
+    border: none;
+    background: none;
+    color: #2962ff;
+    text-decoration: underline;
+    text-underline-offset: 0.18em;
+    text-decoration-thickness: 1.5px;
+    font-weight: 500;
+    letter-spacing: 0.01em;
+    box-shadow: none;
+    transition: color 0.2s ease, text-decoration-color 0.2s ease;
+}
+
+#resume .cta-button__icon {
+    color: inherit;
+    font-size: 16px;
+    pointer-events: none;
 }
 
 #resume .cta-button:hover {
-    filter: brightness(1.05);
+    color: #1e40bf;
+    text-decoration-color: #1e40bf;
+    transform: none;
+    filter: none;
+    box-shadow: none;
 }
 
 /* Certifications */
@@ -2489,14 +2503,30 @@ ion-icon.voice-icon {
 }
 
 [data-theme="light"] #resume .cta-button {
-    color: #fff !important;
-    background: #2563eb !important;
-    border-color: rgba(0, 0, 0, 0.15);
-    text-decoration: none;
+    color: #2563eb;
+    background: none;
+    border: none;
+    text-decoration: underline;
+    text-underline-offset: 0.18em;
+    text-decoration-thickness: 1.5px;
+    font-weight: 500;
+    box-shadow: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: color 0.2s ease, text-decoration-color 0.2s ease;
+}
+
+[data-theme="light"] #resume .cta-button__icon {
+    color: inherit;
+    font-size: 16px;
 }
 
 [data-theme="light"] #resume .cta-button:hover {
-    background: #1d4ed8 !important;
+    color: #1d4ed8;
+    text-decoration-color: #1d4ed8;
+    transform: none;
+    box-shadow: none;
 }
 
 @media only screen and (max-width: 768px) {
@@ -2550,15 +2580,22 @@ ion-icon.voice-icon {
     }
 
     #resume .cta-button {
-        padding: 8px 12px;
-        border-radius: 10px;
-        background: #2563eb !important;
-        color: #fff !important;
-        text-decoration: none;
+        padding: 0;
+        background: none;
+        color: #2962ff;
+        text-decoration: underline;
+        text-underline-offset: 0.18em;
+        text-decoration-thickness: 1.5px;
+        font-weight: 500;
+        box-shadow: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
     }
 
-    [data-theme="light"] #resume .cta-button {
-        background: #2563eb !important;
+    #resume .cta-button__icon {
+        color: inherit;
+        font-size: 15px;
     }
 
     #contact ul ul li a {

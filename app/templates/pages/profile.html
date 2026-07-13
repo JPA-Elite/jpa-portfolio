@@ -134,7 +134,10 @@ endblock %}
     </ul>
     <p>
         <a>{{ _('Detailed_Resume_Description') }}:</a>
-        <a href="{{ resume_pdf }}" target="_blank" class="cta-button">{{ _('Here_Link') }}</a>
+        <a href="{{ resume_pdf }}" target="_blank" class="cta-button" rel="noopener noreferrer">
+            <ion-icon name="cloud-download-outline" class="cta-button__icon" aria-hidden="true"></ion-icon>
+            <span>{{ _('Here_Link') }}</span>
+        </a>
     </p>
     </div>
     {% if get_locale() == en_locale %}

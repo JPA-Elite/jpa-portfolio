@@ -548,6 +548,64 @@ function setupMobileImageSliders() {
     });
 }
 
+function setupContactCopy() {
+    const buttons = document.querySelectorAll("#contactCopyEmailBtn, #copyEmailBtn");
+    buttons.forEach((btn) => {
+        if (!btn || btn.dataset.copyBound === "true") return;
+        btn.dataset.copyBound = "true";
+
+        btn.addEventListener("click", async (event) => {
+            event.preventDefault();
+            const email = btn.dataset.email || "";
+            if (!email) return;
+
+            let copied = false;
+            try {
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    await navigator.clipboard.writeText(email);
+                    copied = true;
+                }
+            } catch (err) {
+                copied = false;
+            }
+
+            if (!copied) {
+                try {
+                    const tempInput = document.createElement("textarea");
+                    tempInput.value = email;
+                    tempInput.setAttribute("readonly", "");
+                    tempInput.style.position = "absolute";
+                    tempInput.style.left = "-9999px";
+                    document.body.appendChild(tempInput);
+                    tempInput.select();
+                    copied = document.execCommand("copy");
+                    document.body.removeChild(tempInput);
+                } catch (err) {
+                    copied = false;
+                }
+            }
+
+            const defaultHTML = btn.innerHTML;
+            if (copied) {
+                if (typeof window.showToast === "function") {
+                    window.showToast(
+                        btn.dataset.copiedMessage || "Email copied to clipboard!",
+                        { type: "success" }
+                    );
+                }
+                btn.classList.add("is-copied");
+                btn.innerHTML = '<ion-icon name="checkmark-outline" aria-hidden="true"></ion-icon>';
+                setTimeout(() => {
+                    btn.classList.remove("is-copied");
+                    btn.innerHTML = defaultHTML;
+                }, 2000);
+            } else if (typeof window.showToast === "function") {
+                window.showToast(email, { type: "info", title: "Email" });
+            }
+        });
+    });
+}
+
 document.addEventListener("DOMContentLoaded", () => {
     setupCarousel();
     setupProfileGifHover();
@@ -556,5 +614,6 @@ document.addEventListener("DOMContentLoaded", () => {
     setupMarqueeVisibility();
     setupCareerRoadmapReveal();
     setupMobileImageSliders();
+    setupContactCopy();
     // setupLazyReveal() lives in base.js — shared across all pages
 });

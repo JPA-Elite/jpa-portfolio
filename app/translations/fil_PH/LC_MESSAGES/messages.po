@@ -580,3 +580,17 @@ msgstr "Freelance"
 
 msgid "Career_Roadmap_Employment_Experience"
 msgstr "Karanasan"
+
+# ---- Contact redesign ----
+msgid "Contact_Eyebrow"
+msgstr "Get In Touch"
+
+msgid "Contact_Copy_Email"
+msgstr "Copy email"
+
+msgid "Contact_Email_Copied"
+msgstr "Email copied to clipboard!"
+
+msgid "Contact_Copied_Label"
+msgstr "Copied!"
+

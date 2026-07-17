@@ -798,61 +798,92 @@ endblock %}
         <div class="skeleton-line skeleton-line--text skeleton-line--short"></div>
     </div>
     <div class="lazy-content">
-        <h2>{{ _('Contact_Me') }}</h2>
-        <p>{{ _('Contact_Description') }}</p>
-        <ul>
-            <li>
-                <div class="contact-header">
-                    <ion-icon name="call-outline"></ion-icon>
-                    <b>{{ _('Phone Number') }}:</b>
+        <div class="section-eyebrow">
+            <ion-icon name="mail-outline" aria-hidden="true"></ion-icon>
+            {{ _('Contact_Eyebrow') }}
+        </div>
+        <div class="contact-layout">
+            <div class="contact-intro">
+                <h2>{{ _('Contact_Me') }}</h2>
+                <p>{{ _('Contact_Description') }}</p>
+                <div class="contact-socials">
+                    <a class="contact-social" href="tel:+639319127640" aria-label="{{ _('Phone Number') }}">
+                        <ion-icon name="call-outline" aria-hidden="true"></ion-icon>
+                    </a>
+                    <a class="contact-social" href="mailto:algadipej962@gmail.com" aria-label="{{ _('Email') }}">
+                        <ion-icon name="mail-outline" aria-hidden="true"></ion-icon>
+                    </a>
+                    <a class="contact-social" href="https://www.facebook.com/profile.php?id=100017724583212" target="_blank" rel="noopener noreferrer" aria-label="{{ _('Facebook') }}">
+                        <ion-icon name="logo-facebook" aria-hidden="true"></ion-icon>
+                    </a>
+                    <a class="contact-social" href="https://www.linkedin.com/in/joshua-algadipe-53933924b/" target="_blank" rel="noopener noreferrer" aria-label="{{ _('LinkedIn') }}">
+                        <ion-icon name="logo-linkedin" aria-hidden="true"></ion-icon>
+                    </a>
+                    <a class="contact-social" href="https://github.com/JPA-Elite" target="_blank" rel="noopener noreferrer" aria-label="{{ _('GitHub') }}">
+                        <ion-icon name="logo-github" aria-hidden="true"></ion-icon>
+                    </a>
                 </div>
-                <ul>
-                    <li><a href="tel:+639319127640">0931 912 7640</a></li>
-                </ul>
-            </li>
-            <li>
-                <div class="contact-header">
-                    <ion-icon name="mail-outline"></ion-icon>
-                    <b>{{ _('Email') }}:</b>
+            </div>
+
+            <div class="contact-cards">
+                <a class="contact-card" href="tel:+639319127640">
+                    <span class="contact-card__icon contact-card__icon--phone">
+                        <ion-icon name="call-outline" aria-hidden="true"></ion-icon>
+                    </span>
+                    <span class="contact-card__body">
+                        <span class="contact-card__label">{{ _('Phone Number') }}</span>
+                        <span class="contact-card__value">0931 912 7640</span>
+                    </span>
+                </a>
+
+                <div class="contact-card contact-card--email">
+                    <span class="contact-card__icon contact-card__icon--mail">
+                        <ion-icon name="mail-outline" aria-hidden="true"></ion-icon>
+                    </span>
+                    <span class="contact-card__body">
+                        <span class="contact-card__label">{{ _('Email') }}</span>
+                        <span class="contact-card__value">algadipej962@gmail.com</span>
+                    </span>
+                    <button type="button" class="contact-card__copy" id="contactCopyEmailBtn"
+                        data-email="algadipej962@gmail.com"
+                        data-copied-message="{{ _('Contact_Email_Copied') }}"
+                        data-copied-label="{{ _('Contact_Copied_Label') }}"
+                        aria-label="{{ _('Contact_Copy_Email') }}">
+                        <ion-icon name="copy-outline" aria-hidden="true"></ion-icon>
+                    </button>
                 </div>
-                <ul>
-                    <li><a href="mailto:algadipej962@gmail.com">algadipej962@gmail.com</a></li>
-                </ul>
-            </li>
-            <li>
-                <div class="contact-header">
-                    <ion-icon name="logo-facebook"></ion-icon>
-                    <b>{{ _('Facebook') }}:</b>
-                </div>
-                <ul>
-                    <li><a
-                            href="https://www.facebook.com/profile.php?id=100017724583212">facebook.com/profile.php?id=100017724583212</a>
-                    </li>
-                </ul>
-            </li>
-            <li>
-                <div class="contact-header">
-                    <ion-icon name="logo-linkedin"></ion-icon>
-                    <b>{{ _('LinkedIn') }}:</b>
-                </div>
-                <ul>
-                    <li>
-                        <a href="https://www.linkedin.com/in/joshua-algadipe-53933924b/" target="_blank">
-                            linkedin.com/in/joshua-algadipe-53933924b/
-                        </a>
-                    </li>
-                </ul>
-            </li>
-            <li>
-                <div class="contact-header">
-                    <ion-icon name="logo-github"></ion-icon>
-                    <b>{{ _('GitHub') }}:</b>
-                </div>
-                <ul>
-                    <li><a href="https://github.com/JPA-Elite" target="_blank">github.com/JPA-Elite</a></li>
-                </ul>
-            </li>
-        </ul>
+
+                <a class="contact-card" href="https://www.facebook.com/profile.php?id=100017724583212" target="_blank" rel="noopener noreferrer">
+                    <span class="contact-card__icon contact-card__icon--facebook">
+                        <ion-icon name="logo-facebook" aria-hidden="true"></ion-icon>
+                    </span>
+                    <span class="contact-card__body">
+                        <span class="contact-card__label">{{ _('Facebook') }}</span>
+                        <span class="contact-card__value">Joshua Algadipe</span>
+                    </span>
+                </a>
+
+                <a class="contact-card" href="https://www.linkedin.com/in/joshua-algadipe-53933924b/" target="_blank" rel="noopener noreferrer">
+                    <span class="contact-card__icon contact-card__icon--linkedin">
+                        <ion-icon name="logo-linkedin" aria-hidden="true"></ion-icon>
+                    </span>
+                    <span class="contact-card__body">
+                        <span class="contact-card__label">{{ _('LinkedIn') }}</span>
+                        <span class="contact-card__value">in/joshua-algadipe</span>
+                    </span>
+                </a>
+
+                <a class="contact-card" href="https://github.com/JPA-Elite" target="_blank" rel="noopener noreferrer">
+                    <span class="contact-card__icon contact-card__icon--github">
+                        <ion-icon name="logo-github" aria-hidden="true"></ion-icon>
+                    </span>
+                    <span class="contact-card__body">
+                        <span class="contact-card__label">{{ _('GitHub') }}</span>
+                        <span class="contact-card__value">JPA-Elite</span>
+                    </span>
+                </a>
+            </div>
+        </div>
     </div>
     {% if get_locale() == en_locale %}
     <ion-icon name="mic-outline" size="18" class="voice-icon" onclick="speak(

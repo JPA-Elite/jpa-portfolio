@@ -54,31 +54,49 @@ endblock %}
         <div class="skeleton-line skeleton-line--text skeleton-line--medium"></div>
     </div>
     <div class="lazy-content">
-    <h2>{{ _('About_Me') }}</h2>
-    <p>{{ _('Highlights_Description') }}</p>
-    <ul>
-        <li>
-            <b>{{ _('Passionate_Software_Developer') }}:</b>
-            <ul>
-                <li>{{ _('Programming_Foundation_Description') }}</li>
-                <li>{{ _('Solution_Creation_Description') }}</li>
+        <div class="section-eyebrow">
+            <ion-icon name="person-outline" aria-hidden="true"></ion-icon>
+            {{ _('About_Eyebrow') }}
+        </div>
+        <div class="about-feature">
+            <h2 class="about-feature__title">{{ _('About_Me') }}</h2>
+            <p class="about-feature__lead">{{ _('Highlights_Description') }}</p>
+            <ul class="feature-rows">
+                <li class="feature-row feature-row--pink">
+                    <span class="feature-row__index">01</span>
+                    <span class="feature-row__icon">
+                        <ion-icon name="code-slash-outline" aria-hidden="true"></ion-icon>
+                    </span>
+                    <span class="feature-row__body">
+                        <span class="feature-row__label">{{ _('Passionate_Software_Developer') }}</span>
+                        <span class="feature-row__value">{{ _('Programming_Foundation_Description') }}</span>
+                        <span class="feature-row__value">{{ _('Solution_Creation_Description') }}</span>
+                    </span>
+                </li>
+                <li class="feature-row feature-row--blue">
+                    <span class="feature-row__index">02</span>
+                    <span class="feature-row__icon">
+                        <ion-icon name="briefcase-outline" aria-hidden="true"></ion-icon>
+                    </span>
+                    <span class="feature-row__body">
+                        <span class="feature-row__label">{{ _('Development_Experience') }}</span>
+                        <span class="feature-row__value">{{ _('Development_Experience_Description') }}</span>
+                        <span class="feature-row__value">{{ _('User_Friendly_Applications_Description') }}</span>
+                    </span>
+                </li>
+                <li class="feature-row feature-row--teal">
+                    <span class="feature-row__index">03</span>
+                    <span class="feature-row__icon">
+                        <ion-icon name="flag-outline" aria-hidden="true"></ion-icon>
+                    </span>
+                    <span class="feature-row__body">
+                        <span class="feature-row__label">{{ _('Goal_Oriented') }}</span>
+                        <span class="feature-row__value">{{ _('Leverage_Technology_Description') }}</span>
+                        <span class="feature-row__value">{{ _('Eager_to_Learn_Description') }}</span>
+                    </span>
+                </li>
             </ul>
-        </li>
-        <li>
-            <b>{{ _('Development_Experience') }}:</b>
-            <ul>
-                <li>{{ _('Development_Experience_Description') }}</li>
-                <li>{{ _('User_Friendly_Applications_Description') }}</li>
-            </ul>
-        </li>
-        <li>
-            <b>{{ _('Goal_Oriented') }}:</b>
-            <ul>
-                <li>{{ _('Leverage_Technology_Description') }}</li>
-                <li>{{ _('Eager_to_Learn_Description') }}</li>
-            </ul>
-        </li>
-    </ul>
+        </div>
     </div>
     {% if get_locale() == en_locale %}
     <ion-icon name="mic-outline" size="18" class="voice-icon" onclick="speak(
@@ -102,43 +120,65 @@ endblock %}
         <div class="skeleton-line skeleton-line--text skeleton-line--short"></div>
     </div>
     <div class="lazy-content">
-    <h2>{{ _('Resume') }}</h2>
-    <p>{{ _('Professional_Highlights_Description') }}</p>
-    <ul>
-        <li>
-            {{ _('Business_Intern_Experience') }}
-            <ul>
-                <li>{{ _('Business_Intern_Description') }}</li>
-            </ul>
-        </li>
-        <li>
-            {{ _('TrustArc_Internship') }}
-            <ul>
-                <li>{{ _('API_Security_Description') }}</li>
-                <li>{{ _('app_Frontend_Description') }}</li>
-            </ul>
-        </li>
-        <li>
-            {{ _('Chronostep_Internship') }}
-            <ul>
-                <li>{{ _('Internal_Projects_Description') }}</li>
-                <li>{{ _('Primary_Technologies_Description') }}</li>
-            </ul>
-        </li>
-        <li>
-            {{ _('Chronostep_Employee') }}
-            <ul>
-                <li>{{ _('Job_Projects_Description') }}</li>
-            </ul>
-        </li>
-    </ul>
-    <p>
-        <a>{{ _('Detailed_Resume_Description') }}:</a>
-        <a href="{{ resume_pdf }}" target="_blank" class="cta-button" rel="noopener noreferrer">
-            <ion-icon name="cloud-download-outline" class="cta-button__icon" aria-hidden="true"></ion-icon>
-            <span>{{ _('Here_Link') }}</span>
-        </a>
-    </p>
+        <div class="section-eyebrow">
+            <ion-icon name="document-text-outline" aria-hidden="true"></ion-icon>
+            {{ _('Resume_Eyebrow') }}
+        </div>
+        <div class="resume-timeline">
+            <h2 class="resume-timeline__title">{{ _('Resume') }}</h2>
+            <p class="resume-timeline__lead">{{ _('Professional_Highlights_Description') }}</p>
+            <ol class="timeline">
+                <li class="timeline__item timeline__item--pink">
+                    <span class="timeline__dot"></span>
+                    <span class="timeline__card">
+                        <span class="timeline__icon">
+                            <ion-icon name="school-outline" aria-hidden="true"></ion-icon>
+                        </span>
+                        <span class="timeline__label">{{ _('Business_Intern_Experience') }}</span>
+                        <span class="timeline__value">{{ _('Business_Intern_Description') }}</span>
+                    </span>
+                </li>
+                <li class="timeline__item timeline__item--blue">
+                    <span class="timeline__dot"></span>
+                    <span class="timeline__card">
+                        <span class="timeline__icon">
+                            <ion-icon name="shield-checkmark-outline" aria-hidden="true"></ion-icon>
+                        </span>
+                        <span class="timeline__label">{{ _('TrustArc_Internship') }}</span>
+                        <span class="timeline__value">{{ _('API_Security_Description') }}</span>
+                        <span class="timeline__value">{{ _('app_Frontend_Description') }}</span>
+                    </span>
+                </li>
+                <li class="timeline__item timeline__item--teal">
+                    <span class="timeline__dot"></span>
+                    <span class="timeline__card">
+                        <span class="timeline__icon">
+                            <ion-icon name="construct-outline" aria-hidden="true"></ion-icon>
+                        </span>
+                        <span class="timeline__label">{{ _('Chronostep_Internship') }}</span>
+                        <span class="timeline__value">{{ _('Internal_Projects_Description') }}</span>
+                        <span class="timeline__value">{{ _('Primary_Technologies_Description') }}</span>
+                    </span>
+                </li>
+                <li class="timeline__item timeline__item--purple">
+                    <span class="timeline__dot"></span>
+                    <span class="timeline__card">
+                        <span class="timeline__icon">
+                            <ion-icon name="ribbon-outline" aria-hidden="true"></ion-icon>
+                        </span>
+                        <span class="timeline__label">{{ _('Chronostep_Employee') }}</span>
+                        <span class="timeline__value">{{ _('Job_Projects_Description') }}</span>
+                    </span>
+                </li>
+            </ol>
+            <p class="resume-download">
+                <a>{{ _('Detailed_Resume_Description') }}:</a>
+                <a href="{{ resume_pdf }}" target="_blank" class="cta-button" rel="noopener noreferrer">
+                    <ion-icon name="cloud-download-outline" class="cta-button__icon" aria-hidden="true"></ion-icon>
+                    <span>{{ _('Here_Link') }}</span>
+                </a>
+            </p>
+        </div>
     </div>
     {% if get_locale() == en_locale %}
     <ion-icon name="mic-outline" size="18" class="voice-icon" onclick="speak(

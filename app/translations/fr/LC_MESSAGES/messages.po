@@ -482,6 +482,12 @@ msgstr "Experience"
 msgid "Contact_Eyebrow"
 msgstr "Get In Touch"
 
+msgid "About_Eyebrow"
+msgstr "Who I Am"
+
+msgid "Resume_Eyebrow"
+msgstr "My Journey"
+
 msgid "Contact_Copy_Email"
 msgstr "Copy email"
 

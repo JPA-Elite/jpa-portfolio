@@ -591,6 +591,30 @@ msgstr "Who I Am"
 msgid "Resume_Eyebrow"
 msgstr "My Journey"
 
+msgid "Summary_Eyebrow"
+msgstr "At A Glance"
+
+msgid "Available_For_Work"
+msgstr "Available for work"
+
+msgid "Years_Experience"
+msgstr "Years Experience"
+
+msgid "Projects_Shipped"
+msgstr "Projects Shipped"
+
+msgid "Full_Stack"
+msgstr "Full-Stack"
+
+msgid "API_Security"
+msgstr "API Security"
+
+msgid "Cloud_Native"
+msgstr "Cloud Native"
+
+msgid "UI_Engineering"
+msgstr "UI Engineering"
+
 msgid "Contact_Copy_Email"
 msgstr "Copy email"
 

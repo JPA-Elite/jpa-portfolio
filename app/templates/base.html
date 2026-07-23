@@ -267,20 +267,21 @@
                         </a>
                     {% endif %}
                     <div class="dropdown">
-                        <button class="dropbtn">
+                        <button class="lang-pill">
                             {% if get_locale() == en_locale %}
                             <img src="{{ url_for('static', filename='images/en_flag.webp') }}" alt="English"
-                                class="flag-icon">
+                                class="pill-flag">
                             {% elif get_locale() == ceb_locale %}
                             <img src="{{ url_for('static', filename='images/ph_flag.webp') }}" alt="Cebuano"
-                                class="flag-icon">
+                                class="pill-flag">
                             {% elif get_locale() == tl_locale %}
                             <img src="{{ url_for('static', filename='images/ph_flag.webp') }}" alt="Tagalog"
-                                class="flag-icon">
+                                class="pill-flag">
                             {% else %}
                             <img src="{{ url_for('static', filename='images/en_flag.webp') }}" alt="Default"
-                                class="flag-icon">
+                                class="pill-flag">
                             {% endif %}
+                            <ion-icon name="chevron-down-outline" class="pill-chevron"></ion-icon>
                         </button>
                         <div class="dropdown-content">
                             <a href="{{ url_for('api.change_language', lang_code=en_locale) }}?mode=professional"

@@ -1,0 +1,274 @@
+.dtp-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    position: relative;
+}
+
+.dtp-label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--text-primary);
+}
+
+.dtp-label ion-icon {
+    font-size: 16px;
+    color: var(--accent-color);
+}
+
+.dtp-input-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.dtp-field .dtp-input {
+    width: 100%;
+    padding: 12px 40px 12px 16px;
+    border: 2px solid var(--border-color);
+    border-radius: 10px;
+    font-size: 15px;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    font-family: inherit;
+    cursor: pointer;
+    transition: border-color 0.3s;
+    user-select: none;
+}
+
+.dtp-field .dtp-input:hover,
+.dtp-field .dtp-input-wrap:hover .dtp-input {
+    border-color: var(--accent-color);
+}
+
+.dtp-field .dtp-input::placeholder {
+    color: var(--text-secondary);
+    opacity: 0.7;
+}
+
+.dtp-icon {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 18px;
+    color: var(--text-secondary);
+    pointer-events: none;
+    transition: color 0.3s;
+}
+
+.dtp-input-wrap:hover .dtp-icon {
+    color: var(--accent-color);
+}
+
+.dtp-dropdown {
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0;
+    z-index: 300;
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    box-shadow: 0 8px 32px var(--shadow-color);
+    visibility: hidden;
+    opacity: 0;
+    transform: translateY(-8px);
+    transition: visibility 0.2s, opacity 0.2s, transform 0.2s;
+    width: 320px;
+}
+
+.dtp-dropdown.open {
+    visibility: visible;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* ---- Calendar ---- */
+.dtp-calendar-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 16px 8px;
+}
+
+.dtp-calendar-nav {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.dtp-nav-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border: none;
+    border-radius: 8px;
+    background: transparent;
+    color: var(--text-primary);
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.dtp-nav-btn:hover {
+    background: var(--bg-secondary);
+}
+
+.dtp-calendar-month {
+    font-weight: 700;
+    font-size: 15px;
+    color: var(--text-primary);
+}
+
+.dtp-calendar-weekdays {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    padding: 4px 16px 8px;
+    text-align: center;
+}
+
+.dtp-weekday {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    padding: 4px 0;
+}
+
+.dtp-calendar-days {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    padding: 0 12px 12px;
+    gap: 2px;
+}
+
+.dtp-day {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 36px;
+    border: none;
+    border-radius: 8px;
+    background: transparent;
+    color: var(--text-primary);
+    font-size: 14px;
+    font-family: inherit;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+}
+
+.dtp-day:hover {
+    background: var(--bg-secondary);
+}
+
+.dtp-day.past {
+    color: var(--text-secondary);
+    opacity: 0.35;
+    cursor: not-allowed;
+}
+
+.dtp-day.past:hover {
+    background: transparent;
+}
+
+.dtp-day:disabled {
+    cursor: not-allowed;
+}
+
+.dtp-day.other-month {
+    color: var(--text-secondary);
+    opacity: 0.4;
+}
+
+.dtp-day.today {
+    border: 1.5px solid var(--accent-color);
+    font-weight: 600;
+}
+
+.dtp-day.selected {
+    background: var(--accent-color);
+    color: #fff;
+    font-weight: 600;
+}
+
+.dtp-day.selected:hover {
+    background: var(--accent-color);
+    opacity: 0.9;
+}
+
+/* ---- Time Grid ---- */
+.dtp-time-grid {
+    padding: 12px;
+    max-height: 260px;
+    overflow-y: auto;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+}
+
+.dtp-time-grid::-webkit-scrollbar {
+    width: 4px;
+}
+
+.dtp-time-grid::-webkit-scrollbar-thumb {
+    background: var(--border-color);
+    border-radius: 4px;
+}
+
+.dtp-time-slot {
+    padding: 8px 4px;
+    border: 1.5px solid var(--border-color);
+    border-radius: 8px;
+    background: transparent;
+    color: var(--text-primary);
+    font-size: 13px;
+    font-family: inherit;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.2s;
+}
+
+.dtp-time-slot:hover {
+    border-color: var(--accent-color);
+    background: var(--bg-secondary);
+}
+
+.dtp-time-slot.selected {
+    background: var(--accent-color);
+    color: #fff;
+    border-color: var(--accent-color);
+    font-weight: 600;
+}
+
+.dtp-time-slot.past {
+    opacity: 0.3;
+    cursor: not-allowed;
+    border-style: dashed;
+}
+
+.dtp-time-slot.past:hover {
+    border-color: var(--border-color);
+    background: transparent;
+}
+
+/* ---- Dark theme adjustments ---- */
+[data-theme="dark"] .dtp-dropdown {
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+@media (max-width: 768px) {
+    .dtp-dropdown {
+        width: 290px;
+        left: 50%;
+        transform: translateX(-50%) translateY(-8px);
+    }
+    .dtp-dropdown.open {
+        transform: translateX(-50%) translateY(0);
+    }
+}

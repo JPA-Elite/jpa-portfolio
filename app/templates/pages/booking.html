@@ -1,0 +1,130 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ _('Book Now | Joshua Algadipe') }}{% endblock %}
+{% block head %}{% endblock %}
+
+{% block meta_description %}Book a session or appointment with Joshua Algadipe. Schedule your consultation, booking, or reservation today.{% endblock %}
+{% block meta_keywords %}Joshua Algadipe, booking, appointment, schedule, reservation, consultation{% endblock %}
+{% block meta_author %}Joshua Algadipe{% endblock %}
+
+{% from 'components/macros.html' import datetime_picker with context %}
+
+{% block content %}
+<link rel="stylesheet" href="{{ static_asset('css/pages/booking.css') }}" />
+<link rel="stylesheet" href="{{ static_asset('css/components/datetime_picker.css') }}" />
+<section id="booking">
+    <div class="booking-header">
+        <div class="booking-icon">
+            <ion-icon name="book-outline"></ion-icon>
+        </div>
+        <h2>{{ _('Book a Session') }}</h2>
+        <p>{{ _('Schedule your appointment below.') }}</p>
+    </div>
+
+    <div class="booking-form-wrapper">
+        <form id="bookingForm" class="booking-form">
+            <div class="form-group">
+                <label for="name">{{ _('Full Name') }} <span class="required-star">*</span></label>
+                <input type="text" id="name" name="name" maxlength="50" required placeholder="{{ _('Your full name') }}">
+                <span class="field-counter"><span id="nameCount">0</span>/50</span>
+            </div>
+            <div class="form-group">
+                <label for="email">{{ _('Email Address') }} <span class="required-star">*</span></label>
+                <input type="email" id="email" name="email" required placeholder="{{ _('your@email.com') }}">
+                <span class="field-msg" id="emailMsg"></span>
+            </div>
+            <div class="form-group">
+                {{ datetime_picker(id='date', name='date', label=_('Preferred Date'), icon='calendar-outline', type='date', required=true, placeholder=_('Select a date')) }}
+            </div>
+            <div class="form-group">
+                {{ datetime_picker(id='time', name='time', label=_('Preferred Time'), icon='time-outline', type='time', required=true, placeholder=_('Select a time')) }}
+            </div>
+            <div class="form-group">
+                <label for="message">{{ _('Message') }} <span class="required-star">*</span></label>
+                <textarea id="message" name="message" maxlength="500" rows="4" placeholder="{{ _('Tell me about your project or request...') }}"></textarea>
+                <span class="field-counter"><span id="messageCount">0</span>/500</span>
+            </div>
+            <button type="submit" class="booking-submit" id="submitBtn" disabled>
+                <ion-icon name="paper-plane-outline"></ion-icon>
+                {{ _('Submit Booking') }}
+            </button>
+        </form>
+    </div>
+</section>
+
+<script src="{{ static_asset('js/components/datetime_picker.js') }}"></script>
+<script>
+(function () {
+    var form = document.getElementById('bookingForm');
+    var submitBtn = document.getElementById('submitBtn');
+    var nameInput = document.getElementById('name');
+    var emailInput = document.getElementById('email');
+    var messageInput = document.getElementById('message');
+    var dateHidden = document.querySelector('.dtp-field[data-type="date"] .dtp-hidden');
+    var timeHidden = document.querySelector('.dtp-field[data-type="time"] .dtp-hidden');
+    var nameCount = document.getElementById('nameCount');
+    var messageCount = document.getElementById('messageCount');
+    var emailMsg = document.getElementById('emailMsg');
+
+    function validateEmail(val) {
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val);
+    }
+
+    function validateForm() {
+        var nameVal = nameInput.value.trim();
+        var emailVal = emailInput.value.trim();
+        var dateVal = dateHidden ? dateHidden.value : '';
+        var timeVal = timeHidden ? timeHidden.value : '';
+        var msgVal = messageInput.value.trim();
+
+        var valid = true;
+
+        if (!nameVal || nameVal.length > 50) valid = false;
+        if (!emailVal || !validateEmail(emailVal)) valid = false;
+        if (!dateVal) valid = false;
+        if (!timeVal) valid = false;
+        if (!msgVal || msgVal.length > 500) valid = false;
+
+        submitBtn.disabled = !valid;
+    }
+
+    nameInput.addEventListener('input', function () {
+        var len = this.value.length;
+        nameCount.textContent = len;
+        if (len > 50) nameCount.style.color = '#e74c3c';
+        else nameCount.style.color = '';
+        validateForm();
+    });
+
+    emailInput.addEventListener('input', function () {
+        var val = this.value.trim();
+        if (val && !validateEmail(val)) {
+            emailMsg.textContent = '{{ _("Invalid email format") }}';
+            emailMsg.style.color = '#e74c3c';
+        } else {
+            emailMsg.textContent = '';
+        }
+        validateForm();
+    });
+
+    messageInput.addEventListener('input', function () {
+        var len = this.value.length;
+        messageCount.textContent = len;
+        if (len > 500) messageCount.style.color = '#e74c3c';
+        else messageCount.style.color = '';
+        validateForm();
+    });
+
+    if (dateHidden) dateHidden.addEventListener('change', validateForm);
+    if (timeHidden) timeHidden.addEventListener('change', validateForm);
+
+    form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        if (submitBtn.disabled) return;
+        alert('{{ _("Booking submitted successfully!") }}');
+    });
+
+    validateForm();
+})();
+</script>
+{% endblock %}

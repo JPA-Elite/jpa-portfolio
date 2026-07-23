@@ -509,6 +509,36 @@ section p {
     display: none;
 }
 
+.booknow-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 18px;
+    border: 2px solid var(--accent-color);
+    color: var(--accent-color);
+    border-radius: 25px;
+    font-weight: 600;
+    font-size: 14px;
+    text-decoration: none;
+    background: transparent;
+    transition: all 0.3s;
+    margin-right: 15px;
+}
+.booknow-btn:hover {
+    background: var(--accent-color);
+    color: #fff;
+    opacity: 1;
+}
+@media (max-width: 768px) {
+    .booknow-btn {
+        display: inline-flex;
+        margin-right: 10px;
+        padding: 8px 12px;
+        border-width: 1.5px;
+        font-size: 12px;
+    }
+}
+
 @keyframes blink {
     50% {
         opacity: 0;

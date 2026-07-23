@@ -671,6 +671,113 @@ function animateStatCounters(stats) {
     });
 }
 
+function parallaxScroll(refSel, targetsSel, opts) {
+    if (window.innerWidth < 768) return;
+    const ref = document.querySelector(refSel);
+    if (!ref) return;
+    var targets = null;
+
+    function findTargets() {
+        if (!targets || !targets.length) targets = document.querySelectorAll(targetsSel);
+        return targets.length ? targets : null;
+    }
+
+    const sMin = opts.sMin || 0.85;
+    const oMin = opts.oMin || 0.75;
+    const yMax = opts.yMax || -30;
+    const rMax = opts.rMax || 0;
+    const ringEl = opts.ring ? document.querySelector(opts.ring) : null;
+
+    const update = () => {
+        var els = findTargets();
+        if (!els) return;
+
+        const rect = ref.getBoundingClientRect();
+        let p = 0;
+        if (rect.top < 0) p = Math.min(1, -rect.top / rect.height);
+
+        const s = 1 - p * (1 - sMin);
+        const y = p * yMax;
+        const r = p * rMax;
+        const o = 1 - p * (1 - oMin);
+        const tf = "scale(" + s + ") translateY(" + y + "px) rotate(" + r + "deg)";
+
+        for (var i = 0; i < els.length; i++) {
+            els[i].style.transform = tf;
+            els[i].style.opacity = o;
+        }
+        if (ringEl) ringEl.style.transform = "rotate(" + p * 90 + "deg)";
+    };
+
+    window.addEventListener("scroll", update, { passive: true });
+    update();
+}
+
+function setupTagTooltips() {
+    const tooltip = document.createElement("div");
+    tooltip.className = "summary-tag-tooltip";
+    document.body.appendChild(tooltip);
+
+    document.querySelectorAll(".summary-tag").forEach((tag) => {
+        const desc = tag.getAttribute("data-desc");
+        if (!desc) return;
+
+        let hideTimeout;
+
+        tag.addEventListener("mouseenter", () => {
+            clearTimeout(hideTimeout);
+            tooltip.textContent = desc;
+            const rect = tag.getBoundingClientRect();
+            tooltip.style.left = rect.left + rect.width / 2 + "px";
+            tooltip.style.top = rect.top - 10 + "px";
+            tooltip.classList.add("is-visible");
+        });
+
+        tag.addEventListener("mouseleave", () => {
+            hideTimeout = setTimeout(() => {
+                tooltip.classList.remove("is-visible");
+            }, 80);
+        });
+    });
+}
+
+function setupCertReveal() {
+    const numEl = document.querySelector(".cert-headline__num");
+    const section = document.getElementById("certifications");
+    if (!numEl || !section) return;
+
+    const trigger = () => animateCertCount(numEl);
+
+    if (section.classList.contains("is-revealed")) {
+        trigger();
+        return;
+    }
+
+    const mo = new MutationObserver(() => {
+        if (section.classList.contains("is-revealed")) {
+            mo.disconnect();
+            trigger();
+        }
+    });
+    mo.observe(section, { attributes: true, attributeFilter: ["class"] });
+}
+
+function animateCertCount(el) {
+    const target = parseInt(el.dataset.count || el.textContent.trim(), 10);
+    if (isNaN(target)) return;
+    const duration = 1000;
+    const startTime = Date.now();
+
+    function tick() {
+        const elapsed = Date.now() - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        const eased = 1 - Math.pow(1 - progress, 3);
+        el.textContent = Math.round(eased * target);
+        if (progress < 1) requestAnimationFrame(tick);
+    }
+    tick();
+}
+
 document.addEventListener("DOMContentLoaded", () => {
     setupCarousel();
     setupProfileGifHover();
@@ -681,5 +788,10 @@ document.addEventListener("DOMContentLoaded", () => {
     setupMobileImageSliders();
     setupContactCopy();
     setupStatReveal();
+    setupCertReveal();
+    parallaxScroll("#portfolio", ".summary-hero__profile", { sMin: 0.85, oMin: 0.75, yMax: -30, rMax: 3, ring: ".summary-avatar__ring" });
+    parallaxScroll("#portfolio", ".summary-hero__panel", { sMin: 0.85, oMin: 0.75, yMax: -30, rMax: 3 });
+
+    setupTagTooltips();
     // setupLazyReveal() lives in base.js — shared across all pages
 });

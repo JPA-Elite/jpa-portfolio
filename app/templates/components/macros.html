@@ -1,0 +1,18 @@
+{% macro datetime_picker(id, name, label, icon, type, required=false, value='', placeholder='') %}
+<div class="dtp-field" data-type="{{ type }}">
+    <label class="dtp-label" for="{{ id }}">
+        <ion-icon name="{{ icon }}"></ion-icon>
+        {{ label }}{% if required %} <span class="required-star">*</span>{% endif %}
+    </label>
+    <div class="dtp-input-wrap">
+        <input type="text" id="{{ id }}" class="dtp-input" readonly
+            placeholder="{{ placeholder }}"
+            {% if required %}required{% endif %}
+            autocomplete="off">
+        <input type="hidden" name="{{ name }}" class="dtp-hidden"
+            {% if value %}value="{{ value }}"{% endif %}>
+        <ion-icon class="dtp-icon" name="{{ 'calendar-outline' if type == 'date' else 'time-outline' }}"></ion-icon>
+    </div>
+    <div class="dtp-dropdown"></div>
+</div>
+{% endmacro %}

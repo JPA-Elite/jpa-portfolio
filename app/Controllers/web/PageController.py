@@ -29,6 +29,7 @@ from app.configurations import (
     VLOG_PAGE,
     MUSIC_PAGE,
     DONATION_PAGE,
+    BOOKING_PAGE,
     SortOrder,
     get_locale,
 )
@@ -878,6 +879,9 @@ def add_portfolio_form_route():
 
 def donation_route():
     return handle_log_parameter() or render_template(DONATION_PAGE)
+
+def booking_route():
+    return handle_log_parameter() or render_template(BOOKING_PAGE)
 
 def portfolio_redirect():
     from flask import redirect

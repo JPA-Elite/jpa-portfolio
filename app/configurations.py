@@ -23,6 +23,7 @@ MUSIC_PAGE = "pages/music.html"
 CONCERN_PAGE = "pages/concern.html"
 ADD_PORTFOLIO_PAGE = "pages/add_portfolio.html"
 DONATION_PAGE = "pages/donation.html"
+BOOKING_PAGE = "pages/booking.html"
 ERROR_404_PAGE = "error/404.html"
 
 # admin pages

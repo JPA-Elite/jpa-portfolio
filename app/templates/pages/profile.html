@@ -63,10 +63,10 @@ endblock %}
                 <ion-icon name="chevron-down"></ion-icon>
             </button>
             <div class="summary-tags">
-                <span class="summary-tag">{{ _('Full_Stack') }}</span>
-                <span class="summary-tag">{{ _('API_Security') }}</span>
-                <span class="summary-tag">{{ _('Cloud_Native') }}</span>
-                <span class="summary-tag">{{ _('UI_Engineering') }}</span>
+                <span class="summary-tag" data-desc="React, Node.js, PostgreSQL, Docker &amp; cloud-native architecture.">{{ _('Full_Stack') }}</span>
+                <span class="summary-tag" data-desc="Safe and secure API request handling.">{{ _('API_Security') }}</span>
+                <span class="summary-tag" data-desc="Containerized deployments across cloud platforms.">{{ _('Cloud_Native') }}</span>
+                <span class="summary-tag" data-desc="Responsive, accessible, performant UI development.">{{ _('UI_Engineering') }}</span>
             </div>
         </div>
     </div>
@@ -838,11 +838,16 @@ endblock %}
             <div class="skeleton-cert"></div>
             <div class="skeleton-cert"></div>
             <div class="skeleton-cert"></div>
+            <div class="skeleton-cert"></div>
+            <div class="skeleton-cert"></div>
+            <div class="skeleton-cert"></div>
+            <div class="skeleton-cert"></div>
         </div>
     </div>
     <div class="lazy-content">
     <h2>{{ _('Certifications') }}</h2>
     <p>{{ _('Certifications_Description') }}</p>
+
     {% set certification_gallery = [
         {'image_url': url_for('static', filename='images/cert1.webp'), 'title': 'Angular Basic Certificate'},
         {'image_url': url_for('static', filename='images/cert2.webp'), 'title': 'Java Basic Certificate'},
@@ -856,10 +861,18 @@ endblock %}
     <script>
         window.profileCertificationsGallery = {{ certification_gallery | tojson }};
     </script>
-    <div class="certification-images" data-mobile-slider data-mobile-slider-label="Certifications">
+    <div class="cert-headline">
+        <span class="cert-headline__num" data-count="{{ certification_gallery|length }}">0</span>
+        <span class="cert-headline__label">{{ _('Certifications') }}</span>
+    </div>
+    <div class="cert-polaroid" data-mobile-slider data-mobile-slider-label="{{ _('Certifications') }}">
         {% for cert in certification_gallery %}
-        <img onclick='openImageGalleryModal(window.profileCertificationsGallery || [], {{ loop.index0 }})'
-            src="{{ cert.image_url }}" alt="{{ cert.title }}" loading="lazy" decoding="async">
+        <div class="cert-polaroid__card" onclick='openImageGalleryModal(window.profileCertificationsGallery || [], {{ loop.index0 }})'>
+            <div class="cert-polaroid__img">
+                <img src="{{ cert.image_url }}" alt="{{ cert.title }}" loading="lazy" decoding="async">
+            </div>
+            <span class="cert-polaroid__caption">{{ cert.title }}</span>
+        </div>
         {% endfor %}
     </div>
     </div>

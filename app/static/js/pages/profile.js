@@ -606,6 +606,71 @@ function setupContactCopy() {
     });
 }
 
+function setupStatReveal() {
+    const container = document.querySelector(".summary-stats");
+    if (!container) return;
+
+    const stats = container.querySelectorAll(".summary-stat");
+    if (!stats.length) return;
+
+    stats.forEach((el, i) => el.style.setProperty("--stat-index", String(i)));
+
+    if ("IntersectionObserver" in window) {
+        const observer = new IntersectionObserver(
+            (entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        setTimeout(() => {
+                            stats.forEach((el) => el.classList.add("is-revealed"));
+                            animateStatCounters(stats);
+                        }, 200);
+                        observer.unobserve(entry.target);
+                    }
+                });
+            },
+            { threshold: 0.3 }
+        );
+        observer.observe(container);
+    } else {
+        stats.forEach((el) => el.classList.add("is-revealed"));
+        animateStatCounters(stats);
+    }
+}
+
+function animateStatCounters(stats) {
+    stats.forEach((el, i) => {
+        const numEl = el.querySelector(".summary-stat__num");
+        if (!numEl) return;
+
+        const originalText = numEl.textContent.trim();
+        const match = originalText.match(/^(\d+)(.*)/);
+        if (!match) return;
+
+        const target = parseInt(match[1], 10);
+        const suffix = match[2] || "";
+        const delay = i * 150;
+        const duration = 1200;
+        const startTime = Date.now() + delay;
+
+        function tick() {
+            const elapsed = Date.now() - startTime;
+            if (elapsed < 0) {
+                setTimeout(tick, 20);
+                return;
+            }
+            const progress = Math.min(elapsed / duration, 1);
+            const eased = 1 - Math.pow(1 - progress, 3);
+            const current = Math.round(eased * target);
+            numEl.textContent = current + suffix;
+            if (progress < 1) {
+                setTimeout(tick, 16);
+            }
+        }
+
+        setTimeout(tick, 20);
+    });
+}
+
 document.addEventListener("DOMContentLoaded", () => {
     setupCarousel();
     setupProfileGifHover();
@@ -615,5 +680,6 @@ document.addEventListener("DOMContentLoaded", () => {
     setupCareerRoadmapReveal();
     setupMobileImageSliders();
     setupContactCopy();
+    setupStatReveal();
     // setupLazyReveal() lives in base.js — shared across all pages
 });

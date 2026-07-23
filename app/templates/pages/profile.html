@@ -10,28 +10,65 @@ endblock %}
 
 {% block content %}
 <section id="portfolio" class="project-intro">
-    <div class="project-image">
-        <img src="{{ profile_image }}" alt="Profile Image" width="300" height="300" fetchpriority="high" decoding="async" onclick="openModal(`{{ profile_image }}`, 
+    <div class="summary-hero">
+        <div class="summary-hero__profile">
+            <div class="summary-avatar">
+                <span class="summary-avatar__ring"></span>
+                <span class="summary-avatar__glow"></span>
+                <img src="{{ profile_image }}" alt="Profile Image" width="300" height="300" fetchpriority="high" decoding="async" onclick="openModal(`{{ profile_image }}`, 
                     `{{ profile_name | e }}`,
                     `{{ profile_desc | e }}`.replace('{age}', calculateAge()))" data-original="{{ profile_image }}"
-            data-gif="{{ profile_image_gif }}" />
-        <div class="profile-name">
-            <h2 class="first-name">Joshua</h2>
-            <h2 class="last-name">Algadipe</h2>
-            <div class="name-underline"></div>
+                    data-gif="{{ profile_image_gif }}" />
+                <span class="summary-badge">
+                    <span class="summary-badge__dot"></span>
+                    {{ _('Available_For_Work') }}
+                </span>
+            </div>
+            <div class="profile-name">
+                <h2 class="first-name">Joshua</h2>
+                <h2 class="last-name">Algadipe</h2>
+                <div class="name-underline"></div>
+            </div>
+            <span class="summary-role">
+                <ion-icon name="code-working-outline" aria-hidden="true"></ion-icon>
+                {{ _('Software Engineer') }}
+            </span>
         </div>
-        <h1>{{ _('Software Engineer') }}</h1>
-    </div>
-    <div class="project-details" id="project-details">
-        <h3>{{ _('Summary') }}:</h3>
-        <p>{{ _('Software_Expertise_Description') }}</p>
-        <div class="collapsible-content" id="collapsibleContent">
-            <p>{{ _('Technology_Adaptability_Description') }}</p>
-            <p>{{ _('Experience_Share_Description') }}</p>
+        <div class="summary-hero__panel" id="project-details">
+            <div class="section-eyebrow">
+                <ion-icon name="sparkles-outline" aria-hidden="true"></ion-icon>
+                {{ _('Summary_Eyebrow') }}
+            </div>
+            <h2 class="summary-hero__title">{{ _('Summary') }}</h2>
+            <p class="summary-hero__lead">{{ _('Software_Expertise_Description') }}</p>
+            <div class="summary-stats">
+                <div class="summary-stat">
+                    <span class="summary-stat__num">5+</span>
+                    <span class="summary-stat__label">{{ _('Years_Experience') }}</span>
+                </div>
+                <div class="summary-stat">
+                    <span class="summary-stat__num">12+</span>
+                    <span class="summary-stat__label">{{ _('Projects_Shipped') }}</span>
+                </div>
+                <div class="summary-stat">
+                    <span class="summary-stat__num">8</span>
+                    <span class="summary-stat__label">{{ _('Certifications') }}</span>
+                </div>
+            </div>
+            <div class="collapsible-content" id="collapsibleContent">
+                <p>{{ _('Technology_Adaptability_Description') }}</p>
+                <p>{{ _('Experience_Share_Description') }}</p>
+            </div>
+            <button class="mobile-toggle" onclick="toggleContent()">
+                <ion-icon name="chevron-down"></ion-icon>
+            </button>
+            <div class="summary-tags">
+                <span class="summary-tag">{{ _('Full_Stack') }}</span>
+                <span class="summary-tag">{{ _('API_Security') }}</span>
+                <span class="summary-tag">{{ _('Cloud_Native') }}</span>
+                <span class="summary-tag">{{ _('UI_Engineering') }}</span>
+            </div>
         </div>
-        <button class="mobile-toggle" onclick="toggleContent()">
-            <ion-icon name="chevron-down"></ion-icon>
-        </button>
     </div>
     {% if get_locale() == en_locale %}
     <ion-icon name="mic-outline" size="18" class="voice-icon" onclick="speak(

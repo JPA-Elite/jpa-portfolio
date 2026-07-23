@@ -394,17 +394,46 @@ section p {
 .language-selector {
     margin-left: auto;
     display: flex;
+    align-items: center;
 }
 
 .dropdown {
     position: relative;
 }
 
-.dropbtn {
-    background-color: transparent;
+.lang-pill {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 0;
+    height: auto;
+    background: none;
     border: none;
     cursor: pointer;
-    padding: 0;
+    transition: opacity 0.2s;
+}
+
+.lang-pill:hover {
+    opacity: 0.75;
+}
+
+.pill-flag {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: block;
+    object-fit: cover;
+}
+
+.pill-chevron {
+    font-size: 14px;
+    color: var(--text-secondary);
+    line-height: 0;
+    transition: transform 0.3s ease;
+}
+
+.dropdown:hover .pill-chevron {
+    transform: rotate(180deg);
 }
 
 .flag-icon {
@@ -415,37 +444,65 @@ section p {
 }
 
 .dropdown-content {
-    display: none;
     position: absolute;
-    background-color: white;
-    min-width: 160px;
-    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
-    border-radius: 8px;
+    right: 0;
+    margin-top: 10px;
+    min-width: 190px;
+    padding: 8px 0;
+    background: var(--bg-primary);
+    border: 1px solid var(--border-color);
+    border-top: 3px solid var(--accent-color);
+    border-radius: 10px;
+    box-shadow: 0 8px 24px var(--shadow-color);
+    z-index: 200;
+    visibility: hidden;
+    opacity: 0;
+    transform: translateY(-8px);
+    transition: visibility 0.25s, opacity 0.25s ease-out, transform 0.25s ease-out;
 }
 
-.dropdown-content .flag-icon {
-    margin-right: 10px;
+.dropdown:hover .dropdown-content {
+    visibility: visible;
+    opacity: 1;
+    transform: translateY(0);
 }
 
-.dropdown-content a {
-    color: black;
-    padding: 8px;
-    text-decoration: none;
+.donation-btn {
     display: flex;
     align-items: center;
 }
 
-.dropdown-content a:hover,
+.dropdown-content .flag-icon {
+    width: 30px;
+    height: 30px;
+    margin-right: 12px;
+    border-radius: 50%;
+}
+
+.dropdown-content a {
+    color: var(--text-primary);
+    padding: 10px 18px;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    transition: background 0.2s;
+}
+
+.dropdown-content a:hover {
+    background: var(--bg-secondary);
+}
+
 .dropdown-content a.active {
-    background-color: #f1f1f1;
+    background: var(--bg-secondary);
 }
 
-.dropdown:hover .dropdown-content {
-    display: block;
-}
-
-.dropdown-content {
-    transition: visibility 0.3s, opacity 0.3s;
+.dropdown-content a.active::after {
+    content: '✓';
+    margin-left: auto;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--accent-color);
 }
 
 .mobile-concern-btn {
@@ -680,9 +737,21 @@ nav #navList {
         /* Smaller font size for headings */
     }
 
+    .lang-pill {
+        gap: 4px;
+    }
+
+    .pill-flag {
+        width: 40px;
+        height: 40px;
+    }
+
+    .pill-chevron {
+        font-size: 12px;
+    }
+
     .dropdown-content {
         overflow-y: hidden;
-        /* Disable vertical scrolling */
     }
 
     .dropdown-content a {
@@ -718,7 +787,7 @@ nav #navList {
     }
 
     .dropdown {
-        margin-top: 2px;
+        margin-top: 0;
     }
 
     .donation-btn {

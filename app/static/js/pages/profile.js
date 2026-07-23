@@ -789,8 +789,8 @@ document.addEventListener("DOMContentLoaded", () => {
     setupContactCopy();
     setupStatReveal();
     setupCertReveal();
-    parallaxScroll("#portfolio", ".summary-hero__profile", { sMin: 0.85, oMin: 0.75, yMax: -30, rMax: 3, ring: ".summary-avatar__ring" });
-    parallaxScroll("#portfolio", ".summary-hero__panel", { sMin: 0.85, oMin: 0.75, yMax: -30, rMax: 3 });
+    parallaxScroll("#portfolio", ".summary-hero__profile", { sMin: 0.85, oMin: 0.75, yMax: -30 });
+    parallaxScroll("#portfolio", ".summary-hero__panel", { sMin: 0.85, oMin: 0.75, yMax: -30 });
 
     setupTagTooltips();
     // setupLazyReveal() lives in base.js — shared across all pages

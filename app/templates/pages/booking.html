@@ -1,7 +1,11 @@
 {% extends 'base.html' %}
 
 {% block title %}{{ _('Book Now | Joshua Algadipe') }}{% endblock %}
-{% block head %}{% endblock %}
+{% block head %}
+{% if HCAPTCHA_ENABLED %}
+<script src="https://hcaptcha.com/1/api.js" async defer></script>
+{% endif %}
+{% endblock %}
 
 {% block meta_description %}Book a session or appointment with Joshua Algadipe. Schedule your consultation, booking, or reservation today.{% endblock %}
 {% block meta_keywords %}Joshua Algadipe, booking, appointment, schedule, reservation, consultation{% endblock %}
@@ -11,6 +15,7 @@
 
 {% block content %}
 <link rel="stylesheet" href="{{ static_asset('css/pages/booking.css') }}" />
+<link rel="stylesheet" href="{{ static_asset('css/pages/admin/login.css') }}" />
 <link rel="stylesheet" href="{{ static_asset('css/components/datetime_picker.css') }}" />
 <section id="booking">
     <div class="booking-header">
@@ -44,6 +49,13 @@
                 <textarea id="message" name="message" maxlength="500" rows="4" placeholder="{{ _('Tell me about your project or request...') }}"></textarea>
                 <span class="field-counter"><span id="messageCount">0</span>/500</span>
             </div>
+            {% if HCAPTCHA_ENABLED %}
+            <div class="form-group">
+                <div class="captcha-wrapper">
+                    <div class="h-captcha" data-sitekey="{{ HCAPTCHA_SITE_KEY }}"></div>
+                </div>
+            </div>
+            {% endif %}
             <div id="bookingStatus" class="booking-status"></div>
             <button type="submit" class="booking-submit" id="submitBtn" disabled>
                 <ion-icon name="paper-plane-outline" id="submitIcon"></ion-icon>
@@ -153,12 +165,16 @@
         clearStatus();
         setLoading(true);
 
+        var captchaInput = document.querySelector('[name="h-captcha-response"]');
+        var captchaToken = captchaInput ? captchaInput.value : '';
+
         var payload = JSON.stringify({
             name: nameInput.value.trim(),
             email: emailInput.value.trim(),
             preferred_date: dateHidden ? dateHidden.value : '',
             preferred_time: timeHidden ? timeHidden.value : '',
             message: messageInput.value.trim(),
+            hcaptcha_token: captchaToken,
         });
 
         fetch('/api/booking/send', {

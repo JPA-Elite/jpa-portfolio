@@ -119,7 +119,7 @@ def admin_login_route():
         if error_response:
             return _render_admin_login(form, status_code=status_code)
 
-        hcaptcha_token = form_data.get("hcaptcha_token")
+        hcaptcha_token = form_data.get("h-captcha-response") or form_data.get("hcaptcha_token")
         client_ip = get_request_ip()
         ok, details = verify_hcaptcha(hcaptcha_token, remote_ip=client_ip)
         if not ok:

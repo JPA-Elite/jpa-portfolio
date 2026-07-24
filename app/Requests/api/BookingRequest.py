@@ -36,10 +36,13 @@ class BookingRequest(BaseRequest):
             self._errors["message"] = "Message must be at most 500 characters."
             return None, self._error_response(400)
 
+        service = str(payload.get("service", "")).strip() or None
+
         return self._success_response({
             "name": name,
             "email": email,
             "preferred_date": preferred_date,
             "preferred_time": preferred_time,
             "message": message,
+            "service": service,
         })

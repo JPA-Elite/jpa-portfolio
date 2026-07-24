@@ -1,7 +1,7 @@
 from datetime import datetime
 
 class BookingRequest:
-    def __init__(self, name, email, preferred_date, preferred_time, message, ip_address, created_at=None, read=False, _id=None):
+    def __init__(self, name, email, preferred_date, preferred_time, message, ip_address, created_at=None, read=False, service=None, _id=None):
         self._id = _id
         self.name = name
         self.email = email
@@ -11,6 +11,7 @@ class BookingRequest:
         self.ip_address = ip_address
         self.created_at = created_at or datetime.utcnow()
         self.read = read
+        self.service = service
 
     def to_dict(self):
         data = {
@@ -22,6 +23,7 @@ class BookingRequest:
             "ip_address": self.ip_address,
             "created_at": self.created_at,
             "read": self.read,
+            "service": self.service,
         }
         if self._id is not None:
             data["_id"] = str(self._id)
@@ -45,4 +47,5 @@ class BookingRequest:
             ip_address=data.get("ip_address", ""),
             created_at=created_at,
             read=data.get("read", False),
+            service=data.get("service"),
         )

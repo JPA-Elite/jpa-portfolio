@@ -253,6 +253,16 @@
                             </li>
                         {% endif %}
                     </ul>
+                    {% if request.args.get('mode') != 'professional' %}
+                    <a class="sidebar-booknow-btn" href="{{ url_for('pages.booking') }}">
+                        <ion-icon name="book-outline"></ion-icon>
+                        Book Now
+                    </a>
+                    <a class="sidebar-admin-btn" href="/admin/login" title="Admin Panel">
+                        <ion-icon name="settings-outline"></ion-icon>
+                        <span>Admin</span>
+                    </a>
+                    {% endif %}
                 </div>
 
                 <div class="language-selector">

@@ -1178,47 +1178,94 @@ body.loading-done .admin-float-btn {
 /* Suppress Ion Icons default SVG title tooltips */
 ion-icon { pointer-events: none !important; }
 
+.sidebar-booknow-btn {
+    display: none;
+}
+
+.sidebar-admin-btn {
+    display: none;
+}
+
 /* Mobile Navigation */
 @media only screen and (max-width: 768px) {
-    body.loading-done .admin-float-btn {
-        visibility: hidden;
+    .language-selector .booknow-btn {
+        display: none;
+    }
+
+    .sidebar-booknow-btn {
+        position: absolute;
+        bottom: 46px;
+        left: 20px;
+        width: calc(100% - 40px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 4px;
+        padding: 8px 12px;
+        border: 2px solid var(--accent-color);
+        color: var(--accent-color);
+        border-radius: 25px;
+        font-weight: 600;
+        font-size: 13px;
+        text-decoration: none;
+        background: transparent;
+        transition: all 0.3s;
+        box-sizing: border-box;
+    }
+
+    .sidebar-booknow-btn::before {
+        content: '';
+        position: absolute;
+        bottom: 100%;
+        left: 0;
+        right: 0;
+        height: 1px;
+        background: var(--text-secondary);
+        opacity: 0.2;
+        margin-bottom: 12px;
+    }
+
+    .sidebar-booknow-btn:hover {
+        background: var(--accent-color);
+        color: #fff;
+    }
+
+    .sidebar-booknow-btn ion-icon {
+        font-size: 16px;
+    }
+
+    .sidebar-admin-btn {
+        position: absolute;
+        bottom: 16px;
+        left: 0;
+        right: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 4px;
+        color: var(--text-secondary);
+        font-size: 12px;
+        text-decoration: none;
+        padding: 4px 0;
+        opacity: 0.6;
+        transition: opacity 0.3s;
+    }
+
+    .sidebar-admin-btn:hover {
+        opacity: 1;
+        color: var(--accent-color);
+    }
+
+    .sidebar-admin-btn ion-icon {
+        font-size: 14px;
+    }
+
+    .sidebar-admin-btn span {
+        font-weight: 500;
     }
 
     .admin-float-btn {
-        top: auto;
-        bottom: 15px;
-        left: 15px;
-        transform: none;
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        justify-content: center;
-        text-align: center;
-        padding: 0;
-        visibility: hidden;
-    }
-
-    .admin-float-btn ion-icon {
-        font-size: 22px;
-        margin: 0;
-    }
-
-    .admin-float-btn::before {
-        display: none;
-    }
-
-    .admin-float-btn:hover {
-        transform: scale(1.1);
-    }
-
-    .admin-float-btn span {
-        display: none;
-    }
-
-    body.nav-active .admin-float-btn {
-        opacity: 1;
-        visibility: visible;
-        pointer-events: auto;
+        display: none !important;
     }
 
     nav #navList {
@@ -1241,7 +1288,8 @@ ion-icon { pointer-events: none !important; }
         backdrop-filter: blur(10px);
         transition: 0.3s ease-in-out;
         z-index: 1001;
-        padding-top: 60px;
+        padding: 60px 0 80px;
+        box-sizing: border-box;
     }
 
     .sidebar.active {

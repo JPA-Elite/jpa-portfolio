@@ -55,6 +55,8 @@ from app.Controllers.api.AdminOtpController import (
     admin_otp_email_get_route,
     admin_otp_email_save_route,
 )
+from app.Controllers.api.BookingController import booking_send_route
+from app.Controllers.api.BookingRequestController import booking_request_list_route, delete_booking_request_route
 
 api_bp = Blueprint("api", __name__)
 
@@ -235,6 +237,10 @@ def update_music(music_id):
 def delete_music(music_id):
     return delete_music_route(music_id)
 
+@api_bp.route("/api/booking/send", methods=[http.POST])
+def booking_send():
+    return booking_send_route()
+
 @api_bp.route("/api/music-categories", methods=[http.GET])
 def music_categories():
     return music_categories_route()
@@ -408,3 +414,14 @@ def admin_face_records():
 @admin_login_required
 def admin_face_verify():
     return admin_face_verify_route()
+
+# Booking Request Admin API
+@api_bp.route("/admin/api/booking-requests", methods=[http.GET])
+@admin_login_required
+def booking_requests():
+    return booking_request_list_route()
+
+@api_bp.route("/admin/api/delete-booking-request/<booking_id>", methods=[http.DELETE])
+@admin_login_required
+def delete_booking_request(booking_id):
+    return delete_booking_request_route(booking_id)

@@ -49,6 +49,12 @@ USER_NOT_FOUND_ERROR = "User not found"
 USER_NAME_REQUIRED_ERROR = "Username is required."
 PROFILE_UPDATE_MSG = "Profile updated successfully!"
 
+# Booking Request Messages
+BOOKING_REQUEST_DELETE_MSG = "Booking request deleted successfully"
+BOOKING_REQUEST_NOT_FOUND_ERROR = "Booking request not found"
+BOOKING_RATE_LIMIT_ERROR = "You have exceeded the maximum of 10 booking requests per hour. Please wait {retry_after} minute(s) before trying again."
+BOOKING_EMAIL_SENT_MSG = "Your booking request has been sent successfully! We will contact you shortly."
+
 # System / Records Messages
 SYSTEM_INFO_ADD_MSG = "System information added successfully"
 DISPLAY_RECORDS_DELETE_MSG = "Displayed records deleted successfully."

@@ -3,7 +3,7 @@ from flask import Blueprint, request
 from app.configurations import HTTPMethod as http, get_locale
 from app.auth.middleware import admin_login_required
 from app.Controllers.web.PageController import add_portfolio_form_route, booking_route, concern_route, donation_route, gallery_route, index_route, music_route, portfolio_redirect, profile_route, vlog_route
-from app.Controllers.web.AdminPageController import admin_company_roadmaps_route, admin_dashboard_route, admin_face_recognition_route, admin_gallery_route, admin_key_projects_route, admin_login_attempts_route, admin_login_route, admin_logout_route, admin_music_route, admin_settings_route, admin_video_route
+from app.Controllers.web.AdminPageController import admin_booking_requests_route, admin_company_roadmaps_route, admin_dashboard_route, admin_face_recognition_route, admin_gallery_route, admin_key_projects_route, admin_login_attempts_route, admin_login_route, admin_logout_route, admin_music_route, admin_settings_route, admin_video_route
 from app.extensions import cache
 
 # Create a Blueprint for pages
@@ -115,6 +115,11 @@ def admin_settings():
 def admin_login_attempts():
     return admin_login_attempts_route()
 
+
+@pages_bp.route("/admin/booking-requests", methods=[http.GET])
+@admin_login_required
+def admin_booking_requests():
+    return admin_booking_requests_route()
 
 @pages_bp.route("/admin/face-recognition", methods=[http.GET, http.POST])
 @admin_login_required

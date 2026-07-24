@@ -71,6 +71,7 @@ class BookingService:
             "preferred_date": data["preferred_date"],
             "preferred_time": data["preferred_time"],
             "message": data["message"],
+            "service": data.get("service"),
             "ip_address": ip_address,
             "created_at": datetime.utcnow(),
             "read": False,
@@ -99,13 +100,16 @@ class BookingService:
 
         time_display = self._format_time_ampm(data['preferred_time'])
 
+        service_line = f"\nService: {data['service']}" if data.get('service') else ""
+
         body = (
             f"New Booking Request\n"
             f"{'─' * 40}\n"
             f"Name: {data['name']}\n"
             f"Email: {data['email']}\n"
             f"Date: {data['preferred_date']}\n"
-            f"Time: {time_display}\n"
+            f"Time: {time_display}"
+            f"{service_line}\n"
             f"Message: {data['message']}\n"
             f"{'─' * 40}\n"
             f"Sent via JPA Portfolio Booking System"

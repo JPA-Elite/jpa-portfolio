@@ -25,6 +25,58 @@
         <p>{{ _('Schedule your appointment below.') }}</p>
     </div>
 
+    <div class="booking-services">
+        <h3 class="booking-services-title">{{ _('What service do you need?') }}</h3>
+        <div class="booking-services-grid">
+            <button type="button" class="service-card" data-service="Website Development">
+                <ion-icon name="globe-outline"></ion-icon>
+                <span class="service-card-title">{{ _('Website Development') }}</span>
+                <span class="service-card-desc">{{ _('Custom websites, landing pages, portfolios, and business sites.') }}</span>
+            </button>
+            <button type="button" class="service-card" data-service="Web Applications">
+                <ion-icon name="code-slash-outline"></ion-icon>
+                <span class="service-card-title">{{ _('Web Applications') }}</span>
+                <span class="service-card-desc">{{ _('SaaS platforms, dashboards, admin panels, and custom web tools.') }}</span>
+            </button>
+            <button type="button" class="service-card" data-service="Mobile Apps">
+                <ion-icon name="phone-portrait-outline"></ion-icon>
+                <span class="service-card-title">{{ _('Mobile Apps') }}</span>
+                <span class="service-card-desc">{{ _('Cross-platform mobile apps built with React Native or Flutter.') }}</span>
+            </button>
+            <button type="button" class="service-card" data-service="API & Backend">
+                <ion-icon name="server-outline"></ion-icon>
+                <span class="service-card-title">{{ _('API & Backend') }}</span>
+                <span class="service-card-desc">{{ _('REST/GraphQL APIs, third-party integrations, and microservices.') }}</span>
+            </button>
+            <button type="button" class="service-card" data-service="UI/UX Design">
+                <ion-icon name="color-palette-outline"></ion-icon>
+                <span class="service-card-title">{{ _('UI/UX Design') }}</span>
+                <span class="service-card-desc">{{ _('Wireframes, prototypes, design systems, and responsive layouts.') }}</span>
+            </button>
+            <button type="button" class="service-card" data-service="E-commerce">
+                <ion-icon name="cart-outline"></ion-icon>
+                <span class="service-card-title">{{ _('E-commerce') }}</span>
+                <span class="service-card-desc">{{ _('Online stores, payment gateways, product management, and carts.') }}</span>
+            </button>
+            <button type="button" class="service-card" data-service="Website Redesign">
+                <ion-icon name="refresh-outline"></ion-icon>
+                <span class="service-card-title">{{ _('Website Redesign') }}</span>
+                <span class="service-card-desc">{{ _('Modernize existing sites, performance optimization, and SEO.') }}</span>
+            </button>
+            <button type="button" class="service-card" data-service="Consultation">
+                <ion-icon name="chatbubbles-outline"></ion-icon>
+                <span class="service-card-title">{{ _('Consultation') }}</span>
+                <span class="service-card-desc">{{ _('Architecture review, tech stack advice, code audit, and planning.') }}</span>
+            </button>
+            <button type="button" class="service-card" data-service="Others">
+                <ion-icon name="ellipsis-horizontal-outline"></ion-icon>
+                <span class="service-card-title">{{ _('Others') }}</span>
+                <span class="service-card-desc">{{ _('Something else? Tell me about your project in the message.') }}</span>
+            </button>
+        </div>
+        <input type="hidden" id="serviceInput" name="service" value="">
+    </div>
+
     <div class="booking-form-wrapper">
         <form id="bookingForm" class="booking-form">
             <div class="form-group">
@@ -71,6 +123,8 @@
     var submitBtn = document.getElementById('submitBtn');
     var submitIcon = document.getElementById('submitIcon');
     var submitText = document.getElementById('submitText');
+    var serviceInput = document.getElementById('serviceInput');
+    var serviceCards = document.querySelectorAll('.service-card');
     var nameInput = document.getElementById('name');
     var emailInput = document.getElementById('email');
     var messageInput = document.getElementById('message');
@@ -80,6 +134,15 @@
     var messageCount = document.getElementById('messageCount');
     var emailMsg = document.getElementById('emailMsg');
     var statusEl = document.getElementById('bookingStatus');
+
+    serviceCards.forEach(function (card) {
+        card.addEventListener('click', function () {
+            serviceCards.forEach(function (c) { c.classList.remove('selected'); });
+            this.classList.add('selected');
+            serviceInput.value = this.dataset.service;
+            clearStatus();
+        });
+    });
 
     function validateEmail(val) {
         return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val);
@@ -173,6 +236,7 @@
             preferred_date: dateHidden ? dateHidden.value : '',
             preferred_time: timeHidden ? timeHidden.value : '',
             message: messageInput.value.trim(),
+            service: serviceInput.value,
             hcaptcha_token: captchaToken,
         });
 
@@ -190,6 +254,8 @@
             if (result.data.ok) {
                 setStatus(result.data.message, 'success');
                 form.reset();
+                serviceInput.value = '';
+                serviceCards.forEach(function (c) { c.classList.remove('selected'); });
                 if (typeof hcaptcha !== 'undefined') hcaptcha.reset();
                 if (dateHidden) dateHidden.value = '';
                 if (timeHidden) timeHidden.value = '';

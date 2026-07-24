@@ -185,8 +185,8 @@
       e.stopPropagation();
       var parts = viewMonth.split('-');
       var y = parseInt(parts[0], 10);
-      var m = parseInt(parts[1], 10);
-      if (m >= 12) { m = 1; y++; }
+      var m = parseInt(parts[1], 10) + 1;
+      if (m > 12) { m = 1; y++; }
       viewMonth = y + '-' + String(m).padStart(2, '0');
       buildCalendar(viewMonth);
     });

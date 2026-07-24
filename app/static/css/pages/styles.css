@@ -1193,14 +1193,14 @@ ion-icon { pointer-events: none !important; }
     }
 
     .sidebar-booknow-btn {
-        position: absolute;
-        bottom: 46px;
-        left: 20px;
-        width: calc(100% - 40px);
         display: flex;
         align-items: center;
         justify-content: center;
         gap: 4px;
+        margin-top: auto;
+        margin-bottom: 8px;
+        margin-left: 20px;
+        width: calc(100% - 40px);
         padding: 8px 12px;
         border: 2px solid var(--accent-color);
         color: var(--accent-color);
@@ -1213,18 +1213,6 @@ ion-icon { pointer-events: none !important; }
         box-sizing: border-box;
     }
 
-    .sidebar-booknow-btn::before {
-        content: '';
-        position: absolute;
-        bottom: 100%;
-        left: 0;
-        right: 0;
-        height: 1px;
-        background: var(--text-secondary);
-        opacity: 0.2;
-        margin-bottom: 12px;
-    }
-
     .sidebar-booknow-btn:hover {
         background: var(--accent-color);
         color: #fff;
@@ -1235,18 +1223,14 @@ ion-icon { pointer-events: none !important; }
     }
 
     .sidebar-admin-btn {
-        position: absolute;
-        bottom: 16px;
-        left: 0;
-        right: 0;
         display: flex;
         align-items: center;
         justify-content: center;
         gap: 4px;
+        padding: 8px 0 16px;
         color: var(--text-secondary);
         font-size: 12px;
         text-decoration: none;
-        padding: 4px 0;
         opacity: 0.6;
         transition: opacity 0.3s;
     }
@@ -1278,18 +1262,22 @@ ion-icon { pointer-events: none !important; }
     }
 
     .sidebar {
-        display: block;
+        display: flex;
+        flex-direction: column;
         position: fixed;
         left: -250px;
         top: 0;
         width: 250px;
         height: 100vh;
+        height: 100dvh;
         background: rgba(0, 0, 0, 0.95);
         backdrop-filter: blur(10px);
         transition: 0.3s ease-in-out;
         z-index: 1001;
-        padding: 60px 0 80px;
+        padding: 60px 0 0;
         box-sizing: border-box;
+        overflow-y: auto;
+        overflow-x: hidden;
     }
 
     .sidebar.active {

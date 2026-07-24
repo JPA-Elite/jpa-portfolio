@@ -190,6 +190,7 @@
             if (result.data.ok) {
                 setStatus(result.data.message, 'success');
                 form.reset();
+                if (typeof hcaptcha !== 'undefined') hcaptcha.reset();
                 if (dateHidden) dateHidden.value = '';
                 if (timeHidden) timeHidden.value = '';
                 nameCount.textContent = '0';

@@ -12,6 +12,7 @@ from app.configurations import (
     ADMIN_SETTINGS_PAGE,
     ADMIN_VIDEO_PAGE,
     ADMIN_FACE_RECOGNITION_PAGE,
+    ADMIN_BOOKING_REQUESTS_PAGE,
 )
 from app.configurations import HTTPMethod as http
 from app.constants.login_roles import ROLE_ADMIN
@@ -204,6 +205,9 @@ def admin_settings_route():
 
 def admin_login_attempts_route():
     return render_template(ADMIN_LOGIN_ATTEMPTS_PAGE, title="Login Attempts")
+
+def admin_booking_requests_route():
+    return render_template(ADMIN_BOOKING_REQUESTS_PAGE, title="Booking Requests")
 
 def admin_face_recognition_route():
 

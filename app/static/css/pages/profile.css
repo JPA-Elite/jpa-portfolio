@@ -4287,7 +4287,22 @@ ion-icon.voice-icon {
 }
 
 [data-theme=light] .feature-row__index {
-    color: rgba(15, 23, 42, .12)
+    -webkit-text-fill-color: initial;
+    background: none;
+    opacity: .7;
+    font-weight: 900
+}
+
+[data-theme=light] .feature-row--pink .feature-row__index {
+    color: #db2777
+}
+
+[data-theme=light] .feature-row--blue .feature-row__index {
+    color: #2563eb
+}
+
+[data-theme=light] .feature-row--teal .feature-row__index {
+    color: #0d9488
 }
 
 [data-theme=light] .timeline__card {

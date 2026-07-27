@@ -1,10 +1,10 @@
 from datetime import timedelta
-from app.Repositories.BookingRequestRepository import BookingRequestRepository
+from app.Repositories.Interfaces.IBookingRequestRepository import IBookingRequestRepository
 from app.Models.BookingRequest import BookingRequest
 
 class BookingRequestService:
-    def __init__(self):
-        self.repository = BookingRequestRepository()
+    def __init__(self, repository: IBookingRequestRepository):
+        self.repository = repository
 
     def get_paginated_list(self, page, per_page, order, search_query=""):
         data, total = self.repository.get_paginated_list(page, per_page, order, search_query)

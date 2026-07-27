@@ -1,6 +1,7 @@
 from flask import jsonify, request
 from app.Requests.api.BookingRequest import BookingRequest
 from app.Services.BookingService import BookingService
+from app.Repositories.BookingRequestRepository import BookingRequestRepository
 from app.security.ddos_guard import get_request_ip
 from app.constants.messages import BOOKING_RATE_LIMIT_ERROR, BOOKING_EMAIL_SENT_MSG, CAPTCHA_VERIFICATION_ERROR
 from app.utils import verify_hcaptcha
@@ -19,7 +20,7 @@ def booking_send_route():
         return jsonify({"ok": False, "message": CAPTCHA_VERIFICATION_ERROR}), 400
 
     try:
-        svc = BookingService()
+        svc = BookingService(repository=BookingRequestRepository())
 
         allowed, retry_after = svc.check_rate_limit(ip)
         if not allowed:

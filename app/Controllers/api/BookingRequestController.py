@@ -1,11 +1,12 @@
 from flask import jsonify, request
 from app.Services.BookingRequestService import BookingRequestService
+from app.Repositories.BookingRequestRepository import BookingRequestRepository
 from app.Requests.api.BookingRequestRequest import BookingRequestRequest
 from app.constants.messages import BOOKING_REQUEST_DELETE_MSG, BOOKING_REQUEST_NOT_FOUND_ERROR
 from app.utils import clear_cache_by_prefix, get_cache_data
 from app.extensions import cache
 
-booking_request_service = BookingRequestService()
+booking_request_service = BookingRequestService(repository=BookingRequestRepository())
 
 def booking_request_list_route():
     cached_data, cache_key = get_cache_data("admin.api.booking_request_list", request.args, 60)

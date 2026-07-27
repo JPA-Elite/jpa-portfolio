@@ -6,13 +6,13 @@ import time
 from email.message import EmailMessage
 from datetime import datetime
 from app.extensions import cache
-from app.Repositories.BookingRequestRepository import BookingRequestRepository
+from app.Repositories.Interfaces.IBookingRequestRepository import IBookingRequestRepository
 
 class BookingService:
     RATE_LIMIT = 10
     RATE_WINDOW = 3600
 
-    def __init__(self):
+    def __init__(self, repository: IBookingRequestRepository):
         self.smtp_host: str = os.getenv("SMTP_HOST", "")
         self.smtp_port: int = self._env_int("SMTP_PORT", 587)
         self.smtp_username: str = os.getenv("SMTP_USERNAME", "")
@@ -21,7 +21,7 @@ class BookingService:
         self.smtp_from_name: str = os.getenv("SMTP_FROM_NAME", "").strip()
         self.smtp_use_tls: bool = self._env_bool("SMTP_USE_TLS", True)
         self.smtp_use_ssl: bool = self._env_bool("SMTP_USE_SSL", False)
-        self.repository = BookingRequestRepository()
+        self.repository = repository
 
     @staticmethod
     def _env_bool(name: str, default: bool):

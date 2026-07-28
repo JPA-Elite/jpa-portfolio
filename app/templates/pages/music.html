@@ -188,10 +188,15 @@
         <div class="album-section" id="albumSection"
             style="background-image: url('https://res.cloudinary.com/dviqx0o48/image/upload/v1744089628/o388ezfg1maax9dcrgpj_zd1zyc.jpg');">
             <canvas id="beatVisualizer"></canvas>
-            <div class="cover-container">
-                <img id="coverImg" class="cover-img"
-                    src="https://res.cloudinary.com/dviqx0o48/image/upload/v1744089628/o388ezfg1maax9dcrgpj_zd1zyc.jpg"
-                    alt="Cover Art" />
+            <div class="desk-player">
+                <div class="tonearm" id="tonearm">
+                    <span class="tonearm-pivot"></span>
+                </div>
+                <div class="vinyl-disc" id="vinylDisc">
+                    <img id="coverImg" class="cover-img"
+                        src="https://res.cloudinary.com/dviqx0o48/image/upload/v1744089628/o388ezfg1maax9dcrgpj_zd1zyc.jpg"
+                        alt="Cover Art" />
+                </div>
             </div>
             <div class="now-playing" id="nowPlaying"><ion-icon name="musical-notes-outline"></ion-icon> Select a song</div>
             <div id="visualizerSettingsPanel" class="visualizer-settings" aria-hidden="true">

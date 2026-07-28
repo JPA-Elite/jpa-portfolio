@@ -59,6 +59,8 @@ musicList = document.getElementById("musicList");
 audioPlayer = document.getElementById("audioPlayer");
 const nowPlaying = document.getElementById("nowPlaying");
 const coverImg = document.getElementById("coverImg");
+const vinylDisc = document.getElementById("vinylDisc");
+const tonearm = document.getElementById("tonearm");
 const playerNowPlaying = document.getElementById("playerNowPlaying");
 const playerCoverImg = document.getElementById("playerCoverImg");
 const progressBar = document.getElementById("progressBar");
@@ -794,7 +796,8 @@ function playSong(index) {
 
     setCategoriesCollapsed(true);
 
-    coverImg.classList.add("spin");
+    if (vinylDisc) vinylDisc.classList.add("spinning");
+    if (tonearm) tonearm.classList.add("playing");
     audioPlayer.play();
     if (!isMobileDevice()) startVisualizer();
     syncPlayPauseButton();
@@ -806,11 +809,13 @@ function playSong(index) {
 function togglePlay() {
     if (audioPlayer.src) {
         if (audioPlayer.paused) {
-            coverImg.classList.add("spin");
+            if (vinylDisc) vinylDisc.classList.add("spinning");
+            if (tonearm) tonearm.classList.add("playing");
             audioPlayer.play();
             syncPlayPauseButton();
         } else {
-            coverImg.classList.remove("spin");
+            if (vinylDisc) vinylDisc.classList.remove("spinning");
+            if (tonearm) tonearm.classList.remove("playing");
             audioPlayer.pause();
             syncPlayPauseButton();
         }
@@ -1372,7 +1377,8 @@ document.addEventListener("touchend", () => {
 });
 
 audioPlayer.addEventListener("ended", () => {
-    coverImg.classList.remove("spin");
+    if (vinylDisc) vinylDisc.classList.remove("spinning");
+    if (tonearm) tonearm.classList.remove("playing");
     if (autoplayEnabled) {
         playNextSongOrNextPage();
     }

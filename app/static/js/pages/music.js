@@ -972,13 +972,19 @@ function downloadSong() {
         return;
     }
 
-    let actualUrl = src;
-    const urlParamMatch = src.match(/[?&]url=([^&]+)/);
-    if (urlParamMatch) {
-        actualUrl = decodeURIComponent(urlParamMatch[1]);
-    }
-
-    window.open(`/api/download_song?url=${encodeURIComponent(actualUrl)}`, "_blank");
+    window.openConfirmModal({
+        title: "Download Song",
+        message: "Do you want to download this song? The file will open in a new tab.",
+        confirmText: "Download",
+        onConfirm: function () {
+            let actualUrl = src;
+            const urlParamMatch = src.match(/[?&]url=([^&]+)/);
+            if (urlParamMatch) {
+                actualUrl = decodeURIComponent(urlParamMatch[1]);
+            }
+            window.open(`/api/download_song?url=${encodeURIComponent(actualUrl)}`, "_blank");
+        }
+    });
 }
 
 function copyLink(url = null) {

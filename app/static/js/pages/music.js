@@ -526,6 +526,17 @@ document.addEventListener("DOMContentLoaded", async () => {
         categoryToggleBtn.addEventListener("click", toggleCategories);
     }
 
+    const musicMain = document.getElementById("musicMain");
+    const musicListTab = document.getElementById("musicListTab");
+    if (musicMain && musicListTab) {
+        musicListTab.addEventListener("click", () => {
+            musicMain.classList.toggle("music-list-hidden");
+            const hidden = musicMain.classList.contains("music-list-hidden");
+            musicListTab.title = hidden ? "Maximize sidebar" : "Minimize sidebar";
+            musicListTab.setAttribute("aria-expanded", String(!hidden));
+        });
+    }
+
     showTripleLoading?.();
     try {
         await loadCategories();

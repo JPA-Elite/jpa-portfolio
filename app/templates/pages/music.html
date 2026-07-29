@@ -72,6 +72,14 @@
                     </a>
                 </li>
             </ul>
+            <a class="sidebar-booknow-btn" href="{{ url_for('pages.booking') }}">
+                <ion-icon name="book-outline"></ion-icon>
+                Book Now
+            </a>
+            <a class="sidebar-admin-btn" href="/admin/login" title="Admin Panel">
+                <ion-icon name="settings-outline"></ion-icon>
+                <span>Admin</span>
+            </a>
         </div>
         <ul id="navbarMenu">
             <li class="{% if request.endpoint == 'pages.portfolio' %}active{% endif %}">
@@ -115,6 +123,10 @@
             </li>
         </ul>
         <div class="navbarMenu2">
+            <a class="booknow-btn" href="{{ url_for('pages.booking') }}">
+                <ion-icon name="book-outline"></ion-icon>
+                Book Now
+            </a>
             <div class="social-dropdown">
                 <button class="social-dropdown-btn">
                     <ion-icon name="share-social-outline"></ion-icon>

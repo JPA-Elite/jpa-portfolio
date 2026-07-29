@@ -57,6 +57,50 @@ const voteStateCache = {};
 window.voteStateCache = voteStateCache;
 musicList = document.getElementById("musicList");
 audioPlayer = document.getElementById("audioPlayer");
+
+const _origShowLoading = window.showTripleLoading;
+const _origHideLoading = window.hideTripleLoading;
+
+function _buildSkeletonHtml(count = 6) {
+    let html = '<div class="music-skeleton">';
+    for (let i = 0; i < count; i++) {
+        html += '<div class="music-skeleton-item">'
+            + '<div class="music-skeleton-img"></div>'
+            + '<div class="music-skeleton-body">'
+            + '<div class="music-skeleton-line music-skeleton-line--title"></div>'
+            + '<div class="music-skeleton-line music-skeleton-line--artist"></div>'
+            + '</div>'
+            + '<div class="music-skeleton-actions">'
+            + '<div class="music-skeleton-btn"></div>'
+            + '<div class="music-skeleton-btn"></div>'
+            + '<div class="music-skeleton-duration"></div>'
+            + '</div>'
+            + '</div>';
+    }
+    html += '</div>';
+    return html;
+}
+
+function _showMusicSkeleton() {
+    if (!musicList) return;
+    musicList.innerHTML = _buildSkeletonHtml();
+}
+
+window.showTripleLoading = function () {
+    if (isMobileDevice()) {
+        const loader = document.querySelector(".dots-loader");
+        if (loader) loader.style.display = "none";
+        _showMusicSkeleton();
+    } else {
+        _origShowLoading?.();
+    }
+};
+
+window.hideTripleLoading = function () {
+    if (!isMobileDevice()) {
+        _origHideLoading?.();
+    }
+};
 const nowPlaying = document.getElementById("nowPlaying");
 const coverImg = document.getElementById("coverImg");
 const vinylDisc = document.getElementById("vinylDisc");
@@ -752,6 +796,10 @@ function toggleCategories() {
 window.toggleCategories = toggleCategories;
 
 async function loadAndRenderMusicPage({ resetSelection = false, activeSongId = null } = {}) {
+    if (isMobileDevice()) {
+        await new Promise(resolve => requestAnimationFrame(resolve));
+    }
+
     const pushUrlState = pendingUrlHistoryPush;
     pendingUrlHistoryPush = false;
 

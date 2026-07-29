@@ -1208,10 +1208,13 @@ nav #navbarMenu > li.active {
 
 .clear-icon {
     display: none;
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
 }
 
 .searchbar-container input:not(:placeholder-shown)+.clear-icon {
-    display: block;
+    display: inline-flex;
 }
 
 .navbarMenu2 {

@@ -160,7 +160,9 @@
                 <ion-icon name="search-outline" class="search-icon"></ion-icon>
                 <input type="text" id="navbarSearch" placeholder="Search music, artist, or album..."
                     oninput="handleSearch(this.value)" />
-                <ion-icon name="close-outline" class="clear-icon" onclick="clearSearch()"></ion-icon>
+                <span class="clear-icon" onclick="clearSearch()">
+                    <ion-icon name="close-outline"></ion-icon>
+                </span>
             </div>
         </div>
     </nav>

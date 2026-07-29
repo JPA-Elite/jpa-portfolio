@@ -238,10 +238,11 @@ main {
 
 .music-list-items {
     flex: 1;
+    display: flex;
+    flex-direction: column;
     overflow-y: auto;
     max-height: calc(100% - 40px);
     scrollbar-width: thin;
-    /* for Firefox */
     scrollbar-color: rgba(255, 255, 255, 0.6) transparent;
 }
 
@@ -1300,6 +1301,39 @@ ion-icon {
     pointer-events: none !important;
 }
 
+.no-results {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: #888;
+    font-size: 16px;
+    padding: 40px 20px;
+}
+
+.empty-category-state {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 12px;
+    padding: 48px 24px;
+}
+
+.empty-category-state__icon {
+    font-size: 56px;
+    display: block;
+}
+
+.empty-category-state__text {
+    font-size: 16px;
+    color: #aaa;
+    line-height: 1.5;
+}
+
 /* Mobile Navigation */
 @media only screen and (max-width: 768px) {
     .no-results {
@@ -1447,8 +1481,8 @@ ion-icon {
     }
 
     main {
-        grid-template-columns: 1fr;
-        grid-template-rows: auto 1fr auto;
+        display: flex;
+        flex-direction: column;
         height: auto;
         overflow-y: auto;
     }
@@ -1928,6 +1962,7 @@ ion-icon {
     }
 
     main {
+        flex: 1;
         height: auto;
         min-height: 0;
         overflow: visible;
@@ -1935,11 +1970,21 @@ ion-icon {
 
     .music-list {
         height: auto;
+        min-height: 100%;
         overflow: visible;
-        padding: 14px 12px 10px;
+        padding: 0 12px;
+    }
+
+    .music-list > div:first-child {
+        position: sticky;
+        top: 60px;
+        z-index: 2;
+        background: #1e1e1e;
+        padding: 6px 0 0;
     }
 
     .music-list-items {
+        flex: 1;
         max-height: none;
         overflow: visible;
     }
@@ -1966,11 +2011,12 @@ ion-icon {
     }
 
     .pagination-controls {
+        margin-top: auto;
         display: grid;
         grid-template-columns: auto 1fr auto;
         align-items: center;
         gap: 8px;
-        padding: 12px 0 4px;
+        padding: 12px 0 10px;
     }
 
     .page-btn {

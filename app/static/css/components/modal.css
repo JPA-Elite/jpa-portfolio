@@ -318,11 +318,24 @@
     line-height: 1;
     cursor: pointer;
     transition: background-color 0.2s ease, border-color 0.2s ease;
+    -webkit-tap-highlight-color: transparent !important;
+    -webkit-touch-callout: none !important;
+    user-select: none !important;
+    touch-action: manipulation !important;
+    outline: none !important;
 }
 
-.comment-panel-toggle:hover {
-    background: rgba(255, 255, 255, 0.12);
-    border-color: rgba(59, 130, 246, 0.35);
+.comment-panel-toggle:focus,
+.comment-panel-toggle:active {
+    outline: none !important;
+    -webkit-tap-highlight-color: transparent !important;
+}
+
+@media (hover: hover) {
+    .comment-panel-toggle:hover {
+        background: rgba(255, 255, 255, 0.12);
+        border-color: rgba(59, 130, 246, 0.35);
+    }
 }
 
 .comment-panel-toggle[hidden] {
@@ -346,6 +359,7 @@
     display: flex;
     align-items: flex-start;
     gap: 10px;
+    -webkit-tap-highlight-color: transparent !important;
 }
 
 .comment-item img {
@@ -377,16 +391,33 @@
     display: flex;
     align-items: center;
     gap: 10px;
+    -webkit-tap-highlight-color: transparent !important;
 }
 
 .comment-meta u {
     text-decoration: none;
     color: #aaa;
     cursor: pointer;
+    -webkit-tap-highlight-color: transparent !important;
+    -webkit-touch-callout: none !important;
+    user-select: none !important;
+    -webkit-user-select: none !important;
+    -moz-user-select: none !important;
+    -ms-user-select: none !important;
+    outline: none !important;
+    touch-action: manipulation !important;
 }
 
-.comment-meta u:hover {
-    color: #1e88e5;
+.comment-meta u:focus,
+.comment-meta u:active {
+    outline: none !important;
+    -webkit-tap-highlight-color: transparent !important;
+}
+
+@media (hover: hover) {
+    .comment-meta u:hover {
+        color: #1e88e5;
+    }
 }
 
 .comment-meta span {

@@ -4,12 +4,15 @@
     align-items: flex-end;
     gap: 4px;
     flex-shrink: 0;
+    -webkit-tap-highlight-color: transparent !important;
 }
 
 .vote-group {
     display: flex;
     align-items: center;
     gap: 4px;
+    -webkit-tap-highlight-color: transparent !important;
+    touch-action: manipulation !important;
 }
 
 .vote-btn {
@@ -27,12 +30,34 @@
     font-family: inherit;
     min-width: 48px;
     justify-content: center;
+    -webkit-tap-highlight-color: transparent !important;
+    -webkit-touch-callout: none !important;
+    user-select: none !important;
+    -webkit-user-select: none !important;
+    -moz-user-select: none !important;
+    -ms-user-select: none !important;
+    outline: none !important;
+    touch-action: manipulation !important;
+    -webkit-appearance: none !important;
+    appearance: none !important;
 }
 
-.vote-btn:hover {
-    background: rgba(255, 255, 255, 0.08);
-    border-color: rgba(255, 255, 255, 0.25);
-    transform: translateY(-1px);
+.vote-btn:focus,
+.vote-btn:active {
+    outline: none !important;
+    -webkit-tap-highlight-color: transparent !important;
+}
+
+.vote-btn ion-icon {
+    -webkit-tap-highlight-color: transparent !important;
+}
+
+@media (hover: hover) {
+    .vote-btn:hover {
+        background: rgba(255, 255, 255, 0.08);
+        border-color: rgba(255, 255, 255, 0.25);
+        transform: translateY(-1px);
+    }
 }
 
 .vote-btn.voted {

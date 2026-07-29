@@ -276,12 +276,20 @@ main {
     cursor: pointer;
     transition: background 0.2s;
     justify-content: space-between;
+    -webkit-tap-highlight-color: transparent !important;
+    touch-action: manipulation !important;
+    outline: none !important;
+    user-select: none !important;
+    -webkit-user-select: none !important;
+    -moz-user-select: none !important;
+    -ms-user-select: none !important;
 }
 
 .music-item .left-content {
     display: flex;
     align-items: center;
     gap: 15px;
+    -webkit-tap-highlight-color: transparent !important;
 }
 
 .music-item .left-content .title-artist {
@@ -304,8 +312,10 @@ main {
     font-size: 14px;
 }
 
-.music-item:hover {
-    background: #292929;
+@media (hover: hover) {
+    .music-item:hover {
+        background: #292929;
+    }
 }
 
 .music-item.active {
@@ -496,6 +506,13 @@ main {
     display: flex;
     align-items: center;
     gap: 15px;
+    -webkit-tap-highlight-color: transparent !important;
+    touch-action: manipulation !important;
+}
+
+.player .left {
+    -webkit-tap-highlight-color: transparent !important;
+    touch-action: manipulation !important;
 }
 
 .share-section button {
@@ -504,6 +521,22 @@ main {
     padding: 2px 6px;
     border-radius: 5px;
     cursor: pointer;
+    -webkit-tap-highlight-color: transparent !important;
+    -webkit-touch-callout: none !important;
+    user-select: none !important;
+    -webkit-user-select: none !important;
+    -moz-user-select: none !important;
+    -ms-user-select: none !important;
+    outline: none !important;
+    touch-action: manipulation !important;
+    -webkit-appearance: none !important;
+    appearance: none !important;
+}
+
+.share-section button:focus,
+.share-section button:active {
+    outline: none !important;
+    -webkit-tap-highlight-color: transparent !important;
 }
 
 .share-section button ion-icon {
@@ -511,12 +544,14 @@ main {
     font-size: 15px;
     position: relative;
     top: 2px;
+    -webkit-tap-highlight-color: transparent !important;
 }
 
-.player .controls button:hover,
-.share-section button:hover {
-    background: #1565c0;
-    /* Changed from #1ed760 to darker blue */
+@media (hover: hover) {
+    .player .controls button:hover,
+    .share-section button:hover {
+        background: #1565c0;
+    }
 }
 
 #copyPopup {

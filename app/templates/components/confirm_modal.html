@@ -1,0 +1,18 @@
+<link rel="stylesheet" href="{{ static_asset('css/components/confirm_modal.css') }}">
+<div id="confirmModal" class="confirm-modal" aria-hidden="true">
+    <div class="confirm-modal__backdrop" data-confirm-close></div>
+    <div class="confirm-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="confirmModalTitle">
+        <div class="confirm-modal__header">
+            <h3 id="confirmModalTitle">Confirm</h3>
+            <button type="button" class="confirm-modal__close" data-confirm-close aria-label="Close">
+                <ion-icon name="close-outline"></ion-icon>
+            </button>
+        </div>
+        <div class="confirm-modal__body" id="confirmModalBody">Are you sure?</div>
+        <div class="confirm-modal__footer">
+            <button type="button" class="confirm-modal__btn confirm-modal__btn--cancel" data-confirm-close>Cancel</button>
+            <button type="button" class="confirm-modal__btn confirm-modal__btn--confirm" id="confirmModalConfirmBtn">Confirm</button>
+        </div>
+    </div>
+</div>
+<script src="{{ static_asset('js/components/confirm_modal.js') }}"></script>

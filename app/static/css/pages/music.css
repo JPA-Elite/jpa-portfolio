@@ -21,6 +21,8 @@ main {
     height: calc(100vh - 120px);
     /* Subtract combined height of navbar and player */
     min-height: 300px;
+    position: relative;
+    transition: grid-template-columns 0.35s ease;
     overflow: hidden;
 }
 
@@ -28,11 +30,13 @@ main {
     display: flex;
     flex-direction: column;
     min-height: 0;
+    min-width: 0;
     height: 100%;
     position: relative;
     background: #1e1e1e;
     padding: 20px 20px 0px 20px;
     overflow-y: auto;
+    transition: padding 0.35s ease;
 }
 
 .album-section {
@@ -68,6 +72,70 @@ main {
 .music-list h2 {
     background: #1e1e1e;
     padding: 10px 0;
+}
+
+/* Sidebar tab */
+.music-list-tab {
+    position: absolute;
+    top: 50%;
+    left: calc(33.333%);
+    transform: translateY(-50%);
+    z-index: 50;
+    width: 28px;
+    min-width: 28px;
+    height: 56px;
+    padding: 0;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-left: none;
+    border-radius: 0 10px 10px 0;
+    background: #1e1e1e;
+    color: rgba(255, 255, 255, 0.6);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: left 0.3s ease, background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+    box-shadow: 2px 0 6px rgba(0, 0, 0, 0.2);
+    line-height: 1;
+}
+
+.music-list-tab:hover {
+    background: #292929;
+    color: #fff;
+    border-color: #2962ff;
+}
+
+.music-list-tab ion-icon {
+    font-size: 18px;
+    transition: transform 0.3s ease;
+    pointer-events: none;
+}
+
+#musicMain.music-list-hidden {
+    grid-template-columns: 0fr 1fr;
+}
+
+#musicMain.music-list-hidden .music-list {
+    padding: 0;
+    overflow: hidden;
+}
+
+#musicMain.music-list-hidden .music-list > * {
+    min-width: max-content;
+}
+
+#musicMain.music-list-hidden .music-list-tab {
+    left: 0;
+}
+
+#musicMain.music-list-hidden .music-list-tab ion-icon {
+    transform: rotate(180deg);
+}
+
+@media (max-width: 768px) {
+    .music-list-tab {
+        display: none;
+    }
 }
 
 /* Category Tags Row */
@@ -1719,8 +1787,12 @@ ion-icon {
     }
 
     main {
-        grid-template-columns: minmax(300px, 0.95fr) minmax(0, 1.05fr);
+        grid-template-columns: 1fr 1fr;
         height: calc(100vh - 132px);
+    }
+
+    .music-list-tab {
+        left: calc(50%);
     }
 
     .music-list {

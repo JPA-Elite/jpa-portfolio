@@ -1453,20 +1453,43 @@ const volumeSlider = document.getElementById("volumeSlider");
 volumeSlider.addEventListener("input", (e) => updateVolume(e.target.value));
 
 
-document.getElementById("navbarToggle").addEventListener("click", () => {
-    const sidebar = document.getElementById("sidebar");
-    const toggleButton = document.getElementById("navbarToggle");
-    const navIcon = toggleButton.querySelector(".navbar-toggle-icon");
-    const isOpen = !sidebar.classList.contains("active");
+function toggleSidebar() {
+    var sidebar = document.getElementById("sidebar");
+    var toggleButton = document.getElementById("navbarToggle");
+    var navIcon = toggleButton.querySelector(".navbar-toggle-icon");
+    var isOpen = !sidebar.classList.contains("active");
     sidebar.classList.toggle("active");
     toggleButton.classList.toggle("active");
     if (navIcon) {
         navIcon.setAttribute("name", isOpen ? "close-outline" : "menu-outline");
     }
+    document.body.style.pointerEvents = isOpen ? "none" : "";
+    sidebar.style.pointerEvents = "auto";
+    toggleButton.style.pointerEvents = "auto";
+}
+
+document.getElementById("navbarToggle").addEventListener("click", () => {
+    toggleSidebar();
 });
 
+const sidebarEl = document.getElementById("sidebar");
+sidebarEl.addEventListener("click", (e) => {
+    if (e.target === sidebarEl) {
+        toggleSidebar();
+    }
+});
 
-
+document.addEventListener("click", function (e) {
+    const sidebar = document.getElementById("sidebar");
+    const toggle = document.getElementById("navbarToggle");
+    if (
+        !sidebar.contains(e.target) &&
+        !toggle.contains(e.target) &&
+        sidebar.classList.contains("active")
+    ) {
+        toggleSidebar();
+    }
+});
 const mobileMediaDropdown = document.querySelector(".mobile-media-dropdown");
 const mobileMediaToggle = document.querySelector(".mobile-media-toggle");
 if (mobileMediaDropdown && mobileMediaToggle) {
@@ -1492,23 +1515,6 @@ if (desktopMediaDropdown && desktopMediaTrigger) {
         }
     });
 }
-
-document.addEventListener("click", function (e) {
-    const sidebar = document.getElementById("sidebar");
-    const toggle = document.getElementById("navbarToggle");
-    if (
-        !sidebar.contains(e.target) &&
-        !toggle.contains(e.target) &&
-        sidebar.classList.contains("active")
-    ) {
-        sidebar.classList.remove("active");
-        toggle.classList.remove("active");
-        const navIcon = toggle.querySelector(".navbar-toggle-icon");
-        if (navIcon) {
-            navIcon.setAttribute("name", "menu-outline");
-        }
-    }
-});
 
 autoplayEnabled = localStorage.getItem("autoplay") !== "false";
 shuffleEnabled = localStorage.getItem("musicShuffle") === "true";

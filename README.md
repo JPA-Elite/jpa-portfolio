@@ -24,7 +24,8 @@ Languages: flask (python)
 
 ## START UP
 
-1. run command: `make start-build`
+1. run command: `npm install` in the project root directory
+2. run command: `make start-build`
 
 ## DDoS / Abuse Protection (Render + Cloudflare)
 

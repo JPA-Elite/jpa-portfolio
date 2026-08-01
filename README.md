@@ -4,11 +4,15 @@ Short Description: a project for my own portfolio
 
 Languages: flask (python)
 
+## PREREQUISITES
+
+- Python **3.11** (the app is tested on Python 3.11; newer versions may require dependency updates)
+
 ## CREATE A VIRTUAL ENVIRONMENT
 
 > **Note:** Run the following commands in Windows Command Prompt (cmd).
 
-1. run command: `py -m venv .venv`
+1. run command: `py -3.11 -m venv .venv`
 2. run command: `.\.venv\Scripts\activate.bat`
 
 ## INSTALL PACKAGE

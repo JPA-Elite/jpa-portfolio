@@ -10,11 +10,11 @@ build:
 
 # Install Package
 package-install:
-	cd app && pip install -r requirements.txt
+	cd app && py -3.11 -m pip install -r requirements.txt
 
 # Uninstall Package
 package-uninstall:
-	cd app && pip uninstall -r requirements.txt -y
+	cd app && py -3.11 -m pip uninstall -r requirements.txt -y
 
 # Run the Docker container
 run:

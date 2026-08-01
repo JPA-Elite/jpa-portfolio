@@ -7,7 +7,7 @@ Flask + MongoDB portfolio app (server-rendered Jinja2, not SPA). Vite bundles JS
 ## Quick commands
 
 ```bash
-make package-install      # pip install -r app/requirements.txt
+make package-install      # py -3.11 -m pip install -r app/requirements.txt
 make start-build          # build frontend + run with dist assets
 npm run dev               # Vite dev server + Flask concurrently
 make start-local          # bare Flask (no Vite, no dist)

@@ -17,7 +17,7 @@ Languages: flask (python)
 
 ## INSTALL PACKAGE
 
-- `cd app && pip install -r requirements.txt` or run `make package-install`
+- `cd app && py -3.11 -m pip install -r requirements.txt` or run `make package-install`
 
 ## LANGUAGE TRANSLATION COMMANDS
 

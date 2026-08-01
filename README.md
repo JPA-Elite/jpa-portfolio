@@ -6,7 +6,9 @@ Languages: flask (python)
 
 ## CREATE A VIRTUAL ENVIRONMENT
 
-1. run command: `python -m venv .venv`
+> **Note:** Run the following commands in Windows Command Prompt (cmd).
+
+1. run command: `py -m venv .venv`
 2. run command: `.\.venv\Scripts\activate.bat`
 
 ## INSTALL PACKAGE

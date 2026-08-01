@@ -10,11 +10,11 @@ build:
 
 # Install Package
 package-install:
-	cd app && py -3.11 -m pip install -r requirements.txt
+	cd app && if exist ..\.venv\Scripts\python.exe (..\.venv\Scripts\python.exe -m pip install -r requirements.txt) else (py -3.11 -m pip install -r requirements.txt)
 
 # Uninstall Package
 package-uninstall:
-	cd app && py -3.11 -m pip uninstall -r requirements.txt -y
+	cd app && if exist ..\.venv\Scripts\python.exe (..\.venv\Scripts\python.exe -m pip uninstall -r requirements.txt -y) else (py -3.11 -m pip uninstall -r requirements.txt -y)
 
 # Run the Docker container
 run:

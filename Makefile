@@ -12,6 +12,10 @@ build:
 package-install:
 	cd app && pip install -r requirements.txt
 
+# Uninstall Package
+package-uninstall:
+	cd app && pip uninstall -r requirements.txt -y
+
 # Run the Docker container
 run:
 	docker run -d -p $(PORT):5000 --name $(APP_NAME) $(DOCKER_IMAGE)

@@ -18,7 +18,7 @@ body {
 main {
     display: grid;
     grid-template-columns: 1fr 2fr;
-    height: calc(100vh - 120px);
+    height: calc(100vh - 130px);
     /* Subtract combined height of navbar and player */
     min-height: 300px;
     position: relative;
@@ -1969,6 +1969,53 @@ ion-icon {
         width: 20px;
         height: 20px;
         right: -8px;
+    }
+}
+
+@media (min-width: 1101px) and (max-width: 1599px) {
+    .player {
+        height: auto;
+        min-height: 70px;
+    }
+
+    .player .left,
+    .player .center,
+    .player .right {
+        min-width: 0;
+        padding: 0 10px;
+    }
+
+    .player .left {
+        gap: 8px;
+    }
+
+    .player .controls {
+        gap: 6px;
+        justify-content: flex-end;
+        flex-wrap: wrap;
+    }
+
+    .player .volume-container {
+        gap: 6px;
+        margin-right: 0;
+    }
+
+    .player .volume-slider {
+        width: 60px;
+    }
+
+    .player .progress-container {
+        max-width: 300px;
+        gap: 8px;
+    }
+
+    .player .now-playing {
+        font-size: 14px;
+    }
+
+    .player .title-artist .title,
+    .player .title-artist .artist {
+        max-width: 140px;
     }
 }
 

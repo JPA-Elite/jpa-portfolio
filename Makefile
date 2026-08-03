@@ -49,7 +49,7 @@ start-local-dist:
 start-local-dist-cmd:
 	cmd /C "set FRONTEND_DIST=1 && set FRONTEND_DIST_TEMPLATES=1 && python -m app.app"
 
-start-build: build-frontend start-local-dist
+start-build: build-frontend start-local-dist-cmd
 
 dev:
 	npm run dev

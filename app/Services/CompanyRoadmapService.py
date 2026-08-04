@@ -225,7 +225,7 @@ class CompanyRoadmapService:
             CompanyRoadmap.from_dict({
                 "id": "cr-chronostep-intern",
                 "company_name": "Chronostep",
-                "role_title": "app Development Intern",
+                "role_title": "App Development Intern",
                 "period": "2023",
                 "employment_type": "Internship",
                 "location": "Cebu City",

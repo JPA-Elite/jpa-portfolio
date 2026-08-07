@@ -19,6 +19,7 @@ class AdminPageRequest(BaseRequest):
             username = str(form.get("username", "")).strip()
             password = form.get("password", "")
             remember = form.get("remember")
+            hcaptcha_response = form.get("h-captcha-response") or form.get("hcaptcha_token")
 
             if not username:
                 self._errors["username"] = "Username is required."
@@ -32,6 +33,7 @@ class AdminPageRequest(BaseRequest):
                 "username": username,
                 "password": password,
                 "remember": remember,
+                "h-captcha-response": hcaptcha_response,
             })
 
         return self._success_response({})

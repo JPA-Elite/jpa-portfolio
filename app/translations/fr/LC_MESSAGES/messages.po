@@ -231,6 +231,12 @@ msgstr "Je peux repondre aux questions suggerees ci-dessous. Essayez de selectio
 msgid "chat_question_prefix"
 msgstr "Q : "
 
+msgid "chat_mute_aria"
+msgstr "Couper le son de la voix"
+
+msgid "chat_unmute_aria"
+msgstr "Réactiver la voix"
+
 msgid "qa_name"
 msgstr "Quel est votre nom ?"
 

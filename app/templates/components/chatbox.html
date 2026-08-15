@@ -20,7 +20,12 @@
                     </span>
                 </div>
             </div>
-            <button class="chatbox-close" type="button" onclick="toggleChatbox()" aria-label="{{ _('chat_close_aria') }}">&times;</button>
+            <div class="chatbox-header-actions">
+                <button class="chatbox-mute-toggle" id="chatMuteToggle" type="button" onclick="toggleChatMute()" aria-label="{{ _('chat_mute_aria') }}" aria-pressed="false">
+                    <ion-icon name="volume-high-outline"></ion-icon>
+                </button>
+                <button class="chatbox-close" type="button" onclick="toggleChatbox()" aria-label="{{ _('chat_close_aria') }}">&times;</button>
+            </div>
         </div>
         <div class="chatbox-body">
             <div class="chatbox-help-card">
@@ -68,6 +73,8 @@
         greetingFallback: {{ _('chat_greeting_fallback') | tojson }},
         unknownFallback: {{ _('chat_unknown_fallback') | tojson }},
         questionPrefix: {{ _('chat_question_prefix') | tojson }},
+        muteAria: {{ _('chat_mute_aria') | tojson }},
+        unmuteAria: {{ _('chat_unmute_aria') | tojson }},
     };
 </script>
 <script src="{{ static_asset('js/components/chatbox.js') }}"></script>

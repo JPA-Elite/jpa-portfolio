@@ -50,9 +50,59 @@ const cacheMessage = 'chatMessagesCache';
 const cacheChatboxVisible = 'chatboxVisible';
 const cacheChatOptionsCollapsed = 'chatOptionsCollapsed';
 const BOT_TYPING_DELAY_MS = 320;
+const cacheChatMuted = 'chatMuted';
 const chatboxI18n = window.chatboxI18n || {};
 let chatQaDataCache = [];
 let typingIndicatorRow = null;
+let chatSpeech = null;
+let chatMuted = localStorage.getItem(cacheChatMuted) === 'true';
+
+function stopChatSpeech() {
+    if (!("speechSynthesis" in window)) return;
+    window.speechSynthesis.cancel();
+    chatSpeech = null;
+}
+
+function speakChatAnswer(text) {
+    if (!("speechSynthesis" in window) || chatMuted || !text) return;
+    window.speechSynthesis.cancel();
+    const speech = new SpeechSynthesisUtterance(text);
+    const language = typeof window.getVoiceLocale === "function"
+        ? window.getVoiceLocale(window.pageLocale || "en")
+        : "en-US";
+    const voices = window.speechSynthesis.getVoices();
+    const maleVoice = voices.find(
+        (voice) =>
+            voice.lang === language &&
+            (voice.name.toLowerCase().includes("male") || voice.gender === "male")
+    );
+    if (maleVoice) {
+        speech.voice = maleVoice;
+    } else {
+        speech.lang = language;
+    }
+    speech.pitch = 1;
+    speech.rate = 1;
+    speech.volume = 1;
+    chatSpeech = speech;
+    window.speechSynthesis.speak(speech);
+}
+
+function syncChatMuteToggle() {
+    const toggle = document.getElementById("chatMuteToggle");
+    if (!toggle) return;
+    const icon = toggle.querySelector("ion-icon");
+    if (icon) icon.setAttribute("name", chatMuted ? "volume-mute-outline" : "volume-high-outline");
+    toggle.setAttribute("aria-pressed", String(chatMuted));
+    toggle.setAttribute("aria-label", tChat(chatMuted ? "unmuteAria" : "muteAria", ""));
+}
+
+function toggleChatMute() {
+    chatMuted = !chatMuted;
+    localStorage.setItem(cacheChatMuted, String(chatMuted));
+    if (chatMuted) stopChatSpeech();
+    syncChatMuteToggle();
+}
 
 function tChat(key, fallback = "") {
     const value = chatboxI18n[key];
@@ -209,6 +259,7 @@ function toggleChatbox() {
         const isVisible = modal.style.display === "flex";
         modal.style.display = isVisible ? "none" : "flex";
         localStorage.setItem(cacheChatboxVisible, !isVisible);
+        if (isVisible) stopChatSpeech();
     }
 }
 
@@ -228,6 +279,7 @@ async function sendMessage() {
         const answer = getAutomaticAnswerSmart(message, chatQaDataCache);
         if (answer) {
             showTypingIndicator();
+            speakChatAnswer(answer);
             await wait(BOT_TYPING_DELAY_MS);
             removeTypingIndicator();
             const botTimestamp = Date.now();
@@ -248,6 +300,7 @@ async function sendPredefinedMessage(question, data = []) {
     cacheMessages(question, "user", userTimestamp);
 
     showTypingIndicator();
+    speakChatAnswer(answer);
     await wait(BOT_TYPING_DELAY_MS);
     removeTypingIndicator();
 
@@ -413,6 +466,7 @@ function loadCachedChat(qaArray = []) {
 function clearChat() {
     localStorage.removeItem(cacheMessage);
     removeTypingIndicator();
+    stopChatSpeech();
     const chatMessages = document.getElementById("chatMessages");
     if (chatMessages) {
         chatMessages.innerHTML = '';
@@ -445,4 +499,5 @@ window.onload = async () => {
     hideTripleLoading?.();
     chatBoxHeader.style.display = 'flex';
     chatBoxBody.style.display = 'flex';
+    syncChatMuteToggle();
 };

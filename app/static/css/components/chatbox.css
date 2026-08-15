@@ -236,6 +236,42 @@
     flex-shrink: 0;
 }
 
+.chatbox-header-actions {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    flex-shrink: 0;
+}
+
+.chatbox-mute-toggle {
+    width: 32px;
+    height: 32px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid transparent;
+    border-radius: 10px;
+    background: transparent;
+    color: var(--chat-muted);
+    font-size: 1.05rem;
+    line-height: 1;
+    cursor: pointer;
+    transition: background-color 0.16s ease, color 0.16s ease, border-color 0.16s ease;
+    flex-shrink: 0;
+}
+
+.chatbox-mute-toggle:hover {
+    background: rgba(255, 255, 255, 0.06);
+    color: var(--chat-text);
+    border-color: var(--chat-border);
+}
+
+.chatbox-mute-toggle[aria-pressed="true"] {
+    color: var(--chat-accent);
+    border-color: color-mix(in srgb, var(--chat-accent) 35%, transparent);
+    background: color-mix(in srgb, var(--chat-accent) 14%, transparent);
+}
+
 .chatbox-close:hover {
     background: rgba(255, 255, 255, 0.06);
     color: var(--chat-text);
@@ -726,6 +762,7 @@
     .chatbox-icon,
     .chatbox-launch-btn,
     .chatbox-close,
+    .chatbox-mute-toggle,
     .chat-options button,
     .chatbox-send,
     #clearChat {

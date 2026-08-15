@@ -237,6 +237,12 @@ msgstr "I can answer the suggested questions below. Try selecting one of the qui
 msgid "chat_question_prefix"
 msgstr "Q: "
 
+msgid "chat_mute_aria"
+msgstr "Mute voice"
+
+msgid "chat_unmute_aria"
+msgstr "Unmute voice"
+
 msgid "qa_name"
 msgstr "What is your name?"
 

@@ -237,6 +237,12 @@ msgstr "Nasasagot ko ang mga mungkahing tanong sa ibaba. Subukan mong pumili ng 
 msgid "chat_question_prefix"
 msgstr "T: "
 
+msgid "chat_mute_aria"
+msgstr "I-mute ang boses"
+
+msgid "chat_unmute_aria"
+msgstr "I-unmute ang boses"
+
 msgid "qa_name"
 msgstr "Ano ang pangalan mo?"
 

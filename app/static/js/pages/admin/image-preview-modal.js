@@ -116,6 +116,10 @@ if (!window.__admin_image_preview_modal_loaded__) {
                 #adminImagePreviewModal.ipm-standalone .modal-body img {
                     max-height: calc(75vh - 80px) !important;
                 }
+                #adminImagePreviewModal.ipm-standalone .preview-header-btn {
+                    font-size: 24px;
+                    padding: 8px 12px;
+                }
             }
         `;
 

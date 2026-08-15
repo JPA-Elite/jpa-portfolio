@@ -311,8 +311,19 @@
 
 @media (max-width: 480px) {
     .avatar-presets {
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: repeat(3, 64px);
+        justify-content: center;
         gap: 10px;
+    }
+
+    .avatar-presets__item {
+        width: 64px;
+        height: 64px;
+    }
+
+    .avatar-presets__item img {
+        width: 64px;
+        height: 64px;
     }
 }
 

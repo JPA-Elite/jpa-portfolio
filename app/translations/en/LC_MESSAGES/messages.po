@@ -542,6 +542,126 @@ msgstr "You"
 msgid "Modal_Project_Preview"
 msgstr "Project Preview"
 
+msgid "Modal_Edit_Name_Title"
+msgstr "Edit Display Name"
+
+msgid "Modal_Edit_Name_Placeholder"
+msgstr "Enter your display name"
+
+msgid "Modal_Edit_Name_Save"
+msgstr "Save"
+
+msgid "Modal_Edit_Name_Aria"
+msgstr "Edit name"
+
+msgid "Modal_Edit_Name_Limit"
+msgstr "You have reached the daily limit of 20 name changes. Try again tomorrow."
+
+msgid "Modal_Edit_Name_Hint_One"
+msgstr "You can change your name 1 more time today."
+
+msgid "Modal_Edit_Name_Hint_Many"
+msgstr "You can change your name {remaining} more times today."
+
+msgid "Modal_Edit_Name_Required"
+msgstr "Please enter a display name."
+
+msgid "Modal_Edit_Name_Error"
+msgstr "Failed to save your name. Please try again."
+
+msgid "Modal_Edit_Name_Saved"
+msgstr "Name updated successfully."
+
+msgid "Modal_Edit_Profile_Title"
+msgstr "Edit Profile"
+
+msgid "Modal_Edit_Profile_Aria"
+msgstr "Edit profile"
+
+msgid "Modal_Avatar_Label"
+msgstr "Avatar"
+
+msgid "Modal_Avatar_Upload"
+msgstr "Upload photo"
+
+msgid "Modal_Avatar_Remove"
+msgstr "Remove photo"
+
+msgid "Modal_Avatar_Upload_Limit"
+msgstr "Max 2MB. Photos are compressed automatically."
+
+msgid "Modal_Danger_Zone"
+msgstr "Danger Zone"
+
+msgid "Modal_Delete_Comment"
+msgstr "Delete this comment"
+
+msgid "Modal_Delete_All_Comments"
+msgstr "Delete all my comments here"
+
+msgid "Modal_View_Avatar_Aria"
+msgstr "View avatar"
+
+msgid "Modal_Avatar_Too_Large"
+msgstr "Image must be 2MB or smaller."
+
+msgid "Modal_Avatar_Limit"
+msgstr "You have reached the daily limit of 20 avatar changes. Try again tomorrow."
+
+msgid "Modal_Avatar_Hint_One"
+msgstr "You can change your avatar 1 more time today."
+
+msgid "Modal_Avatar_Hint_Many"
+msgstr "You can change your avatar {remaining} more times today."
+
+msgid "Modal_Avatar_Saved"
+msgstr "Avatar updated successfully."
+
+msgid "Modal_Avatar_Upload_Error"
+msgstr "Failed to update avatar. Please try again."
+
+msgid "Modal_Avatar_Removed"
+msgstr "Avatar removed."
+
+msgid "Modal_Avatar_Remove_Confirm"
+msgstr "Remove your avatar?"
+
+msgid "Modal_Avatar_Remove_Confirm_Desc"
+msgstr "Your photo avatar will be removed and replaced with the default avatar."
+
+msgid "Action_Confirm"
+msgstr "Confirm"
+
+msgid "Action_Cancel"
+msgstr "Cancel"
+
+msgid "Modal_Remove_Comment_Label"
+msgstr "remove"
+
+msgid "Modal_Delete_Comment_Title"
+msgstr "Delete comment"
+
+msgid "Modal_Delete_Comment_Msg"
+msgstr "Delete this comment? This cannot be undone."
+
+msgid "Modal_Delete_All_Title"
+msgstr "Delete all my comments"
+
+msgid "Modal_Delete_All_Msg"
+msgstr "Delete all your comments on this content? This cannot be undone."
+
+msgid "Modal_Comment_Deleted"
+msgstr "Comment deleted."
+
+msgid "Modal_Comments_Deleted"
+msgstr "All your comments were deleted."
+
+msgid "Modal_Delete_Error"
+msgstr "Failed to delete. Please try again."
+
+msgid "Modal_Cancel"
+msgstr "Cancel"
+
 msgid "Career_Journey"
 msgstr "Career Journey"
 

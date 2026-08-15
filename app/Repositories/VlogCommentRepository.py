@@ -58,3 +58,10 @@ class VlogCommentRepository(IVlogCommentRepository, BaseRepository):
             {"_id": ObjectId(comment["_id"])},
             {"$set": comment}
         )
+
+    def delete_by_id(self, comment_id: str):
+        return self.delete_one({"_id": ObjectId(comment_id)})
+
+    def delete_all_by_content_and_ip(self, content_key: str, content_id: str, ip_address: str):
+        result = self.delete_many({content_key: content_id, "ip_address": ip_address})
+        return result.deleted_count

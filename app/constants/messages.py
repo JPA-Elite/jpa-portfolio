@@ -38,11 +38,19 @@ VIDEO_UPDATE_MSG = "Video updated successfully"
 VIDEO_UPDATE_FAILED_ERROR = "Failed to update video"
 VIDEO_DELETE_MSG = "Video deleted successfully"
 VIDEO_NOT_FOUND_ERROR = "Video not found"
-VIDEO_LIKE_TOGGLE_MSG = "Video like toggled successfully"
-
-
-# Comment Messages
+VIDEO_LIKE_TOGGLE_MSG = "Video like toggled successfully"# Comment Messages
 COMMENT_NOT_FOUND_ERROR = "Comment not found"
+COMMENT_DELETE_SUCCESS = "Comment deleted successfully"
+COMMENT_DELETE_FORBIDDEN = "You can only delete your own comments"
+COMMENT_DELETE_ALL_SUCCESS = "All your comments were deleted successfully"
+COMMENT_AVATAR_UPLOAD_SUCCESS = "Avatar updated successfully"
+AVATAR_CHANGE_LIMIT_ERROR = "You have reached the daily limit of 20 avatar changes. Please try again tomorrow."
+COMMENT_AVATAR_UPLOAD_ERROR = "Failed to upload avatar"
+COMMENT_AVATAR_INVALID_ERROR = "Invalid avatar selection"
+COMMENT_AVATAR_SIZE_ERROR = "Avatar image must be 2MB or smaller after compression"
+COMMENT_AVATAR_TYPE_ERROR = "Unsupported image type. Use PNG, JPG, WEBP, or GIF."
+COMMENT_AVATAR_REQUIRED_ERROR = "Avatar file is required"
+NAME_CHANGE_LIMIT_ERROR = "You have reached the daily limit of 20 name changes. Please try again tomorrow."
 
 # User / Profile Messages
 USER_NOT_FOUND_ERROR = "User not found"

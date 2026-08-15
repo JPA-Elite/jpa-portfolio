@@ -136,6 +136,31 @@ def convert_to_webp(input_path: str, quality: int = 80) -> str:
     return webp_path
 
 
+def compress_avatar_image(input_path: str, max_dimension: int = 256, max_bytes: int = 2 * 1024 * 1024) -> str:
+    webp_path = os.path.splitext(input_path)[0] + ".webp"
+
+    with Image.open(input_path) as img:
+        img = ImageOps.exif_transpose(img)
+        if img.mode in ("RGBA", "P"):
+            img = img.convert("RGB")
+
+        scale = min(1.0, max_dimension / max(img.width, img.height))
+        if scale < 1.0:
+            new_size = (
+                max(1, round(img.width * scale)),
+                max(1, round(img.height * scale)),
+            )
+            img = img.resize(new_size, Image.LANCZOS)
+
+        quality = 85
+        img.save(webp_path, "WEBP", quality=quality, method=6)
+        while os.path.getsize(webp_path) > max_bytes and quality > 25:
+            quality -= 15
+            img.save(webp_path, "WEBP", quality=quality, method=6)
+
+    return webp_path
+
+
 def convert_video(input_path: str, crf: int = 30, bitrate: str = "1M") -> str:
     input_path = str(pathlib.Path(input_path).resolve())
 

@@ -1,4 +1,3 @@
-from app.Controllers.api.VlogCommentController import vlog_comments_route, vlog_like_comment_route
 from app.Controllers.api.VlogLikeController import (
     add_vlog_like_route,
     get_vlog_likes_count_route,
@@ -40,7 +39,20 @@ from app.Controllers.api.MusicLikeController import (
 from app.Controllers.api.DashboardController import visits_info_route, recent_activity_route, dashboard_summary_route, visits_list_route, visits_delete_route, recent_activity_delete_route, clear_all_visitors_route, clear_all_activity_route
 from app.Repositories.ActivityLogRepository import ActivityLogRepository
 from app.Controllers.api.LoginAttemptController import login_attempt_list_route, delete_login_attempt_route
-from app.Controllers.api.GalleryCommentController import gallery_comments_route, gallery_like_comment_route
+from app.Controllers.api.GalleryCommentController import (
+    gallery_comments_route,
+    gallery_delete_all_comments_route,
+    gallery_delete_comment_route,
+    gallery_like_comment_route,
+)
+from app.Controllers.api.VlogCommentController import (
+    vlog_comments_route,
+    vlog_delete_all_comments_route,
+    vlog_delete_comment_route,
+    vlog_like_comment_route,
+)
+from app.Controllers.api.CommentAvatarController import comment_avatar_route, comment_avatar_upload_route
+from app.Controllers.api.UserDisplayNameController import comment_username_route
 from app.auth.middleware import admin_login_required
 from app.Controllers.api.AuthController import update_profile_route
 from app.Controllers.api.AdminFaceController import (
@@ -181,6 +193,37 @@ def vlog_comments():
 @api_bp.route("/api/vlog-comments/like", methods=[http.POST])
 def vlog_like_comment():
     return vlog_like_comment_route()
+
+@api_bp.route("/api/vlog-comments/delete-all", methods=[http.DELETE])
+def vlog_delete_all_comments():
+    return vlog_delete_all_comments_route()
+
+@api_bp.route("/api/vlog-comments/<comment_id>", methods=[http.DELETE])
+def vlog_delete_comment(comment_id):
+    return vlog_delete_comment_route(comment_id)
+
+# Gallery Comments API
+@api_bp.route("/api/gallery-comments/delete-all", methods=[http.DELETE])
+def gallery_delete_all_comments():
+    return gallery_delete_all_comments_route()
+
+@api_bp.route("/api/gallery-comments/<comment_id>", methods=[http.DELETE])
+def gallery_delete_comment(comment_id):
+    return gallery_delete_comment_route(comment_id)
+
+# Comment Username API
+@api_bp.route("/api/comment-username", methods=[http.GET, http.POST])
+def comment_username():
+    return comment_username_route()
+
+# Comment Avatar API
+@api_bp.route("/api/comment-avatar", methods=[http.GET, http.POST, http.DELETE])
+def comment_avatar():
+    return comment_avatar_route()
+
+@api_bp.route("/api/comment-avatar/upload", methods=[http.POST])
+def comment_avatar_upload():
+    return comment_avatar_upload_route()
 
 
 # ************************** Administroller API ********************************

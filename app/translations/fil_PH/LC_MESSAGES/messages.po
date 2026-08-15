@@ -542,6 +542,126 @@ msgstr "Ikaw"
 msgid "Modal_Project_Preview"
 msgstr "Project Preview"
 
+msgid "Modal_Edit_Name_Title"
+msgstr "I-edit ang Display Name"
+
+msgid "Modal_Edit_Name_Placeholder"
+msgstr "Ilagay ang iyong display name"
+
+msgid "Modal_Edit_Name_Save"
+msgstr "I-save"
+
+msgid "Modal_Edit_Name_Aria"
+msgstr "I-edit ang pangalan"
+
+msgid "Modal_Edit_Name_Limit"
+msgstr "Naabot mo na ang pang-araw-araw na limitasyon ng 20 pagpapalit ng pangalan. Subukan muli bukas."
+
+msgid "Modal_Edit_Name_Hint_One"
+msgstr "Maaari mong baguhin ang iyong pangalan nang 1 beses pa ngayong araw."
+
+msgid "Modal_Edit_Name_Hint_Many"
+msgstr "Maaari mong baguhin ang iyong pangalan nang {remaining} beses pa ngayong araw."
+
+msgid "Modal_Edit_Name_Required"
+msgstr "Mangyaring ilagay ang iyong display name."
+
+msgid "Modal_Edit_Name_Error"
+msgstr "Nabigo ang pag-save ng iyong pangalan. Subukan muli."
+
+msgid "Modal_Edit_Name_Saved"
+msgstr "Matagumpay na na-update ang iyong pangalan."
+
+msgid "Modal_Edit_Profile_Title"
+msgstr "I-edit ang Profile"
+
+msgid "Modal_Edit_Profile_Aria"
+msgstr "I-edit ang profile"
+
+msgid "Modal_Avatar_Label"
+msgstr "Avatar"
+
+msgid "Modal_Avatar_Upload"
+msgstr "Mag-upload ng larawan"
+
+msgid "Modal_Avatar_Remove"
+msgstr "Alisin ang larawan"
+
+msgid "Modal_Avatar_Upload_Limit"
+msgstr "Max 2MB. Awtomatikong nagko-compress ng mga larawan."
+
+msgid "Modal_Danger_Zone"
+msgstr "Danger Zone"
+
+msgid "Modal_Delete_Comment"
+msgstr "Tanggalin ang komentong ito"
+
+msgid "Modal_Delete_All_Comments"
+msgstr "Tanggalin ang lahat ng komento ko dito"
+
+msgid "Modal_View_Avatar_Aria"
+msgstr "Tingnan ang avatar"
+
+msgid "Modal_Avatar_Too_Large"
+msgstr "Ang larawan ay dapat 2MB o mas maliit."
+
+msgid "Modal_Avatar_Limit"
+msgstr "Naabot mo na ang araw-araw na limit ng 20 pagbabago ng avatar. Subukan muli bukas."
+
+msgid "Modal_Avatar_Hint_One"
+msgstr "Maaari mong baguhin ang iyong avatar nang 1 beses pa ngayong araw."
+
+msgid "Modal_Avatar_Hint_Many"
+msgstr "Maaari mong baguhin ang iyong avatar nang {remaining} beses pa ngayong araw."
+
+msgid "Modal_Avatar_Saved"
+msgstr "Matagumpay na na-update ang avatar."
+
+msgid "Modal_Avatar_Upload_Error"
+msgstr "Hindi na-update ang avatar. Subukan muli."
+
+msgid "Modal_Avatar_Removed"
+msgstr "Naalis na ang avatar."
+
+msgid "Modal_Avatar_Remove_Confirm"
+msgstr "Alisin ang iyong avatar?"
+
+msgid "Modal_Avatar_Remove_Confirm_Desc"
+msgstr "Tatanggalin ang iyong larawang avatar at papalitan ng default na avatar."
+
+msgid "Action_Confirm"
+msgstr "Kumpirmahin"
+
+msgid "Action_Cancel"
+msgstr "Kanselahin"
+
+msgid "Modal_Remove_Comment_Label"
+msgstr "tanggalin"
+
+msgid "Modal_Delete_Comment_Title"
+msgstr "Tanggalin ang komento"
+
+msgid "Modal_Delete_Comment_Msg"
+msgstr "Tanggalin ang komentong ito? Hindi na ito maaaring maibalik."
+
+msgid "Modal_Delete_All_Title"
+msgstr "Tanggalin ang lahat ng komento ko"
+
+msgid "Modal_Delete_All_Msg"
+msgstr "Tanggalin ang lahat ng komento mo sa content na ito? Hindi na ito maaaring maibalik."
+
+msgid "Modal_Comment_Deleted"
+msgstr "Naalis na ang komento."
+
+msgid "Modal_Comments_Deleted"
+msgstr "Naalis na ang lahat ng komento mo."
+
+msgid "Modal_Delete_Error"
+msgstr "Hindi na-delete. Subukan muli."
+
+msgid "Modal_Cancel"
+msgstr "Kanselahin"
+
 msgid "Career_Journey"
 msgstr "Career Journey"
 

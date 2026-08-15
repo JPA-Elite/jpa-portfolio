@@ -272,6 +272,14 @@ def tl_locale():
 def inject_now():
     return dict(now=datetime.now())
 
+@app.context_processor
+def inject_preset_avatars():
+    from app.constants.avatars import DEFAULT_AVATAR_URL, PRESET_AVATARS
+    return dict(
+        default_avatar_url=DEFAULT_AVATAR_URL,
+        preset_avatars=PRESET_AVATARS,
+    )
+
 @app.errorhandler(404)
 def not_found(error):
     return render_template(ERROR_404_PAGE, title="Not Found", error=error), 404

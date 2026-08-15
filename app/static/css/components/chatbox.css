@@ -253,7 +253,10 @@
     background:
         linear-gradient(180deg, rgba(255, 255, 255, 0.01), transparent 35%),
         transparent;
-    overflow: hidden;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
 }
 
 .chatbox-help-card {
@@ -261,6 +264,7 @@
     border-radius: 12px;
     padding: 10px 12px;
     background: color-mix(in srgb, var(--chat-surface-2) 86%, transparent);
+    flex-shrink: 0;
 }
 
 .chatbox-help {
@@ -299,6 +303,7 @@
     display: grid;
     gap: 4px;
     align-content: start;
+    min-width: 0;
 }
 
 .chat-message-row.is-user {
@@ -338,8 +343,10 @@
     margin: 0;
     line-height: 1.45;
     word-wrap: break-word;
+    overflow-wrap: anywhere;
     border: 1px solid transparent;
     max-width: 92%;
+    min-width: 0;
 }
 
 .chat-message-header {
@@ -402,6 +409,8 @@
     display: grid;
     gap: 8px;
     min-height: 0;
+    flex-shrink: 0;
+    overflow: hidden;
 }
 
 .chat-options-toggle {
@@ -429,6 +438,7 @@
     min-width: 0;
     font-size: 0.8rem;
     font-weight: 700;
+    overflow-wrap: anywhere;
 }
 
 .chat-options-toggle__count {
@@ -486,6 +496,8 @@
     line-height: 1.25;
     min-height: 48px;
     font-weight: 600;
+    white-space: normal;
+    overflow-wrap: anywhere;
 }
 
 .chat-options button:hover {
@@ -643,12 +655,6 @@
 
     .chat-options.grid {
         grid-template-columns: 1fr;
-        max-height: min(180px, 28vh);
-        overflow-y: auto;
-        overscroll-behavior: contain;
-        -webkit-overflow-scrolling: touch;
-        touch-action: pan-y;
-        padding-right: 4px;
     }
 
     .chatbox-composer {
@@ -691,15 +697,6 @@
 
     .chatbox-send {
         min-height: 40px;
-    }
-
-    .chat-options.grid {
-        max-height: min(220px, 30vh);
-        overflow-y: auto;
-        overscroll-behavior: contain;
-        -webkit-overflow-scrolling: touch;
-        touch-action: pan-y;
-        padding-right: 4px;
     }
 }
 

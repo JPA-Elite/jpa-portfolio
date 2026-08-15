@@ -469,6 +469,8 @@ if (!window.__modal_js_loaded__) {
     function clearCommentsUrl() {
         try {
             const url = new URL(window.location.href);
+            url.searchParams.delete(window.idType || "vlog_id");
+            url.searchParams.delete("gallery_id");
             url.hash = "";
             window.history.replaceState(null, "", url.toString());
         } catch (err) {

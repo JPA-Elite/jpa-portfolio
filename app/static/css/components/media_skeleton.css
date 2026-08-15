@@ -1,0 +1,32 @@
+.media-skeleton {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0.04) 25%, rgba(255, 255, 255, 0.12) 50%, rgba(255, 255, 255, 0.04) 75%);
+    background-size: 200% 100%;
+    animation: media-skeleton-shimmer 1.3s ease-in-out infinite;
+    will-change: background-position;
+}
+
+.media-skeleton.is-hidden {
+    animation: none;
+    opacity: 0;
+    transition: opacity 0.35s ease;
+}
+
+@keyframes media-skeleton-shimmer {
+    0% {
+        background-position: 200% 0;
+    }
+
+    100% {
+        background-position: -200% 0;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .media-skeleton {
+        animation: none;
+    }
+}

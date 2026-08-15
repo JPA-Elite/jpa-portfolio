@@ -766,10 +766,11 @@ if (!window.__modal_js_loaded__) {
 
         const avatarImg = div.querySelector(".comment-avatar");
         avatarImg?.addEventListener("click", () => {
+            const currentAvatarSrc = avatarImg.src || avatarUrl || DEFAULT_AVATAR;
             if (typeof window.openAdminImagePreview === "function") {
-                window.openAdminImagePreview(avatarUrl, comment.author_name);
+                window.openAdminImagePreview(currentAvatarSrc, comment.author_name);
             } else {
-                openModal(avatarUrl, comment.author_name, "", ModalType.IMAGE, true, currentSelectedId);
+                openModal(currentAvatarSrc, comment.author_name, "", ModalType.IMAGE, true, currentSelectedId);
             }
         });
 

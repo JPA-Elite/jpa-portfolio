@@ -12,6 +12,7 @@ endblock %}
 {% block content %}
 <!-- Link to the external CSS file for the vlog -->
 <link rel="stylesheet" href="{{ static_asset('css/pages/vlog.css') }}" />
+<link rel="stylesheet" href="{{ static_asset('css/components/media_skeleton.css') }}" />
 <link rel="stylesheet" href="{{ static_asset('css/plyr/plyr.css') }}" />
 <script src="{{ static_asset('js/plyr/plyr.js') }}"></script>
 <div class="vlog-search-shell">
@@ -48,6 +49,7 @@ endblock %}
         <article class="video-item" data-vlog-id="{{ vlog._id }}">
             {% set video_src = url_for('static', filename=vlog.file) if vlog.file else vlog.video_url %}
             <div class="video-frame">
+                <div class="media-skeleton" aria-hidden="true"></div>
                 <video class="player" playsinline controls preload="metadata">
                     <source src="{{ video_src }}" type="video/mp4">
                 </video>

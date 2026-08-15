@@ -96,7 +96,7 @@ def get_cache_data(func_name, args=None, timeout=None, default=None):
         cache.set(cache_key, default, timeout=timeout)
         cached_data = default
 
-    return cached_data, cache_key
+    return cached_data, cache_key 
 
 
 def clear_cache_by_prefix(prefix: str):

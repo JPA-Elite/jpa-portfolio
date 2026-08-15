@@ -1084,6 +1084,10 @@
         width: 50%;
         margin: auto;
     }
+
+    .comment-header-edit-btn {
+        display: none;
+    }
 }
 
 @media only screen and (max-width: 480px) {

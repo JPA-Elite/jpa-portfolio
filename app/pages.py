@@ -20,17 +20,17 @@ def profile():
     return portfolio_redirect()
 
 @pages_bp.route("/portfolio", methods=[http.GET])
-@cache.cached(key_prefix=lambda: f"portfolio_ui_v10_{get_locale()}_{request.query_string.decode()}")
+@cache.cached(key_prefix=lambda: f"portfolio_{get_locale()}_{request.query_string.decode()}")
 def portfolio():
     return profile_route()
 
 @pages_bp.route("/gallery", methods=[http.GET])
-@cache.cached(key_prefix=lambda: f"gallery_ui_v34_{get_locale()}_{request.query_string.decode()}")
+@cache.cached(key_prefix=lambda: f"gallery_{get_locale()}_{request.query_string.decode()}")
 def gallery():
     return gallery_route()
 
 @pages_bp.route("/vlog", methods=[http.GET])
-@cache.cached(key_prefix=lambda: f"vlog_ui_v37_{get_locale()}_{request.query_string.decode()}")
+@cache.cached(key_prefix=lambda: f"vlog_{get_locale()}_{request.query_string.decode()}")
 def vlog():
     return vlog_route()
 

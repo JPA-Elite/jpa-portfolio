@@ -48,7 +48,7 @@ endblock %}
         <article class="video-item" data-vlog-id="{{ vlog._id }}">
             {% set video_src = url_for('static', filename=vlog.file) if vlog.file else vlog.video_url %}
             <div class="video-frame">
-                <video class="player" playsinline controls preload="{% if loop.first %}metadata{% else %}none{% endif %}">
+                <video class="player" playsinline controls preload="metadata">
                     <source src="{{ video_src }}" type="video/mp4">
                 </video>
                 <div class="video-frame__overlay">

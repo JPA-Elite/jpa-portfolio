@@ -931,6 +931,10 @@
         display: inline-flex;
     }
 
+    .comment-panel-toggle ion-icon {
+        font-size: 18px;
+    }
+
     .comment-panel-toggle[aria-expanded="true"] ion-icon {
         transform: rotate(180deg);
     }
@@ -1102,8 +1106,12 @@
     }
 
     .comment-panel-toggle {
-        padding: 5px 9px;
-        font-size: 0.72rem;
+        padding: 6px 10px;
+        font-size: 0.75rem;
+    }
+
+    .comment-panel-toggle ion-icon {
+        font-size: 20px;
     }
 
     .image-modal-nav {

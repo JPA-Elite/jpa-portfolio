@@ -280,6 +280,12 @@ def inject_preset_avatars():
         preset_avatars=PRESET_AVATARS,
     )
 
+
+@app.context_processor
+def inject_profile_image():
+    from app.configurations import PROFILE_IMAGE
+    return dict(profile_image=PROFILE_IMAGE)
+
 @app.errorhandler(404)
 def not_found(error):
     return render_template(ERROR_404_PAGE, title="Not Found", error=error), 404

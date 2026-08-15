@@ -11,6 +11,7 @@ endblock %}
 {% block content %}
 <!-- Link to the external CSS file for the gallery -->
 <link rel="stylesheet" href="{{ static_asset('css/pages/gallery.css') }}" />
+<link rel="stylesheet" href="{{ static_asset('css/components/media_skeleton.css') }}" />
 <div class="gallery-search-shell">
     {% include 'components/searchbar.html' %}
 </div>
@@ -44,6 +45,7 @@ endblock %}
             {% set item_description = item.description.get(get_locale(), item.description.get('en', '')) %}
             <article class="gallery-item" data-gallery-id="{{ item._id }}">
                 <div class="gallery-frame">
+                    <div class="media-skeleton" aria-hidden="true"></div>
                     <img src="{{ item.image_url if item.image_url is defined else image_path ~ item.image_name }}" alt="{{ item_title }}"
                         class="gallery-image"
                         loading="{% if loop.index <= 3 %}eager{% else %}lazy{% endif %}"

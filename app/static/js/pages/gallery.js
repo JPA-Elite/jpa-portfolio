@@ -250,6 +250,29 @@ async function bootstrapGalleryCounts() {
     }
 }
 
+function hideMediaSkeleton(skeleton) {
+    if (!skeleton || skeleton.classList.contains("is-hidden")) return;
+    skeleton.classList.add("is-hidden");
+    setTimeout(() => skeleton.remove(), 400);
+}
+
+function setupMediaSkeletons() {
+    document.querySelectorAll(".gallery-frame").forEach(frame => {
+        const skeleton = frame.querySelector(".media-skeleton");
+        const img = frame.querySelector(".gallery-image");
+        if (!skeleton || !img) return;
+
+        if (img.complete && img.naturalWidth > 0) {
+            hideMediaSkeleton(skeleton);
+            return;
+        }
+
+        const hide = () => hideMediaSkeleton(skeleton);
+        img.addEventListener("load", hide);
+        img.addEventListener("error", hide);
+    });
+}
+
 function optimizeGalleryRendering() {
     const cards = document.querySelectorAll(".gallery-item");
     if (!cards.length) return;
@@ -272,6 +295,7 @@ function optimizeGalleryRendering() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+    setupMediaSkeletons();
     optimizeGalleryRendering();
     bootstrapGalleryCounts();
 });

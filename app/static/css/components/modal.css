@@ -68,6 +68,27 @@
     background: #000;
 }
 
+#modalVideo:fullscreen,
+#modalVideo:-webkit-full-screen {
+    max-width: 100% !important;
+    max-height: 100% !important;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    border-radius: 0;
+    background: #000;
+}
+
+.plyr:fullscreen #modalVideo,
+.plyr:-webkit-full-screen #modalVideo,
+.plyr--fullscreen-fallback #modalVideo {
+    max-width: 100% !important;
+    max-height: 100% !important;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
 .close {
     position: fixed;
     top: 10px;

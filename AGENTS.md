@@ -61,3 +61,5 @@ Routes (pages.py / api.py) → Controllers (Controllers/web, Controllers/api)
 - `Music.CATEGORIES` is a fixed list in the model.
 - Do not rename DB collection names or table names.
 - Mobile responsiveness required for all new pages.
+- **Never modify the cache key_prefix names in `app/pages.py`** (e.g. `portfolio_ui_v10_{get_locale()}...`, `vlog_ui_v37_...`, `gallery_ui_v34_...`). Keep the version numbers/names exactly as they are.
+- **Never build the frontend** (`npm run build:frontend` / `make start-build`) to save time — edit source files only.

@@ -345,6 +345,10 @@
     {% endif %}
     <!-- Include the modal component -->
     {% include 'components/modal.html' %}
+    <!-- Include the display name edit modal component -->
+    {% include 'components/name_edit_modal.html' %}
+    <!-- Include the confirm modal component -->
+    {% include 'components/confirm_modal.html' %}
     {% if request.args.get('mode') != 'professional' %}
         <!-- Include the chatbox component -->
         {% include 'components/chatbox.html' %}
@@ -358,6 +362,7 @@
     </script>
     <script src="{{ static_asset('js/components/toast.js') }}"></script>
     <script src="{{ static_asset('js/pages/base.js') }}"></script>
+    <script src="{{ static_asset('js/pages/admin/image-preview-modal.js') }}"></script>
     {% block modal_script %}
         <script src="{{ static_asset('js/components/modal.js') }}"></script>
     {% endblock %}

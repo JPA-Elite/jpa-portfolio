@@ -1,6 +1,6 @@
 .toast-host {
     position: fixed;
-    z-index: 2000;
+    z-index: 20000;
     display: flex;
     flex-direction: column;
     gap: 12px;

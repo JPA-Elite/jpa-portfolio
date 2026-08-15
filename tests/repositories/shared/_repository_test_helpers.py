@@ -75,6 +75,15 @@ def _assert_repository_method_contract(testcase, class_name: str, method_name: s
     if class_name == "PortfolioRepository" and method_name.startswith("insert_"):
         testcase.assertTrue(hasattr(result, "inserted_id"))
         return
+    if class_name == "UserDisplayNameRepository" and method_name in {"upsert_display_name", "upsert_avatar"}:
+        testcase.assertTrue(hasattr(result, "matched_count"))
+        return
+    if class_name in {"GalleryCommentRepository", "VlogCommentRepository"} and method_name == "delete_by_id":
+        testcase.assertTrue(hasattr(result, "deleted_count"))
+        return
+    if class_name in {"GalleryCommentRepository", "VlogCommentRepository"} and method_name == "delete_all_by_content_and_ip":
+        testcase.assertIsInstance(result, int)
+        return
     if class_name == "VisitRepository" and method_name == "delete_system_info_by_id":
         testcase.assertIsNone(result)
         return

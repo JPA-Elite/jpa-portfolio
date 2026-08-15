@@ -439,6 +439,126 @@ msgstr "You"
 msgid "Modal_Project_Preview"
 msgstr "Project Preview"
 
+msgid "Modal_Edit_Name_Title"
+msgstr "Modifier le nom d'affichage"
+
+msgid "Modal_Edit_Name_Placeholder"
+msgstr "Entrez votre nom d'affichage"
+
+msgid "Modal_Edit_Name_Save"
+msgstr "Enregistrer"
+
+msgid "Modal_Edit_Name_Aria"
+msgstr "Modifier le nom"
+
+msgid "Modal_Edit_Name_Limit"
+msgstr "Vous avez atteint la limite quotidienne de 20 modifications de nom. Réessayez demain."
+
+msgid "Modal_Edit_Name_Hint_One"
+msgstr "Vous pouvez modifier votre nom 1 fois de plus aujourd'hui."
+
+msgid "Modal_Edit_Name_Hint_Many"
+msgstr "Vous pouvez modifier votre nom {remaining} fois de plus aujourd'hui."
+
+msgid "Modal_Edit_Name_Required"
+msgstr "Veuillez saisir un nom d'affichage."
+
+msgid "Modal_Edit_Name_Error"
+msgstr "Échec de l'enregistrement du nom. Réessayez."
+
+msgid "Modal_Edit_Name_Saved"
+msgstr "Nom mis à jour avec succès."
+
+msgid "Modal_Edit_Profile_Title"
+msgstr "Modifier le profil"
+
+msgid "Modal_Edit_Profile_Aria"
+msgstr "Modifier le profil"
+
+msgid "Modal_Avatar_Label"
+msgstr "Avatar"
+
+msgid "Modal_Avatar_Upload"
+msgstr "Télécharger une photo"
+
+msgid "Modal_Avatar_Remove"
+msgstr "Retirer la photo"
+
+msgid "Modal_Avatar_Upload_Limit"
+msgstr "2 Mo maximum. Les photos sont compressées automatiquement."
+
+msgid "Modal_Danger_Zone"
+msgstr "Zone de danger"
+
+msgid "Modal_Delete_Comment"
+msgstr "Supprimer ce commentaire"
+
+msgid "Modal_Delete_All_Comments"
+msgstr "Supprimer tous mes commentaires ici"
+
+msgid "Modal_View_Avatar_Aria"
+msgstr "Voir l'avatar"
+
+msgid "Modal_Avatar_Too_Large"
+msgstr "L'image doit faire 2 Mo ou moins."
+
+msgid "Modal_Avatar_Limit"
+msgstr "Vous avez atteint la limite quotidienne de 20 changements d'avatar. Réessayez demain."
+
+msgid "Modal_Avatar_Hint_One"
+msgstr "Vous pouvez changer votre avatar 1 fois de plus aujourd'hui."
+
+msgid "Modal_Avatar_Hint_Many"
+msgstr "Vous pouvez changer votre avatar {remaining} fois de plus aujourd'hui."
+
+msgid "Modal_Avatar_Saved"
+msgstr "Avatar mis à jour avec succès."
+
+msgid "Modal_Avatar_Upload_Error"
+msgstr "Échec de la mise à jour de l'avatar. Veuillez réessayer."
+
+msgid "Modal_Avatar_Removed"
+msgstr "Avatar supprimé."
+
+msgid "Modal_Avatar_Remove_Confirm"
+msgstr "Retirer votre avatar ?"
+
+msgid "Modal_Avatar_Remove_Confirm_Desc"
+msgstr "Votre photo d'avatar sera retirée et remplacée par l'avatar par défaut."
+
+msgid "Action_Confirm"
+msgstr "Confirmer"
+
+msgid "Action_Cancel"
+msgstr "Annuler"
+
+msgid "Modal_Remove_Comment_Label"
+msgstr "supprimer"
+
+msgid "Modal_Delete_Comment_Title"
+msgstr "Supprimer le commentaire"
+
+msgid "Modal_Delete_Comment_Msg"
+msgstr "Supprimer ce commentaire ? Cette action est irréversible."
+
+msgid "Modal_Delete_All_Title"
+msgstr "Supprimer tous mes commentaires"
+
+msgid "Modal_Delete_All_Msg"
+msgstr "Supprimer tous vos commentaires sur ce contenu ? Cette action est irréversible."
+
+msgid "Modal_Comment_Deleted"
+msgstr "Commentaire supprimé."
+
+msgid "Modal_Comments_Deleted"
+msgstr "Tous vos commentaires ont été supprimés."
+
+msgid "Modal_Delete_Error"
+msgstr "Échec de la suppression. Veuillez réessayer."
+
+msgid "Modal_Cancel"
+msgstr "Annuler"
+
 msgid "Career_Journey"
 msgstr "Career Journey"
 

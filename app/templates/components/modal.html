@@ -38,15 +38,27 @@
         <div class="comment-section">
         <div class="comment-header">
             <span>{{ _('Modal_Comments_Label') }} (<span id="commentCount">0</span>)</span>
-            <button type="button" class="comment-panel-toggle" id="commentPanelToggle" aria-expanded="false" hidden onclick="toggleCommentPanel(event)">
-                <span class="comment-panel-toggle__label">Expand</span>
-                <ion-icon name="chevron-up-outline"></ion-icon>
-            </button>
+            <div class="comment-header__actions">
+                <button type="button" class="comment-header-edit-btn" id="commentHeaderEditBtn"
+                    aria-label="{{ _('Modal_Edit_Profile_Aria') }}" title="{{ _('Modal_Edit_Profile_Aria') }}">
+                    <ion-icon name="pencil-outline"></ion-icon>
+                </button>
+                <button type="button" class="comment-panel-toggle" id="commentPanelToggle" aria-expanded="false" hidden onclick="toggleCommentPanel(event)">
+                    <span class="comment-panel-toggle__label">Expand</span>
+                    <ion-icon name="chevron-up-outline"></ion-icon>
+                </button>
+            </div>
         </div>
         <div class="comment-list"></div>
 
         <div class="comment-input">
-            <img src="/static/images/user.webp" alt="Your profile picture" />
+            <div class="comment-input-avatar">
+                <img id="commenterAvatar" src="{{ default_avatar_url }}" alt="Your profile picture" />
+                <button type="button" class="commenter-edit-btn" id="commenterEditBtn"
+                    aria-label="{{ _('Modal_Edit_Profile_Aria') }}" title="{{ _('Modal_Edit_Profile_Aria') }}">
+                    <ion-icon name="pencil-outline"></ion-icon>
+                </button>
+            </div>
             <div class="comment-input-field">
                 <input type="text" id="commentBox" placeholder="{{ _('Modal_Comment_Placeholder') }}" />
                 <button type="button" class="comment-emoji-btn" id="commentEmojiToggle"
@@ -88,5 +100,31 @@
         modalProjectPreview: {{ _('Modal_Project_Preview') | tojson }},
         commentPanelExpand: {{ 'Expand' | tojson }},
         commentPanelCollapse: {{ 'Collapse' | tojson }},
+        editNameLimit: {{ _('Modal_Edit_Name_Limit') | tojson }},
+        editNameHintOne: {{ _('Modal_Edit_Name_Hint_One') | tojson }},
+        editNameHintMany: {{ _('Modal_Edit_Name_Hint_Many') | tojson }},
+        editNameRequired: {{ _('Modal_Edit_Name_Required') | tojson }},
+        editNameError: {{ _('Modal_Edit_Name_Error') | tojson }},
+        editNameSaved: {{ _('Modal_Edit_Name_Saved') | tojson }},
+        viewAvatar: {{ _('Modal_View_Avatar_Aria') | tojson }},
+        avatarTooLarge: {{ _('Modal_Avatar_Too_Large') | tojson }},
+        avatarSaved: {{ _('Modal_Avatar_Saved') | tojson }},
+        avatarUploadError: {{ _('Modal_Avatar_Upload_Error') | tojson }},
+        avatarRemoved: {{ _('Modal_Avatar_Removed') | tojson }},
+        avatarLimit: {{ _('Modal_Avatar_Limit') | tojson }},
+        avatarHintOne: {{ _('Modal_Avatar_Hint_One') | tojson }},
+        avatarHintMany: {{ _('Modal_Avatar_Hint_Many') | tojson }},
+        avatarRemoveConfirm: {{ _('Modal_Avatar_Remove_Confirm') | tojson }},
+        avatarRemoveConfirmDesc: {{ _('Modal_Avatar_Remove_Confirm_Desc') | tojson }},
+        confirmAction: {{ _('Action_Confirm') | tojson }},
+        cancelAction: {{ _('Action_Cancel') | tojson }},
+        deleteCommentTitle: {{ _('Modal_Delete_Comment_Title') | tojson }},
+        removeCommentLabel: {{ _('Modal_Remove_Comment_Label') | tojson }},
+        deleteCommentMsg: {{ _('Modal_Delete_Comment_Msg') | tojson }},
+        deleteAllTitle: {{ _('Modal_Delete_All_Title') | tojson }},
+        deleteAllMsg: {{ _('Modal_Delete_All_Msg') | tojson }},
+        commentDeleted: {{ _('Modal_Comment_Deleted') | tojson }},
+        commentsDeleted: {{ _('Modal_Comments_Deleted') | tojson }},
+        deleteError: {{ _('Modal_Delete_Error') | tojson }},
     };
 </script>

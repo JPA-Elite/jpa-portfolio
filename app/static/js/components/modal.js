@@ -6,9 +6,8 @@ if (!window.__modal_js_loaded__) {
     };
     let currentSlide = 0;
     const currentLocale = window.pageLocale || "en";
-    const modalI18n = window.modalI18n || {};
     const tm = (key, fallback, vars = {}) => {
-        let text = modalI18n[key] || fallback;
+        let text = (window.modalI18n || {})[key] || fallback;
         Object.entries(vars).forEach(([name, value]) => {
             const safe = String(value);
             text = text
@@ -24,8 +23,14 @@ if (!window.__modal_js_loaded__) {
     let currentCommentPage = 1;
     const COMMENTS_PER_PAGE = 100;
     const MAX_COMMENT_LENGTH = 1000;
+    const MAX_AVATAR_BYTES = 2 * 1024 * 1024;
     let imageGalleryData = [];
     let imageGalleryIndex = 0;
+    let currentDisplayName = null;
+    let remainingNameChanges = 5;
+    const DEFAULT_AVATAR = "/static/images/user.webp";
+    let currentAvatarUrl = null;
+    let remainingAvatarChanges = 5;
 
     fetch("/static/json/project.json")
         .then(response => response.json())
@@ -449,6 +454,28 @@ if (!window.__modal_js_loaded__) {
         renderActiveImageGallerySlide();
     };
 
+    function updateCommentsUrl(selectedId) {
+        if (!selectedId || !window.idType) return;
+        try {
+            const url = new URL(window.location.href);
+            url.searchParams.set(window.idType, String(selectedId));
+            url.hash = "comments";
+            window.history.replaceState(null, "", url.toString());
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
+    function clearCommentsUrl() {
+        try {
+            const url = new URL(window.location.href);
+            url.hash = "";
+            window.history.replaceState(null, "", url.toString());
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
     // Function to open the modal and show the image
     function openModal(fileSrc, title = '', description = '', type = ModalType.IMAGE, enableComments = false, selectedId = null, options = {}) {
         currentSelectedId = selectedId;
@@ -458,6 +485,7 @@ if (!window.__modal_js_loaded__) {
         var modalVideo = document.getElementById("modalVideo");
         var caption = document.getElementById("caption");
         var imageModal = document.getElementById("imageModal");
+        if (!imageModal) return;
         imageModal.style.display = "flex";
         const adminFloadtBtn = document.querySelector(".admin-float-btn");
         let isImageView = false;
@@ -467,44 +495,47 @@ if (!window.__modal_js_loaded__) {
         }
 
         if (type == ModalType.BOX) {
-            boxModalContainer.style.display = "block";
-            modalImage.style.display = "none";
-            modalVideo.style.display = "none";
-            caption.style.display = "none";
+            if (boxModalContainer) boxModalContainer.style.display = "block";
+            if (modalImage) modalImage.style.display = "none";
+            if (modalVideo) modalVideo.style.display = "none";
+            if (caption) caption.style.display = "none";
             isImageView = false;
         } else {
-            boxModalContainer.style.display = "none";
+            if (boxModalContainer) boxModalContainer.style.display = "none";
             if (isVideoFile(fileSrc)) {
                 pauseAllVideos();
-                modalImage.style.display = "none";
-                modalVideo.style.display = "block";
-                modalImage.src = "";
-                modalVideo.src = fileSrc;
+                if (modalImage) modalImage.style.display = "none";
+                if (modalVideo) modalVideo.style.display = "block";
+                if (modalImage) modalImage.src = "";
+                if (modalVideo) modalVideo.src = fileSrc;
 
                 // Force autoplay
-                modalVideo.muted = true;      // required for autoplay
-                modalVideo.autoplay = true;
-                modalVideo.play().catch(err => {
-                    console.warn("Autoplay failed:", err);
-                });
+                if (modalVideo) {
+                    modalVideo.muted = true;      // required for autoplay
+                    modalVideo.autoplay = true;
+                    modalVideo.play().catch(err => {
+                        console.warn("Autoplay failed:", err);
+                    });
+                }
                 isImageView = false;
             } else {
-                modalVideo.style.display = "none";
-                modalImage.style.display = "block";
-                modalVideo.src = "";
-                modalImage.src = fileSrc;
+                if (modalVideo) modalVideo.style.display = "none";
+                if (modalImage) modalImage.style.display = "block";
+                if (modalVideo) modalVideo.src = "";
+                if (modalImage) modalImage.src = fileSrc;
                 isImageView = true;
             }
 
-            caption.style.display = "block";
+            if (caption) {
+                caption.style.display = "block";
+                caption.innerHTML = "";
+                if (title && title.trim() !== "") {
+                    caption.innerHTML += "<h3>" + title + "</h3>";
+                }
 
-            caption.innerHTML = "";
-            if (title && title.trim() !== "") {
-                caption.innerHTML += "<h3>" + title + "</h3>";
-            }
-
-            if (description && description.trim() !== "") {
-                caption.innerHTML += "<p>" + description + "</p>";
+                if (description && description.trim() !== "") {
+                    caption.innerHTML += "<p>" + description + "</p>";
+                }
             }
         }
 
@@ -513,18 +544,21 @@ if (!window.__modal_js_loaded__) {
         const commentSection = document.querySelector(".comment-section");
         const modalContentContainer = document.querySelector(".modal-content-container");
         if (enableComments) {
-            commentSection.style.display = "flex";
-            modalContentContainer.style.width = isMobile ? "100%" : "50%";
+            if (commentSection) commentSection.style.display = "flex";
+            if (modalContentContainer) modalContentContainer.style.width = isMobile ? "100%" : "50%";
             resetCommentPanelState(true);
             currentCommentPage = 1;
+            updateCommentsUrl(selectedId);
             loadComments(selectedId, currentCommentPage, false, true);
         } else {
-            commentSection.style.display = "none";
-            modalContentContainer.style.width = "100%";
-            modalContentContainer.style.height = "";
-            modalContentContainer.style.minHeight = "";
-            modalContentContainer.style.maxHeight = "";
-            modalContentContainer.style.paddingBottom = "";
+            if (commentSection) commentSection.style.display = "none";
+            if (modalContentContainer) {
+                modalContentContainer.style.width = "100%";
+                modalContentContainer.style.height = "";
+                modalContentContainer.style.minHeight = "";
+                modalContentContainer.style.maxHeight = "";
+                modalContentContainer.style.paddingBottom = "";
+            }
             resetCommentPanelState(false);
         }
 
@@ -536,8 +570,10 @@ if (!window.__modal_js_loaded__) {
     // Function to close the modal
     function closeModal() {
         const adminFloadtBtn = document.querySelector(".admin-float-btn");
-        document.getElementById("imageModal").style.display = "none";
-        document.querySelector(".box-modal-container").style.display = "none";
+        const imageModal = document.getElementById("imageModal");
+        if (imageModal) imageModal.style.display = "none";
+        const boxModalContainer = document.querySelector(".box-modal-container");
+        if (boxModalContainer) boxModalContainer.style.display = "none";
         adminFloadtBtn && (adminFloadtBtn.style.display = "flex");
         const modalContentContainer = document.querySelector(".modal-content-container");
         if (modalContentContainer) {
@@ -549,6 +585,7 @@ if (!window.__modal_js_loaded__) {
         pauseAllVideos();
         closeCommentEmojiPicker();
         clearImageGalleryNav();
+        clearCommentsUrl();
         resetCommentPanelState(false);
     }
 
@@ -617,6 +654,18 @@ if (!window.__modal_js_loaded__) {
 
             const res = await fetch(`/api/${baseUrl}?${idType}=${selectedId}&page=${page}&limit=${COMMENTS_PER_PAGE}`);
             const data = await res.json();
+
+            if (typeof data.display_name === "string" && data.display_name.trim() !== "") {
+                currentDisplayName = data.display_name;
+            }
+            if (typeof data.remaining_changes === "number") {
+                remainingNameChanges = data.remaining_changes;
+            }
+            if (typeof data.avatar_url === "string" && data.avatar_url.trim() !== "") {
+                currentAvatarUrl = data.avatar_url;
+            }
+            const commenterAvatar = document.getElementById("commenterAvatar");
+            if (commenterAvatar) commenterAvatar.src = currentAvatarUrl || DEFAULT_AVATAR;
 
             // Remove skeletons once data arrives
             removeCommentSkeletons(commentList);
@@ -687,23 +736,46 @@ if (!window.__modal_js_loaded__) {
         const div = document.createElement("div");
         div.classList.add("comment-item");
         div.dataset.commentId = comment._id;
+        div.dataset.isOwn = comment.is_own ? "true" : "false";
         const likedClass = comment.is_liked ? "liked" : "";
+        const deleteBtnMarkup = comment.is_own
+            ? `<u class="comment-remove-btn" title="${escapeHTML(tm("deleteCommentTitle", "Delete comment"))}">${tm("removeCommentLabel", "remove")}</u>`
+            : "";
 
+        const avatarUrl = comment.avatar_url || DEFAULT_AVATAR;
         div.innerHTML = `
-            <img src="/static/images/user.webp" />
+            <img src="${escapeHTML(avatarUrl)}" class="comment-avatar" alt="Avatar" title="${escapeHTML(tm("viewAvatar", "View avatar"))}" />
             <div class="comment-content">
-                <p class="comment-author">${escapeHTML(comment.author_name)}</p>
+                <div class="comment-author-line">
+                    <p class="comment-author">${escapeHTML(comment.author_name)}</p>
+                </div>
                 <p class="comment-text">${escapeHTML(comment.text)}</p>
                 <div class="comment-meta">
                     <u>${new Date(comment.created_at).toLocaleString()}</u>
                     <u class="like-btn ${likedClass}">${tm("commentLike", "Like")}</u>
                     <span class="like-count">${comment.liked_ips ? comment.liked_ips.length : 0}</span>
+                    ${deleteBtnMarkup}
                 </div>
             </div>
         `;
 
         const likeBtn = div.querySelector('.like-btn');
         likeBtn.addEventListener('click', () => toggleCommentLike(likeBtn, comment._id));
+
+        const avatarImg = div.querySelector(".comment-avatar");
+        avatarImg?.addEventListener("click", () => {
+            if (typeof window.openAdminImagePreview === "function") {
+                window.openAdminImagePreview(avatarUrl, comment.author_name);
+            } else {
+                openModal(avatarUrl, comment.author_name, "", ModalType.IMAGE, true, currentSelectedId);
+            }
+        });
+
+        const deleteBtn = div.querySelector(".comment-remove-btn");
+        deleteBtn?.addEventListener("click", (e) => {
+            e.preventDefault();
+            deleteCommentById(comment._id);
+        });
 
         return div;
     }
@@ -748,10 +820,12 @@ if (!window.__modal_js_loaded__) {
             // Create and append the new comment directly at the bottom
             const newComment = {
                 _id: data.comment_id,
-                author_name: tm("commentAuthorYou", "You"),
+                author_name: currentDisplayName || tm("commentAuthorYou", "You"),
                 text,
                 liked_ips: [],
                 created_at: new Date(),
+                is_own: true,
+                avatar_url: currentAvatarUrl || DEFAULT_AVATAR,
             };
             const div = renderComment(newComment);
             document.querySelector(".comment-list").appendChild(div);
@@ -773,6 +847,472 @@ if (!window.__modal_js_loaded__) {
             commentBox.disabled = false;
             commentBox.focus();
         }
+    }
+
+    // ---------------- Display name / avatar editing ----------------
+    function updateAvatarLimitUI() {
+        const hint = document.getElementById("avatarEditHint");
+        if (!hint) return;
+
+        const limited = remainingAvatarChanges <= 0;
+        if (limited) {
+            hint.textContent = tm("avatarLimit", "You have reached the daily limit of 20 avatar changes. Try again tomorrow.");
+        } else {
+            hint.textContent =
+                remainingAvatarChanges === 1
+                    ? tm("avatarHintOne", "You can change your avatar 1 more time today.")
+                    : tm("avatarHintMany", "You can change your avatar {remaining} more times today.", { remaining: remainingAvatarChanges });
+        }
+
+        const uploadInput = document.getElementById("avatarUploadInput");
+        const removeBtn = document.getElementById("avatarRemoveBtn");
+        const noAvatarToRemove = !currentAvatarUrl || currentAvatarUrl === DEFAULT_AVATAR;
+        if (uploadInput) uploadInput.disabled = limited;
+        if (removeBtn) removeBtn.disabled = limited || noAvatarToRemove;
+        document.querySelectorAll(".avatar-presets__item").forEach((btn) => {
+            btn.disabled = limited;
+        });
+    }
+
+    async function refreshAvatarStatus() {
+        try {
+            const res = await fetch("/api/comment-avatar", { method: "GET" });
+            const data = await res.json();
+            if (!res.ok) return;
+            if (typeof data.avatar_url === "string" && data.avatar_url.trim() !== "") {
+                currentAvatarUrl = data.avatar_url;
+            }
+            if (typeof data.remaining_avatar_changes === "number") {
+                remainingAvatarChanges = data.remaining_avatar_changes;
+            }
+            syncAvatarEditor();
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
+    async function refreshNameStatus() {
+        try {
+            const res = await fetch("/api/comment-username", { method: "GET" });
+            const data = await res.json();
+            if (!res.ok) return;
+            if (typeof data.display_name === "string" && data.display_name.trim() !== "") {
+                currentDisplayName = data.display_name;
+            }
+            if (typeof data.remaining_changes === "number") {
+                remainingNameChanges = data.remaining_changes;
+            }
+            updateNameEditHint();
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
+    function syncAvatarEditor() {
+        const preview = document.getElementById("avatarPreview");
+        const avatarError = document.getElementById("avatarError");
+        if (avatarError) avatarError.hidden = true;
+        if (preview) preview.src = currentAvatarUrl || DEFAULT_AVATAR;
+        document.querySelectorAll(".avatar-presets__item").forEach((btn) => {
+            btn.classList.toggle("is-selected", (currentAvatarUrl || "") === btn.dataset.avatarUrl);
+        });
+        updateAvatarLimitUI();
+    }
+
+    function applyAvatarToComments(avatarUrl) {
+        document.querySelectorAll(".comment-item").forEach((item) => {
+            if (item.dataset.isOwn === "true") {
+                const img = item.querySelector(".comment-avatar");
+                if (img) img.src = avatarUrl;
+            }
+        });
+        const commenterAvatar = document.getElementById("commenterAvatar");
+        if (commenterAvatar) commenterAvatar.src = avatarUrl;
+        const preview = document.getElementById("avatarPreview");
+        if (preview) preview.src = avatarUrl;
+        document.querySelectorAll(".avatar-presets__item").forEach((btn) => {
+            btn.classList.toggle("is-selected", avatarUrl === btn.dataset.avatarUrl);
+        });
+    }
+
+    function openEditNameModal() {
+        const modal = document.getElementById("nameEditModal");
+        const input = document.getElementById("nameEditInput");
+        const error = document.getElementById("nameEditError");
+        if (!modal || !input) return;
+
+        input.value = currentDisplayName || "";
+        if (error) error.hidden = true;
+        updateNameEditHint();
+        syncAvatarEditor();
+        refreshAvatarStatus();
+        refreshNameStatus();
+        modal.classList.add("is-open");
+        modal.setAttribute("aria-hidden", "false");
+    }
+
+    function closeEditNameModal() {
+        const modal = document.getElementById("nameEditModal");
+        if (!modal) return;
+        modal.classList.remove("is-open");
+        modal.setAttribute("aria-hidden", "true");
+    }
+
+    function updateNameEditHint() {
+        const hint = document.getElementById("nameEditHint");
+        const saveBtn = document.getElementById("nameEditSaveBtn");
+        if (!hint || !saveBtn) return;
+
+        if (remainingNameChanges <= 0) {
+            hint.textContent = tm(
+                "editNameLimit",
+                "You have reached the daily limit of 20 name changes. Try again tomorrow."
+            );
+            saveBtn.disabled = true;
+            return;
+        }
+
+        hint.textContent =
+            remainingNameChanges === 1
+                ? tm("editNameHintOne", "You can change your name 1 more time today.")
+                : tm(
+                    "editNameHintMany",
+                    "You can change your name {remaining} more times today.",
+                    { remaining: remainingNameChanges }
+                );
+        saveBtn.disabled = false;
+    }
+
+    function setButtonLoading(btn, loading) {
+        if (!btn) return;
+        if (loading) {
+            btn.classList.add("is-loading");
+            btn.setAttribute("aria-busy", "true");
+            btn.disabled = true;
+            const labelEl = btn.querySelector(".btn-label") || btn;
+            if (!labelEl.dataset.originalText) {
+                labelEl.dataset.originalText = labelEl.textContent || "";
+            }
+            if (btn.dataset.loadingText !== undefined) {
+                labelEl.textContent = btn.dataset.loadingText;
+            }
+        } else {
+            btn.classList.remove("is-loading");
+            btn.removeAttribute("aria-busy");
+            btn.disabled = false;
+            const labelEl = btn.querySelector(".btn-label") || btn;
+            if (labelEl.dataset.originalText) {
+                labelEl.textContent = labelEl.dataset.originalText;
+                delete labelEl.dataset.originalText;
+            }
+        }
+    }
+
+    async function saveDisplayName() {
+        const input = document.getElementById("nameEditInput");
+        const error = document.getElementById("nameEditError");
+        const saveBtn = document.getElementById("nameEditSaveBtn");
+        if (!input || !error || !saveBtn) return;
+
+        const name = input.value.trim();
+        if (!name) {
+            error.textContent = tm("editNameRequired", "Please enter a display name.");
+            error.hidden = false;
+            return;
+        }
+
+        error.hidden = true;
+        setButtonLoading(saveBtn, true);
+
+        try {
+            const res = await fetch("/api/comment-username", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ display_name: name }),
+            });
+            const data = await res.json();
+
+            if (typeof data.remaining_changes === "number") {
+                remainingNameChanges = data.remaining_changes;
+            }
+
+            if (!res.ok) {
+                error.textContent =
+                    (data.errors && data.errors._global) ||
+                    tm("editNameError", "Failed to save your name. Please try again.");
+                error.hidden = false;
+                updateNameEditHint();
+                return;
+            }
+
+            currentDisplayName = data.display_name || name;
+
+            document.querySelectorAll(".comment-item").forEach((item) => {
+                if (item.dataset.isOwn === "true") {
+                    const author = item.querySelector(".comment-author");
+                    if (author) author.textContent = currentDisplayName;
+                }
+            });
+
+            closeEditNameModal();
+            if (window.notify) {
+                window.notify(tm("editNameSaved", "Name updated successfully."), "success");
+            }
+        } catch (err) {
+            console.error(err);
+            error.textContent = tm("editNameError", "Failed to save your name. Please try again.");
+            error.hidden = false;
+        } finally {
+            setButtonLoading(saveBtn, false);
+            updateNameEditHint();
+        }
+    }
+
+    function getAvatarEditorButtons() {
+        const uploadInput = document.getElementById("avatarUploadInput");
+        const uploadLabel = uploadInput ? uploadInput.closest("label") : null;
+        const removeBtn = document.getElementById("avatarRemoveBtn");
+        const presets = document.querySelectorAll(".avatar-presets__item");
+        return { uploadLabel, removeBtn, presets };
+    }
+
+    async function uploadAvatar(file) {
+        const avatarError = document.getElementById("avatarError");
+        const { uploadLabel, presets } = getAvatarEditorButtons();
+        if (file && file.size > MAX_AVATAR_BYTES) {
+            if (avatarError) {
+                avatarError.textContent = tm("avatarTooLarge", "Image must be 2MB or smaller.");
+                avatarError.hidden = false;
+            }
+            return;
+        }
+        setButtonLoading(uploadLabel, true);
+        presets.forEach((btn) => (btn.disabled = true));
+        try {
+            const formData = new FormData();
+            formData.append("avatar", file);
+
+            const res = await fetch("/api/comment-avatar/upload", { method: "POST", body: formData });
+            const data = await res.json();
+            if (typeof data.remaining_avatar_changes === "number") {
+                remainingAvatarChanges = data.remaining_avatar_changes;
+            }
+            if (!res.ok) {
+                if (avatarError) {
+                    avatarError.textContent =
+                        data.code === "avatar_too_large"
+                            ? tm("avatarTooLarge", "Image is still larger than 2MB after compression.")
+                            : data.code === "avatar_limit_reached"                            ? tm("avatarLimit", "You have reached the daily limit of 20 avatar changes. Try again tomorrow.")
+                            : tm("avatarUploadError", "Failed to upload avatar. Please try again.");
+                    avatarError.hidden = false;
+                }
+                updateAvatarLimitUI();
+                return;
+            }
+
+            currentAvatarUrl = data.avatar_url;
+            applyAvatarToComments(currentAvatarUrl);
+            updateAvatarLimitUI();
+            if (window.notify) window.notify(tm("avatarSaved", "Avatar updated successfully."), "success");
+        } catch (err) {
+            console.error(err);
+            if (avatarError) {
+                avatarError.textContent = tm("avatarUploadError", "Failed to upload avatar. Please try again.");
+                avatarError.hidden = false;
+            }
+        } finally {
+            setButtonLoading(uploadLabel, false);
+            updateAvatarLimitUI();
+        }
+    }
+
+    async function selectPresetAvatar(avatarUrl) {
+        const avatarError = document.getElementById("avatarError");
+        const { presets } = getAvatarEditorButtons();
+        presets.forEach((btn) => (btn.disabled = true));
+        try {
+            const res = await fetch("/api/comment-avatar", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ avatar_url: avatarUrl }),
+            });
+            const data = await res.json();
+            if (typeof data.remaining_avatar_changes === "number") {
+                remainingAvatarChanges = data.remaining_avatar_changes;
+            }
+            if (!res.ok) {
+                if (avatarError) {
+                    avatarError.textContent =
+                        data.code === "avatar_limit_reached"
+                            ? tm("avatarLimit", "You have reached the daily limit of 20 avatar changes. Try again tomorrow.")
+                            : tm("avatarUploadError", "Failed to update avatar. Please try again.");
+                    avatarError.hidden = false;
+                }
+                updateAvatarLimitUI();
+                return;
+            }
+            currentAvatarUrl = data.avatar_url;
+            applyAvatarToComments(currentAvatarUrl);
+            updateAvatarLimitUI();
+            if (window.notify) window.notify(tm("avatarSaved", "Avatar updated successfully."), "success");
+        } catch (err) {
+            console.error(err);
+        } finally {
+            updateAvatarLimitUI();
+        }
+    }
+
+    async function removeAvatar() {
+        const avatarError = document.getElementById("avatarError");
+        const { removeBtn, presets } = getAvatarEditorButtons();
+        setButtonLoading(removeBtn, true);
+        presets.forEach((btn) => (btn.disabled = true));
+        try {
+            const res = await fetch("/api/comment-avatar", { method: "DELETE" });
+            const data = await res.json();
+            if (typeof data.remaining_avatar_changes === "number") {
+                remainingAvatarChanges = data.remaining_avatar_changes;
+            }
+            if (!res.ok) {
+                if (avatarError) {
+                    avatarError.textContent =
+                        data.code === "avatar_limit_reached"
+                            ? tm("avatarLimit", "You have reached the daily limit of 20 avatar changes. Try again tomorrow.")
+                            : tm("avatarUploadError", "Failed to update avatar. Please try again.");
+                    avatarError.hidden = false;
+                }
+                updateAvatarLimitUI();
+                return;
+            }
+            currentAvatarUrl = data.avatar_url || DEFAULT_AVATAR;
+            applyAvatarToComments(currentAvatarUrl);
+            updateAvatarLimitUI();
+            if (window.notify) window.notify(tm("avatarRemoved", "Avatar removed."), "success");
+        } catch (err) {
+            console.error(err);
+        } finally {
+            setButtonLoading(removeBtn, false);
+            updateAvatarLimitUI();
+        }
+    }
+
+    function deleteCommentById(commentId) {
+        if (!commentId) return;
+        if (typeof window.openConfirmModal !== "function") return;
+
+        window.openConfirmModal({
+            title: tm("deleteCommentTitle", "Delete comment"),
+            message: tm("deleteCommentMsg", "Delete this comment? This cannot be undone."),
+            confirmText: tm("confirmAction", "Delete"),
+            onConfirm: async () => {
+                try {
+                    const res = await fetch(`/api/${baseUrl}/${commentId}`, { method: "DELETE" });
+                    const data = await res.json();
+                    if (!res.ok) {
+                        if (window.notify) window.notify(data.message || tm("deleteError", "Failed to delete. Please try again."), "error");
+                        return;
+                    }
+                    const commentEl = document.querySelector(`.comment-item[data-comment-id="${commentId}"]`);
+                    if (commentEl) commentEl.remove();
+                    const countEl = document.getElementById("commentCount");
+                    if (countEl) countEl.textContent = Math.max(0, Number(countEl.textContent) - 1);
+                    if (window.notify) window.notify(tm("commentDeleted", "Comment deleted."), "success");
+                } catch (err) {
+                    console.error(err);
+                }
+            },
+        });
+    }
+
+    function deleteAllMyComments() {
+        if (!currentSelectedId) return;
+        if (typeof window.openConfirmModal !== "function") return;
+
+        window.openConfirmModal({
+            title: tm("deleteAllTitle", "Delete all my comments"),
+            message: tm("deleteAllMsg", "Delete all your comments on this content? This cannot be undone."),
+            confirmText: tm("confirmAction", "Delete"),
+            onConfirm: async () => {
+                const deleteAllBtn = document.getElementById("deleteAllCommentsBtn");
+                if (deleteAllBtn) {
+                    deleteAllBtn.disabled = true;
+                    deleteAllBtn.setAttribute("aria-busy", "true");
+                }
+                try {
+                    const body = {};
+                    body[window.idType] = currentSelectedId;
+                    const res = await fetch(`/api/${baseUrl}/delete-all`, {
+                        method: "DELETE",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify(body),
+                    });
+                    const data = await res.json();
+                    if (!res.ok) {
+                        if (window.notify) window.notify(data.message || tm("deleteError", "Failed to delete. Please try again."), "error");
+                        return;
+                    }
+                    closeEditNameModal();
+                    loadComments(currentSelectedId, 1, false, true);
+                    if (window.notify) window.notify(tm("commentsDeleted", "All your comments were deleted."), "success");
+                } catch (err) {
+                    console.error(err);
+                } finally {
+                    if (deleteAllBtn) {
+                        deleteAllBtn.disabled = false;
+                        deleteAllBtn.removeAttribute("aria-busy");
+                    }
+                }
+            },
+        });
+    }
+
+    function initNameEditModal() {
+        const modal = document.getElementById("nameEditModal");
+        if (!modal || modal.dataset.initialized === "true") return;
+        modal.dataset.initialized = "true";
+
+        modal.querySelectorAll("[data-name-edit-close]").forEach((el) => {
+            el.addEventListener("click", closeEditNameModal);
+        });
+
+        const saveBtn = document.getElementById("nameEditSaveBtn");
+        saveBtn?.addEventListener("click", saveDisplayName);
+
+        const input = document.getElementById("nameEditInput");
+        input?.addEventListener("keydown", (e) => {
+            if (e.key === "Enter") {
+                e.preventDefault();
+                saveDisplayName();
+            }
+        });
+
+        document.getElementById("commentHeaderEditBtn")?.addEventListener("click", () => {
+            openEditNameModal();
+        });
+
+        document.getElementById("commenterEditBtn")?.addEventListener("click", () => {
+            openEditNameModal();
+        });
+
+        const uploadInput = document.getElementById("avatarUploadInput");
+        uploadInput?.addEventListener("change", (e) => {
+            const file = e.target.files && e.target.files[0];
+            if (file) uploadAvatar(file);
+            e.target.value = "";
+        });
+
+        document.getElementById("avatarRemoveBtn")?.addEventListener("click", removeAvatar);
+        document.getElementById("deleteAllCommentsBtn")?.addEventListener("click", deleteAllMyComments);
+
+        modal.querySelectorAll(".avatar-presets__item").forEach((btn) => {
+            btn.addEventListener("click", () => selectPresetAvatar(btn.dataset.avatarUrl));
+        });
+
+        document.addEventListener("keydown", (e) => {
+            if (e.key === "Escape" && modal.classList.contains("is-open")) {
+                closeEditNameModal();
+            }
+        });
     }
 
     // Toggle IP-based like
@@ -818,6 +1358,16 @@ if (!window.__modal_js_loaded__) {
             event.stopPropagation();
         });
 
+        const commenterAvatar = document.getElementById("commenterAvatar");
+        commenterAvatar?.addEventListener("click", () => {
+            const avatarUrl = commenterAvatar.src || currentAvatarUrl || DEFAULT_AVATAR;
+            if (typeof window.openAdminImagePreview === "function") {
+                window.openAdminImagePreview(avatarUrl, currentDisplayName || tm("commentAuthorYou", "You"));
+            } else {
+                openModal(avatarUrl, currentDisplayName || tm("commentAuthorYou", "You"), "", ModalType.IMAGE, true, currentSelectedId);
+            }
+        });
+
         document.addEventListener("click", (event) => {
             const target = event.target;
             if (!(target instanceof Element)) return;
@@ -847,9 +1397,13 @@ if (!window.__modal_js_loaded__) {
 
     // Call after DOM is ready (or immediately if already ready)
     if (document.readyState === "loading") {
-        document.addEventListener("DOMContentLoaded", initCommentBox);
+        document.addEventListener("DOMContentLoaded", () => {
+            initCommentBox();
+            initNameEditModal();
+        });
     } else {
         initCommentBox();
+        initNameEditModal();
     }
 
     document.addEventListener("keydown", (event) => {

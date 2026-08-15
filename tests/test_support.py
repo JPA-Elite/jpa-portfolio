@@ -154,6 +154,9 @@ class FakeCollection:
     def delete_one(self, *args, **kwargs):
         return SimpleNamespace(deleted_count=1)
 
+    def delete_many(self, *args, **kwargs):
+        return SimpleNamespace(deleted_count=2)
+
     def distinct(self, *args, **kwargs):
         return ["tag1", "tag2"]
 

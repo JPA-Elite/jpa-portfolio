@@ -1,0 +1,54 @@
+<link rel="stylesheet" href="{{ static_asset('css/components/name_edit_modal.css') }}" />
+<div id="nameEditModal" class="name-edit-modal" aria-hidden="true">
+    <div class="name-edit-modal__backdrop" data-name-edit-close></div>
+    <div class="name-edit-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="nameEditModalTitle">
+        <div class="name-edit-modal__header">
+            <h3 id="nameEditModalTitle">{{ _('Modal_Edit_Profile_Title') }}</h3>
+            <button type="button" class="name-edit-modal__close" data-name-edit-close aria-label="Close">
+                <ion-icon name="close-outline"></ion-icon>
+            </button>
+        </div>
+        <div class="name-edit-modal__body">
+            <div class="name-edit-modal__section">
+                <p class="name-edit-modal__section-title">{{ _('Modal_Avatar_Label') }}</p>
+                <div class="avatar-editor">
+                    <img id="avatarPreview" class="avatar-editor__preview" src="{{ default_avatar_url }}" alt="{{ _('Modal_Avatar_Label') }}" />
+                    <div class="avatar-editor__actions">
+                        <label class="name-edit-modal__btn name-edit-modal__btn--secondary" data-loading-text="Uploading...">
+                            <span class="btn-label">{{ _('Modal_Avatar_Upload') }}</span>
+                            <input type="file" id="avatarUploadInput" accept="image/png,image/jpeg,image/webp,image/gif" hidden />
+                        </label>
+                        <button type="button" class="name-edit-modal__btn name-edit-modal__btn--secondary" id="avatarRemoveBtn" data-loading-text="Removing..."><span class="btn-label">{{ _('Modal_Avatar_Remove') }}</span></button>
+                    </div>
+                </div>
+                <p class="name-edit-modal__hint" id="avatarEditHint"></p>
+                <div class="avatar-presets" id="avatarPresets">
+                    {% for avatar_url in preset_avatars %}
+                    <button type="button" class="avatar-presets__item" data-avatar-url="{{ avatar_url }}" aria-label="{{ _('Modal_Avatar_Label') }}">
+                        <img src="{{ avatar_url }}" alt="{{ _('Modal_Avatar_Label') }}" />
+                    </button>
+                    {% endfor %}
+                </div>
+                <p class="name-edit-modal__error" id="avatarError" hidden></p>
+            </div>
+
+            <div class="name-edit-modal__section">
+                <p class="name-edit-modal__section-title">{{ _('Modal_Edit_Name_Title') }}</p>
+                <div class="name-edit-row">
+                    <input type="text" id="nameEditInput" maxlength="30" placeholder="{{ _('Modal_Edit_Name_Placeholder') }}" autocomplete="off" />
+                    <button type="button" class="name-edit-modal__btn name-edit-modal__btn--save" id="nameEditSaveBtn" data-loading-text=""><span class="btn-label">{{ _('Modal_Edit_Name_Save') }}</span></button>
+                </div>
+                <p class="name-edit-modal__hint" id="nameEditHint"></p>
+                <p class="name-edit-modal__error" id="nameEditError" hidden></p>
+            </div>
+
+            <div class="name-edit-modal__section name-edit-modal__section--danger">
+                <p class="name-edit-modal__section-title">{{ _('Modal_Danger_Zone') }}</p>
+                <button type="button" class="name-edit-modal__btn name-edit-modal__btn--danger" id="deleteAllCommentsBtn" data-loading-text="Deleting..."><span class="btn-label">{{ _('Modal_Delete_All_Comments') }}</span></button>
+            </div>
+        </div>
+        <div class="name-edit-modal__footer">
+            <button type="button" class="name-edit-modal__btn name-edit-modal__btn--cancel" data-name-edit-close>{{ _('Modal_Cancel') }}</button>
+        </div>
+    </div>
+</div>

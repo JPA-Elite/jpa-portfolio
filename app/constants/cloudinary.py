@@ -8,9 +8,10 @@ class CloudinaryFolders(Enum):
     ROADMAP = "portfolio_company_roadmap"
     PDF = "portfolio_pdf"
     GALLERY = "portfolio_gallery"
+    AVATAR = "portfolio_avatars"
 
 class CloudinaryResourceType(Enum):
     IMAGE = "image"
     VIDEO = "video"
-    AUDIO = "video" #audio files are uploaded as video type in Cloudinary
+    AUDIO = "video"
     RAW = "raw"

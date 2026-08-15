@@ -542,6 +542,126 @@ msgstr "Ikaw"
 msgid "Modal_Project_Preview"
 msgstr "Project Preview"
 
+msgid "Modal_Edit_Name_Title"
+msgstr "Usba ang Display Name"
+
+msgid "Modal_Edit_Name_Placeholder"
+msgstr "Isulod ang imong display name"
+
+msgid "Modal_Edit_Name_Save"
+msgstr "I-save"
+
+msgid "Modal_Edit_Name_Aria"
+msgstr "Usba ang pangalan"
+
+msgid "Modal_Edit_Name_Limit"
+msgstr "Naabot na nimo ang adlaw-adlaw nga limit sa 20 ka pag-usab sa pangalan. Sulayi pag-usab ugma."
+
+msgid "Modal_Edit_Name_Hint_One"
+msgstr "Makahimo ka sa pag-usab sa imong pangalan og 1 ka beses pa karon nga adlaw."
+
+msgid "Modal_Edit_Name_Hint_Many"
+msgstr "Makahimo ka sa pag-usab sa imong pangalan og {remaining} ka beses pa karon nga adlaw."
+
+msgid "Modal_Edit_Name_Required"
+msgstr "Palihug isulod ang imong display name."
+
+msgid "Modal_Edit_Name_Error"
+msgstr "Napakyas sa pag-save sa imong pangalan. Palihug sulayi pag-usab."
+
+msgid "Modal_Edit_Name_Saved"
+msgstr "Malampuson nga na-update ang imong pangalan."
+
+msgid "Modal_Edit_Profile_Title"
+msgstr "Usba ang Profile"
+
+msgid "Modal_Edit_Profile_Aria"
+msgstr "Usba ang profile"
+
+msgid "Modal_Avatar_Label"
+msgstr "Avatar"
+
+msgid "Modal_Avatar_Upload"
+msgstr "Pag-upload og litrato"
+
+msgid "Modal_Avatar_Remove"
+msgstr "Kuhaa ang litrato"
+
+msgid "Modal_Avatar_Upload_Limit"
+msgstr "Max 2MB. Awtomatikong i-compress ang mga litrato."
+
+msgid "Modal_Danger_Zone"
+msgstr "Danger Zone"
+
+msgid "Modal_Delete_Comment"
+msgstr "Papasa kini nga komento"
+
+msgid "Modal_Delete_All_Comments"
+msgstr "Papasa ang tanang akong komento diri"
+
+msgid "Modal_View_Avatar_Aria"
+msgstr "Tan-awa ang avatar"
+
+msgid "Modal_Avatar_Too_Large"
+msgstr "Ang litrato kinahanglan 2MB o mas gamay."
+
+msgid "Modal_Avatar_Limit"
+msgstr "Naabot na nimo ang adlaw-adlaw nga limit sa 20 ka pag-usab sa avatar. Sulayi pag-usab ugma."
+
+msgid "Modal_Avatar_Hint_One"
+msgstr "Makahimo ka sa pag-usab sa imong avatar og 1 ka beses pa karon nga adlaw."
+
+msgid "Modal_Avatar_Hint_Many"
+msgstr "Makahimo ka sa pag-usab sa imong avatar og {remaining} ka beses pa karon nga adlaw."
+
+msgid "Modal_Avatar_Saved"
+msgstr "Malampuson nga na-update ang avatar."
+
+msgid "Modal_Avatar_Upload_Error"
+msgstr "Napakyas ang pag-update sa avatar. Palihug sulayi pag-usab."
+
+msgid "Modal_Avatar_Removed"
+msgstr "Na-remove na ang avatar."
+
+msgid "Modal_Avatar_Remove_Confirm"
+msgstr "Kuhaon ba ang imong avatar?"
+
+msgid "Modal_Avatar_Remove_Confirm_Desc"
+msgstr "Ang imong litrato nga avatar kuhaon ug pulihan sa default nga avatar."
+
+msgid "Action_Confirm"
+msgstr "Kumpirmahon"
+
+msgid "Action_Cancel"
+msgstr "Kansela"
+
+msgid "Modal_Remove_Comment_Label"
+msgstr "kuhaa"
+
+msgid "Modal_Delete_Comment_Title"
+msgstr "Papasa ang komento"
+
+msgid "Modal_Delete_Comment_Msg"
+msgstr "Papasa kini nga komento? Dili na kini ma-undang."
+
+msgid "Modal_Delete_All_Title"
+msgstr "Papasa ang tanang akong komento"
+
+msgid "Modal_Delete_All_Msg"
+msgstr "Papasa ang tanang imong komento niining content? Dili na kini ma-undang."
+
+msgid "Modal_Comment_Deleted"
+msgstr "Na-delete na ang komento."
+
+msgid "Modal_Comments_Deleted"
+msgstr "Na-delete na ang tanang imong komento."
+
+msgid "Modal_Delete_Error"
+msgstr "Napakyas ang pag-delete. Palihug sulayi pag-usab."
+
+msgid "Modal_Cancel"
+msgstr "Kansela"
+
 msgid "Career_Journey"
 msgstr "Career Journey"
 

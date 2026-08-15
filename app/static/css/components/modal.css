@@ -326,6 +326,50 @@
     color: #ccc;
 }
 
+.comment-header__actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.comment-header-edit-btn {
+    display: inline-grid;
+    place-items: center;
+    width: 30px;
+    height: 30px;
+    padding: 0;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.06);
+    color: #f3f6ff;
+    cursor: pointer;
+    transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+    -webkit-tap-highlight-color: transparent !important;
+    -webkit-touch-callout: none !important;
+    user-select: none !important;
+    touch-action: manipulation !important;
+    outline: none !important;
+}
+
+.comment-header-edit-btn:focus,
+.comment-header-edit-btn:active {
+    outline: none !important;
+    -webkit-tap-highlight-color: transparent !important;
+}
+
+@media (hover: hover) {
+    .comment-header-edit-btn:hover {
+        background: rgba(255, 255, 255, 0.12);
+        border-color: rgba(59, 130, 246, 0.35);
+        color: #fff;
+    }
+}
+
+.comment-header-edit-btn ion-icon {
+    font-size: 15px;
+    pointer-events: none;
+}
+
 .comment-panel-toggle {
     display: none;
     align-items: center;
@@ -390,14 +434,57 @@
     object-fit: cover;
 }
 
+.comment-item .comment-avatar {
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+}
+
 .comment-content {
     flex: 1;
+}
+
+.comment-author-line {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.comment-author-line .comment-author {
+    margin-bottom: 4px;
 }
 
 .comment-author {
     font-weight: 600;
     color: #fff;
     margin-bottom: 4px;
+}
+
+.comment-meta .comment-remove-btn {
+    text-decoration: none;
+    color: #aaa;
+    text-transform: capitalize;
+    cursor: pointer;
+    font-size: 0.8rem;
+    -webkit-tap-highlight-color: transparent !important;
+    -webkit-touch-callout: none !important;
+    user-select: none !important;
+    touch-action: manipulation !important;
+    outline: none !important;
+    transition: color 0.2s ease;
+}
+
+.comment-meta .comment-remove-btn:focus,
+.comment-meta .comment-remove-btn:active {
+    outline: none !important;
+    -webkit-tap-highlight-color: transparent !important;
+}
+
+@media (hover: hover) {
+    .comment-meta .comment-remove-btn:hover {
+        color: #ff6b6b;
+        text-decoration: underline;
+    }
 }
 
 .comment-text {
@@ -463,11 +550,50 @@
     padding-top: 12px;
 }
 
+.comment-input-avatar {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    align-self: center;
+}
+
 .comment-input img {
     border-radius: 50%;
     height: 40px;
     width: 40px;
     align-self: center;
+}
+
+.comment-input #commenterAvatar {
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.commenter-edit-btn {
+    display: inline-grid;
+    place-items: center;
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.06);
+    color: rgba(255, 255, 255, 0.75);
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: background 0.3s, border-color 0.3s, color 0.3s;
+}
+
+.commenter-edit-btn:hover,
+.commenter-edit-btn:focus-visible {
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(59, 130, 246, 0.35);
+    color: #fff;
+}
+
+.commenter-edit-btn ion-icon {
+    font-size: 13px;
+    pointer-events: none;
 }
 
 .comment-input-field {
@@ -909,6 +1035,15 @@
         height: 36px;
         width: 36px;
         align-self: center;
+    }
+
+    .commenter-edit-btn {
+        width: 22px;
+        height: 22px;
+    }
+
+    .commenter-edit-btn ion-icon {
+        font-size: 12px;
     }
 
     .comment-input-field {

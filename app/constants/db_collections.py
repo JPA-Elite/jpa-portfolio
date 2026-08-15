@@ -20,3 +20,4 @@ class MongoCollections:
     ACTIVITY_LOGS = "activity_logs"
     MUSIC_LIKES = "music_likes"
     BOOKING_REQUESTS = "booking_requests"
+    USER_NAMES = "user_names"

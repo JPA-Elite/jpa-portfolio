@@ -127,6 +127,17 @@ endblock %}
         };
     </script>
     {{ super() }}
+    <script>
+        (function () {
+            if (location.hash !== "#comments") return;
+            var galleryId = new URLSearchParams(location.search).get("gallery_id");
+            if (!galleryId) return;
+            var card = document.querySelector('.gallery-item[data-gallery-id="' + galleryId + '"]');
+            if (!card) return;
+            var btn = card.querySelector(".comment-btn");
+            if (btn) btn.click();
+        })();
+    </script>
 {% endblock %}
 
 <script type="module" src="{{ static_asset('js/pages/gallery.js') }}"></script>

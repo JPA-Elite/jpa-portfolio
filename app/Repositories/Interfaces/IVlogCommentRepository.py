@@ -25,3 +25,11 @@ class IVlogCommentRepository(ABC):
     @abstractmethod
     def update_comment(self, comment: VlogComment):
         pass
+
+    @abstractmethod
+    def delete_by_id(self, comment_id: str):
+        pass
+
+    @abstractmethod
+    def delete_all_by_content_and_ip(self, content_key: str, content_id: str, ip_address: str):
+        pass

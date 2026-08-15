@@ -239,6 +239,13 @@ def _build_service_mock(name="service"):
     svc.count_comments_by_gallery.return_value = 1
     svc.count_comments_by_vlog.return_value = 1
     svc.count_comments_by_vlog_ids.return_value = {"v1": 1, "v2": 0}
+    svc.get_display_name.return_value = ("Joshua", 5)
+    svc.save_display_name.return_value = ("Joshua", 4)
+    svc.get_profile.return_value = ("Joshua", None, 5)
+    svc.get_avatar_status.return_value = ("http://avatar.webp", 5)
+    svc.save_avatar.return_value = ("http://avatar.webp", None)
+    svc.delete_comment.return_value = True
+    svc.delete_all_comments.return_value = 2
 
     svc.get_gallery_likes_count_by_id.return_value = 1
     svc.get_gallery_likes_by_id_and_ip.return_value = _dummy_like_doc()
@@ -379,6 +386,7 @@ def _request_context_kwargs(module_path: str, function_name: str):
         "app.Controllers.api.AuthController.update_profile_route",
         "app.Controllers.api.GalleryCommentController.gallery_like_comment_route",
         "app.Controllers.api.VlogCommentController.vlog_like_comment_route",
+        "app.Controllers.api.UserDisplayNameController.comment_username_route",
     }
     form_post_routes = {
         "app.Controllers.api.GalleryLikeController.add_gallery_like_route",
@@ -410,6 +418,7 @@ def _request_context_kwargs(module_path: str, function_name: str):
             "text": "hello",
             "username": "admin",
             "password": "secret",
+            "display_name": "Joshua",
         }
         return base_kwargs
 

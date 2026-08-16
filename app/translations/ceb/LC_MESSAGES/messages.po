@@ -327,6 +327,9 @@ msgstr "Ania ang link: {url}"
 msgid "chat_urls_all"
 msgstr "Ania ang mga pangunang pahina: {urls}"
 
+msgid "chat_survey_reply"
+msgstr "Ania ang link sa survey: {url}"
+
 msgid "chat_projects_intro"
 msgstr "Ania ang pipila sa akong mga key projects:"
 

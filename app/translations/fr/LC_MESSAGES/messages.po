@@ -321,6 +321,9 @@ msgstr "Voici le lien : {url}"
 msgid "chat_urls_all"
 msgstr "Voici les pages principales : {urls}"
 
+msgid "chat_survey_reply"
+msgstr "Voici le lien du sondage : {url}"
+
 msgid "chat_projects_intro"
 msgstr "Voici quelques-uns de mes projets clés :"
 

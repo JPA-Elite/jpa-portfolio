@@ -33,6 +33,7 @@ def _fake_gettext(key):
         "chat_qr_reply": "The donation QR codes are on the Donation page — open {url} to scan the code and send your gift.",
         "chat_url_reply": "Here's the link: {url}",
         "chat_urls_all": "Here are the main pages: {urls}",
+        "chat_survey_reply": "Here's the survey link: {url}",
         "chat_projects_intro": "Key projects:",
         "chat_experience_intro": "Experience:",
         "chat_gallery_intro": "Gallery photos:",
@@ -288,6 +289,27 @@ class ChatServiceIntentTests(unittest.TestCase):
     def test_social_link_question_still_uses_contact(self):
         result = self._resolve("what is the link to your facebook?")
         self.assertIn("algadipej962@gmail.com", result["answer"])
+
+    def test_survey_link_question_returns_google_form(self):
+        result = self._resolve("tell me the survey link")
+        self.assertIn("https://forms.gle/QV5kHc3STEFDFUYf9", result["answer"])
+
+    def test_take_survey_button_link(self):
+        result = self._resolve("no the link when i click the take the survey button")
+        self.assertIn("https://forms.gle/QV5kHc3STEFDFUYf9", result["answer"])
+
+    def test_concern_link_to_google_returns_survey_form(self):
+        result = self._resolve("tell me link of your concern connecting to google")
+        self.assertIn("https://forms.gle/QV5kHc3STEFDFUYf9", result["answer"])
+
+    def test_survey_link_professional_mode(self):
+        import flask
+
+        fake_request = MagicMock()
+        fake_request.args.get.return_value = "professional"
+        with patch.object(flask, "request", fake_request):
+            result = self._resolve("what is the survey link")
+        self.assertIn("https://forms.gle/5UqVgzzxgkJS11Qj9", result["answer"])
 
 
 class ChatServiceAiTests(unittest.TestCase):

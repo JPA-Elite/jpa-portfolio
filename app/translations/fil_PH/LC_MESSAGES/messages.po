@@ -228,11 +228,23 @@ msgstr "AI Assistant"
 msgid "chat_typing_aria"
 msgstr "Nagta-type"
 
+msgid "chat_typing_message"
+msgstr "Nagta-type si Josh"
+
+msgid "chat_current_role_reply"
+msgstr "Kasalukuyan akong nagtatrabaho bilang {role} sa {company}."
+
 msgid "chat_greeting_fallback"
 msgstr "Hi! Welcome sa portfolio chat ko. Pwede kang magtanong diretso o pumili sa mga mabilis na tanong sa ibaba."
 
 msgid "chat_unknown_fallback"
 msgstr "Nasasagot ko ang mga mungkahing tanong sa ibaba. Subukan mong pumili ng isa sa mga quick options."
+
+msgid "chat_unknown_fallback_intro"
+msgstr "Wala akong mahanap na tungkol diyan."
+
+msgid "chat_quick_questions_intro"
+msgstr "Narito ang mga bagay na kaya kong sagutin:"
 
 msgid "chat_question_prefix"
 msgstr "T: "
@@ -242,6 +254,102 @@ msgstr "I-mute ang boses"
 
 msgid "chat_unmute_aria"
 msgstr "I-unmute ang boses"
+
+msgid "chat_sensitive_refusal"
+msgstr "Hindi ako makapagbahagi ng sensitibo o pribadong impormasyon tulad ng password, API key, o credentials. Kung may iba kang tanong, huwag mag-atubiling magtanong!"
+
+msgid "chat_farewell_reply"
+msgstr "Paalam! Salamat sa pagbisita. Bumalik ka lang anumang oras kung may tanong ka!"
+
+msgid "chat_appreciation_reply"
+msgstr "Walang anuman! Natutuwa akong nakatulong ako."
+
+msgid "chat_how_are_you_reply"
+msgstr "Mabuti naman ako, salamat sa pagtatanong! Ikaw, kumusta ka?"
+
+msgid "chat_contact_reply"
+msgstr "Maaari kang makipag-ugnayan sa akin sa algadipej962@gmail.com o 0931 912 7640, at kumonekta sa Facebook, LinkedIn (in/joshua-algadipe), at GitHub (JPA-Elite)."
+
+msgid "chat_skills_reply"
+msgstr "Ang mga wikang ginagamit ko ay JavaScript, Python, Java, PHP, C++, at C#, at mga framework tulad ng Angular, Vue.js, Next.js, React, Laravel, Spring Boot, at Flask — pati na ang Git at Postman."
+
+msgid "chat_identity_reply"
+msgstr "Ako ang chat assistant ng portfolio, na ginawa ko. Rule-based bot ako, hindi AI — magtanong ka lang tungkol sa aking mga proyekto, karanasan, o kasanayan!"
+
+msgid "chat_negative_reply"
+msgstr "Pasensya na! Maaari ka bang magbigay ng karagdagang detalye para masagot kita nang mas mahusay?"
+
+msgid "chat_joke_reply"
+msgstr "Bakit mas gusto ng mga programmer ang dark mode? Dahil ang light ay umaakit ng bugs!"
+
+msgid "chat_redirect_reply"
+msgstr "Hindi ako sigurado diyan. Subukang i-rephrase, o pumili ng isa sa mga suggested questions sa ibaba."
+
+msgid "chat_followup_more_intro"
+msgstr "Maaari kong sabihin ang higit pa tungkol sa mga ito:"
+
+msgid "chat_followup_range"
+msgstr "{count} lang ang mga item ko doon."
+
+msgid "chat_did_you_mean"
+msgstr "Ang ibig mo bang sabihin ay isa sa mga ito?"
+
+msgid "chat_developers_reply"
+msgstr "Ang website na ito ay dinisenyo at ginawa ko, kasama ang mga collaborator na sina J-AlDev (j-aldev.com) at Brocode Devs (brocode-devs.vercel.app)."
+
+msgid "chat_certifications_reply"
+msgstr "Mayroon akong mga sertipikasyon sa Angular, Java, JavaScript, SQL, Analyzing Data with Python, Basic Statistics with Python, HTML & CSS Web Design, at Flask Web Apps with Python."
+
+msgid "chat_education_reply"
+msgstr "Ang aking background ay may kasamang hands-on na mga internship at tungkulin sa TrustArc at Chronostep, at isang Business Intern na karanasan. Ang aking resume ay nagpapakita ng full-stack development, API security, at internal na mga proyekto."
+
+msgid "chat_summary_reply"
+msgstr "Ako ay isang Software Engineer na may 5+ taong karanasan, 12+ proyektong natapos, at 8 sertipikasyon — nakatuon sa Full Stack, API Security, Cloud-Native, at UI Engineering."
+
+msgid "chat_about_reply"
+msgstr "Ako ay isang passionate na software developer na gumagawa ng user-friendly na mga aplikasyon, mahilig matuto ng bagong teknolohiya, at goal-oriented. Sanay ako sa frontend, backend, cloud, at automation."
+
+msgid "chat_donation_reply"
+msgstr "Salamat sa pagsasaalang-alang sa donasyon! Maaari mong suportahan ako sa pamamagitan ng GCash, PayMaya, MariBank, Tonik Bank, o OwnBank — pumunta lang sa Donation page para i-scan ang QR code at makapagpadala."
+
+msgid "chat_booking_reply"
+msgstr "Maaari kang mag-book ng session para sa Website Development, Web Applications, Mobile Apps, API & Backend, UI/UX Design, E-commerce, Website Redesign, Consultation, o Others. Pumunta sa Booking page para pumili ng serbisyo at mag-schedule."
+
+msgid "chat_concern_reply"
+msgstr "Salamat sa iyong feedback! Ibahagi ang iyong mga saloobin, alalahanin, o suhestyon sa pamamagitan ng Concern page."
+
+msgid "chat_projects_intro"
+msgstr "Narito ang ilan sa aking mga key projects:"
+
+msgid "chat_experience_intro"
+msgstr "Narito ang aking karanasan:"
+
+msgid "chat_gallery_intro"
+msgstr "Narito ang ilang kamakailang mga litrato sa gallery:"
+
+msgid "chat_vlog_intro"
+msgstr "Narito ang ilang kamakailang mga vlog:"
+
+msgid "chat_music_intro"
+msgstr "Narito ang ilang mga kanta:"
+
+msgid "chat_content_empty"
+msgstr "Wala akong nahanap na mga item para sa paksang iyon ngayon."
+
+msgid "chat_content_unavailable"
+msgstr "Hindi ko makuha ang impormasyong iyon ngayon. Subukan muli mamaya."
+
+msgid "chat_content_more"
+msgstr " ... at {count} pa."
+
+msgid "chat_gallery_count_reply"
+msgstr "Mayroon akong {total} na mga litrato sa aking gallery."
+
+msgid "chat_vlog_count_reply"
+msgstr "Mayroon akong {total} na mga vlog sa aking koleksyon."
+
+msgid "chat_music_count_reply"
+msgstr "Mayroon akong {total} na mga kanta sa aking koleksyon."
 
 msgid "qa_name"
 msgstr "Ano ang pangalan mo?"

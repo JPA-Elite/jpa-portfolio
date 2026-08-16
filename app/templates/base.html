@@ -255,8 +255,7 @@
                     </ul>
                     {% if request.args.get('mode') != 'professional' %}
                     <a class="sidebar-booknow-btn" href="{{ url_for('pages.booking') }}">
-                        <ion-icon name="book-outline"></ion-icon>
-                        Book Now
+                        Build Now
                     </a>
                     <a class="sidebar-admin-btn" href="/admin/login" title="Admin Panel">
                         <ion-icon name="settings-outline"></ion-icon>
@@ -273,8 +272,7 @@
                     </a>
                     {% if request.args.get('mode') != 'professional' %}
                         <a class="booknow-btn" href="{{ url_for('pages.booking') }}">
-                            <ion-icon name="book-outline"></ion-icon>
-                            Book Now
+                            Build Now
                         </a>
                         <a class="donation-btn" href="{{ url_for('pages.donation') }}">
                             <img src="{{ url_for('static', filename='images/peso.webp') }}" alt="donation" class="flag-icon">

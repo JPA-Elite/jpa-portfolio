@@ -1,14 +1,14 @@
 {% extends 'base.html' %}
 
-{% block title %}{{ _('Book Now | Joshua Algadipe') }}{% endblock %}
+{% block title %}{{ _('Build Now | Joshua Algadipe') }}{% endblock %}
 {% block head %}
 {% if HCAPTCHA_ENABLED %}
 <script src="https://hcaptcha.com/1/api.js" async defer></script>
 {% endif %}
 {% endblock %}
 
-{% block meta_description %}Book a session or appointment with Joshua Algadipe. Schedule your consultation, booking, or reservation today.{% endblock %}
-{% block meta_keywords %}Joshua Algadipe, booking, appointment, schedule, reservation, consultation{% endblock %}
+{% block meta_description %}Build a session or appointment with Joshua Algadipe. Schedule your consultation, build, or reservation today.{% endblock %}
+{% block meta_keywords %}Joshua Algadipe, build, appointment, schedule, reservation, consultation{% endblock %}
 {% block meta_author %}Joshua Algadipe{% endblock %}
 
 {% from 'components/macros.html' import datetime_picker with context %}
@@ -21,7 +21,7 @@
         <div class="booking-icon">
             <ion-icon name="book-outline"></ion-icon>
         </div>
-        <h2>{{ _('Book a Session') }}</h2>
+        <h2>{{ _('Build a Session') }}</h2>
         <p>{{ _('Schedule your appointment below.') }}</p>
     </div>
 
@@ -110,7 +110,7 @@
             <div id="bookingStatus" class="booking-status"></div>
             <button type="submit" class="booking-submit" id="submitBtn" disabled>
                 <ion-icon name="paper-plane-outline" id="submitIcon"></ion-icon>
-                <span id="submitText">{{ _('Submit Booking') }}</span>
+                <span id="submitText">{{ _('Submit Build') }}</span>
             </button>
         </form>
     </div>
@@ -183,7 +183,7 @@
             submitText.textContent = '{{ _("Sending...") }}';
         } else {
             submitIcon.setAttribute('name', 'paper-plane-outline');
-            submitText.textContent = '{{ _("Submit Booking") }}';
+            submitText.textContent = '{{ _("Submit Build") }}';
             validateForm();
         }
     }

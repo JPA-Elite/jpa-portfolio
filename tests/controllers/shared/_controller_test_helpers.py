@@ -271,6 +271,8 @@ def _build_service_mock(name="service"):
     svc.delete_company_roadmap.return_value = True
 
     svc.get_all_tags.return_value = ["tag1", "tag2"]
+    svc.resolve.return_value = {"answer": "ok", "action": None, "matched_question": None}
+    svc.get_qa_data.return_value = [{"question": "What is your name?", "answer": "My name is Joshua."}]
     return svc
 
 
@@ -383,6 +385,7 @@ def _request_context_kwargs(module_path: str, function_name: str):
 
     json_routes = {
         "app.Controllers.api.BaseController.delete_page_system_info_route",
+        "app.Controllers.api.BaseController.chat_route",
         "app.Controllers.api.AuthController.update_profile_route",
         "app.Controllers.api.GalleryCommentController.gallery_like_comment_route",
         "app.Controllers.api.VlogCommentController.vlog_like_comment_route",
@@ -419,6 +422,7 @@ def _request_context_kwargs(module_path: str, function_name: str):
             "username": "admin",
             "password": "secret",
             "display_name": "Joshua",
+            "message": "What is your name?",
         }
         return base_kwargs
 

@@ -614,6 +614,48 @@
     line-height: 1;
 }
 
+.chatbox-send .chatbox-send__loader {
+    display: none;
+    align-items: center;
+    gap: 4px;
+}
+
+.chatbox-send.is-loading .chatbox-send__loader {
+    display: inline-flex;
+}
+
+.chatbox-send.is-loading ion-icon,
+.chatbox-send.is-loading > span:not(.chatbox-send__loader) {
+    display: none;
+}
+
+.chatbox-send.is-loading,
+.chatbox-input:disabled {
+    cursor: not-allowed;
+    opacity: 0.75;
+}
+
+.chatbox-send:disabled:hover {
+    transform: none;
+}
+
+.chatbox-send__dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: currentColor;
+    opacity: 0.6;
+    animation: chatTypingPulse 1.1s infinite ease-in-out;
+}
+
+.chatbox-send__dot:nth-child(2) {
+    animation-delay: 0.16s;
+}
+
+.chatbox-send__dot:nth-child(3) {
+    animation-delay: 0.32s;
+}
+
 .chatbox-send:hover {
     transform: translateY(-1px);
     background: color-mix(in srgb, var(--accent-color, #007bff) 90%, #000);

@@ -3055,7 +3055,7 @@ body.lyrics-modal-open {
     margin: 0;
 }
 
-/* ── Book Now button (desktop navbar) ── */
+/* ── Build Now button (desktop navbar) ── */
 .navbarMenu2 .booknow-btn {
     display: inline-flex;
     align-items: center;
@@ -3076,7 +3076,7 @@ body.lyrics-modal-open {
     color: #fff;
 }
 
-/* ── Sidebar Book Now + Admin (mobile) ── */
+/* ── Sidebar Build Now + Admin (mobile) ── */
 .sidebar-booknow-btn {
     display: none;
 }

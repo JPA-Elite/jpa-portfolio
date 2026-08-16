@@ -236,6 +236,14 @@ QR_CODE_PATTERNS = [
     "qr", "qr code", "qrcode",
 ]
 
+SURVEY_LINK_PATTERNS = [
+    "survey link", "survey url", "survey button", "take the survey",
+    "google form", "google forms", "forms.gle", "the survey",
+]
+
+SURVEY_URL_DEFAULT = "https://forms.gle/QV5kHc3STEFDFUYf9"
+SURVEY_URL_PROFESSIONAL = "https://forms.gle/5UqVgzzxgkJS11Qj9"
+
 URL_QUESTION_PATTERNS = [
     "what is the url", "whats the url", "what is url", "whats url", "whats your url",
     "what is your url", "what is the link", "whats the link", "what is link",
@@ -519,6 +527,10 @@ class ChatService:
         if self._is_qr_question(normalized):
             return self._reply(gettext("chat_qr_reply").format(url=self._site_url(PAGE_PATHS["donation"])))
 
+        survey_reply = self._resolve_survey_question(normalized)
+        if survey_reply:
+            return self._reply(survey_reply)
+
         url_reply = self._resolve_url_question(normalized)
         if url_reply:
             return self._reply(url_reply)
@@ -652,6 +664,30 @@ class ChatService:
     def _is_qr_question(self, normalized):
         return any(self._contains_word(normalized, word) for word in QR_CODE_PATTERNS)
 
+    def _is_survey_question(self, normalized):
+        return any(self._contains_word(normalized, word) for word in SURVEY_LINK_PATTERNS)
+
+    def _survey_url(self):
+        mode = ""
+        try:
+            from flask import request
+
+            mode = request.args.get("mode") or ""
+        except Exception:
+            pass
+        if mode == "professional":
+            return SURVEY_URL_PROFESSIONAL
+        return SURVEY_URL_DEFAULT
+
+    def _resolve_survey_question(self, normalized):
+        if not self._is_survey_question(normalized):
+            if not (
+                self._contains_word(normalized, "google")
+                and any(pattern in normalized for pattern in URL_QUESTION_PATTERNS)
+            ):
+                return None
+        return gettext("chat_survey_reply").format(url=self._survey_url())
+
     def _url_topic_from_text(self, normalized):
         for topic, keywords in PAGE_TOPIC_KEYWORDS:
             if any(self._contains_word(normalized, keyword) for keyword in keywords):
@@ -712,6 +748,8 @@ class ChatService:
             "PAGE LINKS: " + ", ".join(
                 f"{key}={self._site_url(path)}" for key, path in PAGE_PATHS.items()
             ),
+            f"CONCERN SURVEY LINK: {SURVEY_URL_DEFAULT}"
+            f" (professional mode: {SURVEY_URL_PROFESSIONAL})",
         ]
         try:
             locale = get_locale() or "en"

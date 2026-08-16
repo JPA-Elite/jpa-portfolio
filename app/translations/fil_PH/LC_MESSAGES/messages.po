@@ -327,6 +327,9 @@ msgstr "Narito ang link: {url}"
 msgid "chat_urls_all"
 msgstr "Narito ang mga pangunahing pahina: {urls}"
 
+msgid "chat_survey_reply"
+msgstr "Narito ang link ng survey: {url}"
+
 msgid "chat_projects_intro"
 msgstr "Narito ang ilan sa aking mga key projects:"
 

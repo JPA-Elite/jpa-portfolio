@@ -312,6 +312,15 @@ msgstr "Vous pouvez réserver une session pour le développement de site web, le
 msgid "chat_concern_reply"
 msgstr "Merci pour vos retours ! Partagez vos réflexions, préoccupations ou suggestions via la page Concern."
 
+msgid "chat_qr_reply"
+msgstr "Les codes QR pour les dons se trouvent sur la page Donation — ouvrez {url} pour scanner le code et envoyer votre don."
+
+msgid "chat_url_reply"
+msgstr "Voici le lien : {url}"
+
+msgid "chat_urls_all"
+msgstr "Voici les pages principales : {urls}"
+
 msgid "chat_projects_intro"
 msgstr "Voici quelques-uns de mes projets clés :"
 

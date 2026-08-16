@@ -1,3 +1,4 @@
+import os
 import re
 import time
 from datetime import datetime
@@ -231,6 +232,49 @@ CONCERN_PATTERNS = [
     "report", "suggestion",
 ]
 
+QR_CODE_PATTERNS = [
+    "qr", "qr code", "qrcode",
+]
+
+URL_QUESTION_PATTERNS = [
+    "what is the url", "whats the url", "what is url", "whats url", "whats your url",
+    "what is your url", "what is the link", "whats the link", "what is link",
+    "what is your website", "whats your website",
+    "the url for", "the url of", "url for", "url of",
+    "the link for", "the link of", "link for", "link of",
+    "give me the url", "give me the link", "send me the url", "send me the link",
+    "send the url", "send the link",
+    "where can i find", "where do i find",
+    "take me to", "how do i go to", "how to go to",
+    "link to the", "url to the",
+]
+
+SOCIAL_LINK_WORDS = [
+    "facebook", "instagram", "linkedin", "github", "twitter", "social", "email",
+]
+
+PAGE_TOPIC_KEYWORDS = [
+    ("donation", ["donation", "donate", "qr"]),
+    ("gallery", ["gallery", "photos", "pictures"]),
+    ("vlog", ["vlog", "video"]),
+    ("music", ["music", "song"]),
+    ("build", ["booking", "book", "build", "hire", "appointment", "schedule", "consultation"]),
+    ("concern", ["concern", "feedback", "complaint"]),
+    ("portfolio", ["portfolio", "project", "projects", "resume"]),
+    ("home", ["home", "website", "site"]),
+]
+
+PAGE_PATHS = {
+    "home": "/",
+    "portfolio": "/portfolio",
+    "gallery": "/gallery",
+    "vlog": "/vlog",
+    "music": "/music",
+    "donation": "/donation",
+    "build": "/build",
+    "concern": "/concern",
+}
+
 TOPIC_HANDLERS = [
     ("summary", SUMMARY_PATTERNS, "_topic_summary"),
     ("about", ABOUT_PATTERNS, "_topic_about"),
@@ -298,6 +342,7 @@ class ChatService:
         video_service=None,
         music_service=None,
         knowledge_base_service=None,
+        gemini_service=None,
     ):
         self.key_project_service = key_project_service
         self.company_roadmap_service = company_roadmap_service
@@ -305,6 +350,7 @@ class ChatService:
         self.video_service = video_service
         self.music_service = music_service
         self.knowledge_base_service = knowledge_base_service
+        self.gemini_service = gemini_service
         self._kb_cache = None
         self._locale = "en"
         self._session_id = None
@@ -470,6 +516,17 @@ class ChatService:
         if self._is_how_are_you(expanded):
             return self._reply(gettext("chat_how_are_you_reply"))
 
+        if self._is_qr_question(normalized):
+            return self._reply(gettext("chat_qr_reply").format(url=self._site_url(PAGE_PATHS["donation"])))
+
+        url_reply = self._resolve_url_question(normalized)
+        if url_reply:
+            return self._reply(url_reply)
+
+        ai_answer = self._ai_chat_answer(message)
+        if ai_answer:
+            return self._reply(ai_answer)
+
         content = self._resolve_content(normalized, expanded)
         if content:
             return content
@@ -501,13 +558,13 @@ class ChatService:
         if followup:
             return followup
 
-        fuzzy = self._fuzzy_topic_match(normalized)
-        if fuzzy:
-            return getattr(self, fuzzy[2])(normalized, expanded)
-
         topic = self._search_topics_content(expanded)
         if topic:
             return getattr(self, TOPIC_METHODS[topic])(normalized, expanded)
+
+        fuzzy = self._fuzzy_topic_match(normalized)
+        if fuzzy:
+            return getattr(self, fuzzy[2])(normalized, expanded)
 
         qa = qa_data if qa_data is not None else self.get_qa_data()
 
@@ -516,18 +573,18 @@ class ChatService:
             return self._reply(exact, matched_question=message)
 
         best = self._find_best_qa(expanded, qa)
-        if best:
-            if best["score"] >= CHAT_MATCH_THRESHOLD:
-                return self._reply(
-                    self._apply_age(self._kb_answer_for(best["qa"])),
-                    matched_question=best["qa"]["question"],
-                )
-            if best["score"] >= CHAT_SUGGEST_THRESHOLD:
-                suggestions = self._suggest_questions(expanded, qa)
-                return self._reply(
-                    f"{gettext('chat_did_you_mean')} {' • '.join(suggestions)}",
-                    action="expand_options",
-                )
+        if best and best["score"] >= CHAT_MATCH_THRESHOLD:
+            return self._reply(
+                self._apply_age(self._kb_answer_for(best["qa"])),
+                matched_question=best["qa"]["question"],
+            )
+
+        if best and best["score"] >= CHAT_SUGGEST_THRESHOLD:
+            suggestions = self._suggest_questions(expanded, qa)
+            return self._reply(
+                f"{gettext('chat_did_you_mean')} {' • '.join(suggestions)}",
+                action="expand_options",
+            )
 
         suggested = self._suggest_follow_ups(qa)
         if suggested:
@@ -591,6 +648,130 @@ class ChatService:
             return True
         cleaned = normalized.strip(" ?!.,;:")
         return cleaned in {"what", "huh", "idk", "wat", "wut", "hmm"}
+
+    def _is_qr_question(self, normalized):
+        return any(self._contains_word(normalized, word) for word in QR_CODE_PATTERNS)
+
+    def _url_topic_from_text(self, normalized):
+        for topic, keywords in PAGE_TOPIC_KEYWORDS:
+            if any(self._contains_word(normalized, keyword) for keyword in keywords):
+                return topic
+        return None
+
+    def _resolve_url_question(self, normalized):
+        if any(self._contains_word(normalized, word) for word in SOCIAL_LINK_WORDS):
+            return None
+        if not any(pattern in normalized for pattern in URL_QUESTION_PATTERNS):
+            return None
+        topic = self._url_topic_from_text(normalized)
+        if topic is None and self._session_id:
+            session = self._sessions.get(self._session_id)
+            if session and session.get("last_topic") in PAGE_PATHS:
+                topic = session["last_topic"]
+        if topic and topic in PAGE_PATHS:
+            return gettext("chat_url_reply").format(url=self._site_url(PAGE_PATHS[topic]))
+        urls = " • ".join(self._site_url(PAGE_PATHS[topic_key]) for topic_key in PAGE_PATHS)
+        return gettext("chat_urls_all").format(urls=urls)
+
+    def _site_base_url(self):
+        try:
+            from flask import request
+
+            base = request.host_url
+            if base:
+                return base
+        except Exception:
+            pass
+        return os.getenv("SITE_URL", "")
+
+    def _site_url(self, path=""):
+        base = self._site_base_url()
+        if not base:
+            return path
+        base = base.rstrip("/")
+        cleaned = (path or "").lstrip("/")
+        if not cleaned:
+            return base
+        return base + "/" + cleaned
+
+    # ------------------------------ ai layer ------------------------------
+
+    def _get_gemini_service(self):
+        if self.gemini_service is None:
+            from app.Services.GeminiService import GeminiService
+
+            candidate = GeminiService()
+            if candidate.is_available():
+                self.gemini_service = candidate
+        return self.gemini_service
+
+    def _ai_context(self):
+        base = self._site_base_url()
+        parts = [
+            "SITE BASE URL: " + (base or "(use relative paths)"),
+            "PAGE LINKS: " + ", ".join(
+                f"{key}={self._site_url(path)}" for key, path in PAGE_PATHS.items()
+            ),
+        ]
+        try:
+            locale = get_locale() or "en"
+        except Exception:
+            locale = "en"
+        age = str(self._age())
+        for section in self._knowledge_base().sections():
+            loc = (section.get("localized") or {}).get(locale) or {}
+            heading = loc.get("heading") or section["heading"]
+            body = loc.get("body") or section.get("body")
+            if heading and body:
+                parts.append(f"Q: {heading}\nA: {body.replace('{age}', age)}")
+        for topic, fetcher in (
+            ("projects", self._fetch_projects),
+            ("experience", self._fetch_roadmaps),
+            ("gallery", self._fetch_gallery),
+            ("vlog", self._fetch_vlog),
+            ("music", self._fetch_music),
+        ):
+            try:
+                items, fields = fetcher()
+            except Exception:
+                continue
+            for item in (items or [])[:20]:
+                record = self._item_record(topic, item)
+                if record.get("detail"):
+                    parts.append(f"{topic.upper()}: {record['detail']}")
+        return "\n".join(parts)
+
+    def _ai_history(self, message):
+        if not self._session_id:
+            return []
+        session = self._sessions.get(self._session_id)
+        if not session:
+            return []
+        turns = session.get("turns") or []
+        if turns and turns[-1].get("text") == message:
+            turns = turns[:-1]
+        return [
+            {"role": turn.get("role"), "text": turn.get("text")}
+            for turn in turns[-6:]
+            if turn.get("text")
+        ]
+
+    def _ai_chat_answer(self, message):
+        gemini = self._get_gemini_service()
+        if gemini is None:
+            return None
+        try:
+            context = self._ai_context()
+        except Exception:
+            context = ""
+        try:
+            history = self._ai_history(message)
+        except Exception:
+            history = []
+        try:
+            return gemini.answer(message, context, history=history)
+        except Exception:
+            return None
 
     def _contains_word(self, text, word):
         return re.search(rf"\b{re.escape(word)}\b", text) is not None
@@ -692,7 +873,7 @@ class ChatService:
                 gettext("chat_followup_range").replace("{count}", str(len(last_items)))
             )
 
-        if self._is_follow_up_which(expanded) and last_items:
+        if self._is_follow_up_which(expanded) and last_items and self._has_item_reference(expanded):
             return self._follow_up_list_reply(last_items)
 
         return None
@@ -716,6 +897,14 @@ class ChatService:
             if self._contains_word(expanded, word):
                 return index
         return None
+
+    def _has_item_reference(self, expanded):
+        if self._ordinal_index(expanded) is not None:
+            return True
+        return any(
+            phrase in expanded
+            for phrase in ["this one", "that one", "one of", "any of", "them", "these", "those", "this", "that"]
+        )
 
     def _suggest_follow_ups(self, qa):
         if not self._session_id:

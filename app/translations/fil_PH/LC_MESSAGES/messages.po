@@ -318,6 +318,15 @@ msgstr "Maaari kang mag-book ng session para sa Website Development, Web Applica
 msgid "chat_concern_reply"
 msgstr "Salamat sa iyong feedback! Ibahagi ang iyong mga saloobin, alalahanin, o suhestyon sa pamamagitan ng Concern page."
 
+msgid "chat_qr_reply"
+msgstr "Ang mga QR code para sa donasyon ay nasa Donation page — buksan ang {url} para i-scan ang code at makapagpadala ng iyong regalo."
+
+msgid "chat_url_reply"
+msgstr "Narito ang link: {url}"
+
+msgid "chat_urls_all"
+msgstr "Narito ang mga pangunahing pahina: {urls}"
+
 msgid "chat_projects_intro"
 msgstr "Narito ang ilan sa aking mga key projects:"
 

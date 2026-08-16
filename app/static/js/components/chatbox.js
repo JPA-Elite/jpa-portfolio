@@ -362,8 +362,6 @@ async function sendMessage() {
         input.value = "";
 
         const answer = await fetchChatAnswer(message);
-        setChatComposerLoading(false);
-        chatRequestPending = false;
 
         if (answer) {
             showTypingIndicator();
@@ -375,6 +373,8 @@ async function sendMessage() {
             cacheMessages(answer, "bot", botTimestamp);
         }
 
+        setChatComposerLoading(false);
+        chatRequestPending = false;
         updateClearChatButtonVisibility();
     }
 }
@@ -390,8 +390,6 @@ async function sendPredefinedMessage(question, data = []) {
     cacheMessages(question, "user", userTimestamp);
 
     const answer = await fetchChatAnswer(question);
-    setChatComposerLoading(false);
-    chatRequestPending = false;
 
     if (answer) {
         showTypingIndicator();
@@ -403,6 +401,9 @@ async function sendPredefinedMessage(question, data = []) {
         displayMessage(answer, "", "black", true, { role: "bot", timestamp: botTimestamp });
         cacheMessages(answer, "bot", botTimestamp);
     }
+
+    setChatComposerLoading(false);
+    chatRequestPending = false;
     updateClearChatButtonVisibility();
 }
 
@@ -444,6 +445,41 @@ function displayMessage(message, backgroundColor = '', color = '', typeEffect = 
     scrollChatToBottom("smooth");
 }
 
+function linkifyChatMessage(element) {
+    if (!element) return;
+    const text = element.textContent || "";
+    if (!text) return;
+
+    const plainUrl = /https?:\/\/[^\s<>"']+/g;
+    const markdownLink = /\[([^\]]+)\]\((https?:\/\/[^\s)]+|\/[^)\s]+)\)/g;
+    if (!plainUrl.test(text) && !markdownLink.test(text)) return;
+    plainUrl.lastIndex = 0;
+    markdownLink.lastIndex = 0;
+
+    const escapeHtml = (value) => String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
+
+    const absolute = (url) => {
+        if (/^https?:\/\//i.test(url)) return url;
+        return window.location.origin + (url.startsWith("/") ? url : "/" + url);
+    };
+
+    const linkify = (match) => {
+        const url = match.replace(/[.,;:!?]+$/, "");
+        const href = escapeHtml(url);
+        return `<a href="${href}" target="_blank" rel="noopener noreferrer">${href}</a>`;
+    };
+
+    element.innerHTML = escapeHtml(text)
+        .replace(markdownLink, (match, label, url) => {
+            const href = escapeHtml(absolute(url));
+            return `<a href="${href}" target="_blank" rel="noopener noreferrer">${escapeHtml(label)}</a>`;
+        })
+        .replace(plainUrl, linkify);
+}
+
 function addTypingEffect(element, text, typeEffect = true) {
     let index = 0;
 
@@ -456,11 +492,14 @@ function addTypingEffect(element, text, typeEffect = true) {
                 scrollChatToBottom("auto");
             }
             setTimeout(typeNextCharacter, 50); // Adjust speed as needed
+        } else {
+            linkifyChatMessage(element);
         }
     }
 
     if (!typeEffect) {
         element.textContent = text;
+        linkifyChatMessage(element);
         scrollChatToBottom("auto");
     } else {
         typeNextCharacter();

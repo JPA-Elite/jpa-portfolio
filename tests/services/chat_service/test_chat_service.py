@@ -30,6 +30,9 @@ def _fake_gettext(key):
         "chat_donation_reply": "Donate via GCash on the Donation page.",
         "chat_booking_reply": "Book: Website Development, Web Apps, and more.",
         "chat_concern_reply": "Share feedback on the Concern page.",
+        "chat_qr_reply": "The donation QR codes are on the Donation page — open {url} to scan the code and send your gift.",
+        "chat_url_reply": "Here's the link: {url}",
+        "chat_urls_all": "Here are the main pages: {urls}",
         "chat_projects_intro": "Key projects:",
         "chat_experience_intro": "Experience:",
         "chat_gallery_intro": "Gallery photos:",
@@ -80,7 +83,8 @@ class ChatServiceTests(unittest.TestCase):
         self.service = ChatService()
 
     def _resolve(self, message):
-        with patch("app.Services.ChatService.gettext", side_effect=_fake_gettext):
+        with patch("app.Services.ChatService.gettext", side_effect=_fake_gettext), \
+             patch("app.Services.ChatService.ChatService._get_gemini_service", new=lambda self: self.gemini_service):
             return self.service.resolve(message, QA)
 
     def test_exact_match_returns_answer(self):
@@ -148,7 +152,8 @@ class ChatServiceTests(unittest.TestCase):
             {"question": f"Question {i}?", "answer": f"Answer {i}."}
             for i in range(15)
         ]
-        with patch("app.Services.ChatService.gettext", side_effect=_fake_gettext):
+        with patch("app.Services.ChatService.gettext", side_effect=_fake_gettext), \
+             patch("app.Services.ChatService.ChatService._get_gemini_service", new=lambda self: self.gemini_service):
             result = self.service.resolve("what are the quick questions", big_qa)
         self.assertEqual(result["answer"].count(" • "), 9)
         self.assertIn("Question 9?", result["answer"])
@@ -160,7 +165,8 @@ class ChatServiceIntentTests(unittest.TestCase):
         self.service = ChatService()
 
     def _resolve(self, message):
-        with patch("app.Services.ChatService.gettext", side_effect=_fake_gettext):
+        with patch("app.Services.ChatService.gettext", side_effect=_fake_gettext), \
+             patch("app.Services.ChatService.ChatService._get_gemini_service", new=lambda self: self.gemini_service):
             return self.service.resolve(message, QA)
 
     def test_sensitive_guard_wins_over_greeting(self):
@@ -241,6 +247,100 @@ class ChatServiceIntentTests(unittest.TestCase):
         result = self._resolve("give feedback")
         self.assertIn("Concern page", result["answer"])
 
+    def test_qr_question_returns_donation_reply(self):
+        result = self._resolve("do you have qr code for this?")
+        self.assertIn("/donation", result["answer"])
+        self.assertNotIn("Python", result["answer"])
+
+    def test_qr_question_without_donation_context(self):
+        result = self._resolve("where is the qr code?")
+        self.assertIn("Donation", result["answer"])
+
+    def test_url_question_with_page(self):
+        result = self._resolve("what is the url of the donation page?")
+        self.assertIn("/donation", result["answer"])
+
+    def test_url_reply_uses_site_base_url(self):
+        with patch.dict("os.environ", {"SITE_URL": "https://example.com"}):
+            result = self._resolve("what is the url of the donation page")
+        self.assertIn("https://example.com/donation", result["answer"])
+
+    def test_url_question_gallery(self):
+        result = self._resolve("give me the link to the gallery")
+        self.assertIn("/gallery", result["answer"])
+
+    def test_url_question_build_page(self):
+        result = self._resolve("what is the url of the booking page?")
+        self.assertIn("/build", result["answer"])
+
+    def test_url_question_uses_last_topic(self):
+        with patch("app.Services.ChatService.gettext", side_effect=_fake_gettext), \
+             patch("app.Services.ChatService.ChatService._get_gemini_service", new=lambda self: self.gemini_service):
+            self.service.resolve("how can I donate?", QA, session_id="url-test-1")
+            result = self.service.resolve("what is the url?", QA, session_id="url-test-1")
+        self.assertIn("/donation", result["answer"])
+
+    def test_url_question_without_topic_lists_pages(self):
+        result = self._resolve("what is the url?")
+        self.assertIn("/portfolio", result["answer"])
+        self.assertIn("/gallery", result["answer"])
+
+    def test_social_link_question_still_uses_contact(self):
+        result = self._resolve("what is the link to your facebook?")
+        self.assertIn("algadipej962@gmail.com", result["answer"])
+
+
+class ChatServiceAiTests(unittest.TestCase):
+    def _resolve(self, message, gemini=None):
+        service = ChatService(gemini_service=gemini)
+        with patch("app.Services.ChatService.gettext", side_effect=_fake_gettext), \
+             patch("app.Services.ChatService.ChatService._get_gemini_service", new=lambda self: self.gemini_service):
+            return service.resolve(message, QA)
+
+    def test_ai_answers_when_rules_cannot_match(self):
+        gemini = MagicMock()
+        gemini.answer.return_value = "AI generated answer."
+        result = self._resolve("what are joshua's pets?", gemini=gemini)
+        self.assertEqual(result["answer"], "AI generated answer.")
+        gemini.answer.assert_called_once()
+
+    def test_ai_unrelated_falls_back(self):
+        gemini = MagicMock()
+        gemini.answer.return_value = None
+        result = self._resolve("what is the weather in tokyo?", gemini=gemini)
+        self.assertIn("couldn't find anything", result["answer"])
+        gemini.answer.assert_called_once()
+
+    def test_ai_answers_first_even_for_rule_match(self):
+        gemini = MagicMock()
+        gemini.answer.return_value = "AI answer."
+        result = self._resolve("What is your name?", gemini=gemini)
+        self.assertEqual(result["answer"], "AI answer.")
+        gemini.answer.assert_called_once()
+
+    def test_ai_answers_backend_language_question(self):
+        gemini = MagicMock()
+        gemini.answer.return_value = "Backend: Python, PHP (Laravel), and SQL."
+        result = self._resolve("what is your backend programming language use", gemini=gemini)
+        self.assertEqual(result["answer"], "Backend: Python, PHP (Laravel), and SQL.")
+        gemini.answer.assert_called_once()
+
+    def test_ai_context_has_no_age_placeholder(self):
+        service = ChatService()
+        context = service._ai_context()
+        self.assertNotIn("{age}", context)
+
+    def test_ai_context_includes_page_links_and_base_url(self):
+        service = ChatService()
+        context = service._ai_context()
+        self.assertIn("SITE BASE URL:", context)
+        self.assertIn("PAGE LINKS:", context)
+        self.assertIn("/donation", context)
+
+    def test_no_ai_without_gemini(self):
+        result = self._resolve("what are joshua's pets?")
+        self.assertIn("couldn't find anything", result["answer"])
+
 
 class ChatServiceContentTests(unittest.TestCase):
     def setUp(self):
@@ -255,7 +355,8 @@ class ChatServiceContentTests(unittest.TestCase):
             music_service=services.get("music"),
         )
         with patch("app.Services.ChatService.gettext", side_effect=_fake_gettext), \
-             patch("app.Services.ChatService.get_locale", return_value="en"):
+             patch("app.Services.ChatService.get_locale", return_value="en"), \
+             patch("app.Services.ChatService.ChatService._get_gemini_service", new=lambda self: self.gemini_service):
             return service.resolve(message, QA)
 
     def _projects(self, count):
@@ -307,6 +408,19 @@ class ChatServiceContentTests(unittest.TestCase):
     def test_experience_unavailable_without_service(self):
         result = self._resolve("company roadmap")
         self.assertIn("unavailable right now", result["answer"])
+
+    def test_contributions_at_company_routes_to_experience_not_donation(self):
+        roadmaps = [
+            {"company_name": "TrustArc", "period": "2021 - 2022", "role_title": "Intern", "role_title_i18n": {"en": "Software Engineer Intern"}},
+            {"company_name": "Chronostep", "period": "2024 - Present", "role_title": "Software Engineer", "role_title_i18n": None},
+        ]
+        result = self._resolve(
+            "tell me your contributions in chronostep",
+            roadmaps=_make_service("get_active_company_roadmaps", roadmaps),
+        )
+        self.assertIn("Chronostep", result["answer"])
+        self.assertNotIn("Donation", result["answer"])
+        self.assertNotIn("Python", result["answer"])
 
     def test_gallery_lists_titles_with_count(self):
         items = [{"title": {"en": f"Photo {i + 1}"}} for i in range(8)]
@@ -385,7 +499,8 @@ class ChatServiceSuggestTests(unittest.TestCase):
         self.service = ChatService()
 
     def _resolve(self, message, qa):
-        with patch("app.Services.ChatService.gettext", side_effect=_fake_gettext):
+        with patch("app.Services.ChatService.gettext", side_effect=_fake_gettext), \
+             patch("app.Services.ChatService.ChatService._get_gemini_service", new=lambda self: self.gemini_service):
             return self.service.resolve(message, qa)
 
     def test_partial_match_suggests_questions(self):
@@ -422,7 +537,8 @@ class ChatServiceMultiTurnTests(unittest.TestCase):
 
     def _resolve(self, message, session_id="abc123", qa=None):
         with patch("app.Services.ChatService.gettext", side_effect=_fake_gettext), \
-             patch("app.Services.ChatService.get_locale", return_value="en"):
+             patch("app.Services.ChatService.get_locale", return_value="en"), \
+             patch("app.Services.ChatService.ChatService._get_gemini_service", new=lambda self: self.gemini_service):
             return self.service.resolve(message, qa if qa is not None else QA, session_id=session_id)
 
     def test_ordinal_follow_up_returns_item_detail(self):
@@ -456,6 +572,31 @@ class ChatServiceMultiTurnTests(unittest.TestCase):
         self.assertEqual(result["action"], "expand_options")
         self.assertIn("Project 1", result["answer"])
 
+    def test_how_about_new_topic_does_not_repeat_stale_list(self):
+        gemini = MagicMock()
+        gemini.answer.return_value = "Backend: Python, PHP, and SQL."
+        self.service = ChatService(
+            key_project_service=_make_service("get_active_key_projects", self._projects(3)),
+            gemini_service=gemini,
+        )
+        self._resolve("projects")
+        result = self._resolve("how about in backend")
+        self.assertEqual(result["answer"], "Backend: Python, PHP, and SQL.")
+
+    def test_how_about_this_one_still_lists_items(self):
+        self._use_projects(3)
+        self._resolve("projects")
+        result = self._resolve("how about this one")
+        self.assertEqual(result["action"], "expand_options")
+        self.assertIn("Project 1", result["answer"])
+
+    def test_has_item_reference(self):
+        self.assertTrue(self.service._has_item_reference("how about this one"))
+        self.assertTrue(self.service._has_item_reference("what about them"))
+        self.assertTrue(self.service._has_item_reference("the second one"))
+        self.assertFalse(self.service._has_item_reference("how about in backend"))
+        self.assertFalse(self.service._has_item_reference("what about the weather"))
+
 
 class ChatServiceContentMatchTests(unittest.TestCase):
     def setUp(self):
@@ -470,7 +611,8 @@ class ChatServiceContentMatchTests(unittest.TestCase):
             music_service=services.get("music"),
         )
         with patch("app.Services.ChatService.gettext", side_effect=_fake_gettext), \
-             patch("app.Services.ChatService.get_locale", return_value="en"):
+             patch("app.Services.ChatService.get_locale", return_value="en"), \
+             patch("app.Services.ChatService.ChatService._get_gemini_service", new=lambda self: self.gemini_service):
             return service.resolve(message, QA)
 
     def test_project_description_lookup(self):
@@ -564,7 +706,8 @@ class ChatServiceFuzzyTopicTests(unittest.TestCase):
             company_roadmap_service=services.get("roadmaps"),
         )
         with patch("app.Services.ChatService.gettext", side_effect=_fake_gettext), \
-             patch("app.Services.ChatService.get_locale", return_value="en"):
+             patch("app.Services.ChatService.get_locale", return_value="en"), \
+             patch("app.Services.ChatService.ChatService._get_gemini_service", new=lambda self: self.gemini_service):
             return service.resolve(message, QA)
 
     def test_typo_in_topic_word(self):
@@ -585,7 +728,8 @@ class ChatServiceLocalizedAliasTests(unittest.TestCase):
 
     def _resolve(self, message, locale="ceb"):
         with patch("app.Services.ChatService.gettext", side_effect=_fake_gettext), \
-             patch("app.Services.ChatService.get_locale", return_value=locale):
+             patch("app.Services.ChatService.get_locale", return_value=locale), \
+             patch("app.Services.ChatService.ChatService._get_gemini_service", new=lambda self: self.gemini_service):
             return self.service.resolve(message, QA)
 
     def test_ceb_alias_lives(self):
@@ -702,7 +846,8 @@ class ChatServiceKnowledgeBaseTests(unittest.TestCase):
     def _resolve(self, message, service=None):
         service = service or self.service
         with patch("app.Services.ChatService.gettext", side_effect=_fake_gettext), \
-             patch("app.Services.ChatService.get_locale", return_value="en"):
+             patch("app.Services.ChatService.get_locale", return_value="en"), \
+             patch("app.Services.ChatService.ChatService._get_gemini_service", new=lambda self: self.gemini_service):
             return service.resolve(message)
 
     def test_get_qa_data_derives_from_guide(self):
@@ -764,7 +909,8 @@ class ChatServiceKnowledgeBaseLocalizedTests(unittest.TestCase):
     def _resolve(self, message, locale="ceb", service=None):
         service = service or self.service
         with patch("app.Services.ChatService.gettext", side_effect=_fake_gettext), \
-             patch("app.Services.ChatService.get_locale", return_value=locale):
+             patch("app.Services.ChatService.get_locale", return_value=locale), \
+             patch("app.Services.ChatService.ChatService._get_gemini_service", new=lambda self: self.gemini_service):
             return service.resolve(message)
 
     def test_get_qa_data_localizes_cebuano(self):
@@ -823,7 +969,8 @@ class ChatServiceLocalizedCountTests(unittest.TestCase):
             music_service=services.get("music"),
         )
         with patch("app.Services.ChatService.gettext", side_effect=_localized_gettext_factory(replies)), \
-             patch("app.Services.ChatService.get_locale", return_value=locale):
+             patch("app.Services.ChatService.get_locale", return_value=locale), \
+             patch("app.Services.ChatService.ChatService._get_gemini_service", new=lambda self: self.gemini_service):
             return service.resolve(message, QA)
 
     def test_ceb_gallery_count(self):
@@ -860,7 +1007,8 @@ class ChatServiceDynamicJobTests(unittest.TestCase):
 
     def _resolve(self, service, message, locale="en", replies=None):
         with patch("app.Services.ChatService.gettext", side_effect=_localized_gettext_factory(replies or {})), \
-             patch("app.Services.ChatService.get_locale", return_value=locale):
+             patch("app.Services.ChatService.get_locale", return_value=locale), \
+             patch("app.Services.ChatService.ChatService._get_gemini_service", new=lambda self: self.gemini_service):
             return service.resolve(message)
 
     def test_job_answer_is_dynamic_from_roadmaps(self):
@@ -930,7 +1078,8 @@ class RealGuideLocalizationTests(unittest.TestCase):
         ]
         for message, locale, needle in cases:
             with patch("app.Services.ChatService.gettext", side_effect=_fake_gettext), \
-                 patch("app.Services.ChatService.get_locale", return_value=locale):
+                 patch("app.Services.ChatService.get_locale", return_value=locale), \
+                 patch("app.Services.ChatService.ChatService._get_gemini_service", new=lambda self: self.gemini_service):
                 result = service.resolve(message)
             self.assertIn(needle, result["answer"], f"{message} in {locale}")
 

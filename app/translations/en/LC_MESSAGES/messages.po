@@ -318,6 +318,15 @@ msgstr "You can book a session for Website Development, Web Applications, Mobile
 msgid "chat_concern_reply"
 msgstr "I appreciate your feedback! Please share your thoughts, concerns, or suggestions via the Concern page."
 
+msgid "chat_qr_reply"
+msgstr "The donation QR codes are on the Donation page — open {url} to scan the code and send your gift."
+
+msgid "chat_url_reply"
+msgstr "Here's the link: {url}"
+
+msgid "chat_urls_all"
+msgstr "Here are the main pages: {urls}"
+
 msgid "chat_projects_intro"
 msgstr "Here are some of my key projects:"
 

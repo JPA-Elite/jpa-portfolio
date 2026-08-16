@@ -222,11 +222,23 @@ msgstr "Assistant IA"
 msgid "chat_typing_aria"
 msgstr "Saisie en cours"
 
+msgid "chat_typing_message"
+msgstr "Josh est en train de taper"
+
+msgid "chat_current_role_reply"
+msgstr "Je travaille actuellement comme {role} chez {company}."
+
 msgid "chat_greeting_fallback"
 msgstr "Bonjour ! Bienvenue dans le chat de mon portfolio. Vous pouvez poser une question directement ou utiliser les questions rapides ci-dessous."
 
 msgid "chat_unknown_fallback"
 msgstr "Je peux repondre aux questions suggerees ci-dessous. Essayez de selectionner une option rapide."
+
+msgid "chat_unknown_fallback_intro"
+msgstr "Je n'ai rien trouve a ce sujet."
+
+msgid "chat_quick_questions_intro"
+msgstr "Voici les questions auxquelles je peux repondre :"
 
 msgid "chat_question_prefix"
 msgstr "Q : "
@@ -236,6 +248,102 @@ msgstr "Couper le son de la voix"
 
 msgid "chat_unmute_aria"
 msgstr "Réactiver la voix"
+
+msgid "chat_sensitive_refusal"
+msgstr "Je ne peux pas partager d'informations sensibles ou privées comme les mots de passe, les clés API ou les identifiants. Si vous avez une autre question, n'hésitez pas !"
+
+msgid "chat_farewell_reply"
+msgstr "Au revoir ! Merci de votre visite. Revenez quand vous voulez !"
+
+msgid "chat_appreciation_reply"
+msgstr "Avec plaisir ! Je suis ravi d'avoir pu aider."
+
+msgid "chat_how_are_you_reply"
+msgstr "Je vais très bien, merci de demander ! Et vous ?"
+
+msgid "chat_contact_reply"
+msgstr "Vous pouvez me joindre à algadipej962@gmail.com ou au 0931 912 7640, et me retrouver sur Facebook, LinkedIn (in/joshua-algadipe) et GitHub (JPA-Elite)."
+
+msgid "chat_skills_reply"
+msgstr "J'utilise des langages comme JavaScript, Python, Java, PHP, C++ et C#, et des frameworks comme Angular, Vue.js, Next.js, React, Laravel, Spring Boot et Flask — ainsi que Git et Postman."
+
+msgid "chat_identity_reply"
+msgstr "Je suis l'assistant de chat du portfolio, que j'ai créé. Je suis un bot à base de règles, pas une IA — posez-moi des questions sur mes projets, mon expérience ou mes compétences !"
+
+msgid "chat_negative_reply"
+msgstr "Je suis désolé de l'entendre ! Pouvez-vous m'en dire un peu plus pour que je puisse mieux vous répondre ?"
+
+msgid "chat_joke_reply"
+msgstr "Pourquoi les programmeurs préfèrent-ils le mode sombre ? Parce que la lumière attire les bugs !"
+
+msgid "chat_redirect_reply"
+msgstr "Je ne suis pas sûr de comprendre. Essayez de reformuler, ou choisissez l'une des questions suggérées ci-dessous."
+
+msgid "chat_followup_more_intro"
+msgstr "Je peux vous en dire plus à ce sujet :"
+
+msgid "chat_followup_range"
+msgstr "Je n'ai que {count} éléments ici."
+
+msgid "chat_did_you_mean"
+msgstr "Vouliez-vous dire l'une de ces questions ?"
+
+msgid "chat_developers_reply"
+msgstr "Ce site a été conçu et développé par moi, avec la collaboration de J-AlDev (j-aldev.com) et Brocode Devs (brocode-devs.vercel.app)."
+
+msgid "chat_certifications_reply"
+msgstr "Je détiens des certifications en Angular, Java, JavaScript, SQL, Analyse de données avec Python, Statistiques de base avec Python, Conception web en HTML & CSS et Applications web Flask avec Python."
+
+msgid "chat_education_reply"
+msgstr "Mon parcours comprend des stages pratiques et des rôles chez TrustArc et Chronostep, ainsi qu'une expérience de Business Intern. Mon CV met en avant le développement full-stack, la sécurité des API et les projets internes."
+
+msgid "chat_summary_reply"
+msgstr "Je suis ingénieur logiciel avec plus de 5 ans d'expérience, 12+ projets livrés et 8 certifications — spécialisé en Full Stack, Sécurité des API, Cloud-Native et Ingénierie UI."
+
+msgid "chat_about_reply"
+msgstr "Je suis un développeur passionné qui crée des applications conviviales, aime apprendre de nouvelles technologies et est orienté objectifs. Je maîtrise le frontend, le backend, le cloud et l'automatisation."
+
+msgid "chat_donation_reply"
+msgstr "Merci de penser à un don ! Vous pouvez me soutenir via GCash, PayMaya, MariBank, Tonik Bank ou OwnBank — il suffit de vous rendre sur la page Donation pour scanner le QR code."
+
+msgid "chat_booking_reply"
+msgstr "Vous pouvez réserver une session pour le développement de site web, les applications web, les applications mobiles, l'API & le backend, le design UI/UX, l'e-commerce, la refonte de site, la consultation ou d'autres services. Rendez-vous sur la page Booking pour choisir un service et planifier."
+
+msgid "chat_concern_reply"
+msgstr "Merci pour vos retours ! Partagez vos réflexions, préoccupations ou suggestions via la page Concern."
+
+msgid "chat_projects_intro"
+msgstr "Voici quelques-uns de mes projets clés :"
+
+msgid "chat_experience_intro"
+msgstr "Voici mon expérience :"
+
+msgid "chat_gallery_intro"
+msgstr "Voici quelques photos récentes de la galerie :"
+
+msgid "chat_vlog_intro"
+msgstr "Voici quelques vlogs récents :"
+
+msgid "chat_music_intro"
+msgstr "Voici quelques chansons :"
+
+msgid "chat_content_empty"
+msgstr "Je n'ai trouvé aucun élément pour ce sujet pour le moment."
+
+msgid "chat_content_unavailable"
+msgstr "Je ne peux pas récupérer ces informations pour le moment. Réessayez plus tard."
+
+msgid "chat_content_more"
+msgstr " ... et {count} de plus."
+
+msgid "chat_gallery_count_reply"
+msgstr "I have {total} photos in my gallery."
+
+msgid "chat_vlog_count_reply"
+msgstr "I have {total} vlogs in my collection."
+
+msgid "chat_music_count_reply"
+msgstr "I have {total} songs in my collection."
 
 msgid "qa_name"
 msgstr "Quel est votre nom ?"

@@ -228,11 +228,23 @@ msgstr "AI Assistant"
 msgid "chat_typing_aria"
 msgstr "Typing"
 
+msgid "chat_typing_message"
+msgstr "Josh is typing"
+
+msgid "chat_current_role_reply"
+msgstr "I am currently working as a {role} at {company}."
+
 msgid "chat_greeting_fallback"
 msgstr "Hi! Welcome to my portfolio chat. You can ask me something directly or use the quick questions below."
 
 msgid "chat_unknown_fallback"
 msgstr "I can answer the suggested questions below. Try selecting one of the quick options."
+
+msgid "chat_unknown_fallback_intro"
+msgstr "I couldn't find anything about that."
+
+msgid "chat_quick_questions_intro"
+msgstr "Here are the things I can answer:"
 
 msgid "chat_question_prefix"
 msgstr "Q: "
@@ -242,6 +254,102 @@ msgstr "Mute voice"
 
 msgid "chat_unmute_aria"
 msgstr "Unmute voice"
+
+msgid "chat_sensitive_refusal"
+msgstr "I can't share sensitive or private information like passwords, API keys, or credentials. If you have another question, feel free to ask!"
+
+msgid "chat_farewell_reply"
+msgstr "Goodbye! Thanks for stopping by. Come back anytime you have a question!"
+
+msgid "chat_appreciation_reply"
+msgstr "You're welcome! I'm glad I could help."
+
+msgid "chat_how_are_you_reply"
+msgstr "I'm doing great, thanks for asking! How about you?"
+
+msgid "chat_contact_reply"
+msgstr "You can reach me at algadipej962@gmail.com or 0931 912 7640, and connect on Facebook, LinkedIn (in/joshua-algadipe), and GitHub (JPA-Elite)."
+
+msgid "chat_skills_reply"
+msgstr "I work with languages like JavaScript, Python, Java, PHP, C++, and C#, plus frameworks like Angular, Vue.js, Next.js, React, Laravel, Spring Boot, and Flask — and tools like Git and Postman."
+
+msgid "chat_identity_reply"
+msgstr "I'm the portfolio chat assistant, built by me. I'm a rule-based bot, not an AI — ask me about my projects, experience, skills, or anything on this site!"
+
+msgid "chat_negative_reply"
+msgstr "I'm sorry to hear that! Can you tell me a bit more so I can give you a better answer?"
+
+msgid "chat_joke_reply"
+msgstr "Why do programmers prefer dark mode? Because light attracts bugs!"
+
+msgid "chat_redirect_reply"
+msgstr "I'm not sure about that one. Try rephrasing, or pick one of the suggested questions below."
+
+msgid "chat_followup_more_intro"
+msgstr "I can tell you more about these:"
+
+msgid "chat_followup_range"
+msgstr "I only have {count} items there."
+
+msgid "chat_did_you_mean"
+msgstr "Did you mean one of these?"
+
+msgid "chat_developers_reply"
+msgstr "This website was designed and developed by me, with collaboration from J-AlDev (j-aldev.com) and Brocode Devs (brocode-devs.vercel.app)."
+
+msgid "chat_certifications_reply"
+msgstr "I hold certifications in Angular, Java, JavaScript, SQL, Analyzing Data with Python, Basic Statistics with Python, HTML & CSS Web Design, and Flask Web Apps with Python."
+
+msgid "chat_education_reply"
+msgstr "My background includes hands-on internships and roles at TrustArc and Chronostep, plus a Business Intern experience. My resume highlights full-stack development, API security, and internal projects."
+
+msgid "chat_summary_reply"
+msgstr "I am a Software Engineer with 5+ years of experience, 12+ projects shipped, and 8 certifications — focused on Full Stack, API Security, Cloud-Native, and UI Engineering."
+
+msgid "chat_about_reply"
+msgstr "I am a passionate software developer who builds user-friendly applications, loves learning new technologies, and is goal-oriented. I'm experienced across frontend, backend, cloud, and automation."
+
+msgid "chat_donation_reply"
+msgstr "Thanks for considering a donation! You can support me via GCash, PayMaya, MariBank, Tonik Bank, or OwnBank — just head to the Donation page to scan the QR code and send your gift."
+
+msgid "chat_booking_reply"
+msgstr "You can book a session for Website Development, Web Applications, Mobile Apps, API & Backend, UI/UX Design, E-commerce, Website Redesign, Consultation, or Others. Head to the Booking page to pick a service and schedule."
+
+msgid "chat_concern_reply"
+msgstr "I appreciate your feedback! Please share your thoughts, concerns, or suggestions via the Concern page."
+
+msgid "chat_projects_intro"
+msgstr "Here are some of my key projects:"
+
+msgid "chat_experience_intro"
+msgstr "Here's my experience:"
+
+msgid "chat_gallery_intro"
+msgstr "Here are some recent gallery photos:"
+
+msgid "chat_vlog_intro"
+msgstr "Here are some recent vlogs:"
+
+msgid "chat_music_intro"
+msgstr "Here are some songs:"
+
+msgid "chat_content_empty"
+msgstr "I couldn't find any items for that topic right now."
+
+msgid "chat_content_unavailable"
+msgstr "I can't fetch that information right now. Please try again later."
+
+msgid "chat_content_more"
+msgstr " ... and {count} more."
+
+msgid "chat_gallery_count_reply"
+msgstr "I have {total} photos in my gallery."
+
+msgid "chat_vlog_count_reply"
+msgstr "I have {total} vlogs in my collection."
+
+msgid "chat_music_count_reply"
+msgstr "I have {total} songs in my collection."
 
 msgid "qa_name"
 msgstr "What is your name?"

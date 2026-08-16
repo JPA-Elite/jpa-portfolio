@@ -8,7 +8,7 @@ from flask import Blueprint, request, request, current_app
 from datetime import datetime
 import json
 import os
-from app.Controllers.api.BaseController import change_language_route, delete_page_system_info_route, download_song_route, get_client_ip_route, profile_config_route, proxy_audio_route
+from app.Controllers.api.BaseController import change_language_route, delete_page_system_info_route, download_song_route, get_client_ip_route, profile_config_route, chat_route, proxy_audio_route
 from app.Repositories.ActivityLogRepository import ActivityLogRepository
 from flask import session
 from app.Controllers.api.MusicController import add_music_route, delete_music_route, music_categories_route, music_list_route, update_music_route
@@ -124,6 +124,10 @@ def delete_page_system_info():
 @api_bp.route("/api/profile-config", methods=[http.GET])
 def profile_config():
     return profile_config_route()
+
+@api_bp.route("/api/chat", methods=[http.POST])
+def chat():
+    return chat_route()
 
 @api_bp.route('/api/download_song')
 def download_song():

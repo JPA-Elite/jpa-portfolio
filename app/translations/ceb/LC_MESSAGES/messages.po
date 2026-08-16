@@ -228,11 +228,23 @@ msgstr "AI Assistant"
 msgid "chat_typing_aria"
 msgstr "Nagatype"
 
+msgid "chat_typing_message"
+msgstr "Nagatype si Josh"
+
+msgid "chat_current_role_reply"
+msgstr "Kasamtangan nagtrabaho ko isip {role} sa {company}."
+
 msgid "chat_greeting_fallback"
 msgstr "Hi! Welcome sa akong portfolio chat. Pwede ka mangutana diretso o mopili sa paspas nga mga pangutana sa ubos."
 
 msgid "chat_unknown_fallback"
 msgstr "Makatubag ko sa mga gisugyot nga pangutana sa ubos. Sulayi og pili sa usa sa paspas nga kapilian."
+
+msgid "chat_unknown_fallback_intro"
+msgstr "Wala koy nakit-an nga nahisama niana."
+
+msgid "chat_quick_questions_intro"
+msgstr "Ania ang mga butang nga akong matubag:"
 
 msgid "chat_question_prefix"
 msgstr "P: "
@@ -242,6 +254,102 @@ msgstr "I-mute ang tingog"
 
 msgid "chat_unmute_aria"
 msgstr "I-unmute ang tingog"
+
+msgid "chat_sensitive_refusal"
+msgstr "Dili ko maka-share sa sensitibo o pribadong impormasyon sama sa password, API key, o credentials. Kung naa kay laing pangutana, ayaw pagpanuko sa pagpangutana!"
+
+msgid "chat_farewell_reply"
+msgstr "Paalam! Salamat sa pagbisita. Balik-balik lang kung naa kay pangutana!"
+
+msgid "chat_appreciation_reply"
+msgstr "Way sapayan! Nalipay ko nga nakatabang ko."
+
+msgid "chat_how_are_you_reply"
+msgstr "Maayo ra ko, salamat sa pagpangutana! Ikaw, kumusta ka?"
+
+msgid "chat_contact_reply"
+msgstr "Maka-contact ka nako pinaagi sa algadipej962@gmail.com o 0931 912 7640, ug puwede sab sa Facebook, LinkedIn (in/joshua-algadipe), ug GitHub (JPA-Elite)."
+
+msgid "chat_skills_reply"
+msgstr "Ang mga pinulongan nga akong gigamit kay JavaScript, Python, Java, PHP, C++, ug C#, ug mga framework sama sa Angular, Vue.js, Next.js, React, Laravel, Spring Boot, ug Flask — apil ang Git ug Postman."
+
+msgid "chat_identity_reply"
+msgstr "Ako ang chat assistant sa portfolio, nga akong gibuhat. Rule-based bot ko, dili AI — pangutana lang ug bisan unsa mahitungod sa akong mga proyekto, kasinatian, o kahanas!"
+
+msgid "chat_negative_reply"
+msgstr "Pasensya na! Puwede ka bang mosulti ug dugang aron mas maayo ang akong tubag?"
+
+msgid "chat_joke_reply"
+msgstr "Ngano nga mas gusto sa mga programmer ang dark mode? Kay ang light makadani og bugs!"
+
+msgid "chat_redirect_reply"
+msgstr "Dili ko sigurado niana. Sulayi ug usba ang pangutana, o pagpili sa usa sa mga suggested questions sa ubos."
+
+msgid "chat_followup_more_intro"
+msgstr "Makatubag ko og dugang mahitungod niining mga mosunod:"
+
+msgid "chat_followup_range"
+msgstr "{count} ra ang akong mga butang didto."
+
+msgid "chat_did_you_mean"
+msgstr "Pasabot ba nimo usa niining mga mosunod?"
+
+msgid "chat_developers_reply"
+msgstr "Kini nga website gidisenyo ug gibuhat nako, uban sa tabang ni J-AlDev (j-aldev.com) ug Brocode Devs (brocode-devs.vercel.app)."
+
+msgid "chat_certifications_reply"
+msgstr "Aduna koy mga sertipikasyon sa Angular, Java, JavaScript, SQL, Analyzing Data with Python, Basic Statistics with Python, HTML & CSS Web Design, ug Flask Web Apps with Python."
+
+msgid "chat_education_reply"
+msgstr "Ang akong background naglakip sa hands-on nga mga internship ug mga tahas sa TrustArc ug Chronostep, ug usa ka Business Intern nga kasinatian. Ang akong resume nagpakita sa full-stack development, API security, ug internal nga mga proyekto."
+
+msgid "chat_summary_reply"
+msgstr "Ako usa ka Software Engineer nga may 5+ ka tuig nga kasinatian, 12+ ka proyekto nga nahuman, ug 8 ka sertipikasyon — nakapokus sa Full Stack, API Security, Cloud-Native, ug UI Engineering."
+
+msgid "chat_about_reply"
+msgstr "Ako usa ka passionate nga software developer nga nagbuhat og user-friendly nga mga aplikasyon, ganahan magtuon og bag-ong teknolohiya, ug goal-oriented. Na-expose ako sa frontend, backend, cloud, ug automation."
+
+msgid "chat_donation_reply"
+msgstr "Salamat sa imong donasyon! Maka-supporta ka nako pinaagi sa GCash, PayMaya, MariBank, Tonik Bank, o OwnBank — adto lang sa Donation page aron ma-scan ang QR code ug makapadala."
+
+msgid "chat_booking_reply"
+msgstr "Puwede ka mag-book og session para sa Website Development, Web Applications, Mobile Apps, API & Backend, UI/UX Design, E-commerce, Website Redesign, Consultation, o Others. Adto sa Booking page aron mopili og serbisyo ug makaschedule."
+
+msgid "chat_concern_reply"
+msgstr "Salamat sa imong feedback! Ipaambit ang imong mga hunahuna, kabalaka, o sugyot pinaagi sa Concern page."
+
+msgid "chat_projects_intro"
+msgstr "Ania ang pipila sa akong mga key projects:"
+
+msgid "chat_experience_intro"
+msgstr "Ania ang akong kasinatian:"
+
+msgid "chat_gallery_intro"
+msgstr "Ania ang pipila ka bag-ong mga litrato sa gallery:"
+
+msgid "chat_vlog_intro"
+msgstr "Ania ang pipila ka bag-ong mga vlog:"
+
+msgid "chat_music_intro"
+msgstr "Ania ang pipila ka mga kanta:"
+
+msgid "chat_content_empty"
+msgstr "Wala koy nakit-an nga mga butang para niana nga topiko karon."
+
+msgid "chat_content_unavailable"
+msgstr "Dili ko maka-fetch niana nga impormasyon karon. Sulayi pag-usab sa ulahi."
+
+msgid "chat_content_more"
+msgstr " ... ug {count} pa."
+
+msgid "chat_gallery_count_reply"
+msgstr "Naa koy {total} nga mga litrato sa akong gallery."
+
+msgid "chat_vlog_count_reply"
+msgstr "Naa koy {total} nga mga vlog sa akong koleksyon."
+
+msgid "chat_music_count_reply"
+msgstr "Naa koy {total} nga mga kanta sa akong koleksyon."
 
 msgid "qa_name"
 msgstr "Unsa imong ngalan?"

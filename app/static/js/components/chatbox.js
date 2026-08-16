@@ -49,6 +49,7 @@ window.visualViewport?.addEventListener('scroll', syncChatViewportHeight);
 const cacheMessage = 'chatMessagesCache';
 const cacheChatboxVisible = 'chatboxVisible';
 const cacheChatOptionsCollapsed = 'chatOptionsCollapsed';
+const cacheChatSession = 'chatSessionId';
 const BOT_TYPING_DELAY_MS = 320;
 const cacheChatMuted = 'chatMuted';
 const chatboxI18n = window.chatboxI18n || {};
@@ -56,6 +57,72 @@ let chatQaDataCache = [];
 let typingIndicatorRow = null;
 let chatSpeech = null;
 let chatMuted = localStorage.getItem(cacheChatMuted) === 'true';
+let chatRequestPending = false;
+
+function setChatComposerLoading(isLoading) {
+    const input = document.getElementById("chatInput");
+    const sendButton = document.getElementById("sendChat");
+    if (input) {
+        input.disabled = Boolean(isLoading);
+        input.setAttribute("aria-disabled", String(Boolean(isLoading)));
+    }
+    if (sendButton) {
+        sendButton.disabled = Boolean(isLoading);
+        sendButton.classList.toggle("is-loading", Boolean(isLoading));
+        sendButton.setAttribute("aria-busy", String(Boolean(isLoading)));
+    }
+    const chatOptionsPanel = document.getElementById("chatOptionsPanel");
+    if (chatOptionsPanel) {
+        chatOptionsPanel.style.display = isLoading ? "none" : "";
+    }
+    if (isLoading) {
+        startChatTypingPlaceholder();
+    } else {
+        stopChatTypingPlaceholder();
+    }
+}
+
+let chatPlaceholderText = "";
+let chatPlaceholderTimer = null;
+const CHAT_TYPING_DOTS = ["", ".", "..", "..."];
+
+function startChatTypingPlaceholder() {
+    const input = document.getElementById("chatInput");
+    if (!input) return;
+    if (!chatPlaceholderText) {
+        chatPlaceholderText = input.placeholder;
+    }
+    const base = tChat("typingMessage", "Josh is typing");
+    let dotIndex = 0;
+    const update = () => {
+        input.placeholder = base + CHAT_TYPING_DOTS[dotIndex];
+        dotIndex = (dotIndex + 1) % CHAT_TYPING_DOTS.length;
+    };
+    update();
+    chatPlaceholderTimer = setInterval(update, 400);
+}
+
+function stopChatTypingPlaceholder() {
+    if (chatPlaceholderTimer) {
+        clearInterval(chatPlaceholderTimer);
+        chatPlaceholderTimer = null;
+    }
+    const input = document.getElementById("chatInput");
+    if (input && chatPlaceholderText) {
+        input.placeholder = chatPlaceholderText;
+    }
+}
+
+function getChatSessionId() {
+    let sessionId = localStorage.getItem(cacheChatSession);
+    if (!sessionId) {
+        sessionId = (typeof crypto !== "undefined" && crypto.randomUUID)
+            ? crypto.randomUUID()
+            : "chat-" + Date.now() + "-" + Math.random().toString(36).slice(2);
+        localStorage.setItem(cacheChatSession, sessionId);
+    }
+    return sessionId;
+}
 
 function stopChatSpeech() {
     if (!("speechSynthesis" in window)) return;
@@ -242,14 +309,14 @@ function initializeChatOptions(qaArray = []) {
     if (!chatOptions) return;
 
     chatOptions.innerHTML = "";
-    qaArray.forEach(item => {
+    qaArray.slice(0, 10).forEach(item => {
         const button = document.createElement("button");
         button.textContent = item.question;
         button.onclick = () => sendPredefinedMessage(item.question, qaArray);
         chatOptions.appendChild(button);
     });
 
-    updateChatOptionsCount(qaArray.length);
+    updateChatOptionsCount(Math.min(qaArray.length, 10));
 }
 
 function toggleChatbox() {
@@ -263,20 +330,40 @@ function toggleChatbox() {
     }
 }
 
+async function fetchChatAnswer(message) {
+    try {
+        const response = await fetch("/api/chat", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ message, session_id: getChatSessionId() }),
+        });
+        if (!response.ok) return null;
+        const data = await response.json();
+        return data?.answer || null;
+    } catch (error) {
+        console.error("Failed to fetch chat answer:", error);
+        return null;
+    }
+}
+
 async function sendMessage() {
     const input = document.getElementById("chatInput");
     if (!input) return;
 
     const message = input.value.trim();
-    if (message) {
-        setChatOptionsCollapsed(true, true);
+    if (message && !chatRequestPending) {
+        chatRequestPending = true;
+        setChatComposerLoading(true);
 
         const userTimestamp = Date.now();
         displayMessage(message, "transparent", "black", true, { role: "user", timestamp: userTimestamp });
         cacheMessages(message, "user", userTimestamp);
         input.value = "";
 
-        const answer = getAutomaticAnswerSmart(message, chatQaDataCache);
+        const answer = await fetchChatAnswer(message);
+        setChatComposerLoading(false);
+        chatRequestPending = false;
+
         if (answer) {
             showTypingIndicator();
             speakChatAnswer(answer);
@@ -292,21 +379,28 @@ async function sendMessage() {
 }
 
 async function sendPredefinedMessage(question, data = []) {
-    setChatOptionsCollapsed(true, true);
+    if (chatRequestPending) return;
+    chatRequestPending = true;
+    setChatComposerLoading(true);
 
     const userTimestamp = Date.now();
     displayMessage(question, "transparent", "black", true, { role: "user", timestamp: userTimestamp });
-    const answer = getAutomaticAnswer(question, data);
     cacheMessages(question, "user", userTimestamp);
 
-    showTypingIndicator();
-    speakChatAnswer(answer);
-    await wait(BOT_TYPING_DELAY_MS);
-    removeTypingIndicator();
+    const answer = await fetchChatAnswer(question);
+    setChatComposerLoading(false);
+    chatRequestPending = false;
 
-    const botTimestamp = Date.now();
-    displayMessage(answer, "", "black", true, { role: "bot", timestamp: botTimestamp });
-    cacheMessages(answer, "bot", botTimestamp);
+    if (answer) {
+        showTypingIndicator();
+        speakChatAnswer(answer);
+        await wait(BOT_TYPING_DELAY_MS);
+        removeTypingIndicator();
+
+        const botTimestamp = Date.now();
+        displayMessage(answer, "", "black", true, { role: "bot", timestamp: botTimestamp });
+        cacheMessages(answer, "bot", botTimestamp);
+    }
     updateClearChatButtonVisibility();
 }
 
@@ -315,67 +409,9 @@ function handleChatInputKeydown(event) {
 
     if (event.key === "Enter" && !event.shiftKey) {
         event.preventDefault();
+        if (chatRequestPending) return;
         sendMessage();
     }
-}
-
-function getAutomaticAnswer(question, qaArray = []) {
-    const qa = qaArray.find(item => item.question === question);
-    if (qa) {
-        let answer = qa.answer;
-        if (answer.includes("{age}")) {
-            answer = answer.replace("{age}", calculateAge());
-        }
-
-        return answer;
-    }
-    return null;
-}
-
-function getAutomaticAnswerSmart(question, qaArray = []) {
-    const exact = getAutomaticAnswer(question, qaArray);
-    if (exact) return exact;
-
-    const normalized = (question || "").trim().toLowerCase();
-    if (!normalized) return null;
-
-    const greetingPatterns = [
-        /\bhi\b/,
-        /\bhello\b/,
-        /\bhey\b/,
-        /\bhola\b/,
-        /\bkumusta\b/,
-        /\bgood\s*morning\b/,
-        /\bgood\s*afternoon\b/,
-        /\bgood\s*evening\b/,
-        /\bgood\s*day\b/,
-    ];
-
-    const isGreeting = greetingPatterns.some(pattern => pattern.test(normalized));
-    if (isGreeting) {
-        return tChat(
-            "greetingFallback",
-            "Hi! Welcome to my portfolio chat. You can ask me something directly or use the quick questions below."
-        );
-    }
-
-    const partial = qaArray.find(item => {
-        const q = (item?.question || "").toLowerCase();
-        return q.includes(normalized) || normalized.includes(q);
-    });
-
-    if (partial?.answer) {
-        let answer = partial.answer;
-        if (answer.includes("{age}")) {
-            answer = answer.replace("{age}", calculateAge());
-        }
-        return answer;
-    }
-
-    return tChat(
-        "unknownFallback",
-        "I can answer the suggested questions below. Try selecting one of the quick options."
-    );
 }
 
 function displayMessage(message, backgroundColor = '', color = '', typeEffect = true, options = {}) {
@@ -465,6 +501,7 @@ function loadCachedChat(qaArray = []) {
 
 function clearChat() {
     localStorage.removeItem(cacheMessage);
+    localStorage.removeItem(cacheChatSession);
     removeTypingIndicator();
     stopChatSpeech();
     const chatMessages = document.getElementById("chatMessages");

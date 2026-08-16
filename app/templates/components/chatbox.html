@@ -56,9 +56,14 @@
                     placeholder="{{ _('chat_input_placeholder') }}"
                     onkeydown="handleChatInputKeydown(event)"
                     autocomplete="off" />
-                <button id="sendChat" class="chatbox-send" type="button" onclick="sendMessage()">
+                <button id="sendChat" class="chatbox-send" type="button" onclick="sendMessage()" aria-busy="false">
                     <ion-icon name="paper-plane-outline" aria-hidden="true"></ion-icon>
                     <span>{{ _('chat_send_button') }}</span>
+                    <span class="chatbox-send__loader" aria-hidden="true">
+                        <span class="chatbox-send__dot"></span>
+                        <span class="chatbox-send__dot"></span>
+                        <span class="chatbox-send__dot"></span>
+                    </span>
                 </button>
             </div>
             <button id="clearChat" onclick="clearChat()" style="display: none;">{{ _('chat_clear_button') }}</button>
@@ -70,8 +75,10 @@
         roleYou: {{ _('chat_role_you') | tojson }},
         roleBot: {{ _('chat_role_bot') | tojson }},
         typingAria: {{ _('chat_typing_aria') | tojson }},
+        typingMessage: {{ _('chat_typing_message') | tojson }},
         greetingFallback: {{ _('chat_greeting_fallback') | tojson }},
         unknownFallback: {{ _('chat_unknown_fallback') | tojson }},
+        unknownFallbackIntro: {{ _('chat_unknown_fallback_intro') | tojson }},
         questionPrefix: {{ _('chat_question_prefix') | tojson }},
         muteAria: {{ _('chat_mute_aria') | tojson }},
         unmuteAria: {{ _('chat_unmute_aria') | tojson }},

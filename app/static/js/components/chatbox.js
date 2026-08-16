@@ -353,6 +353,7 @@ async function sendMessage() {
     const message = input.value.trim();
     if (message && !chatRequestPending) {
         chatRequestPending = true;
+        setChatOptionsCollapsed(true, true);
         setChatComposerLoading(true);
 
         const userTimestamp = Date.now();
@@ -381,6 +382,7 @@ async function sendMessage() {
 async function sendPredefinedMessage(question, data = []) {
     if (chatRequestPending) return;
     chatRequestPending = true;
+    setChatOptionsCollapsed(true, true);
     setChatComposerLoading(true);
 
     const userTimestamp = Date.now();

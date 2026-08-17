@@ -258,6 +258,9 @@ msgstr "I-unmute ang boses"
 msgid "chat_sensitive_refusal"
 msgstr "Hindi ako makapagbahagi ng sensitibo o pribadong impormasyon tulad ng password, API key, o credentials. Kung may iba kang tanong, huwag mag-atubiling magtanong!"
 
+msgid "chat_emoji_only_reply"
+msgstr "Ang ganda ng mga emoji mo! 😊 Itanong mo sa akin ang tungkol sa aking mga kasanayan, proyekto, o karanasan!"
+
 msgid "chat_farewell_reply"
 msgstr "Paalam! Salamat sa pagbisita. Bumalik ka lang anumang oras kung may tanong ka!"
 

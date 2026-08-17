@@ -258,6 +258,12 @@ msgstr "Maximize chat"
 msgid "chat_minimize_aria"
 msgstr "Minimize chat"
 
+msgid "chat_mic_aria"
+msgstr "Speak your message"
+
+msgid "chat_mic_denied"
+msgstr "Microphone is blocked. Allow mic access in your browser settings, then try again."
+
 msgid "chat_unmute_aria"
 msgstr "Unmute voice"
 
@@ -673,6 +679,12 @@ msgstr "Write a comment..."
 
 msgid "Modal_Insert_Emoji"
 msgstr "Insert emoji"
+
+msgid "Modal_Insert_Voice"
+msgstr "Insert voice"
+
+msgid "Modal_Mic_Denied"
+msgstr "Microphone is blocked. Allow mic access in your browser settings, then try again."
 
 msgid "Modal_Send"
 msgstr "Send"

@@ -613,6 +613,132 @@ function getChatEmojiElements() {
     };
 }
 
+function getSpeechRecognition() {
+    return window.SpeechRecognition || window.webkitSpeechRecognition || null;
+}
+
+function getSpeechLocale() {
+    const locale = (window.pageLocale || "en").toLowerCase();
+    const map = {
+        ceb: "ceb-PH",
+        fil_ph: "fil-PH",
+        fil: "fil-PH",
+        fr: "fr-FR",
+        en: "en-US",
+    };
+    return map[locale] || "en-US";
+}
+
+let chatRecognition = null;
+let chatMicHintTimer = null;
+let chatMicPermission = "prompt";
+
+function flashChatMicHint(message) {
+    const input = document.getElementById("chatInput");
+    if (!input) return;
+    const original = chatPlaceholderText || input.placeholder;
+    input.placeholder = message;
+    clearTimeout(chatMicHintTimer);
+    chatMicHintTimer = setTimeout(() => {
+        input.placeholder = original;
+    }, 4000);
+}
+
+function setChatMicState(recording) {
+    const micButton = document.getElementById("chatMicToggle");
+    if (!micButton) return;
+    micButton.classList.toggle("is-recording", Boolean(recording));
+    micButton.setAttribute("aria-pressed", String(Boolean(recording)));
+    const icon = micButton.querySelector("ion-icon");
+    if (icon) icon.setAttribute("name", recording ? "mic" : "mic-outline");
+}
+
+function applyChatTranscript(transcript) {
+    const input = document.getElementById("chatInput");
+    if (!input || !transcript) return;
+    input.value = (input.value ? input.value + " " : "") + transcript;
+    input.focus();
+}
+
+function stopChatMic() {
+    if (chatRecognition) {
+        try {
+            chatRecognition.stop();
+        } catch (_) {
+            // Ignore if already stopped.
+        }
+        chatRecognition = null;
+    }
+    setChatMicState(false);
+}
+
+function toggleChatMic() {
+    const SR = getSpeechRecognition();
+    if (!SR) return;
+
+    if (chatRecognition) {
+        stopChatMic();
+        return;
+    }
+
+    if (chatMicPermission === "denied") {
+        console.error("[chat-mic] microphone permission denied");
+        flashChatMicHint(tChat("micDenied", "Microphone is blocked. Allow mic access in your browser settings."));
+        return;
+    }
+
+    const recognition = new SR();
+    chatRecognition = recognition;
+    let retriedLang = false;
+    let captured = "";
+    recognition.lang = getSpeechLocale();
+    recognition.interimResults = false;
+    recognition.maxAlternatives = 1;
+
+    recognition.onresult = (event) => {
+        captured = Array.from(event.results)
+            .map(result => result[0].transcript)
+            .join(" ");
+    };
+
+    recognition.onend = () => {
+        chatRecognition = null;
+        setChatMicState(false);
+        if (captured) {
+            applyChatTranscript(captured);
+            captured = "";
+        }
+    };
+
+    recognition.onerror = (event) => {
+        if (!retriedLang && event && event.error === "language-not-supported") {
+            retriedLang = true;
+            try {
+                recognition.lang = "en-US";
+                recognition.start();
+                return;
+            } catch (_) {
+                // Fall through to cleanup.
+            }
+        }
+        console.error("[chat-mic] recognition error:", event?.error || event);
+        if (event && event.error === "not-allowed") {
+            flashChatMicHint(tChat("micDenied", "Microphone is blocked. Allow mic access in your browser settings."));
+        }
+        chatRecognition = null;
+        setChatMicState(false);
+    };
+
+    try {
+        recognition.start();
+        setChatMicState(true);
+    } catch (_) {
+        console.error("[chat-mic] failed to start:", _);
+        chatRecognition = null;
+        setChatMicState(false);
+    }
+}
+
 function closeChatEmojiPicker() {
     const { picker, toggle } = getChatEmojiElements();
     if (picker) picker.hidden = true;
@@ -673,6 +799,23 @@ window.onload = async () => {
         document.getElementById("chatboxModal")?.classList.add("is-maximized");
     }
     syncChatMaximizeToggle();
+
+    if (navigator.permissions && navigator.permissions.query) {
+        navigator.permissions.query({ name: "microphone" })
+            .then((status) => {
+                chatMicPermission = status.state;
+                status.addEventListener("change", () => {
+                    chatMicPermission = status.state;
+                });
+            })
+            .catch(() => {});
+    }
+
+    const chatMicToggle = document.getElementById("chatMicToggle");
+    chatMicToggle?.addEventListener("click", toggleChatMic);
+    if (chatMicToggle && !getSpeechRecognition()) {
+        chatMicToggle.style.display = "none";
+    }
 
     const chatEmojiToggle = document.getElementById("chatEmojiToggle");
     chatEmojiToggle?.addEventListener("click", toggleChatEmojiPicker);

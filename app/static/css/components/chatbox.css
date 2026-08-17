@@ -606,7 +606,7 @@
     background: transparent;
     color: var(--chat-text);
     font-size: 0.88rem;
-    padding: 8px 42px 8px 10px;
+    padding: 8px 76px 8px 10px;
     border-radius: 8px;
     box-sizing: border-box;
 }
@@ -635,6 +635,47 @@
     color: var(--chat-muted);
     cursor: pointer;
     transition: background 0.2s ease, color 0.2s ease, opacity 0.2s ease;
+}
+
+.chatbox-mic-btn {
+    position: absolute;
+    right: 42px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 30px;
+    height: 30px;
+    display: inline-grid;
+    place-items: center;
+    border: none;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--chat-text) 8%, transparent);
+    color: var(--chat-muted);
+    cursor: pointer;
+    transition: background 0.2s ease, color 0.2s ease, opacity 0.2s ease;
+}
+
+.chatbox-mic-btn:hover {
+    background: color-mix(in srgb, var(--chat-text) 14%, transparent);
+    color: var(--chat-text);
+}
+
+.chatbox-mic-btn ion-icon {
+    font-size: 17px;
+}
+
+.chatbox-mic-btn.is-recording {
+    color: #e5484d;
+    background: rgba(229, 72, 77, 0.16);
+    animation: chatMicPulse 1.2s ease-in-out infinite;
+}
+
+@keyframes chatMicPulse {
+    0%, 100% {
+        box-shadow: 0 0 0 0 rgba(229, 72, 77, 0.35);
+    }
+    50% {
+        box-shadow: 0 0 0 5px rgba(229, 72, 77, 0);
+    }
 }
 
 .chatbox-emoji-btn:hover {
@@ -850,8 +891,14 @@
         width: 100%;
         max-width: 100%;
         min-width: 0;
-        padding: 8px 40px 8px 8px;
+        padding: 8px 74px 8px 8px;
         font-size: 16px; /* prevent iOS zoom and keep width stable */
+    }
+
+    .chatbox-mic-btn {
+        width: 28px;
+        height: 28px;
+        right: 40px;
     }
 
     .chatbox-emoji-btn {
@@ -981,6 +1028,10 @@
 
     .chat-message-row--clearing {
         animation-duration: 0.01s;
+    }
+
+    .chatbox-mic-btn.is-recording {
+        animation: none;
     }
 
     .chat-options button:hover,

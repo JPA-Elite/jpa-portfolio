@@ -426,6 +426,134 @@ if (!window.__modal_js_loaded__) {
         closeCommentEmojiPicker();
     }
 
+    let commentRecognition = null;
+    let commentMicPermission = "prompt";
+    let commentMicHintTimer = null;
+
+    function flashCommentMicHint(message) {
+        const commentBox = document.getElementById("commentBox");
+        if (!commentBox) return;
+        const original = commentBox.dataset.placeholder || commentBox.placeholder;
+        commentBox.dataset.placeholder = original;
+        commentBox.placeholder = message;
+        clearTimeout(commentMicHintTimer);
+        commentMicHintTimer = setTimeout(() => {
+            commentBox.placeholder = original;
+        }, 4000);
+    }
+
+    function getSpeechRecognition() {
+        return window.SpeechRecognition || window.webkitSpeechRecognition || null;
+    }
+
+    function getSpeechLocale() {
+        const locale = (window.pageLocale || "en").toLowerCase();
+        const map = {
+            ceb: "ceb-PH",
+            fil_ph: "fil-PH",
+            fil: "fil-PH",
+            fr: "fr-FR",
+            en: "en-US",
+        };
+        return map[locale] || "en-US";
+    }
+
+    function setCommentMicState(recording) {
+        const micButton = document.getElementById("commentMicToggle");
+        if (!micButton) return;
+        micButton.classList.toggle("is-recording", Boolean(recording));
+        micButton.setAttribute("aria-pressed", String(Boolean(recording)));
+        const icon = micButton.querySelector("ion-icon");
+        if (icon) icon.setAttribute("name", recording ? "mic" : "mic-outline");
+    }
+
+    function stopCommentMic() {
+        if (commentRecognition) {
+            try {
+                commentRecognition.stop();
+            } catch (_) {
+                // Ignore if already stopped.
+            }
+            commentRecognition = null;
+        }
+        setCommentMicState(false);
+    }
+
+    function toggleCommentMic() {
+        const SR = getSpeechRecognition();
+        if (!SR) return;
+
+        if (commentRecognition) {
+            stopCommentMic();
+            return;
+        }
+
+        if (commentMicPermission === "denied") {
+            console.error("[comment-mic] microphone permission denied");
+            flashCommentMicHint(tm("micDenied", "Microphone is blocked. Allow mic access in your browser settings."));
+            return;
+        }
+
+        const recognition = new SR();
+        commentRecognition = recognition;
+        let retriedLang = false;
+        let captured = "";
+        recognition.lang = getSpeechLocale();
+        recognition.interimResults = false;
+        recognition.maxAlternatives = 1;
+
+        recognition.onresult = (event) => {
+            captured = Array.from(event.results)
+                .map(result => result[0].transcript)
+                .join(" ");
+        };
+
+        recognition.onend = () => {
+            commentRecognition = null;
+            setCommentMicState(false);
+            if (captured) {
+                applyCommentTranscript(captured);
+                captured = "";
+            }
+        };
+
+        recognition.onerror = (event) => {
+            if (!retriedLang && event && event.error === "language-not-supported") {
+                retriedLang = true;
+                try {
+                    recognition.lang = "en-US";
+                    recognition.start();
+                    return;
+                } catch (_) {
+                    // Fall through to cleanup.
+                }
+            }
+            console.error("[comment-mic] recognition error:", event?.error || event);
+            if (event && event.error === "not-allowed") {
+                flashCommentMicHint(tm("micDenied", "Microphone is blocked. Allow mic access in your browser settings."));
+            }
+            commentRecognition = null;
+            setCommentMicState(false);
+        };
+
+        try {
+            recognition.start();
+            setCommentMicState(true);
+        } catch (_) {
+            console.error("[comment-mic] failed to start:", _);
+            commentRecognition = null;
+            setCommentMicState(false);
+        }
+    }
+
+    function applyCommentTranscript(transcript) {
+        const commentBox = document.getElementById("commentBox");
+        if (!commentBox || !transcript) return;
+        commentBox.value = (commentBox.value ? commentBox.value + " " : "") + transcript;
+        commentBox.dispatchEvent(new Event("input", { bubbles: true }));
+        commentBox.focus();
+    }
+
     window.openProjectSlidesModal = function (slides, startIndex = 0) {
         const normalized = normalizeSlides(slides);
         if (!normalized.length) {
@@ -1343,6 +1471,23 @@ if (!window.__modal_js_loaded__) {
 
         const emojiToggle = document.getElementById("commentEmojiToggle");
         const emojiPicker = document.getElementById("commentEmojiPicker");
+        const micToggle = document.getElementById("commentMicToggle");
+
+        if (micToggle && !getSpeechRecognition()) {
+            micToggle.style.display = "none";
+        }
+        micToggle?.addEventListener("click", toggleCommentMic);
+
+        if (navigator.permissions && navigator.permissions.query) {
+            navigator.permissions.query({ name: "microphone" })
+                .then((status) => {
+                    commentMicPermission = status.state;
+                    status.addEventListener("change", () => {
+                        commentMicPermission = status.state;
+                    });
+                })
+                .catch(() => {});
+        }
 
         commentBox.addEventListener("input", () => {
             if (commentBox.value.length > MAX_COMMENT_LENGTH) {
@@ -1436,6 +1581,7 @@ if (!window.__modal_js_loaded__) {
     window.loadComments = loadComments;
     window.toggleCommentEmojiPicker = toggleCommentEmojiPicker;
     window.insertCommentEmoji = insertCommentEmoji;
+    window.toggleCommentMic = toggleCommentMic;
     window.toggleCommentPanel = toggleCommentPanel;
 }
 

@@ -252,6 +252,12 @@ msgstr "T: "
 msgid "chat_mute_aria"
 msgstr "I-mute ang boses"
 
+msgid "chat_maximize_aria"
+msgstr "I-maximize ang chat"
+
+msgid "chat_minimize_aria"
+msgstr "I-minimize ang chat"
+
 msgid "chat_unmute_aria"
 msgstr "I-unmute ang boses"
 

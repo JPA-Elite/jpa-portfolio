@@ -24,6 +24,9 @@
                 <button class="chatbox-mute-toggle" id="chatMuteToggle" type="button" onclick="toggleChatMute()" aria-label="{{ _('chat_mute_aria') }}" aria-pressed="false">
                     <ion-icon name="volume-high-outline"></ion-icon>
                 </button>
+                <button class="chatbox-maximize-toggle" id="chatMaximizeToggle" type="button" onclick="toggleChatMaximize()" aria-label="{{ _('chat_maximize_aria') }}" aria-pressed="false">
+                    <ion-icon name="expand-outline"></ion-icon>
+                </button>
                 <button class="chatbox-close" type="button" onclick="toggleChatbox()" aria-label="{{ _('chat_close_aria') }}">&times;</button>
             </div>
         </div>
@@ -102,6 +105,8 @@
         questionPrefix: {{ _('chat_question_prefix') | tojson }},
         muteAria: {{ _('chat_mute_aria') | tojson }},
         unmuteAria: {{ _('chat_unmute_aria') | tojson }},
+        maximizeAria: {{ _('chat_maximize_aria') | tojson }},
+        minimizeAria: {{ _('chat_minimize_aria') | tojson }},
         insertEmoji: {{ _('Modal_Insert_Emoji') | tojson }},
     };
 </script>

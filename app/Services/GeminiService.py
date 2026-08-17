@@ -74,6 +74,8 @@ class GeminiService:
         text = text.strip()
         if GEMINI_UNRELATED_MARKER in text.upper():
             return None
+        if re.sub(r"[^a-z]+", "", text.lower()) in {"related", "unrelated", "notrelated", "notunrelated"}:
+            return None
         return text
 
     def _build_prompt(self, context, question, history=None):
@@ -94,7 +96,10 @@ class GeminiService:
             "education, certifications, donations, bookings, and everything shown on the "
             "public pages of this site.\n\n"
             "Below is the full content of the site (knowledge base plus live data). "
-            "Use ONLY this content to answer.\n\n"
+            "Use it for everything about Joshua. For questions about the companies "
+            "mentioned in the site content (for example Chronostep, TrustArc, or "
+            "Teleperformance), you may also use your own knowledge about those "
+            "companies.\n\n"
             f"SITE CONTENT:\n{context}\n\n"
             + (f"CONVERSATION SO FAR:\n{history_block}" if history_block else "")
             + "RULES:\n"
@@ -107,13 +112,20 @@ class GeminiService:
             f"{GEMINI_UNRELATED_MARKER}\n"
             "- If the site content does not contain the answer, reply with exactly: "
             f"{GEMINI_UNRELATED_MARKER} instead of inventing facts.\n"
+            "- For questions about a company mentioned in the site content (for example "
+            "Chronostep, TrustArc, or Teleperformance) — the company itself, its purpose, "
+            "what it offers, its location, or its services — answer in full detail using "
+            "your own knowledge of that company in addition to the site content, and do "
+            "not reply with UNRELATED.\n"
             "- If the user's question refers to the previous topic (for example 'how about in "
             "backend' after frontend), continue that topic instead of treating it as unrelated.\n"
             "- When sharing a page link, ALWAYS give the full absolute URL as plain text "
             "(for example https://example.com/donation) using the SITE BASE URL above. Never "
             "use markdown link syntax or relative paths like /donation.\n"
             "- Keep answers concise (1-3 sentences), friendly, and use the same language "
-            "as the question when possible.\n\n"
+            "as the question when possible. Exception: when asked for full details about "
+            "a company (Chronostep, TrustArc, or Teleperformance), give a thorough, "
+            "detailed answer.\n\n"
             f"USER QUESTION: {question}"
         )
 

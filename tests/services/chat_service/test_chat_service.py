@@ -1,8 +1,20 @@
 import unittest
+from datetime import datetime
 from unittest.mock import MagicMock, patch
 
 from app.Services.ChatService import ChatService
 from app.Services.KnowledgeBaseService import KnowledgeBaseService
+
+
+GIRLFRIEND_BIRTHDAY = datetime(2005, 4, 11)
+
+
+def _girlfriend_age():
+    today = datetime.now()
+    age = today.year - GIRLFRIEND_BIRTHDAY.year
+    if (today.month, today.day) < (GIRLFRIEND_BIRTHDAY.month, GIRLFRIEND_BIRTHDAY.day):
+        age -= 1
+    return age
 
 
 def _fake_gettext(key):
@@ -48,6 +60,13 @@ def _fake_gettext(key):
         "chat_vlog_count_reply": "I have {total} vlogs in my collection.",
         "chat_music_count_reply": "I have {total} songs in my collection.",
         "chat_current_role_reply": "I am currently working as a {role} at {company}.",
+        "chat_girlfriend_reply": "Fiona Samantha Escarro.",
+        "chat_girlfriend_contact_reply": "I don't know about her contacts.",
+        "chat_girlfriend_company_reply": "She works at Teleperformance in IT Park.",
+        "chat_girlfriend_age_reply": "Fiona is {age} years old. Her birthday is April 11, 2005.",
+        "chat_girlfriend_age_yes_reply": "Yes, she is {age} years old! Fiona was born on April 11, 2005.",
+        "chat_girlfriend_age_no_reply": "No, she is {age} years old, not {asked}. Fiona was born on April 11, 2005.",
+        "chat_unrelated_reply": "That question is unrelated to my conversation. Please focus on my skills, projects, experience, and everything on this site!",
     }.get(key, key)
 
 
@@ -132,7 +151,16 @@ class ChatServiceTests(unittest.TestCase):
     def test_unrelated_returns_fallback(self):
         result = self._resolve("what is the weather today in tokyo?")
         self.assertIsNone(result["action"])
-        self.assertIn("I couldn't find anything about that.", result["answer"])
+        self.assertIn("unrelated to my conversation", result["answer"])
+
+    def test_math_question_returns_unrelated_reply(self):
+        result = self._resolve("1 + 1?")
+        self.assertIsNone(result["action"])
+        self.assertIn("unrelated to my conversation", result["answer"])
+
+    def test_unrelated_reply_not_used_for_related_questions(self):
+        result = self._resolve("what projects have you built?")
+        self.assertNotIn("unrelated to my conversation", result["answer"])
 
     def test_empty_message_returns_fallback(self):
         result = self._resolve("")
@@ -290,6 +318,41 @@ class ChatServiceIntentTests(unittest.TestCase):
         result = self._resolve("what is the link to your facebook?")
         self.assertIn("algadipej962@gmail.com", result["answer"])
 
+    def test_girlfriend_question_replies_name(self):
+        result = self._resolve("do you have a girlfriend?")
+        self.assertEqual(result["answer"], "Fiona Samantha Escarro.")
+
+    def test_girlfriend_alias_replies_name(self):
+        result = self._resolve("who is fiona?")
+        self.assertEqual(result["answer"], "Fiona Samantha Escarro.")
+
+    def test_girlfriend_contact_question_refuses(self):
+        result = self._resolve("what is your girlfriend's contact number?")
+        self.assertEqual(result["answer"], "I don't know about her contacts.")
+
+    def test_girlfriend_email_question_refuses(self):
+        result = self._resolve("can i have fiona's email address?")
+        self.assertEqual(result["answer"], "I don't know about her contacts.")
+
+    def test_girlfriend_contact_question_beats_contact_intent(self):
+        result = self._resolve("what is fiona's facebook?")
+        self.assertEqual(result["answer"], "I don't know about her contacts.")
+        self.assertNotIn("algadipej962@gmail.com", result["answer"])
+
+    def test_girlfriend_company_question_replies_teleperformance(self):
+        result = self._resolve("what company does your girlfriend work at?")
+        self.assertEqual(result["answer"], "She works at Teleperformance in IT Park.")
+
+    def test_girlfriend_company_question_beats_ai(self):
+        gemini = MagicMock()
+        gemini.answer.return_value = "AI answer."
+        service = ChatService(gemini_service=gemini)
+        with patch("app.Services.ChatService.gettext", side_effect=_fake_gettext), \
+             patch("app.Services.ChatService.ChatService._get_gemini_service", new=lambda self: self.gemini_service):
+            result = service.resolve("what company does fiona work for?", QA)
+        self.assertEqual(result["answer"], "She works at Teleperformance in IT Park.")
+        gemini.answer.assert_not_called()
+
     def test_survey_link_question_returns_google_form(self):
         result = self._resolve("tell me the survey link")
         self.assertIn("https://forms.gle/QV5kHc3STEFDFUYf9", result["answer"])
@@ -329,9 +392,16 @@ class ChatServiceAiTests(unittest.TestCase):
     def test_ai_unrelated_falls_back(self):
         gemini = MagicMock()
         gemini.answer.return_value = None
-        result = self._resolve("what is the weather in tokyo?", gemini=gemini)
+        result = self._resolve("what is the meaning of life?", gemini=gemini)
         self.assertIn("couldn't find anything", result["answer"])
         gemini.answer.assert_called_once()
+
+    def test_ai_not_called_for_unrelated_math(self):
+        gemini = MagicMock()
+        gemini.answer.return_value = "AI answer."
+        result = self._resolve("what is 1 + 1?", gemini=gemini)
+        self.assertIn("unrelated to my conversation", result["answer"])
+        gemini.answer.assert_not_called()
 
     def test_ai_answers_first_even_for_rule_match(self):
         gemini = MagicMock()
@@ -362,6 +432,125 @@ class ChatServiceAiTests(unittest.TestCase):
     def test_no_ai_without_gemini(self):
         result = self._resolve("what are joshua's pets?")
         self.assertIn("couldn't find anything", result["answer"])
+
+    def test_ai_answers_girlfriend_question_in_detail(self):
+        gemini = MagicMock()
+        gemini.answer.return_value = "Fiona Samantha Escarro is a wonderful person who loves traveling and trying new food."
+        result = self._resolve("tell me about your girlfriend", gemini=gemini)
+        self.assertEqual(result["answer"], "Fiona Samantha Escarro is a wonderful person who loves traveling and trying new food.")
+        gemini.answer.assert_called_once()
+
+    def test_girlfriend_contact_refusal_beats_ai(self):
+        gemini = MagicMock()
+        gemini.answer.return_value = "AI answer."
+        result = self._resolve("what is your girlfriend's contact number?", gemini=gemini)
+        self.assertEqual(result["answer"], "I don't know about her contacts.")
+        gemini.answer.assert_not_called()
+
+    def test_girlfriend_age_question_beats_ai(self):
+        gemini = MagicMock()
+        gemini.answer.return_value = "AI answer."
+        result = self._resolve("how old is fiona?", gemini=gemini)
+        self.assertEqual(result["answer"], f"Fiona is {_girlfriend_age()} years old. Her birthday is April 11, 2005.")
+        gemini.answer.assert_not_called()
+
+    def test_girlfriend_age_confirmation_beats_ai(self):
+        gemini = MagicMock()
+        gemini.answer.return_value = "AI answer."
+        age = _girlfriend_age()
+        result = self._resolve(f"is fiona {age} years old today", gemini=gemini)
+        self.assertEqual(result["answer"], f"Yes, she is {age} years old! Fiona was born on April 11, 2005.")
+        gemini.answer.assert_not_called()
+
+    def test_ai_context_includes_girlfriend_info(self):
+        service = ChatService()
+        context = service._ai_context()
+        self.assertIn("Fiona Samantha Escarro", context)
+        self.assertIn("GIRLFRIEND RULES", context)
+
+    def test_ai_context_includes_girlfriend_personality(self):
+        service = ChatService()
+        context = service._ai_context()
+        self.assertIn("introvert", context)
+        self.assertIn("angry", context)
+        self.assertIn("sexy", context)
+
+    def test_ai_context_includes_girlfriend_facts(self):
+        service = ChatService()
+        context = service._ai_context()
+        self.assertIn("04/11/2005", context)
+        self.assertIn("Bantayan", context)
+        self.assertIn("PN scholars", context)
+        self.assertIn("TrustArc", context)
+        self.assertIn("non-voice assistant", context)
+        self.assertIn("Teleperformance in IT Park", context)
+
+    def test_ai_context_includes_company_rules(self):
+        roadmaps = [
+            {"company_name": "TrustArc", "period": "2021 - 2022", "role_title": "Intern", "role_title_i18n": None},
+            {"company_name": "Chronostep", "period": "2024 - Present", "role_title": "Software Engineer", "role_title_i18n": None},
+        ]
+        service = ChatService(company_roadmap_service=_make_service("get_active_company_roadmaps", roadmaps))
+        context = service._ai_context()
+        self.assertIn("COMPANY RULES", context)
+        self.assertIn("Chronostep", context)
+        self.assertIn("TrustArc", context)
+        self.assertIn("full company profile", context)
+        self.assertIn("services and offers", context)
+        self.assertIn("mention Joshua's role only briefly", context)
+        self.assertIn("His current company is Chronostep.", context)
+
+    def test_ai_context_company_rules_follow_current_roadmap(self):
+        roadmaps = [
+            {"company_name": "Chronostep", "period": "2024 - 2025", "role_title": "Software Engineer", "role_title_i18n": None, "sort_order": 1},
+            {"company_name": "FutureCo", "period": "2025 - Present", "role_title": "Senior Engineer", "role_title_i18n": None, "sort_order": 2},
+        ]
+        service = ChatService(company_roadmap_service=_make_service("get_active_company_roadmaps", roadmaps))
+        context = service._ai_context()
+        self.assertIn("His current company is FutureCo.", context)
+        self.assertIn("FutureCo", context)
+        self.assertNotIn("His current company is Chronostep.", context)
+
+    def test_ai_context_job_question_uses_current_company(self):
+        roadmaps = [
+            {"company_name": "FutureCo", "period": "2025 - Present", "role_title": "Senior Engineer", "role_title_i18n": None, "sort_order": 2},
+        ]
+        service = ChatService(company_roadmap_service=_make_service("get_active_company_roadmaps", roadmaps))
+        with patch("app.Services.ChatService.gettext", side_effect=_fake_gettext):
+            context = service._ai_context()
+        self.assertIn("Q: What is your job?", context)
+        self.assertIn("I am currently working as a Senior Engineer at FutureCo.", context)
+        self.assertNotIn("currently at Chronostep", context)
+
+    def test_qa_item_job_question_uses_current_company(self):
+        roadmaps = [
+            {"company_name": "FutureCo", "period": "2025 - Present", "role_title": "Senior Engineer", "role_title_i18n": None, "sort_order": 2},
+        ]
+        service = ChatService(company_roadmap_service=_make_service("get_active_company_roadmaps", roadmaps))
+        with patch("app.Services.ChatService.gettext", side_effect=_fake_gettext):
+            qa = service.get_qa_data()
+        job = next(item for item in qa if item["question"] == "What is your job?")
+        self.assertIn("Senior Engineer at FutureCo", job["answer"])
+
+    def test_ai_context_includes_company_details_from_roadmaps(self):
+        roadmaps = [
+            {
+                "company_name": "Chronostep",
+                "period": "2024 - Present",
+                "role_title": "Software Engineer",
+                "role_title_i18n": None,
+                "location": "Cebu City",
+                "definition": "Software development company.",
+                "summary": "Builds web and mobile products.",
+                "highlights": ["Full stack", "Internal tools"],
+            },
+        ]
+        service = ChatService(company_roadmap_service=_make_service("get_active_company_roadmaps", roadmaps))
+        context = service._ai_context()
+        self.assertIn("COMPANY: Chronostep", context)
+        self.assertIn("COMPANY LOCATION: Cebu City", context)
+        self.assertIn("COMPANY DEFINITION: Software development company.", context)
+        self.assertIn("COMPANY HIGHLIGHTS: Full stack; Internal tools", context)
 
 
 class ChatServiceContentTests(unittest.TestCase):
@@ -587,10 +776,70 @@ class ChatServiceMultiTurnTests(unittest.TestCase):
         result = self._resolve("the second one")
         self.assertIsNone(result["matched_question"])
 
+    def test_girlfriend_pronoun_follow_up(self):
+        self._resolve("tell me your gf")
+        result = self._resolve("who is she")
+        self.assertEqual(result["answer"], "Fiona Samantha Escarro.")
+
+    def test_girlfriend_pronoun_follow_up_her(self):
+        self._resolve("tell me about fiona")
+        result = self._resolve("tell me more about her")
+        self.assertEqual(result["answer"], "Fiona Samantha Escarro.")
+
+    def test_girlfriend_pronoun_follow_up_contact_refused(self):
+        self._resolve("tell me your gf")
+        result = self._resolve("what is her contact number?")
+        self.assertEqual(result["answer"], "I don't know about her contacts.")
+
+    def test_girlfriend_pronoun_follow_up_needs_context(self):
+        result = self._resolve("who is she")
+        self.assertNotEqual(result["answer"], "Fiona Samantha Escarro.")
+
+    def test_unrelated_math_beats_girlfriend_company(self):
+        result = self._resolve("1 + 1?")
+        self.assertIn("unrelated to my conversation", result["answer"])
+
+    def test_girlfriend_pronoun_follow_up_company(self):
+        self._resolve("tell me your gf")
+        result = self._resolve("what company does she work at?")
+        self.assertEqual(result["answer"], "She works at Teleperformance in IT Park.")
+
+    def test_girlfriend_pronoun_follow_up_age(self):
+        self._resolve("tell me your gf")
+        result = self._resolve("what is her age?")
+        self.assertEqual(result["answer"], f"Fiona is {_girlfriend_age()} years old. Her birthday is April 11, 2005.")
+
+    def test_girlfriend_pronoun_follow_up_age_confirmation_yes(self):
+        self._resolve("tell me your gf")
+        age = _girlfriend_age()
+        result = self._resolve(f"is she {age} years old today or not")
+        self.assertEqual(result["answer"], f"Yes, she is {age} years old! Fiona was born on April 11, 2005.")
+
+    def test_girlfriend_pronoun_follow_up_age_confirmation_no(self):
+        self._resolve("tell me your gf")
+        age = _girlfriend_age()
+        result = self._resolve(f"is she {age + 1} years old")
+        self.assertEqual(result["answer"], f"No, she is {age} years old, not {age + 1}. Fiona was born on April 11, 2005.")
+
+    def test_girlfriend_age_follow_up_needs_context(self):
+        result = self._resolve("what is her age?")
+        self.assertNotIn("Fiona is", result["answer"])
+
+    def test_girlfriend_age_follow_up_beats_ai(self):
+        gemini = MagicMock()
+        gemini.answer.return_value = "AI answer."
+        self.service = ChatService(gemini_service=gemini)
+        self._resolve("tell me your gf")
+        gemini.answer.reset_mock()
+        result = self._resolve("is she 21 years old today or not")
+        self.assertIn("years old", result["answer"])
+        self.assertIn("Fiona", result["answer"])
+        gemini.answer.assert_not_called()
+
     def test_context_suggestions_on_fallback(self):
         self._use_projects(3)
         self._resolve("projects")
-        result = self._resolve("what is the weather today in tokyo")
+        result = self._resolve("tell me about the habitat of elephants")
         self.assertEqual(result["action"], "expand_options")
         self.assertIn("Project 1", result["answer"])
 

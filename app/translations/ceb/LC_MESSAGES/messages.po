@@ -363,6 +363,27 @@ msgstr "Naa koy {total} nga mga vlog sa akong koleksyon."
 msgid "chat_music_count_reply"
 msgstr "Naa koy {total} nga mga kanta sa akong koleksyon."
 
+msgid "chat_girlfriend_reply"
+msgstr "Si Fiona Samantha Escarro."
+
+msgid "chat_girlfriend_contact_reply"
+msgstr "Wala ko kahibalo sa iyang mga contact."
+
+msgid "chat_girlfriend_company_reply"
+msgstr "Nagtrabaho siya sa Teleperformance sa IT Park."
+
+msgid "chat_girlfriend_age_reply"
+msgstr "Si Fiona {age} anyos na. Ang iyang adlawng natawhan kay Abril 11, 2005."
+
+msgid "chat_girlfriend_age_yes_reply"
+msgstr "Oo, siya {age} anyos na! Si Fiona natawo sa Abril 11, 2005."
+
+msgid "chat_girlfriend_age_no_reply"
+msgstr "Dili, siya {age} anyos, dili {asked}. Si Fiona natawo sa Abril 11, 2005."
+
+msgid "chat_unrelated_reply"
+msgstr "Kana nga pangutana dili may kalabotan sa akong panag-istorya. Palihog pag-focus sa akong mga kahanas, mga proyekto, kasinatian, ug sa tanang butang niining site!"
+
 msgid "qa_name"
 msgstr "Unsa imong ngalan?"
 

@@ -29,6 +29,22 @@ class GeminiServiceTests(unittest.TestCase):
         with patch.object(service, "_generate", return_value="I cannot help. UNRELATED"):
             self.assertIsNone(service.answer("weather?", "ctx"))
 
+    def test_returns_none_for_related_marker(self):
+        service = GeminiService(api_key="key")
+        with patch.object(service, "_generate", return_value="RELATED"):
+            self.assertIsNone(service.answer("weather?", "ctx"))
+
+    def test_returns_none_for_not_related_marker(self):
+        service = GeminiService(api_key="key")
+        with patch.object(service, "_generate", return_value="NOT RELATED"):
+            self.assertIsNone(service.answer("weather?", "ctx"))
+
+    def test_keeps_answer_mentioning_related_word(self):
+        service = GeminiService(api_key="key")
+        with patch.object(service, "_generate", return_value="This is related to my skills."):
+            result = service.answer("skills?", "ctx")
+        self.assertEqual(result, "This is related to my skills.")
+
     def test_returns_answer_for_related_question(self):
         service = GeminiService(api_key="key")
         with patch.object(service, "_generate", return_value="Joshua is a developer."):
@@ -65,6 +81,18 @@ class GeminiServiceTests(unittest.TestCase):
         prompt = service._build_prompt("SITE", "give me the link")
         self.assertIn("full absolute URL", prompt)
         self.assertIn("Never use markdown link syntax or relative paths", prompt)
+
+    def test_build_prompt_allows_company_knowledge(self):
+        service = GeminiService(api_key="key")
+        prompt = service._build_prompt("SITE", "what is chronostep about?")
+        self.assertIn("own knowledge", prompt)
+        self.assertIn("Chronostep", prompt)
+        self.assertIn("do not reply with UNRELATED", prompt)
+
+    def test_build_prompt_allows_detailed_company_answers(self):
+        service = GeminiService(api_key="key")
+        prompt = service._build_prompt("SITE", "tell me about your company")
+        self.assertIn("thorough, detailed answer", prompt)
 
     def test_falls_back_when_primary_model_quota_exhausted(self):
         def fake_post(url, **kwargs):

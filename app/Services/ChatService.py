@@ -175,6 +175,38 @@ HOW_ARE_YOU_PATTERNS = [
     "you good", "how have you been", "how is it going", "how are u",
 ]
 
+GIRLFRIEND_PATTERNS = [
+    "girlfriend", "girl friend", "gf", "fiona", "samantha", "escarro",
+]
+
+GIRLFRIEND_PRIVATE_PATTERNS = [
+    "contact", "contacts", "contact number", "number", "phone", "cellphone",
+    "cell phone", "mobile", "email", "address", "facebook", "instagram",
+    "messenger", "whatsapp", "tiktok", "social media", "socials", "reach",
+]
+
+GIRLFRIEND_COMPANY_WORDS = [
+    "company", "which company", "what company", "her company",
+    "employer", "where does she work", "where do she work", "where she works",
+]
+
+GIRLFRIEND_AGE_WORDS = [
+    "age", "how old", "years old", "year old", "old", "birthday", "birthdate",
+    "born", "edad", "panuigon", "taon", "anyos",
+]
+
+GIRLFRIEND_BIRTHDAY = datetime(2005, 4, 11)
+
+UNRELATED_PATTERNS = [
+    "1 + 1", "1+1", "2 + 2", "2+2", "3 + 3", "4 + 4", "5 + 5", "10 + 10",
+    "plus", "minus", "multiply", "multiplied", "divided by", "divide", "division",
+    "equation", "calculate", "calculator", "solve", "math problem", "math question",
+    "weather", "temperature", "forecast", "is it raining", "is it sunny",
+    "recipe", "cooking", "bake", "baking", "ingredients",
+    "translate", "translation",
+    "capital of", "population of", "currency of",
+]
+
 PROJECTS_PATTERNS = [
     "projects", "project", "what have you built", "what did you build", "your works",
     "portfolio projects", "key projects", "what do you build",
@@ -408,6 +440,10 @@ class ChatService:
         loc = localized.get(locale) or {}
         question = loc.get("heading") or section["heading"]
         answer = loc.get("body") or section["body"]
+        if question in DYNAMIC_KB_QUESTIONS:
+            dynamic = self._current_company_reply()
+            if dynamic:
+                answer = dynamic
         aliases = list(section["aliases"])
         for alias in loc.get("aliases") or []:
             if alias not in aliases:
@@ -535,9 +571,47 @@ class ChatService:
         if url_reply:
             return self._reply(url_reply)
 
+        girlfriend_contact = self._resolve_girlfriend_contact(normalized)
+        if girlfriend_contact:
+            return self._reply(girlfriend_contact)
+
+        girlfriend_followup_contact = self._resolve_girlfriend_followup_contact(normalized)
+        if girlfriend_followup_contact:
+            return self._reply(girlfriend_followup_contact)
+
+        girlfriend_company = self._resolve_girlfriend_company(normalized)
+        if girlfriend_company:
+            return self._reply(girlfriend_company)
+
+        girlfriend_followup_company = self._resolve_girlfriend_followup_company(normalized)
+        if girlfriend_followup_company:
+            return self._reply(girlfriend_followup_company)
+
+        girlfriend_age = self._resolve_girlfriend_age(normalized)
+        if girlfriend_age:
+            return self._reply(girlfriend_age)
+
+        girlfriend_followup_age = self._resolve_girlfriend_followup_age(normalized)
+        if girlfriend_followup_age:
+            return self._reply(girlfriend_followup_age)
+
+        if self._is_girlfriend_question(normalized):
+            self._last_topic = "girlfriend"
+
+        if self._is_unrelated(normalized, expanded):
+            return self._reply(gettext("chat_unrelated_reply"))
+
         ai_answer = self._ai_chat_answer(message)
         if ai_answer:
             return self._reply(ai_answer)
+
+        girlfriend_reply = self._resolve_girlfriend(normalized)
+        if girlfriend_reply:
+            return self._reply(girlfriend_reply)
+
+        girlfriend_followup = self._resolve_girlfriend_followup(normalized)
+        if girlfriend_followup:
+            return self._reply(girlfriend_followup)
 
         content = self._resolve_content(normalized, expanded)
         if content:
@@ -709,6 +783,129 @@ class ChatService:
         urls = " • ".join(self._site_url(PAGE_PATHS[topic_key]) for topic_key in PAGE_PATHS)
         return gettext("chat_urls_all").format(urls=urls)
 
+    def _is_girlfriend_question(self, normalized):
+        return any(self._contains_word(normalized, word) for word in GIRLFRIEND_PATTERNS)
+
+    def _is_unrelated(self, normalized, expanded):
+        text = f"{normalized} {expanded}"
+        return any(self._contains_word(text, pattern) for pattern in UNRELATED_PATTERNS)
+
+    def _resolve_girlfriend_contact(self, normalized):
+        if not self._is_girlfriend_question(normalized):
+            return None
+        if not any(self._contains_word(normalized, word) for word in GIRLFRIEND_PRIVATE_PATTERNS):
+            return None
+        self._last_topic = "girlfriend"
+        return gettext("chat_girlfriend_contact_reply")
+
+    def _resolve_girlfriend_followup_contact(self, normalized):
+        if not self._session_id:
+            return None
+        if not self._girlfriend_session_context():
+            return None
+        if not any(self._contains_word(normalized, word) for word in ["she", "her"]):
+            return None
+        if not any(self._contains_word(normalized, word) for word in GIRLFRIEND_PRIVATE_PATTERNS):
+            return None
+        self._last_topic = "girlfriend"
+        return gettext("chat_girlfriend_contact_reply")
+
+    def _resolve_girlfriend_company(self, normalized):
+        if not self._is_girlfriend_question(normalized):
+            return None
+        if not any(self._contains_word(normalized, word) for word in GIRLFRIEND_COMPANY_WORDS):
+            return None
+        self._last_topic = "girlfriend"
+        return gettext("chat_girlfriend_company_reply")
+
+    def _resolve_girlfriend_followup_company(self, normalized):
+        if not self._session_id:
+            return None
+        if not self._girlfriend_session_context():
+            return None
+        if not any(self._contains_word(normalized, word) for word in ["she", "her"]):
+            return None
+        if not any(self._contains_word(normalized, word) for word in GIRLFRIEND_COMPANY_WORDS):
+            return None
+        self._last_topic = "girlfriend"
+        return gettext("chat_girlfriend_company_reply")
+
+    def _resolve_girlfriend_age(self, normalized):
+        if not self._is_girlfriend_question(normalized):
+            return None
+        if not any(self._contains_word(normalized, word) for word in GIRLFRIEND_AGE_WORDS):
+            return None
+        self._last_topic = "girlfriend"
+        return self._girlfriend_age_reply(normalized)
+
+    def _resolve_girlfriend_followup_age(self, normalized):
+        if not self._session_id:
+            return None
+        if not self._girlfriend_session_context():
+            return None
+        if not any(self._contains_word(normalized, word) for word in ["she", "her"]):
+            return None
+        if not any(self._contains_word(normalized, word) for word in GIRLFRIEND_AGE_WORDS):
+            return None
+        self._last_topic = "girlfriend"
+        return self._girlfriend_age_reply(normalized)
+
+    def _girlfriend_age(self):
+        today = datetime.now()
+        age = today.year - GIRLFRIEND_BIRTHDAY.year
+        if (today.month, today.day) < (GIRLFRIEND_BIRTHDAY.month, GIRLFRIEND_BIRTHDAY.day):
+            age -= 1
+        return age
+
+    def _asked_age(self, normalized):
+        match = re.search(r"(\d+)\s*(?:years?\s*old|yrs?\b|year\b)", normalized)
+        if match:
+            return int(match.group(1))
+        if "years old" in normalized or "age" in normalized:
+            match = re.search(r"\b(\d+)\b", normalized)
+            if match:
+                return int(match.group(1))
+        return None
+
+    def _girlfriend_age_reply(self, normalized):
+        age = self._girlfriend_age()
+        asked = self._asked_age(normalized)
+        if asked is not None:
+            if asked == age:
+                return gettext("chat_girlfriend_age_yes_reply").format(age=age)
+            return gettext("chat_girlfriend_age_no_reply").format(age=age, asked=asked)
+        return gettext("chat_girlfriend_age_reply").format(age=age)
+
+    def _girlfriend_session_context(self):
+        if not self._session_id:
+            return False
+        session = self._sessions.get(self._session_id)
+        if not session:
+            return False
+        if session.get("last_topic") == "girlfriend":
+            return True
+        for turn in (session.get("turns") or [])[-8:]:
+            text = (turn.get("text") or "").lower()
+            if "fiona" in text or "girlfriend" in text:
+                return True
+        return False
+
+    def _resolve_girlfriend(self, normalized):
+        if not self._is_girlfriend_question(normalized):
+            return None
+        self._last_topic = "girlfriend"
+        return gettext("chat_girlfriend_reply")
+
+    def _resolve_girlfriend_followup(self, normalized):
+        if not self._session_id:
+            return None
+        if not self._girlfriend_session_context():
+            return None
+        if not any(self._contains_word(normalized, word) for word in ["she", "her"]):
+            return None
+        self._last_topic = "girlfriend"
+        return gettext("chat_girlfriend_reply")
+
     def _site_base_url(self):
         try:
             from flask import request
@@ -750,16 +947,33 @@ class ChatService:
             ),
             f"CONCERN SURVEY LINK: {SURVEY_URL_DEFAULT}"
             f" (professional mode: {SURVEY_URL_PROFESSIONAL})",
+            "GIRLFRIEND: Fiona Samantha Escarro is the girlfriend of the site owner.",
+            "GIRLFRIEND PERSONALITY: She is an introvert and smart. Her face often looks "
+            "angry but she is actually pretty. She is a small girl, and in the site owner's "
+            "opinion she is sexy. When asked about her, describe her with these traits "
+            "warmly and in detail.",
+            "GIRLFRIEND FACTS: Her birthday is 04/11/2005. She lives in Bantayan. "
+            "She is one of the PN scholars. She worked as an intern at TrustArc and is "
+            "now a non-voice assistant at her current work, Teleperformance in IT Park. "
+            "When asked about her company, say she works at Teleperformance in IT Park.",
+            "GIRLFRIEND RULES: When asked about her, answer in detail and warmly. "
+            "Never reveal her personal contact details such as phone number, email, "
+            "address, or social media accounts. If asked about those, say you do not "
+            "know about her contacts. If asked further about Teleperformance as a BPO "
+            "company, answer in detail.",
         ]
         try:
             locale = get_locale() or "en"
         except Exception:
             locale = "en"
         age = str(self._age())
+        dynamic_reply = self._current_company_reply()
         for section in self._knowledge_base().sections():
             loc = (section.get("localized") or {}).get(locale) or {}
             heading = loc.get("heading") or section["heading"]
             body = loc.get("body") or section.get("body")
+            if heading in DYNAMIC_KB_QUESTIONS and dynamic_reply:
+                body = dynamic_reply
             if heading and body:
                 parts.append(f"Q: {heading}\nA: {body.replace('{age}', age)}")
         for topic, fetcher in (
@@ -777,7 +991,66 @@ class ChatService:
                 record = self._item_record(topic, item)
                 if record.get("detail"):
                     parts.append(f"{topic.upper()}: {record['detail']}")
+        try:
+            roadmaps, _ = self._fetch_roadmaps()
+        except Exception:
+            roadmaps = []
+        for entry in (roadmaps or [])[:10]:
+            company = str(entry.get("company_name") or "").strip()
+            if not company:
+                continue
+            role = self._localize_roadmap_role(entry)
+            period = str(entry.get("period") or "").strip()
+            location = str(entry.get("location") or "").strip()
+            definition = self._localize_text(entry.get("definition"))
+            summary = self._localize_text(entry.get("summary"))
+            highlights = entry.get("highlights") or []
+            parts.append(f"COMPANY: {company}")
+            if role:
+                parts.append(f"COMPANY ROLE: {role}")
+            if period:
+                parts.append(f"COMPANY PERIOD: {period}")
+            if location:
+                parts.append(f"COMPANY LOCATION: {location}")
+            if definition:
+                parts.append(f"COMPANY DEFINITION: {definition}")
+            if summary:
+                parts.append(f"COMPANY SUMMARY: {summary}")
+            if highlights:
+                parts.append(f"COMPANY HIGHLIGHTS: {'; '.join(str(h) for h in highlights)}")
+        company_rules = self._company_rules_text(roadmaps)
+        if company_rules:
+            parts.append(company_rules)
         return "\n".join(parts)
+
+    def _company_rules_text(self, roadmaps):
+        entries = [self._as_dict(item) for item in (roadmaps or [])]
+        companies = []
+        for entry in entries:
+            company = str(entry.get("company_name") or "").strip()
+            if company and company not in companies:
+                companies.append(company)
+        current = self._current_roadmap_entry(entries)
+        current_name = str(current.get("company_name") or "").strip() if current else ""
+        if not companies:
+            return "COMPANY RULES: When asked about a company Joshua has worked at, answer in full detail about the company itself."
+        lines = [
+            "COMPANY RULES: The companies Joshua has worked at are: "
+            + ", ".join(companies) + "."
+        ]
+        if current_name:
+            lines.append(f"His current company is {current_name}.")
+        lines.append(
+            "When the user asks about the COMPANY itself (for example 'your company', "
+            f"'what is {current_name or companies[0]} about', 'what does the company "
+            "offer', 'what is the purpose'), answer with a full company profile based on "
+            "the COMPANY data included in this content: the company name, what it does, "
+            "its purpose, the services and offers it provides, where it is located, and "
+            "its highlights — mention Joshua's role only briefly. Use the COMPANY data as "
+            "the base and your own knowledge of the company for additional detail. Never "
+            "contradict the COMPANY data."
+        )
+        return "\n".join(lines)
 
     def _ai_history(self, message):
         if not self._session_id:

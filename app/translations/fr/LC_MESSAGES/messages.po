@@ -357,6 +357,27 @@ msgstr "I have {total} vlogs in my collection."
 msgid "chat_music_count_reply"
 msgstr "I have {total} songs in my collection."
 
+msgid "chat_girlfriend_reply"
+msgstr "Fiona Samantha Escarro."
+
+msgid "chat_girlfriend_contact_reply"
+msgstr "Je ne connais pas ses contacts."
+
+msgid "chat_girlfriend_company_reply"
+msgstr "Elle travaille chez Teleperformance à IT Park."
+
+msgid "chat_girlfriend_age_reply"
+msgstr "Fiona a {age} ans. Son anniversaire est le 11 avril 2005."
+
+msgid "chat_girlfriend_age_yes_reply"
+msgstr "Oui, elle a {age} ans ! Fiona est née le 11 avril 2005."
+
+msgid "chat_girlfriend_age_no_reply"
+msgstr "Non, elle a {age} ans, pas {asked}. Fiona est née le 11 avril 2005."
+
+msgid "chat_unrelated_reply"
+msgstr "Cette question n'a aucun lien avec ma conversation. Concentrez-vous sur mes compétences, mes projets, mon expérience et tout ce qui se trouve sur ce site !"
+
 msgid "qa_name"
 msgstr "Quel est votre nom ?"
 

@@ -363,6 +363,27 @@ msgstr "Mayroon akong {total} na mga vlog sa aking koleksyon."
 msgid "chat_music_count_reply"
 msgstr "Mayroon akong {total} na mga kanta sa aking koleksyon."
 
+msgid "chat_girlfriend_reply"
+msgstr "Si Fiona Samantha Escarro."
+
+msgid "chat_girlfriend_contact_reply"
+msgstr "Hindi ko alam ang kanyang mga contact."
+
+msgid "chat_girlfriend_company_reply"
+msgstr "Nagtatrabaho siya sa Teleperformance sa IT Park."
+
+msgid "chat_girlfriend_age_reply"
+msgstr "Si Fiona ay {age} taong gulang na. Ang kanyang kaarawan ay Abril 11, 2005."
+
+msgid "chat_girlfriend_age_yes_reply"
+msgstr "Oo, siya ay {age} taong gulang! Ipinanganak si Fiona noong Abril 11, 2005."
+
+msgid "chat_girlfriend_age_no_reply"
+msgstr "Hindi, siya ay {age} taong gulang, hindi {asked}. Ipinanganak si Fiona noong Abril 11, 2005."
+
+msgid "chat_unrelated_reply"
+msgstr "Ang tanong na iyan ay walang kaugnayan sa aking pag-uusap. Pakiusap, mag-focus sa aking mga kasanayan, proyekto, karanasan, at lahat ng nasa site na ito!"
+
 msgid "qa_name"
 msgstr "Ano ang pangalan mo?"
 

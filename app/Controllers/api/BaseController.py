@@ -80,9 +80,11 @@ def delete_page_system_info_route():
 def profile_config_route():
     qa_data = chat_service.get_qa_data()
 
-    return jsonify({
+    response = jsonify({
         'qaData': qa_data
     })
+    response.headers['Cache-Control'] = 'no-store'
+    return response
 
 def chat_route():
     form = BaseControllerRequest()

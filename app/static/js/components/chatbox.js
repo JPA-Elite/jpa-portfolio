@@ -1,6 +1,6 @@
 async function initChat() {
     try {
-        const response = await fetch("/api/profile-config");
+        const response = await fetch("/api/profile-config", { cache: "no-store" });
         const apiData = await response.json();
         const qaArray = apiData?.qaData ?? [];
         return qaArray;

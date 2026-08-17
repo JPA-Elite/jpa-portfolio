@@ -577,13 +577,84 @@
     background: transparent;
     color: var(--chat-text);
     font-size: 0.88rem;
-    padding: 8px 8px 8px 10px;
+    padding: 8px 42px 8px 10px;
     border-radius: 8px;
     box-sizing: border-box;
 }
 
 .chatbox-input::placeholder {
     color: var(--chat-muted);
+}
+
+.chatbox-composer-input {
+    position: relative;
+    min-width: 0;
+}
+
+.chatbox-emoji-btn {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 30px;
+    height: 30px;
+    display: inline-grid;
+    place-items: center;
+    border: none;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--chat-text) 8%, transparent);
+    color: var(--chat-muted);
+    cursor: pointer;
+    transition: background 0.2s ease, color 0.2s ease, opacity 0.2s ease;
+}
+
+.chatbox-emoji-btn:hover {
+    background: color-mix(in srgb, var(--chat-text) 14%, transparent);
+    color: var(--chat-text);
+}
+
+.chatbox-emoji-btn ion-icon {
+    font-size: 17px;
+}
+
+.chatbox-emoji-btn:disabled {
+    cursor: not-allowed;
+    opacity: 0.75;
+}
+
+.chatbox-emoji-picker {
+    position: absolute;
+    right: 0;
+    bottom: calc(100% + 8px);
+    width: min(260px, calc(100vw - 120px));
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 6px;
+    padding: 8px;
+    border-radius: 12px;
+    background: color-mix(in srgb, var(--chat-surface-2) 96%, transparent);
+    border: 1px solid var(--chat-border);
+    box-shadow: 0 12px 26px rgba(0, 0, 0, 0.35);
+    z-index: 20;
+}
+
+.chatbox-emoji-picker[hidden] {
+    display: none !important;
+}
+
+.chatbox-emoji-picker button {
+    border: none;
+    border-radius: 8px;
+    background: color-mix(in srgb, var(--chat-text) 6%, transparent);
+    color: var(--chat-text);
+    height: 34px;
+    font-size: 18px;
+    cursor: pointer;
+    line-height: 1;
+}
+
+.chatbox-emoji-picker button:hover {
+    background: color-mix(in srgb, var(--chat-text) 14%, transparent);
 }
 
 .chatbox-send {
@@ -750,8 +821,21 @@
         width: 100%;
         max-width: 100%;
         min-width: 0;
-        padding: 8px 8px;
+        padding: 8px 40px 8px 8px;
         font-size: 16px; /* prevent iOS zoom and keep width stable */
+    }
+
+    .chatbox-emoji-btn {
+        width: 28px;
+        height: 28px;
+        right: 7px;
+    }
+
+    .chatbox-emoji-picker {
+        width: min(220px, calc(100vw - 90px));
+        grid-template-columns: repeat(5, 1fr);
+        gap: 5px;
+        padding: 7px;
     }
 
     .chat-options button {
@@ -807,6 +891,7 @@
     .chatbox-mute-toggle,
     .chat-options button,
     .chatbox-send,
+    .chatbox-emoji-btn,
     #clearChat {
         transition: none;
     }

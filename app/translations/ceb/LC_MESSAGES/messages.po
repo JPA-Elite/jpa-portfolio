@@ -258,6 +258,12 @@ msgstr "I-maximize ang chat"
 msgid "chat_minimize_aria"
 msgstr "I-minimize ang chat"
 
+msgid "chat_mic_aria"
+msgstr "Isulti ang imong mensahe"
+
+msgid "chat_mic_denied"
+msgstr "Naka-block ang mikropono. Palihog i-allow ang paggamit sa mikropono sa imong browser settings, dayon sulayi pag-usab."
+
 msgid "chat_unmute_aria"
 msgstr "I-unmute ang tingog"
 
@@ -673,6 +679,12 @@ msgstr "Pagsulat og comment..."
 
 msgid "Modal_Insert_Emoji"
 msgstr "Ibutang ang emoji"
+
+msgid "Modal_Insert_Voice"
+msgstr "Isulod ang tingog"
+
+msgid "Modal_Mic_Denied"
+msgstr "Naka-block ang mikropono. Palihog i-allow ang paggamit sa mikropono sa imong browser settings, dayon sulayi pag-usab."
 
 msgid "Modal_Send"
 msgstr "Ipadala"

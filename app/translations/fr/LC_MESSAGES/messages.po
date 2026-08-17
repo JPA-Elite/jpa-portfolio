@@ -252,6 +252,12 @@ msgstr "Agrandir le chat"
 msgid "chat_minimize_aria"
 msgstr "Réduire le chat"
 
+msgid "chat_mic_aria"
+msgstr "Parlez votre message"
+
+msgid "chat_mic_denied"
+msgstr "Le micro est bloqué. Autorisez l'accès au micro dans les paramètres de votre navigateur, puis réessayez."
+
 msgid "chat_unmute_aria"
 msgstr "Réactiver la voix"
 
@@ -570,6 +576,12 @@ msgstr "Write a comment..."
 
 msgid "Modal_Insert_Emoji"
 msgstr "Insert emoji"
+
+msgid "Modal_Insert_Voice"
+msgstr "Insérer la voix"
+
+msgid "Modal_Mic_Denied"
+msgstr "Le micro est bloqué. Autorisez l'accès au micro dans les paramètres de votre navigateur, puis réessayez."
 
 msgid "Modal_Send"
 msgstr "Send"

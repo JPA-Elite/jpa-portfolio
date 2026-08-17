@@ -60,6 +60,10 @@
                         placeholder="{{ _('chat_input_placeholder') }}"
                         onkeydown="handleChatInputKeydown(event)"
                         autocomplete="off" />
+                    <button type="button" class="chatbox-mic-btn" id="chatMicToggle"
+                        aria-label="{{ _('chat_mic_aria') }}" aria-pressed="false">
+                        <ion-icon name="mic-outline"></ion-icon>
+                    </button>
                     <button type="button" class="chatbox-emoji-btn" id="chatEmojiToggle"
                         aria-label="{{ _('Modal_Insert_Emoji') }}" aria-expanded="false">
                         <ion-icon name="happy-outline"></ion-icon>
@@ -107,6 +111,8 @@
         unmuteAria: {{ _('chat_unmute_aria') | tojson }},
         maximizeAria: {{ _('chat_maximize_aria') | tojson }},
         minimizeAria: {{ _('chat_minimize_aria') | tojson }},
+        micAria: {{ _('chat_mic_aria') | tojson }},
+        micDenied: {{ _('chat_mic_denied') | tojson }},
         insertEmoji: {{ _('Modal_Insert_Emoji') | tojson }},
     };
 </script>

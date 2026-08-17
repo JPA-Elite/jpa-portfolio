@@ -61,6 +61,10 @@
             </div>
             <div class="comment-input-field">
                 <input type="text" id="commentBox" placeholder="{{ _('Modal_Comment_Placeholder') }}" />
+                <button type="button" class="comment-mic-btn" id="commentMicToggle"
+                    aria-label="{{ _('Modal_Insert_Voice') }}" aria-pressed="false">
+                    <ion-icon name="mic-outline"></ion-icon>
+                </button>
                 <button type="button" class="comment-emoji-btn" id="commentEmojiToggle"
                     aria-label="{{ _('Modal_Insert_Emoji') }}" aria-expanded="false">
                     <ion-icon name="happy-outline"></ion-icon>
@@ -89,6 +93,8 @@
         commentsLabel: {{ _('Modal_Comments_Label') | tojson }},
         commentPlaceholder: {{ _('Modal_Comment_Placeholder') | tojson }},
         insertEmoji: {{ _('Modal_Insert_Emoji') | tojson }},
+        insertVoice: {{ _('Modal_Insert_Voice') | tojson }},
+        micDenied: {{ _('Modal_Mic_Denied') | tojson }},
         send: {{ _('Modal_Send') | tojson }},
         loadPrevious: {{ _('Modal_Load_Previous') | tojson }},
         loading: {{ _('Modal_Loading') | tojson }},

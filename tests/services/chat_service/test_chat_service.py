@@ -555,6 +555,34 @@ class ChatServiceAiTests(unittest.TestCase):
         job = next(item for item in qa if item["question"] == "What is your job?")
         self.assertIn("Senior Engineer at FutureCo", job["answer"])
 
+    def test_current_locale_normalizes_babel_locale_object(self):
+        from babel import Locale
+
+        service = ChatService()
+        with patch("app.Services.ChatService.get_locale", return_value=Locale.parse("ceb")):
+            self.assertEqual(service._current_locale(), "ceb")
+        with patch("app.Services.ChatService.get_locale", return_value=Locale.parse("fil_PH")):
+            self.assertEqual(service._current_locale(), "fil_PH")
+
+    def test_get_qa_data_localizes_when_get_locale_returns_babel_object(self):
+        from babel import Locale
+
+        service = ChatService()
+        with patch("app.Services.ChatService.get_locale", return_value=Locale.parse("ceb")):
+            qa = service.get_qa_data()
+        self.assertEqual(qa[0]["question"], "Unsa ang imong pangalan?")
+
+    def test_resolve_uses_string_locale_for_aliases(self):
+        from babel import Locale
+
+        service = ChatService()
+        with patch("app.Services.ChatService.gettext", side_effect=_fake_gettext), \
+             patch("app.Services.ChatService.get_locale", return_value=Locale.parse("ceb")), \
+             patch("app.Services.ChatService.ChatService._get_gemini_service", new=lambda self: self.gemini_service):
+            result = service.resolve("Unsa ang imong pangalan?", QA)
+        self.assertEqual(result["answer"], "My name is Joshua P. Algadipe.")
+        self.assertEqual(service._locale, "ceb")
+
     def test_ai_context_includes_company_details_from_roadmaps(self):
         roadmaps = [
             {

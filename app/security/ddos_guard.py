@@ -269,6 +269,6 @@ def init_ddos_guard(app):
         else:
             response.headers.setdefault(
                 "Permissions-Policy",
-                "camera=(), microphone=(), geolocation=()",
+                "camera=(), microphone=(self), geolocation=()",
             )
         return response

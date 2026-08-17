@@ -62,6 +62,7 @@ let chatRequestPending = false;
 function setChatComposerLoading(isLoading) {
     const input = document.getElementById("chatInput");
     const sendButton = document.getElementById("sendChat");
+    const emojiToggle = document.getElementById("chatEmojiToggle");
     if (input) {
         input.disabled = Boolean(isLoading);
         input.setAttribute("aria-disabled", String(Boolean(isLoading)));
@@ -70,6 +71,10 @@ function setChatComposerLoading(isLoading) {
         sendButton.disabled = Boolean(isLoading);
         sendButton.classList.toggle("is-loading", Boolean(isLoading));
         sendButton.setAttribute("aria-busy", String(Boolean(isLoading)));
+    }
+    if (emojiToggle) {
+        emojiToggle.disabled = Boolean(isLoading);
+        if (isLoading) closeChatEmojiPicker();
     }
     const chatOptionsPanel = document.getElementById("chatOptionsPanel");
     if (chatOptionsPanel) {
@@ -562,6 +567,53 @@ function updateClearChatButtonVisibility() {
     }
 }
 
+function getChatEmojiElements() {
+    return {
+        input: document.getElementById("chatInput"),
+        picker: document.getElementById("chatEmojiPicker"),
+        toggle: document.getElementById("chatEmojiToggle"),
+    };
+}
+
+function closeChatEmojiPicker() {
+    const { picker, toggle } = getChatEmojiElements();
+    if (picker) picker.hidden = true;
+    if (toggle) toggle.setAttribute("aria-expanded", "false");
+}
+
+function toggleChatEmojiPicker(event) {
+    event?.preventDefault?.();
+    event?.stopPropagation?.();
+
+    const { picker, toggle } = getChatEmojiElements();
+    if (!picker) return;
+
+    const willOpen = picker.hidden;
+    picker.hidden = !willOpen;
+    if (toggle) toggle.setAttribute("aria-expanded", willOpen ? "true" : "false");
+}
+
+function insertChatEmoji(emoji) {
+    const { input } = getChatEmojiElements();
+    if (!input) return;
+
+    const value = input.value || "";
+    const start = Number.isInteger(input.selectionStart) ? input.selectionStart : value.length;
+    const end = Number.isInteger(input.selectionEnd) ? input.selectionEnd : value.length;
+    const nextValue = value.slice(0, start) + emoji + value.slice(end);
+
+    input.value = nextValue;
+    input.dispatchEvent(new Event("input", { bubbles: true }));
+
+    const nextPos = start + emoji.length;
+    try {
+        input.setSelectionRange(nextPos, nextPos);
+    } catch (_) {
+        // Ignore if browser/input type doesn't support selection range.
+    }
+    input.focus();
+}
+
 window.onload = async () => {
     syncChatViewportHeight();
 
@@ -578,4 +630,23 @@ window.onload = async () => {
     chatBoxHeader.style.display = 'flex';
     chatBoxBody.style.display = 'flex';
     syncChatMuteToggle();
+
+    const chatEmojiToggle = document.getElementById("chatEmojiToggle");
+    chatEmojiToggle?.addEventListener("click", toggleChatEmojiPicker);
+
+    const chatEmojiPicker = document.getElementById("chatEmojiPicker");
+    chatEmojiPicker?.addEventListener("click", (event) => {
+        event.stopPropagation();
+    });
+
+    document.addEventListener("click", (event) => {
+        const target = event.target;
+        if (!(target instanceof Element)) return;
+        if (target.closest(".chatbox-composer-input")) return;
+        closeChatEmojiPicker();
+    });
+
+    document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape") closeChatEmojiPicker();
+    });
 };

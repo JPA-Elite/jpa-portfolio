@@ -49,13 +49,33 @@
         </div>
         <div class="chatbox-footer">
             <div class="chatbox-composer">
-                <input
-                    id="chatInput"
-                    class="chatbox-input"
-                    type="text"
-                    placeholder="{{ _('chat_input_placeholder') }}"
-                    onkeydown="handleChatInputKeydown(event)"
-                    autocomplete="off" />
+                <div class="chatbox-composer-input">
+                    <input
+                        id="chatInput"
+                        class="chatbox-input"
+                        type="text"
+                        placeholder="{{ _('chat_input_placeholder') }}"
+                        onkeydown="handleChatInputKeydown(event)"
+                        autocomplete="off" />
+                    <button type="button" class="chatbox-emoji-btn" id="chatEmojiToggle"
+                        aria-label="{{ _('Modal_Insert_Emoji') }}" aria-expanded="false">
+                        <ion-icon name="happy-outline"></ion-icon>
+                    </button>
+                    <div class="chatbox-emoji-picker" id="chatEmojiPicker" hidden>
+                        <button type="button" onclick="insertChatEmoji('😀')">😀</button>
+                        <button type="button" onclick="insertChatEmoji('😂')">😂</button>
+                        <button type="button" onclick="insertChatEmoji('😍')">😍</button>
+                        <button type="button" onclick="insertChatEmoji('😎')">😎</button>
+                        <button type="button" onclick="insertChatEmoji('🥹')">🥹</button>
+                        <button type="button" onclick="insertChatEmoji('🔥')">🔥</button>
+                        <button type="button" onclick="insertChatEmoji('✨')">✨</button>
+                        <button type="button" onclick="insertChatEmoji('👏')">👏</button>
+                        <button type="button" onclick="insertChatEmoji('❤️')">❤️</button>
+                        <button type="button" onclick="insertChatEmoji('👍')">👍</button>
+                        <button type="button" onclick="insertChatEmoji('🙏')">🙏</button>
+                        <button type="button" onclick="insertChatEmoji('🎉')">🎉</button>
+                    </div>
+                </div>
                 <button id="sendChat" class="chatbox-send" type="button" onclick="sendMessage()" aria-busy="false">
                     <ion-icon name="paper-plane-outline" aria-hidden="true"></ion-icon>
                     <span>{{ _('chat_send_button') }}</span>
@@ -82,6 +102,7 @@
         questionPrefix: {{ _('chat_question_prefix') | tojson }},
         muteAria: {{ _('chat_mute_aria') | tojson }},
         unmuteAria: {{ _('chat_unmute_aria') | tojson }},
+        insertEmoji: {{ _('Modal_Insert_Emoji') | tojson }},
     };
 </script>
 <script src="{{ static_asset('js/components/chatbox.js') }}"></script>

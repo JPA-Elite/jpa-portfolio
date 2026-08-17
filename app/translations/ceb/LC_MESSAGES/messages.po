@@ -258,6 +258,9 @@ msgstr "I-unmute ang tingog"
 msgid "chat_sensitive_refusal"
 msgstr "Dili ko maka-share sa sensitibo o pribadong impormasyon sama sa password, API key, o credentials. Kung naa kay laing pangutana, ayaw pagpanuko sa pagpangutana!"
 
+msgid "chat_emoji_only_reply"
+msgstr "Nindot nga mga emoji! 😊 Pangutana nako bahin sa akong mga kahanas, mga proyekto, o kasinatian!"
+
 msgid "chat_farewell_reply"
 msgstr "Paalam! Salamat sa pagbisita. Balik-balik lang kung naa kay pangutana!"
 

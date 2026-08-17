@@ -24,6 +24,7 @@ def _fake_gettext(key):
         "chat_unknown_fallback_intro": "I couldn't find anything about that.",
         "chat_quick_questions_intro": "Here are the things I can answer:",
         "chat_sensitive_refusal": "I can't share sensitive or private information like passwords or credentials.",
+        "chat_emoji_only_reply": "Nice emojis! 😊 Ask me about my skills, projects, or experience!",
         "chat_farewell_reply": "Goodbye! Thanks for stopping by.",
         "chat_appreciation_reply": "You're welcome! I'm glad I could help.",
         "chat_how_are_you_reply": "I'm doing great, thanks for asking!",
@@ -157,6 +158,28 @@ class ChatServiceTests(unittest.TestCase):
         result = self._resolve("1 + 1?")
         self.assertIsNone(result["action"])
         self.assertIn("unrelated to my conversation", result["answer"])
+
+    def test_emoji_only_message_gets_quick_reply(self):
+        result = self._resolve("🥹")
+        self.assertEqual(result["answer"], "Nice emojis! 😊 Ask me about my skills, projects, or experience!")
+
+    def test_emoji_only_message_does_not_call_ai(self):
+        gemini = MagicMock()
+        gemini.answer.return_value = "AI answer."
+        service = ChatService(gemini_service=gemini)
+        with patch("app.Services.ChatService.gettext", side_effect=_fake_gettext), \
+             patch("app.Services.ChatService.ChatService._get_gemini_service", new=lambda self: self.gemini_service):
+            result = service.resolve("👏❤️😎😂😀🙏🎉", QA)
+        self.assertEqual(result["answer"], "Nice emojis! 😊 Ask me about my skills, projects, or experience!")
+        gemini.answer.assert_not_called()
+
+    def test_mixed_emoji_message_flows_normally(self):
+        result = self._resolve("hi joshua 😀")
+        self.assertNotEqual(result["answer"], "Nice emojis! 😊 Ask me about my skills, projects, or experience!")
+
+    def test_punctuation_only_message_not_emoji_only(self):
+        result = self._resolve("???")
+        self.assertNotEqual(result["answer"], "Nice emojis! 😊 Ask me about my skills, projects, or experience!")
 
     def test_unrelated_reply_not_used_for_related_questions(self):
         result = self._resolve("what projects have you built?")

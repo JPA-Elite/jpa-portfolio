@@ -252,6 +252,9 @@ msgstr "Réactiver la voix"
 msgid "chat_sensitive_refusal"
 msgstr "Je ne peux pas partager d'informations sensibles ou privées comme les mots de passe, les clés API ou les identifiants. Si vous avez une autre question, n'hésitez pas !"
 
+msgid "chat_emoji_only_reply"
+msgstr "J'adore ces émojis ! 😊 Posez-moi plutôt des questions sur mes compétences, mes projets ou mon expérience !"
+
 msgid "chat_farewell_reply"
 msgstr "Au revoir ! Merci de votre visite. Revenez quand vous voulez !"
 

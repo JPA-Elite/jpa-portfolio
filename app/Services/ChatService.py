@@ -142,6 +142,10 @@ SENSITIVE_WORDS = {
     "national id", "passport",
 }
 
+EMOJI_ONLY_PATTERN = re.compile(
+    r"[\U0001F000-\U0001FAFF\U0001F900-\U0001F9FF\u2600-\u27BF\u2B50\u2764\uFE0F\u2728]"
+)
+
 GREETING_PATTERNS = [
     "hi", "hello", "hey", "hola", "kumusta",
     "good morning", "good afternoon", "good evening", "good day",
@@ -541,6 +545,9 @@ class ChatService:
         if self._is_sensitive(normalized):
             return self._reply(gettext("chat_sensitive_refusal"), action="expand_options")
 
+        if self._is_emoji_only(normalized):
+            return self._reply(gettext("chat_emoji_only_reply"))
+
         if self._is_quick_questions(normalized):
             questions = " • ".join(item["question"] for item in (qa_data or self.get_qa_data())[:10])
             return self._reply(
@@ -692,6 +699,13 @@ class ChatService:
 
     def _is_quick_questions(self, normalized):
         return any(pattern in normalized for pattern in QUICK_QUESTIONS_PATTERNS)
+
+    def _is_emoji_only(self, normalized):
+        if not normalized:
+            return False
+        if re.search(r"[a-z0-9]", normalized):
+            return False
+        return EMOJI_ONLY_PATTERN.search(normalized) is not None
 
     def _is_greeting(self, normalized):
         return any(self._contains_word(normalized, word) for word in GREETING_PATTERNS)

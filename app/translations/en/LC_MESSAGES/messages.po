@@ -258,6 +258,9 @@ msgstr "Unmute voice"
 msgid "chat_sensitive_refusal"
 msgstr "I can't share sensitive or private information like passwords, API keys, or credentials. If you have another question, feel free to ask!"
 
+msgid "chat_emoji_only_reply"
+msgstr "Nice emojis! 😊 Ask me about my skills, projects, or experience!"
+
 msgid "chat_farewell_reply"
 msgstr "Goodbye! Thanks for stopping by. Come back anytime you have a question!"
 

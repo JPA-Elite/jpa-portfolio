@@ -913,6 +913,25 @@
     }
 }
 
+/* Clear chat: cascade dissolve */
+.chat-message-row--clearing {
+    animation: chatRowCascade 0.55s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    will-change: opacity, transform, filter;
+}
+
+@keyframes chatRowCascade {
+    0% {
+        opacity: 1;
+        transform: translateY(0);
+        filter: blur(0);
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(-18px);
+        filter: blur(3px);
+    }
+}
+
 /* Maximized state: half-width, balanced height on desktop; full screen on mobile */
 .chatbox-modal.is-maximized {
     width: min(50vw, calc(100vw - 24px));
@@ -958,6 +977,10 @@
     .chatbox-emoji-btn,
     #clearChat {
         transition: none;
+    }
+
+    .chat-message-row--clearing {
+        animation-duration: 0.01s;
     }
 
     .chat-options button:hover,

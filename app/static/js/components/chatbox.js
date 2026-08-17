@@ -566,18 +566,35 @@ function loadCachedChat(qaArray = []) {
     updateClearChatButtonVisibility();
 }
 
-function clearChat() {
+function wipeChatStorage() {
     localStorage.removeItem(cacheMessage);
     localStorage.removeItem(cacheChatSession);
+}
+
+function clearChat() {
     removeTypingIndicator();
     stopChatSpeech();
-    const chatMessages = document.getElementById("chatMessages");
-    if (chatMessages) {
-        chatMessages.innerHTML = '';
-    }
-    const helpCard = document.querySelector(".chatbox-help-card");
-    if (helpCard) helpCard.style.display = '';
+    wipeChatStorage();
     updateClearChatButtonVisibility();
+
+    const chatMessages = document.getElementById("chatMessages");
+    const rows = chatMessages
+        ? Array.from(chatMessages.querySelectorAll(".chat-message-row"))
+        : [];
+    if (rows.length === 0) return;
+
+    const delayStep = 90;
+    const maxDelaySteps = 14;
+    rows.reverse().forEach((row, index) => {
+        row.classList.add("chat-message-row--clearing");
+        row.style.animationDelay = `${Math.min(index, maxDelaySteps) * delayStep}ms`;
+    });
+
+    setTimeout(() => {
+        if (chatMessages) chatMessages.innerHTML = "";
+        const helpCard = document.querySelector(".chatbox-help-card");
+        if (helpCard) helpCard.style.display = "";
+    }, Math.min(rows.length, maxDelaySteps) * delayStep + 500);
 }
 
 function updateClearChatButtonVisibility() {

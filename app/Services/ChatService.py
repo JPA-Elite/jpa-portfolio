@@ -414,12 +414,17 @@ class ChatService:
                 return section
         return None
 
-    def _kb_section_reply(self, key, fallback_key):
-        locale = self._locale
+    def _current_locale(self):
         try:
-            locale = get_locale() or locale
+            value = get_locale()
         except Exception:
-            pass
+            value = None
+        if not value:
+            return self._locale or "en"
+        return str(value)
+
+    def _kb_section_reply(self, key, fallback_key):
+        locale = self._current_locale()
         section = self._kb_section_by_key(key)
         if section:
             localized = section.get("localized") or {}
@@ -430,10 +435,7 @@ class ChatService:
         return gettext(fallback_key)
 
     def get_qa_data(self):
-        try:
-            locale = get_locale() or "en"
-        except Exception:
-            locale = self._locale or "en"
+        locale = self._current_locale()
         return [
             self._qa_item(section, locale)
             for section in self._knowledge_base().sections()
@@ -532,10 +534,7 @@ class ChatService:
         if not message:
             return self._reply(gettext("chat_unknown_fallback"))
 
-        try:
-            self._locale = get_locale() or "en"
-        except Exception:
-            self._locale = "en"
+        self._locale = self._current_locale()
 
         normalized = message.lower()
         expanded = self._normalize_spacing(self._expand_message(normalized))
@@ -976,10 +975,7 @@ class ChatService:
             "know about her contacts. If asked further about Teleperformance as a BPO "
             "company, answer in detail.",
         ]
-        try:
-            locale = get_locale() or "en"
-        except Exception:
-            locale = "en"
+        locale = self._current_locale()
         age = str(self._age())
         dynamic_reply = self._current_company_reply()
         for section in self._knowledge_base().sections():

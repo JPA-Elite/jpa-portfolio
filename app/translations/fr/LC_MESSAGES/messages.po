@@ -246,6 +246,12 @@ msgstr "Q : "
 msgid "chat_mute_aria"
 msgstr "Couper le son de la voix"
 
+msgid "chat_maximize_aria"
+msgstr "Agrandir le chat"
+
+msgid "chat_minimize_aria"
+msgstr "Réduire le chat"
+
 msgid "chat_unmute_aria"
 msgstr "Réactiver la voix"
 

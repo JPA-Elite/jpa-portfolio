@@ -252,6 +252,12 @@ msgstr "P: "
 msgid "chat_mute_aria"
 msgstr "I-mute ang tingog"
 
+msgid "chat_maximize_aria"
+msgstr "I-maximize ang chat"
+
+msgid "chat_minimize_aria"
+msgstr "I-minimize ang chat"
+
 msgid "chat_unmute_aria"
 msgstr "I-unmute ang tingog"
 

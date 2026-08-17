@@ -52,6 +52,7 @@ const cacheChatOptionsCollapsed = 'chatOptionsCollapsed';
 const cacheChatSession = 'chatSessionId';
 const BOT_TYPING_DELAY_MS = 320;
 const cacheChatMuted = 'chatMuted';
+const cacheChatMaximized = 'chatMaximized';
 const chatboxI18n = window.chatboxI18n || {};
 let chatQaDataCache = [];
 let typingIndicatorRow = null;
@@ -174,6 +175,26 @@ function toggleChatMute() {
     localStorage.setItem(cacheChatMuted, String(chatMuted));
     if (chatMuted) stopChatSpeech();
     syncChatMuteToggle();
+}
+
+function syncChatMaximizeToggle() {
+    const modal = document.getElementById("chatboxModal");
+    const toggle = document.getElementById("chatMaximizeToggle");
+    if (!modal || !toggle) return;
+    const isMaximized = modal.classList.contains("is-maximized");
+    const icon = toggle.querySelector("ion-icon");
+    if (icon) icon.setAttribute("name", isMaximized ? "contract-outline" : "expand-outline");
+    toggle.setAttribute("aria-pressed", String(isMaximized));
+    toggle.setAttribute("aria-label", tChat(isMaximized ? "minimizeAria" : "maximizeAria", isMaximized ? "Minimize chat" : "Maximize chat"));
+}
+
+function toggleChatMaximize() {
+    const modal = document.getElementById("chatboxModal");
+    if (!modal) return;
+    const isMaximized = modal.classList.contains("is-maximized");
+    modal.classList.toggle("is-maximized", !isMaximized);
+    localStorage.setItem(cacheChatMaximized, String(!isMaximized));
+    syncChatMaximizeToggle();
 }
 
 function tChat(key, fallback = "") {
@@ -630,6 +651,11 @@ window.onload = async () => {
     chatBoxHeader.style.display = 'flex';
     chatBoxBody.style.display = 'flex';
     syncChatMuteToggle();
+
+    if (localStorage.getItem(cacheChatMaximized) === "true") {
+        document.getElementById("chatboxModal")?.classList.add("is-maximized");
+    }
+    syncChatMaximizeToggle();
 
     const chatEmojiToggle = document.getElementById("chatEmojiToggle");
     chatEmojiToggle?.addEventListener("click", toggleChatEmojiPicker);

@@ -252,6 +252,12 @@ msgstr "Q: "
 msgid "chat_mute_aria"
 msgstr "Mute voice"
 
+msgid "chat_maximize_aria"
+msgstr "Maximize chat"
+
+msgid "chat_minimize_aria"
+msgstr "Minimize chat"
+
 msgid "chat_unmute_aria"
 msgstr "Unmute voice"
 

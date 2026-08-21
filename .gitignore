@@ -29,6 +29,7 @@ config.py
 .idea/
 
 # Miscellaneous
+nul
 .DS_Store
 *.sqlite3
 *.db

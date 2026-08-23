@@ -65,7 +65,7 @@ class BuiltAppRequest(BaseRequest):
             "version": str(self._get_form("version", "")).strip(),
             "icon": str(self._get_form("icon", "apps-outline")).strip(),
             "download_url": str(self._get_form("download_url", "")).strip(),
-            "snapshot_files": request.files.getlist("snapshot_files"),
+            "snapshot_files": request.files,
             "snapshots_meta": json.loads(snapshots_meta) if snapshots_meta else None,
             "sort_order": int(sort_order or 0),
             "is_active": self._parse_bool(self._get_form("is_active", "true")),
@@ -93,7 +93,7 @@ class BuiltAppRequest(BaseRequest):
             "version": self._get_form("version"),
             "icon": self._get_form("icon"),
             "download_url": self._get_form("download_url"),
-            "snapshot_files": request.files.getlist("snapshot_files"),
+            "snapshot_files": request.files,
             "snapshots_meta": json.loads(snapshots_meta) if snapshots_meta else None,
             "sort_order": int(sort_order) if sort_order not in (None, "") else None,
             "is_active": (

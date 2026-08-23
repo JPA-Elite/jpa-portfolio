@@ -1,10 +1,21 @@
 import unittest
+import io
 from unittest.mock import MagicMock, patch
+
+from PIL import Image
+from werkzeug.datastructures import FileStorage, MultiDict
 
 from app.Services.BuiltAppService import BuiltAppService
 from app.configurations import SortOrder
 
 from tests.services._service_fixtures import built_app_doc
+
+
+def _png_file_storage():
+    buffer = io.BytesIO()
+    Image.new("RGB", (8, 6), "blue").save(buffer, "PNG")
+    buffer.seek(0)
+    return FileStorage(stream=buffer, filename="snap.png", content_type="image/png")
 
 
 class BuiltAppServiceTests(unittest.TestCase):
@@ -112,6 +123,82 @@ class BuiltAppServiceTests(unittest.TestCase):
 
         saved = self.repo.add_built_app.call_args[0][0].to_dict()
         self.assertEqual(saved["slug"], "taskflow-2")
+
+    def test_add_built_app_persists_snapshots_from_files_mapping(self):
+        self.repo.add_built_app.return_value = "app-new"
+
+        files = MultiDict([("snapshot_files", _png_file_storage())])
+        with patch.object(
+            self.service, "_upload_snapshot_file", return_value="/uploaded.webp"
+        ) as mock_upload:
+            result = self.service.add_built_app(
+                {
+                    "name": {"en": "TaskFlow"},
+                    "snapshot_files": files,
+                    "snapshots_meta": None,
+                }
+            )
+
+            self.assertEqual(result, "app-new")
+            mock_upload.assert_called_once()
+        saved = self.repo.add_built_app.call_args[0][0].to_dict()
+        self.assertEqual(len(saved["snapshots"]), 1)
+        self.assertEqual(saved["snapshots"][0]["image_url"], "/uploaded.webp")
+        self.assertEqual(saved["snapshots"][0]["sort_order"], 0)
+
+    def test_update_built_app_replaces_snapshot_via_files_mapping(self):
+        existing = built_app_doc()
+        existing["snapshots"] = [
+            {
+                "id": "s1",
+                "image_url": "https://res.cloudinary.com/demo/image/upload/old.webp",
+                "sort_order": 0,
+            }
+        ]
+        self.repo.get_built_app_by_id.return_value = existing
+        self.repo.update_built_app.return_value = True
+
+        with patch.object(
+            self.service, "_upload_snapshot_file", return_value="/uploaded.webp"
+        ) as mock_upload:
+            files = MultiDict([("new_0", _png_file_storage())])
+            result = self.service.update_built_app(
+                "app1",
+                {
+                    "snapshots_meta": [{"id": "s1", "image_field": "new_0"}],
+                    "snapshot_files": files,
+                },
+            )
+
+            self.assertTrue(result)
+            mock_upload.assert_called_once()
+
+        updated = self.repo.update_built_app.call_args[0][1].to_dict()
+        self.assertEqual(len(updated["snapshots"]), 1)
+        self.assertEqual(updated["snapshots"][0]["image_url"], "/uploaded.webp")
+        self.assertEqual(updated["snapshots"][0]["id"], "s1")
+
+    def test_update_built_app_appends_new_snapshot_row_without_id(self):
+        existing = built_app_doc()
+        self.repo.get_built_app_by_id.return_value = existing
+        self.repo.update_built_app.return_value = True
+
+        with patch.object(
+            self.service, "_upload_snapshot_file", return_value="/uploaded.webp"
+        ):
+            files = MultiDict([("new_0", _png_file_storage())])
+            result = self.service.update_built_app(
+                "app1",
+                {
+                    "snapshots_meta": [{"id": None, "image_field": "new_0"}],
+                    "snapshot_files": files,
+                },
+            )
+
+        self.assertTrue(result)
+        updated = self.repo.update_built_app.call_args[0][1].to_dict()
+        self.assertEqual(len(updated["snapshots"]), 1)
+        self.assertTrue(updated["snapshots"][0]["id"])
 
     def test_update_built_app_returns_false_when_missing(self):
         self.repo.get_built_app_by_id.return_value = None

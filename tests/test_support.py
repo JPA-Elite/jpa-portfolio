@@ -187,7 +187,7 @@ def dummy_repo_param(name):
         return "test"
     if name in {"tags"}:
         return ["tag1"]
-    if name in {"roadmaps", "key_projects"}:
+    if name in {"roadmaps", "key_projects", "built_apps"}:
         return [dummy_repo_model(), dummy_repo_model()]
     if name in {"locale"}:
         return "en"
@@ -210,4 +210,20 @@ def dummy_repo_param(name):
         "gallery_like", "vlog_like", "comment", "vlog", "portfolio_data", "system_info"
     }:
         return dummy_repo_model()
+    if name == "built_app":
+        from app.Models.BuiltApp import BuiltApp
+        return BuiltApp.from_dict({
+            "id": "app-1",
+            "slug": "taskflow",
+            "platform": "Mobile",
+            "version": "v1.0.0",
+            "icon": "apps-outline",
+            "name": {"en": "TaskFlow"},
+            "short_description": {"en": "Task manager."},
+            "full_description": {"en": ["Paragraph."]},
+            "snapshots": [],
+            "download_url": "#",
+            "sort_order": 1,
+            "is_active": True,
+        })
     return "value"

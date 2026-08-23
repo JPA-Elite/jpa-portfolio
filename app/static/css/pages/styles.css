@@ -94,15 +94,9 @@ nav ul li:hover {
     transition: opacity 0.3s ease;
 }
 
-nav ul li.active {
-    border-bottom: 2px solid var(--accent-color);
-}
-
 nav ul li.active a {
     color: var(--text-primary);
     pointer-events: none;
-    /* font-weight: 500; */
-    /* font-style: italic; */
 }
 
 /* Override pointer-events: none for megamenu items when the dropdown is open */
@@ -110,13 +104,7 @@ nav ul li.media-dropdown.is-open .media-megamenu__item {
     pointer-events: auto;
 }
 
-/* Active state: blue bottom border when on Gallery/Vlog/Music page — toggle via is-open */
-nav ul li.media-dropdown.active {
-    border-bottom: 2px solid var(--accent-color);
-    border-radius: 5px;
-}
-
-/* Show megamenu only via is-open class (JS toggle); 'active' only gives the underline */
+/* Show megamenu only via is-open class (JS toggle); 'active' marks the current media page */
 nav ul li.media-dropdown.is-open .media-megamenu {
     display: flex;
 }

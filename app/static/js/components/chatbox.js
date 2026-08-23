@@ -51,6 +51,7 @@ const cacheChatboxVisible = 'chatboxVisible';
 const cacheChatOptionsCollapsed = 'chatOptionsCollapsed';
 const cacheChatSession = 'chatSessionId';
 const BOT_TYPING_DELAY_MS = 320;
+const CHATBOX_ANIM_MS = 550;
 const cacheChatMuted = 'chatMuted';
 const cacheChatMaximized = 'chatMaximized';
 const chatboxI18n = window.chatboxI18n || {};
@@ -347,12 +348,34 @@ function initializeChatOptions(qaArray = []) {
 
 function toggleChatbox() {
     const modal = document.getElementById("chatboxModal");
+    if (!modal) return;
 
-    if (modal) {
-        const isVisible = modal.style.display === "flex";
-        modal.style.display = isVisible ? "none" : "flex";
-        localStorage.setItem(cacheChatboxVisible, !isVisible);
-        if (isVisible) stopChatSpeech();
+    const willOpen = localStorage.getItem(cacheChatboxVisible) !== "true";
+
+    if (modal.dataset.chatAnimTimer) {
+        window.clearTimeout(Number(modal.dataset.chatAnimTimer));
+        delete modal.dataset.chatAnimTimer;
+    }
+    modal.classList.remove("chatbox-modal--opening", "chatbox-modal--closing");
+    void modal.offsetWidth;
+
+    if (willOpen) {
+        modal.classList.add("chatbox-modal--opening");
+        modal.style.display = "flex";
+        localStorage.setItem(cacheChatboxVisible, true);
+        modal.dataset.chatAnimTimer = window.setTimeout(() => {
+            modal.classList.remove("chatbox-modal--opening");
+            delete modal.dataset.chatAnimTimer;
+        }, CHATBOX_ANIM_MS);
+    } else {
+        stopChatSpeech();
+        modal.classList.add("chatbox-modal--closing");
+        localStorage.setItem(cacheChatboxVisible, false);
+        modal.dataset.chatAnimTimer = window.setTimeout(() => {
+            modal.style.display = "none";
+            modal.classList.remove("chatbox-modal--closing");
+            delete modal.dataset.chatAnimTimer;
+        }, CHATBOX_ANIM_MS);
     }
 }
 

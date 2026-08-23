@@ -12,6 +12,7 @@ class MongoCollections:
     GALLERY = "gallery"
     KEY_PROJECTS = "key_projects"
     COMPANY_ROADMAPS = "company_roadmaps"
+    BUILT_APPS = "built_apps"
     GALLERY_LIKES = "gallery_likes"
     VIDEO_LIKES = "video_likes"
     GALLERY_COMMENTS = "gallery_comments"

@@ -8,12 +8,13 @@ from app.Services.GalleryService import GalleryService
 from app.Repositories.GalleryRepository import GalleryRepository
 from app.Services.KeyProjectService import KeyProjectService
 from app.Repositories.KeyProjectRepository import KeyProjectRepository
+from app.Services.BuiltAppService import BuiltAppService
+from app.Repositories.BuiltAppRepository import BuiltAppRepository
 from app.Services.CompanyRoadmapService import CompanyRoadmapService
 from app.Repositories.CompanyRoadmapRepository import CompanyRoadmapRepository
 from app.Services.GalleryLikeService import GalleryLikeService
 from app.Repositories.GalleryLikeRepository import GalleryLikeRepository
 from app.Requests.web.PageRequest import PageRequest
-from app.constants.built_apps import get_built_app, get_built_apps
 from app.utils import capture_image, get_random_tags
 from app.configurations import (
     ADD_PORTFOLIO_PAGE,
@@ -44,6 +45,7 @@ portfolio_service = PortfolioService(repository=PortfolioRepository())
 gallery_service = GalleryService(repository=GalleryRepository())
 video_service = VideoService(repository=VideoRepository())
 key_project_service = KeyProjectService(repository=KeyProjectRepository())
+built_app_service = BuiltAppService(repository=BuiltAppRepository())
 company_roadmap_service = CompanyRoadmapService(repository=CompanyRoadmapRepository())
 gallery_like_service = GalleryLikeService(repository=GalleryLikeRepository())
 
@@ -605,6 +607,32 @@ def _resolve_project_stack_display(stack_value, locale_value, seed_stack_map=Non
 
     return stack_text
 
+def _resolve_built_app_display(app_dict):
+    locale = _locale_key(get_locale())
+    name_map = app_dict.get("name") or {}
+    short_map = app_dict.get("short_description") or {}
+    full_map = app_dict.get("full_description") or {}
+
+    paragraphs = full_map.get(locale) or full_map.get("en") or []
+    snapshots = [
+        {
+            "id": (s or {}).get("id"),
+            "image_url": (s or {}).get("image_url"),
+            "sort_order": (s or {}).get("sort_order", index),
+        }
+        for index, s in enumerate(app_dict.get("snapshots") or [])
+        if isinstance(s, dict) and s.get("image_url")
+    ]
+
+    return {
+        **app_dict,
+        "name": (name_map.get(locale) or name_map.get("en") or "").strip(),
+        "short_description": (short_map.get(locale) or short_map.get("en") or "").strip(),
+        "full_description": [str(p).strip() for p in paragraphs if str(p).strip()],
+        "snapshots": snapshots,
+    }
+
+
 def index_route():
     log_result = handle_log_parameter()
     if log_result is not None:
@@ -632,6 +660,11 @@ def profile_route():
         company_roadmap_service.seed_default_company_roadmaps_if_empty()
     except Exception as exc:
         print(f"Company roadmap default seed failed: {exc}")
+
+    try:
+        built_app_service.seed_default_built_apps_if_empty()
+    except Exception as exc:
+        print(f"Built app default seed failed: {exc}")
 
     locale = _locale_key(get_locale())
     key_projects = [project.to_dict() for project in key_project_service.get_active_key_projects()]
@@ -791,21 +824,31 @@ def profile_route():
         key_project_columns=key_project_columns,
         company_roadmap_entries=company_roadmap_entries,
         voice_icon=voice_icon,
-        built_apps=get_built_apps(),
+        built_apps=[_resolve_built_app_display(app.to_dict()) for app in built_app_service.get_active_built_apps()],
     )
 
 
 def built_app_details_route(slug):
-    app = get_built_app(slug)
+    try:
+        built_app_service.seed_default_built_apps_if_empty()
+    except Exception as exc:
+        print(f"Built app default seed failed: {exc}")
+
+    app = built_app_service.get_active_built_app_by_slug(slug)
     if app is None:
         return render_template(ERROR_404_PAGE, title="Not Found"), 404
 
-    other_apps = [a for a in get_built_apps() if a["slug"] != app["slug"]][:6]
+    app_data = _resolve_built_app_display(app.to_dict())
+    other_apps = [
+        _resolve_built_app_display(a.to_dict())
+        for a in built_app_service.get_active_built_apps()
+        if a.slug != app.slug
+    ][:6]
 
     return handle_log_parameter() or render_template(
         APP_DETAILS_PAGE,
-        title=f"{app['name']} — Built Apps",
-        built_app=app,
+        title=f"{app_data['name']} — Built Apps",
+        built_app=app_data,
         other_apps=other_apps,
     )
 

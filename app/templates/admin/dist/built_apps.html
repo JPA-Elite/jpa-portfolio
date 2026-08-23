@@ -1,0 +1,195 @@
+{% extends "admin/dist/layout.html" %}
+{% block title %}Admin | Built Apps{% endblock %}
+{% block head %}
+
+<style>
+  .ba-admin-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .4rem;
+  }
+
+  @media (max-width: 768px) {
+    .ba-admin-actions {
+      flex-direction: row;
+      flex-wrap: wrap;
+      width: 100%;
+    }
+
+    .ba-admin-actions .btn {
+      flex: 1 1 calc(50% - .4rem);
+      min-width: 96px;
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      gap: .35rem;
+      margin-right: 0 !important;
+    }
+
+    #builtAppsTableBody td:last-child {
+      min-width: 140px;
+    }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="app-content-header">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-sm-6">
+        <h3 class="mb-0">Built Apps</h3>
+      </div>
+      <div class="col-sm-6">
+        <ol class="breadcrumb float-sm-end">
+          <li class="breadcrumb-item"><a href="/admin/dashboard">Home</a></li>
+          <li class="breadcrumb-item active" aria-current="page">Maintenance</li>
+          <li class="breadcrumb-item active" aria-current="page">Built Apps</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="app-content">
+  <div class="container-fluid">
+    <div class="card">
+      <div class="card-body">
+        <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 pb-3 admin-table-toolbar">
+          <div class="d-flex flex-wrap align-items-center gap-2 admin-table-filters">
+            <div class="d-flex align-items-center gap-2 admin-table-show">
+              <label for="perPageSelect" class="form-label mb-0">Show</label>
+              <select id="perPageSelect" class="form-select form-select-sm admin-table-filter-select" style="width:auto;">
+                <option value="5">5</option>
+                <option value="10" selected>10</option>
+                <option value="20">20</option>
+              </select>
+              <span>entries</span>
+            </div>
+            <input id="searchInput" type="search" class="form-control form-control-sm admin-table-filter-input" style="width: 220px;"
+              placeholder="Search apps, slug, or version" />
+            <select id="orderSelect" class="form-select form-select-sm admin-table-filter-select" style="width: 150px;">
+              <option value="asc" selected>Sort Order</option>
+              <option value="desc">Newest First</option>
+            </select>
+            <select id="platformFilterSelect" class="form-select form-select-sm admin-table-filter-select" style="width: 140px;">
+              <option value="">All Platforms</option>
+              <option value="mobile">Mobile</option>
+              <option value="desktop">Desktop</option>
+            </select>
+            <select id="activeFilterSelect" class="form-select form-select-sm admin-table-filter-select" style="width: 150px;">
+              <option value="">All Visibility</option>
+              <option value="true">Active</option>
+              <option value="false">Inactive</option>
+            </select>
+          </div>
+          <button class="btn btn-success admin-table-action" data-bs-toggle="modal" data-bs-target="#addAppModal">
+            <i class="bi bi-plus-circle"></i> Add App
+          </button>
+        </div>
+
+        <div class="table-responsive">
+          <table class="table table-bordered table-hover align-middle">
+            <thead class="table-light">
+              <tr>
+                <th>#</th>
+                <th>App</th>
+                <th>Slug</th>
+                <th>Platform</th>
+                <th>Version</th>
+                <th>Snapshots</th>
+                <th>Sort</th>
+                <th>Active</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="builtAppsTableBody">
+              <tr><td colspan="9" class="text-center">Loading...</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="d-flex justify-content-between align-items-center mt-3">
+          <button id="prevPage" class="btn btn-outline-secondary btn-sm">Prev</button>
+          <span id="pageInfo"></span>
+          <button id="nextPage" class="btn btn-outline-secondary btn-sm">Next</button>
+        </div>
+
+        <div id="builtAppModals"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="addAppModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title me-auto">Add Built App</h5>
+        <div class="d-flex align-items-center gap-1">
+          <button type="button" class="btn p-1 preview-header-btn" id="addBuiltAppMaximizeBtn" aria-label="Maximize" title="Maximize">
+            <i class="bi bi-arrows-fullscreen"></i>
+          </button>
+          <button type="button" class="btn p-1 preview-header-btn" data-bs-dismiss="modal" aria-label="Close">
+            <i class="bi bi-x-lg"></i>
+          </button>
+        </div>
+      </div>
+      <div class="modal-body">
+        <form id="addBuiltAppForm">
+          <div class="row g-3">
+            <div class="col-md-6"><label class="form-label">Name (EN) <span class="text-danger">*</span></label><input type="text" id="addNameEn" class="form-control" required></div>
+            <div class="col-md-6"><label class="form-label">Name (Ceb)</label><input type="text" id="addNameCeb" class="form-control"></div>
+            <div class="col-md-6"><label class="form-label">Name (Fr)</label><input type="text" id="addNameFr" class="form-control"></div>
+            <div class="col-md-6"><label class="form-label">Name (Fil)</label><input type="text" id="addNameFil" class="form-control"></div>
+
+            <div class="col-md-6">
+              <label class="form-label">Platform</label>
+              <select id="addPlatform" class="form-select">
+                <option value="Mobile" selected>Mobile</option>
+                <option value="Desktop">Desktop</option>
+              </select>
+            </div>
+            <div class="col-md-3"><label class="form-label">Version</label><input type="text" id="addVersion" class="form-control" placeholder="v1.0.0"></div>
+            <div class="col-md-3"><label class="form-label">Sort Order</label><input type="number" id="addSortOrder" class="form-control" value="0"></div>
+
+            <div class="col-md-6"><label class="form-label">Icon (ion-icon name)</label><input type="text" id="addIcon" class="form-control" placeholder="apps-outline"></div>
+            <div class="col-md-6"><label class="form-label">Download URL</label><input type="url" id="addDownloadUrl" class="form-control" placeholder="https://mediafire.com/... or https://drive.google.com/..."></div>
+
+            <div class="col-12"><label class="form-label">Short Description (EN)</label><textarea id="addShortEn" class="form-control" rows="2"></textarea></div>
+            <div class="col-md-4"><label class="form-label">Short Description (Ceb)</label><textarea id="addShortCeb" class="form-control" rows="2"></textarea></div>
+            <div class="col-md-4"><label class="form-label">Short Description (Fr)</label><textarea id="addShortFr" class="form-control" rows="2"></textarea></div>
+            <div class="col-md-4"><label class="form-label">Short Description (Fil)</label><textarea id="addShortFil" class="form-control" rows="2"></textarea></div>
+
+            <div class="col-12"><label class="form-label">Full Description (EN) — separate paragraphs with a blank line</label><textarea id="addFullEn" class="form-control" rows="4"></textarea></div>
+            <div class="col-md-4"><label class="form-label">Full Description (Ceb)</label><textarea id="addFullCeb" class="form-control" rows="4"></textarea></div>
+            <div class="col-md-4"><label class="form-label">Full Description (Fr)</label><textarea id="addFullFr" class="form-control" rows="4"></textarea></div>
+            <div class="col-md-4"><label class="form-label">Full Description (Fil)</label><textarea id="addFullFil" class="form-control" rows="4"></textarea></div>
+
+            <div class="col-12">
+              <label class="form-label">Snapshots (optional images saved to Cloudinary)</label>
+              <input type="file" id="addSnapshotFiles" class="form-control" accept="image/*" multiple>
+              <div class="form-text">Each image becomes a snapshot slide on the app details page.</div>
+            </div>
+
+            <div class="col-12 form-check mt-2 ms-2">
+              <input class="form-check-input" type="checkbox" id="addIsActive" checked>
+              <label class="form-check-label" for="addIsActive">Active (show on portfolio)</label>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-success" id="addAppBtn"
+          data-loading-text='<span class="spinner-border spinner-border-sm me-2"></span> Saving...'
+          onclick="addBuiltApp()">
+          Save
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="module" src="{{ static_asset('js/pages/admin/built-apps.js') }}"></script>
+{% endblock %}

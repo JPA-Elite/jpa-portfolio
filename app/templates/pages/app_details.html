@@ -46,10 +46,14 @@
         <div class="app-details__snapshots" data-mobile-slider data-mobile-slider-label="{{ _('App_Details_Snapshots') }}">
             {% for snapshot in built_app.snapshots %}
             <figure class="app-details__snapshot" style="--i: {{ loop.index0 }}">
+                {% if snapshot.image_url %}
+                <img src="{{ snapshot.image_url }}" alt="{{ built_app.name }} {{ _('App_Details_Snapshot_Label') }} {{ loop.index }}" loading="lazy" decoding="async">
+                {% else %}
                 <div class="app-details__snapshot-placeholder">
                     <ion-icon name="image-outline" aria-hidden="true"></ion-icon>
                 </div>
-                <figcaption>{{ built_app.name }} {{ _('App_Details_Snapshot_Label') }} {{ snapshot }}</figcaption>
+                {% endif %}
+                <figcaption>{{ built_app.name }} {{ _('App_Details_Snapshot_Label') }} {{ loop.index }}</figcaption>
             </figure>
             {% endfor %}
         </div>

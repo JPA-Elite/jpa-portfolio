@@ -979,6 +979,42 @@
     }
 }
 
+.chatbox-modal--opening {
+    animation: chatboxCascadeIn 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+    will-change: opacity, transform, filter;
+}
+
+.chatbox-modal--closing {
+    animation: chatboxCascadeOut 0.55s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    will-change: opacity, transform, filter;
+}
+
+@keyframes chatboxCascadeIn {
+    0% {
+        opacity: 0;
+        transform: translateY(-18px);
+        filter: blur(3px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+        filter: blur(0);
+    }
+}
+
+@keyframes chatboxCascadeOut {
+    0% {
+        opacity: 1;
+        transform: translateY(0);
+        filter: blur(0);
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(-18px);
+        filter: blur(3px);
+    }
+}
+
 /* Maximized state: half-width, balanced height on desktop; full screen on mobile */
 .chatbox-modal.is-maximized {
     width: min(50vw, calc(100vw - 24px));
@@ -1027,6 +1063,11 @@
     }
 
     .chat-message-row--clearing {
+        animation-duration: 0.01s;
+    }
+
+    .chatbox-modal--opening,
+    .chatbox-modal--closing {
         animation-duration: 0.01s;
     }
 

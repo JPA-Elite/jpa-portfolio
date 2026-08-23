@@ -156,9 +156,10 @@ class BuiltAppService:
         self.repository.add_many_built_apps(seeded)
         return len(seeded)
 
-    def _build_new_snapshots(self, files, uploaded_urls):
+    def _build_new_snapshots(self, file_storage, uploaded_urls):
+        files = file_storage.getlist("snapshot_files") if file_storage else []
         snapshots = []
-        for file in files or []:
+        for file in files:
             if not file:
                 continue
             url = self._upload_snapshot_file(file)

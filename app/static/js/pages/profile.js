@@ -797,6 +797,33 @@ function setupBuiltAppsShowMore() {
     });
 }
 
+function setupBuiltAppsHashScroll() {
+    if (window.location.hash !== "#built-apps") return;
+    const target = document.getElementById("built-apps");
+    if (!target) return;
+    let node = target.parentElement;
+    while (node) {
+        if (node.classList && node.classList.contains("lazy-reveal")) {
+            node.classList.add("is-revealed");
+        }
+        node = node.parentElement;
+    }
+    const scrollToApps = () => {
+        requestAnimationFrame(() => {
+            target.scrollIntoView({ behavior: "smooth", block: "start" });
+        });
+    };
+    const scheduleScroll = () => {
+        setTimeout(scrollToApps, 150);
+        setTimeout(scrollToApps, 600);
+    };
+    if (document.readyState === "complete") {
+        scheduleScroll();
+    } else {
+        window.addEventListener("load", scheduleScroll);
+    }
+}
+
 document.addEventListener("DOMContentLoaded", () => {
     setupCarousel();
     setupProfileGifHover();
@@ -813,5 +840,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     setupTagTooltips();
     setupBuiltAppsShowMore();
+    setupBuiltAppsHashScroll();
     // setupLazyReveal() lives in base.js — shared across all pages
 });

@@ -47,7 +47,8 @@
             {% for snapshot in built_app.snapshots %}
             <figure class="app-details__snapshot" style="--i: {{ loop.index0 }}">
                 {% if snapshot.image_url %}
-                <img src="{{ snapshot.image_url }}" alt="{{ built_app.name }} {{ _('App_Details_Snapshot_Label') }} {{ loop.index }}" loading="lazy" decoding="async">
+                <img src="{{ snapshot.image_url }}" alt="{{ built_app.name }} {{ _('App_Details_Snapshot_Label') }} {{ loop.index }}" loading="lazy" decoding="async"
+                    onclick='openModal(`{{ snapshot.image_url }}`, `{{ built_app.name |e }} — {{ _("App_Details_Snapshots") }} {{ loop.index }}`, ``)'>
                 {% else %}
                 <div class="app-details__snapshot-placeholder">
                     <ion-icon name="image-outline" aria-hidden="true"></ion-icon>

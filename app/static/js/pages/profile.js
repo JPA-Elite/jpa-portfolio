@@ -778,6 +778,25 @@ function animateCertCount(el) {
     tick();
 }
 
+function setupBuiltAppsShowMore() {
+    const showMoreBtn = document.getElementById("builtAppsShowMore");
+    const extraGrid = document.getElementById("builtAppsExtra");
+    if (!showMoreBtn || !extraGrid) return;
+
+    showMoreBtn.addEventListener("click", () => {
+        extraGrid.hidden = false;
+        requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+                extraGrid.classList.add("is-open");
+            });
+        });
+        showMoreBtn.classList.add("is-hidden");
+        setTimeout(() => {
+            extraGrid.scrollIntoView({ behavior: "smooth", block: "nearest" });
+        }, 350);
+    });
+}
+
 document.addEventListener("DOMContentLoaded", () => {
     setupCarousel();
     setupProfileGifHover();
@@ -793,5 +812,6 @@ document.addEventListener("DOMContentLoaded", () => {
     parallaxScroll("#portfolio", ".summary-hero__panel", { sMin: 0.85, oMin: 0.75, yMax: -30 });
 
     setupTagTooltips();
+    setupBuiltAppsShowMore();
     // setupLazyReveal() lives in base.js — shared across all pages
 });

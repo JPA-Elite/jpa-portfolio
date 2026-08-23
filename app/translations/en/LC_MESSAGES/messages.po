@@ -912,3 +912,42 @@ msgstr "Email copied to clipboard!"
 msgid "Contact_Copied_Label"
 msgstr "Copied!"
 
+
+msgid "Built_Apps_Eyebrow"
+msgstr "APP SHOWCASE"
+
+msgid "Built_Apps_Heading"
+msgstr "Built Apps"
+
+msgid "Built_Apps_Description"
+msgstr "Mobile and desktop apps I have created — free to download."
+
+msgid "Built_Apps_Download"
+msgstr "Download"
+
+msgid "Built_Apps_Free"
+msgstr "Free"
+
+msgid "Built_Apps_Show_More"
+msgstr "Show More"
+
+msgid "Apps_View_Details"
+msgstr "View Details"
+
+msgid "App_Details_Back_To_Apps"
+msgstr "Back to Built Apps"
+
+msgid "App_Details_Download"
+msgstr "Download"
+
+msgid "App_Details_Snapshots"
+msgstr "Snapshots"
+
+msgid "App_Details_Snapshot_Label"
+msgstr "Snapshot"
+
+msgid "App_Details_About"
+msgstr "About this app"
+
+msgid "App_Details_More_Apps"
+msgstr "More Apps"

@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ built_app.name }} | Built Apps — Joshua Algadipe{% endblock %}
+{% block head %}{% endblock %}
+{% block meta_description %}{{ built_app.short_description }} Learn more and download {{ built_app.name }}.{% endblock %}
+{% block meta_keywords %}{{ built_app.name }}, {{ built_app.platform }} app, download, Joshua Algadipe, built apps{% endblock %}
+{% block meta_author %}Joshua Algadipe{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{{ static_asset('css/pages/app_details.css') }}" />
+
+<div class="app-details">
+    <nav class="app-details__breadcrumb">
+        <a href="{{ url_for('pages.portfolio') }}#built-apps">
+            <ion-icon name="arrow-back-outline" aria-hidden="true"></ion-icon>
+            {{ _('App_Details_Back_To_Apps') }}
+        </a>
+    </nav>
+
+    <header class="app-details__hero">
+        <div class="app-details__icon">
+            <ion-icon name="{{ built_app.icon }}" aria-hidden="true"></ion-icon>
+        </div>
+        <div class="app-details__head">
+            <h1>{{ built_app.name }}</h1>
+            <div class="app-details__meta">
+                <span class="store-card__platform store-card__platform--{{ built_app.platform|lower }}">
+                    {% if built_app.platform == 'Mobile' %}
+                    <ion-icon name="phone-portrait-outline" aria-hidden="true"></ion-icon>
+                    {% else %}
+                    <ion-icon name="desktop-outline" aria-hidden="true"></ion-icon>
+                    {% endif %}
+                    {{ built_app.platform }}
+                </span>
+                <span class="app-details__version">{{ built_app.version }} • {{ _('Built_Apps_Free') }}</span>
+            </div>
+            <a href="{{ built_app.download_url }}" class="app-details__download">
+                <ion-icon name="download-outline" aria-hidden="true"></ion-icon>
+                {{ _('App_Details_Download') }}
+            </a>
+        </div>
+    </header>
+
+    <section class="app-details__section" aria-labelledby="appSnapshotsTitle">
+        <h2 id="appSnapshotsTitle">{{ _('App_Details_Snapshots') }}</h2>
+        <div class="app-details__snapshots" data-mobile-slider data-mobile-slider-label="{{ _('App_Details_Snapshots') }}">
+            {% for snapshot in built_app.snapshots %}
+            <figure class="app-details__snapshot" style="--i: {{ loop.index0 }}">
+                <div class="app-details__snapshot-placeholder">
+                    <ion-icon name="image-outline" aria-hidden="true"></ion-icon>
+                </div>
+                <figcaption>{{ built_app.name }} {{ _('App_Details_Snapshot_Label') }} {{ snapshot }}</figcaption>
+            </figure>
+            {% endfor %}
+        </div>
+    </section>
+
+    <section class="app-details__section" aria-labelledby="appAboutTitle">
+        <h2 id="appAboutTitle">{{ _('App_Details_About') }}</h2>
+        {% for paragraph in built_app.full_description %}
+        <p>{{ paragraph }}</p>
+        {% endfor %}
+    </section>
+
+    <section class="app-details__section" aria-labelledby="appMoreTitle">
+        <h2 id="appMoreTitle">{{ _('App_Details_More_Apps') }}</h2>
+        <div class="app-details__more-grid">
+            {% for other in other_apps %}
+            <a href="{{ url_for('pages.built_app_details', slug=other.slug) }}" class="app-details__more-card">
+                <span class="app-details__more-icon">
+                    <ion-icon name="{{ other.icon }}" aria-hidden="true"></ion-icon>
+                </span>
+                <span class="app-details__more-meta">
+                    <strong>{{ other.name }}</strong>
+                    <small>{{ other.platform }} • {{ other.version }}</small>
+                </span>
+                <ion-icon name="chevron-forward-outline" aria-hidden="true"></ion-icon>
+            </a>
+            {% endfor %}
+        </div>
+    </section>
+</div>
+{% endblock %}

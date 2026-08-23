@@ -13,9 +13,11 @@ from app.Repositories.CompanyRoadmapRepository import CompanyRoadmapRepository
 from app.Services.GalleryLikeService import GalleryLikeService
 from app.Repositories.GalleryLikeRepository import GalleryLikeRepository
 from app.Requests.web.PageRequest import PageRequest
+from app.constants.built_apps import get_built_app, get_built_apps
 from app.utils import capture_image, get_random_tags
 from app.configurations import (
     ADD_PORTFOLIO_PAGE,
+    APP_DETAILS_PAGE,
     CONCERN_PAGE,
     ERROR_404_PAGE,
     GALLERY_PAGE,
@@ -789,6 +791,22 @@ def profile_route():
         key_project_columns=key_project_columns,
         company_roadmap_entries=company_roadmap_entries,
         voice_icon=voice_icon,
+        built_apps=get_built_apps(),
+    )
+
+
+def built_app_details_route(slug):
+    app = get_built_app(slug)
+    if app is None:
+        return render_template(ERROR_404_PAGE, title="Not Found"), 404
+
+    other_apps = [a for a in get_built_apps() if a["slug"] != app["slug"]][:6]
+
+    return handle_log_parameter() or render_template(
+        APP_DETAILS_PAGE,
+        title=f"{app['name']} — Built Apps",
+        built_app=app,
+        other_apps=other_apps,
     )
 
 def gallery_route():

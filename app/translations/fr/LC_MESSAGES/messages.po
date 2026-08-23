@@ -809,3 +809,42 @@ msgstr "Email copied to clipboard!"
 msgid "Contact_Copied_Label"
 msgstr "Copied!"
 
+
+msgid "Built_Apps_Eyebrow"
+msgstr "VITRINE D'APPLICATIONS"
+
+msgid "Built_Apps_Heading"
+msgstr "Applications Créées"
+
+msgid "Built_Apps_Description"
+msgstr "Applications mobiles et de bureau que j'ai créées — téléchargement gratuit."
+
+msgid "Built_Apps_Download"
+msgstr "Télécharger"
+
+msgid "Built_Apps_Free"
+msgstr "Gratuit"
+
+msgid "Built_Apps_Show_More"
+msgstr "Afficher Plus"
+
+msgid "Apps_View_Details"
+msgstr "Voir les détails"
+
+msgid "App_Details_Back_To_Apps"
+msgstr "Retour aux applications"
+
+msgid "App_Details_Download"
+msgstr "Télécharger"
+
+msgid "App_Details_Snapshots"
+msgstr "Captures d'écran"
+
+msgid "App_Details_Snapshot_Label"
+msgstr "Capture"
+
+msgid "App_Details_About"
+msgstr "À propos de cette application"
+
+msgid "App_Details_More_Apps"
+msgstr "Plus d'applications"

@@ -1,0 +1,28 @@
+{% macro app_card(app, index) %}
+<article class="store-card" style="--i: {{ index }}">
+    <div class="store-card__head">
+        <div class="store-card__icon">
+            <ion-icon name="{{ app.icon }}" aria-hidden="true"></ion-icon>
+        </div>
+        <div class="store-card__meta">
+            <h5 class="store-card__name">{{ app.name }}</h5>
+            <span class="store-card__platform store-card__platform--{{ app.platform|lower }}">
+                {% if app.platform == 'Mobile' %}
+                <ion-icon name="phone-portrait-outline" aria-hidden="true"></ion-icon>
+                {% else %}
+                <ion-icon name="desktop-outline" aria-hidden="true"></ion-icon>
+                {% endif %}
+                {{ app.platform }}
+            </span>
+            <span class="store-card__version">{{ app.version }} • {{ _('Built_Apps_Free') }}</span>
+        </div>
+    </div>
+    <p class="store-card__desc">{{ app.short_description }}</p>
+    <div class="store-card__actions">
+        <a href="{{ url_for('pages.built_app_details', slug=app.slug) }}" class="store-card__download store-card__view">
+            <ion-icon name="eye-outline" aria-hidden="true"></ion-icon>
+            {{ _('Apps_View_Details') }}
+        </a>
+    </div>
+</article>
+{% endmacro %}

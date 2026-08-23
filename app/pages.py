@@ -2,7 +2,7 @@
 from flask import Blueprint, redirect, request, url_for
 from app.configurations import HTTPMethod as http, get_locale
 from app.auth.middleware import admin_login_required
-from app.Controllers.web.PageController import add_portfolio_form_route, booking_route, concern_route, donation_route, gallery_route, index_route, music_route, portfolio_redirect, profile_route, vlog_route
+from app.Controllers.web.PageController import add_portfolio_form_route, booking_route, built_app_details_route, concern_route, donation_route, gallery_route, index_route, music_route, portfolio_redirect, profile_route, vlog_route
 from app.Controllers.web.AdminPageController import admin_booking_requests_route, admin_company_roadmaps_route, admin_dashboard_route, admin_face_recognition_route, admin_gallery_route, admin_key_projects_route, admin_login_attempts_route, admin_login_route, admin_logout_route, admin_music_route, admin_settings_route, admin_video_route
 from app.extensions import cache
 
@@ -61,6 +61,11 @@ def booking_redirect():
 @cache.cached(key_prefix=lambda: f"add_portfolio_form_{get_locale()}_{request.query_string.decode()}")
 def add_portfolio_form():
     return add_portfolio_form_route()
+
+@pages_bp.route("/apps/<slug>", methods=[http.GET])
+@cache.cached(key_prefix=lambda: f"app_details_{get_locale()}_{request.view_args.get('slug', '')}")
+def built_app_details(slug):
+    return built_app_details_route(slug)
 
 
 # ************************** ADMIN PAGES ********************************

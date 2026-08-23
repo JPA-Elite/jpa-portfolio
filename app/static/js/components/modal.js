@@ -617,7 +617,7 @@ if (!window.__modal_js_loaded__) {
         var imageModal = document.getElementById("imageModal");
         if (!imageModal) return;
         imageModal.style.display = "flex";
-        const adminFloadtBtn = document.querySelector(".admin-float-btn");
+        const adminFloatWrap = document.getElementById("adminFloat");
         let isImageView = false;
 
         if (!keepImageGallery) {
@@ -692,19 +692,19 @@ if (!window.__modal_js_loaded__) {
             resetCommentPanelState(false);
         }
 
-        adminFloadtBtn && (adminFloadtBtn.style.display = "none");
+        adminFloatWrap && (adminFloatWrap.style.display = "none");
         closeCommentEmojiPicker();
         syncImageGalleryNav(isImageView);
     }
 
     // Function to close the modal
     function closeModal() {
-        const adminFloadtBtn = document.querySelector(".admin-float-btn");
+        const adminFloatWrap = document.getElementById("adminFloat");
         const imageModal = document.getElementById("imageModal");
         if (imageModal) imageModal.style.display = "none";
         const boxModalContainer = document.querySelector(".box-modal-container");
         if (boxModalContainer) boxModalContainer.style.display = "none";
-        adminFloadtBtn && (adminFloadtBtn.style.display = "flex");
+        adminFloatWrap && (adminFloatWrap.style.display = "flex");
         const modalContentContainer = document.querySelector(".modal-content-container");
         if (modalContentContainer) {
             modalContentContainer.style.height = "";

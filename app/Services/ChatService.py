@@ -755,14 +755,15 @@ class ChatService:
         return any(self._contains_word(normalized, word) for word in SURVEY_LINK_PATTERNS)
 
     def _survey_url(self):
-        mode = ""
+        professional = False
         try:
-            from flask import request
+            from flask import request as flask_request
+            from app.domains import current_site
 
-            mode = request.args.get("mode") or ""
+            professional = current_site(flask_request.host) == "professional"
         except Exception:
             pass
-        if mode == "professional":
+        if professional:
             return SURVEY_URL_PROFESSIONAL
         return SURVEY_URL_DEFAULT
 

@@ -31,6 +31,97 @@ Languages: flask (python)
 1. run command: `npm install` in the project root directory
 2. run command: `make start-build`
 
+## DOCKER
+
+Prerequisites: Docker Desktop installed and running.
+
+1. Create the env file (the container reads it at runtime):
+
+   - copy `app/.env.example` to `app/.env` and fill in real values (`MONGO_URI`, `SECRET_KEY`, ...)
+
+   The image already bakes the frontend (`npm run build:frontend`, `FRONTEND_DIST=1`), so no local Node build is needed to run it.
+
+### Option A: Docker Compose (recommended)
+
+- run command: `docker compose up --build` in the project root directory
+- open `http://localhost:5000`
+- stop: `docker compose down`
+
+Compose builds the root `Dockerfile`, loads `./app/.env` when present, and sets `PORT=5000` (the image starts `gunicorn --bind :$PORT`, so the published port always matches the in-container port).
+
+### Live development (see local edits instantly, no rebuild)
+
+`compose.dev.yaml` bind-mounts your local `./app` into the container, runs the Flask dev server (auto-reloads on `.py` changes), serves source templates instead of the built `dist` output, disables the server page cache (`CACHE_TYPE=null`), and turns on template live-reload in the browser:
+
+```bash
+make run-docker-local
+```
+
+Build once — after that, editing any file under `app/` (Python, templates, static) shows up on refresh with no rebuild and no `docker` cache to clear. Stop with:
+
+```bash
+make stop-docker-local
+```
+
+Notes:
+
+- Python changes trigger an automatic server restart (a few seconds); template/static changes apply on the next browser refresh.
+- If the browser still shows an old page, it is the *browser* cache, not Docker: hard-refresh (`Ctrl+Shift+R`) or test with `curl`.
+- For frontend Vite hot-reload (`:5173` + `VITE_DEV_SERVER`), keep using `npm run dev` outside Docker.
+
+### Local custom domains (`*.jpastack.local`)
+
+The app separates traffic by hostname (`app/domains.py`):
+
+- Professional landing: `http://professional.jpastack.local`
+- Social landing: `http://jpastack.local` or `http://social.jpastack.local`
+- Admin/config (incl. admin login): `http://config.jpastack.local`
+
+Two one-time setup steps are required before those URLs resolve:
+
+1. Map the names to localhost. Run Notepad **as Administrator**, open `C:\Windows\System32\drivers\etc\hosts`, and add:
+
+   ```
+   127.0.0.1 jpastack.local
+   127.0.0.1 professional.jpastack.local
+   127.0.0.1 social.jpastack.local
+   127.0.0.1 config.jpastack.local
+   ```
+
+2. Recreate the container so the port mapping applies: `docker compose up -d --build`.
+
+Compose publishes both host ports `80` and `5000` to the container, so the bare domains work without a port (`http://jpastack.local/`). If port `80` is already taken on your machine, use the `:5000` variants instead (`http://jpastack.local:5000/`).
+
+### Troubleshooting (`site can't be reached`)
+
+1. Is the container actually up? `docker compose ps` should show `flask` as running (not restarting).
+2. Read the startup log: `docker compose logs --tail=50 flask`. A crash loop at import almost always means `app/.env` is missing — without `MONGO_URI` / `MONGO_DB` the app cannot start. Copy `app/.env.example` to `app/.env`, fill in real values, then `docker compose up -d --build`.
+3. Bypass the custom domains first: `http://127.0.0.1:5000/` should return the site (unknown hosts skip domain routing). If that works but `http://jpastack.local/` doesn't, the `hosts` entries or port `80` mapping is the problem — check with `ping jpastack.local` (it must resolve to `127.0.0.1`).
+4. If port `80` conflicts with another service, drop that mapping and use `http://jpastack.local:5000/`.
+
+### Option B: Makefile shortcuts
+
+- `make build` — `docker build -t flask_image .` (repo root is the build context)
+- `make run` — run detached as `flask_app`: `-e PORT=5000 -p 5000:5000 --env-file app/.env` (override the port with `make run PORT=8080`)
+- `make start-build-docker` — build + run
+- `make stop` / `make remove` / `make restart` — stop / delete / recreate the `flask_app` container
+- `make shell` — open bash inside the running container (`docker exec -it flask_app /bin/bash`)
+- `make remove-image` — delete the `flask_image` image
+
+### Option C: raw Docker commands
+
+```bash
+docker build -t flask_image .
+docker run -d --name flask_app -p 5000:5000 -e PORT=5000 --env-file app/.env flask_image
+docker logs -f flask_app
+docker stop flask_app && docker rm flask_app
+```
+
+Notes:
+
+- On Cloud Run / Render the platform injects `PORT` (e.g. `8080`); the image `CMD` binds `:$PORT`, so no code change is needed — just make sure the published port matches `PORT`.
+- `make` targets also work in Windows Command Prompt; otherwise run the raw `docker` commands from Option C in cmd/PowerShell.
+
 ## DDoS / Abuse Protection (Render + Cloudflare)
 
 This project now includes an app-level request guard (`app/security/ddos_guard.py`) for:

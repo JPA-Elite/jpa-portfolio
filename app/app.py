@@ -1,4 +1,4 @@
-from flask import Flask, render_template, send_from_directory, url_for, Response, abort
+from flask import Flask, g, redirect, render_template, request, send_from_directory, url_for, Response, abort
 from app.configurations import (
     ERROR_404_PAGE,
     LANGUAGES,
@@ -18,7 +18,9 @@ import os
 import requests
 from markupsafe import Markup
 import time
+from werkzeug.middleware.proxy_fix import ProxyFix
 from app.extensions import cache
+from app.domains import current_site, get_domain_config, resolve_domain_redirect
 from app.security import init_ddos_guard
 from dotenv import load_dotenv
 
@@ -53,6 +55,7 @@ app = Flask(
     template_folder=dist_templates if use_dist_templates else default_templates,
     static_folder=dist_static if use_dist_static else default_static,
 )
+app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1)
 app.config["SECRET_KEY"] = os.getenv('SECRET_KEY')
 app.config["LANGUAGES"] = LANGUAGES
 app.config["BABEL_DEFAULT_LOCALE"] = BABEL_DEFAULT_LOCALE
@@ -80,9 +83,64 @@ cache_key_prefix = os.getenv("CACHE_KEY_PREFIX")
 if cache_key_prefix:
     app.config["CACHE_KEY_PREFIX"] = cache_key_prefix
 
+app.config["LANDING_DOMAIN"] = os.getenv("LANDING_DOMAIN", "")
+app.config["PROFESSIONAL_DOMAIN"] = os.getenv("PROFESSIONAL_DOMAIN", "")
+app.config["SOCIAL_DOMAIN"] = os.getenv("SOCIAL_DOMAIN", "")
+app.config["ADMIN_DOMAIN"] = os.getenv("ADMIN_DOMAIN", "")
+app.config["DOMAIN_ROUTING_ENABLED"] = _env_bool("DOMAIN_ROUTING_ENABLED", True)
+
 app.register_blueprint(pages_bp)
 app.register_blueprint(sitemap_bp)
 app.register_blueprint(api_bp)
+
+
+@app.before_request
+def enforce_domain_routing():
+    try:
+        raw_query = request.query_string.decode()
+    except Exception:
+        raw_query = ""
+    try:
+        target = resolve_domain_redirect(
+            request.host,
+            request.path,
+            raw_query,
+            request.scheme,
+            request.method,
+        )
+    except Exception:
+        target = None
+    if target:
+        code = 301 if request.method in ("GET", "HEAD") else 307
+        return redirect(target, code=code)
+    try:
+        g.site = current_site(request.host)
+    except Exception:
+        g.site = "unknown"
+
+
+@app.context_processor
+def inject_site_domains():
+    try:
+        cfg = get_domain_config()
+    except Exception:
+        cfg = {
+            "landing_domain": "",
+            "professional_domain": "",
+            "social_domain": "",
+            "admin_domain": "",
+        }
+    try:
+        site = current_site(request.host)
+    except Exception:
+        site = "unknown"
+    return dict(
+        landing_domain=cfg.get("landing_domain", ""),
+        professional_domain=cfg.get("professional_domain", ""),
+        social_domain=cfg.get("social_domain", ""),
+        admin_domain=cfg.get("admin_domain", ""),
+        current_site=site,
+    )
 
 _asset_manifest_cache = {"mtime": None, "data": {}}
 _vite_dev_server = os.getenv("VITE_DEV_SERVER", "").strip()

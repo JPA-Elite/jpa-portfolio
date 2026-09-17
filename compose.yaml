@@ -2,8 +2,13 @@ services:
   flask:
     restart: unless-stopped
     build:
-      context: ./app
+      context: .
       dockerfile: Dockerfile
+    env_file:
+      - path: ./app/.env
+        required: false
+    environment:
+      PORT: "5000"
     deploy:
       resources:
         reservations:
@@ -13,5 +18,8 @@ services:
       - mode: ingress
         target: 5000
         published: 5000
+      - mode: ingress
+        target: 5000
+        published: 80
     healthcheck:
       test: ["CMD", "python3", "-c", "import sys, urllib.request; urllib.request.urlopen(sys.argv[1]).read()", "http://localhost:5000/"]

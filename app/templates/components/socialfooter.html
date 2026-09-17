@@ -94,21 +94,33 @@
     var container = document.getElementById("modeToggleContainer");
     var label = document.getElementById("modeToggleLabel");
     var btn = document.getElementById("modeToggleBtn");
+
+    function hostPort() {
+        return window.location.port ? ":" + window.location.port : "";
+    }
+
+    var professionalDomain = "{{ professional_domain }}";
+    var socialDomain = "{{ landing_domain or social_domain }}";
+
     if (!container || !label || !btn) return;
+    if (!professionalDomain || !socialDomain) {
+        container.style.display = "none";
+        return;
+    }
+
+    function isProfessional() {
+        return window.location.hostname === professionalDomain;
+    }
 
     function updateToggleUI() {
-        var isProfessional = new URLSearchParams(window.location.search).get("mode") === "professional";
-        label.textContent = isProfessional ? "Switch to Social Mode" : "Switch to Professional Mode";
+        label.textContent = isProfessional() ? "Switch to Social Mode" : "Switch to Professional Mode";
     }
 
     updateToggleUI();
 
     btn.addEventListener("click", function () {
-        var isProfessional = new URLSearchParams(window.location.search).get("mode") === "professional";
-        var url = isProfessional
-            ? window.location.pathname
-            : window.location.pathname + "?mode=professional";
-        window.location.href = url;
+        var target = isProfessional() ? socialDomain : professionalDomain;
+        window.location.href = window.location.protocol + "//" + target + hostPort() + window.location.pathname;
     });
 })();
 </script>

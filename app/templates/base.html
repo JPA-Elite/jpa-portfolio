@@ -109,7 +109,7 @@
 
                 <!-- Desktop Navigation -->
                 <ul id="navList">
-                    {% if request.args.get('mode') != 'professional' %}
+                    {% if current_site != 'professional' %}
                         <li class="{% if request.endpoint == 'pages.portfolio' %}active{% endif %}">
                             <a href="{{ url_for('pages.portfolio') }}">
                                 <ion-icon name="person-outline"></ion-icon>
@@ -139,38 +139,38 @@
                         </li>
                     {% else %}
                         <li>
-                            <a href="{{ url_for('pages.portfolio') }}?mode=professional#portfolio">
+                            <a href="{{ url_for('pages.portfolio') }}#portfolio">
                                 <ion-icon name="document-text-outline"></ion-icon>
                                 Summary
                             </a>
                         </li>
                         <li>
-                            <a href="{{ url_for('pages.portfolio') }}?mode=professional#about">
+                            <a href="{{ url_for('pages.portfolio') }}#about">
                                 <ion-icon name="person-outline"></ion-icon>
                                 About Me
                             </a>
                         </li>
                         <li>
-                            <a href="{{ url_for('pages.portfolio') }}?mode=professional#resume">
+                            <a href="{{ url_for('pages.portfolio') }}#resume">
                                 <ion-icon name="reader-outline"></ion-icon>
                                 Resume
                             </a>
                         </li>
                         <li>
-                            <a href="{{ url_for('pages.portfolio') }}?mode=professional#key-projects">
+                            <a href="{{ url_for('pages.portfolio') }}#key-projects">
                                 <ion-icon name="rocket-outline"></ion-icon>
                                 Projects
                             </a>
                         </li>
                         <li>
-                            <a href="{{ url_for('pages.portfolio') }}?mode=professional#contact">
+                            <a href="{{ url_for('pages.portfolio') }}#contact">
                                 <ion-icon name="mail-outline"></ion-icon>
                                 Contact
                             </a>
                         </li>
                     {% endif %}
                     <li class="{% if request.endpoint == 'pages.concern' %}active{% endif %}">
-                        <a href="{{ url_for('pages.concern') }}{{ '?mode=professional' if request.args.get('mode') == 'professional' else '' }}">
+                        <a href="{{ url_for('pages.concern') }}">
                             <ion-icon name="chatbubbles-outline"></ion-icon>
                             Concern
                         </a>
@@ -180,7 +180,7 @@
                 <!-- Mobile Sidebar -->
                 <div class="sidebar" id="sidebar">
                     <ul id="mobileNavList">
-                        {% if request.args.get('mode') != 'professional' %}
+                        {% if current_site != 'professional' %}
                             <li class="{% if request.endpoint == 'pages.portfolio' %}active{% endif %}">
                                 <a href="{{ url_for('pages.portfolio') }}">
                                     <ion-icon name="person-outline"></ion-icon>
@@ -222,38 +222,38 @@
                             </li>
                         {% else %}
                             <li>
-                                <a href="{{ url_for('pages.portfolio') }}?mode=professional#portfolio">
+                                <a href="{{ url_for('pages.portfolio') }}#portfolio">
                                     <ion-icon name="document-text-outline"></ion-icon>
                                     Summary
                                 </a>
                             </li>
                             <li>
-                                <a href="{{ url_for('pages.portfolio') }}?mode=professional#about">
+                                <a href="{{ url_for('pages.portfolio') }}#about">
                                     <ion-icon name="person-circle-outline"></ion-icon>
                                     About Me
                                 </a>
                             </li>
                             <li>
-                                <a href="{{ url_for('pages.portfolio') }}?mode=professional#resume">
+                                <a href="{{ url_for('pages.portfolio') }}#resume">
                                     <ion-icon name="file-tray-full-outline"></ion-icon>
                                     Resume
                                 </a>
                             </li>
                             <li>
-                                <a href="{{ url_for('pages.portfolio') }}?mode=professional#key-projects">
+                                <a href="{{ url_for('pages.portfolio') }}#key-projects">
                                     <ion-icon name="briefcase-outline"></ion-icon>
                                     Projects
                                 </a>
                             </li>
                             <li>
-                                <a href="{{ url_for('pages.portfolio') }}?mode=professional#contact">
+                                <a href="{{ url_for('pages.portfolio') }}#contact">
                                     <ion-icon name="mail-outline"></ion-icon>
                                     Contact
                                 </a>
                             </li>
                         {% endif %}
                     </ul>
-                    {% if request.args.get('mode') != 'professional' %}
+                    {% if current_site != 'professional' %}
                     <a class="sidebar-booknow-btn" href="{{ url_for('pages.booking') }}">
                         Build Now
                     </a>
@@ -266,11 +266,11 @@
 
                 <div class="language-selector">
                     <a class="mobile-concern-btn"
-                        style="margin-right: {{ '15px' if request.args.get('mode') == 'professional' else '0px' }};"
-                        href="{{ url_for('pages.concern') }}{{ '?mode=professional' if request.args.get('mode') == 'professional' else '' }}">
+                        style="margin-right: {{ '15px' if current_site == 'professional' else '0px' }};"
+                        href="{{ url_for('pages.concern') }}">
                         Concern
                     </a>
-                    {% if request.args.get('mode') != 'professional' %}
+                    {% if current_site != 'professional' %}
                         <a class="booknow-btn" href="{{ url_for('pages.booking') }}">
                             Build Now
                         </a>
@@ -296,21 +296,21 @@
                             <ion-icon name="chevron-down-outline" class="pill-chevron"></ion-icon>
                         </button>
                         <div class="dropdown-content">
-                            <a href="{{ url_for('api.change_language', lang_code=en_locale) }}?mode=professional"
+                            <a href="{{ url_for('api.change_language', lang_code=en_locale) }}"
                                 class="{% if get_locale()==en_locale %}active{% endif %}"
-                                onclick="changeLanguage('/change_language/{{en_locale}}?mode=professional'); return false;">
+                                onclick="changeLanguage('/change_language/{{en_locale}}'); return false;">
                                 <img src="{{ url_for('static', filename='images/en_flag.webp') }}" alt="English"
                                     class="flag-icon"> {{ _('English') }}
                             </a>
-                            <a href="{{ url_for('api.change_language', lang_code=ceb_locale) }}?mode=professional"
+                            <a href="{{ url_for('api.change_language', lang_code=ceb_locale) }}"
                                 class="{% if get_locale()==ceb_locale %}active{% endif %}"
-                                onclick="changeLanguage('/change_language/{{ceb_locale}}?mode=professional'); return false;">
+                                onclick="changeLanguage('/change_language/{{ceb_locale}}'); return false;">
                                 <img src="{{ url_for('static', filename='images/ph_flag.webp') }}" alt="Cebuano"
                                     class="flag-icon"> {{ _('Cebuano') }}
                             </a>
-                            <a href="{{ url_for('api.change_language', lang_code=tl_locale) }}?mode=professional"
+                            <a href="{{ url_for('api.change_language', lang_code=tl_locale) }}"
                                 class="{% if get_locale()==tl_locale %}active{% endif %}"
-                                onclick="changeLanguage('/change_language/{{tl_locale}}?mode=professional'); return false;">
+                                onclick="changeLanguage('/change_language/{{tl_locale}}'); return false;">
                                 <img src="{{ url_for('static', filename='images/ph_flag.webp') }}" alt="Tagalog"
                                     class="flag-icon"> {{ _('Tagalog') }}
                             </a>
@@ -335,7 +335,7 @@
                 data-copyright-rights="{{ _('Footer_All_Rights_Reserved') }}"></p>
         </footer>
     </div>
-    {% if request.args.get('mode') != 'professional' %}
+    {% if current_site != 'professional' %}
         <a href="/admin/login" class="admin-float-btn" title="Admin Panel">
             <ion-icon name="settings-outline"></ion-icon>
             <span>Admin</span>
@@ -347,7 +347,7 @@
     {% include 'components/name_edit_modal.html' %}
     <!-- Include the confirm modal component -->
     {% include 'components/confirm_modal.html' %}
-    {% if request.args.get('mode') != 'professional' %}
+    {% if current_site != 'professional' %}
         <!-- Include the chatbox component -->
         {% include 'components/chatbox.html' %}
     {% endif %}
@@ -355,7 +355,7 @@
         // Pass background image URL to JavaScript
         window.backgroundImageUrl = "{{ url_for('static', filename=background_image) }}";
         window.isForceLightMode = "{{ force_light_theme }}";
-        window.isProfessionalMode = "{{ request.args.get('mode') == 'professional' }}";
+        window.isProfessionalMode = "{{ current_site == 'professional' }}";
         window.pageLocale = {{ get_locale() | tojson }};
     </script>
     <script src="{{ static_asset('js/components/toast.js') }}"></script>

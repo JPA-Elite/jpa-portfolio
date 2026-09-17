@@ -127,14 +127,13 @@ let currentSpeech = null; // Track the current speech instance
 let currentButton = null; // Track the current button being clicked
 let currentSpeechHighlight = null; // Track active word highlight state
 let speechSessionId = 0; // Ignore stale speech events after switching sections
-const currentYear = new Date().getFullYear();
 const copyrightEl = document.getElementById("copyright");
 if (copyrightEl) {
     const ownerName =
         copyrightEl.dataset.copyrightOwner || "Joshua Algadipe";
     const rightsText =
         copyrightEl.dataset.copyrightRights || "All Rights Reserved.";
-    copyrightEl.innerHTML = `&copy; ${currentYear} ${ownerName}. ${rightsText}`;
+    copyrightEl.innerHTML = `&copy; 2025 ${ownerName}. ${rightsText}`;
 }
 
 function changeLanguage(url) {

@@ -361,13 +361,13 @@ Body-fil_PH: Oo, sinusuportahan ng mga litrato sa gallery at vlogs ang likes at 
 Aliases-fil_PH: mag-like ng litrato, mag-comment sa mga litrato, mag-like ng video, mag-share ng litrato, mag-share ng video
 
 ## What is professional mode?
-Professional mode gives the site a compact, resume-like layout. Add ?mode=professional to the URL and the navigation becomes Summary, About Me, Resume, Projects, and Contact — it hides the chat, donation, and booking sections so the page reads like a focused professional profile. It's great for showing to employers or clients.
+Professional mode gives the site a compact, resume-like layout. Visit the professional domain and the navigation becomes Summary, About Me, Resume, Projects, and Contact — it hides the chat, donation, and booking sections so the page reads like a focused professional profile. It's great for showing to employers or clients.
 Aliases: professional mode, compact mode, resume mode, minimalist mode
 Heading-ceb: Unsa ang professional mode?
-Body-ceb: Ang professional mode naghatag sa site og compact, sama sa resume nga layout. Idungag ang ?mode=professional sa URL ug ang navigation mahimong Summary, About Me, Resume, Projects, ug Contact — gitago ang chat, donation, ug booking nga mga seksyon aron ang pahina mabasa sama sa usa ka naka-focus nga propesyonal nga profile. Maayo kini nga ipakita sa mga employer o mga kliyente.
+Body-ceb: Ang professional mode naghatag sa site og compact, sama sa resume nga layout. Bisitaha ang professional domain ug ang navigation mahimong Summary, About Me, Resume, Projects, ug Contact — gitago ang chat, donation, ug booking nga mga seksyon aron ang pahina mabasa sama sa usa ka naka-focus nga propesyonal nga profile. Maayo kini nga ipakita sa mga employer o mga kliyente.
 Aliases-ceb: professional mode, compact mode, resume mode, minimalist mode
 Heading-fil_PH: Ano ang professional mode?
-Body-fil_PH: Ang professional mode ay nagbibigay sa site ng compact at resume-like na layout. Idagdag ang ?mode=professional sa URL at magiging Summary, About Me, Resume, Projects, at Contact ang navigation — itinatago nito ang chat, donation, at booking sections para mabasa ang page na parang isang nakatutok na propesyonal na profile. Mahusay itong ipakita sa mga employer o kliyente.
+Body-fil_PH: Ang professional mode ay nagbibigay sa site ng compact at resume-like na layout. Bisitahin ang professional domain at magiging Summary, About Me, Resume, Projects, at Contact ang navigation — itinatago nito ang chat, donation, at booking sections para mabasa ang page na parang isang nakatutok na propesyonal na profile. Mahusay itong ipakita sa mga employer o kliyente.
 Aliases-fil_PH: professional mode, compact mode, resume mode, minimalist mode
 
 ## How do I change the language?

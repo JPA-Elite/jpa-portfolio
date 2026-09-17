@@ -390,10 +390,12 @@ class ChatServiceIntentTests(unittest.TestCase):
 
     def test_survey_link_professional_mode(self):
         import flask
+        import os
 
         fake_request = MagicMock()
-        fake_request.args.get.return_value = "professional"
-        with patch.object(flask, "request", fake_request):
+        fake_request.host = "professional.jpastack.local"
+        with patch.object(flask, "request", fake_request), \
+             patch.dict(os.environ, {"PROFESSIONAL_DOMAIN": "professional.jpastack.local"}):
             result = self._resolve("what is the survey link")
         self.assertIn("https://forms.gle/5UqVgzzxgkJS11Qj9", result["answer"])
 

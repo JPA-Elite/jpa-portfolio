@@ -1,7 +1,7 @@
 # Define variables
 APP_NAME := flask_app
 DOCKER_IMAGE := flask_image
-DOCKERFILE_DIR := ./app  # Path to the folder containing Dockerfile
+DOCKERFILE_DIR := .  # Path to the folder containing Dockerfile
 PORT := 5000
 
 # Build the Docker image
@@ -18,10 +18,18 @@ package-uninstall:
 
 # Run the Docker container
 run:
-	docker run -d -p $(PORT):5000 --name $(APP_NAME) $(DOCKER_IMAGE)
+	docker run -d -e PORT=$(PORT) -p $(PORT):$(PORT) --env-file app/.env --name $(APP_NAME) $(DOCKER_IMAGE)
 
 # Docker build + run
 start-build-docker: build run
+
+# Run Docker with live local code (bind-mount ./app, Flask dev server, no page cache)
+run-docker-local:
+	docker compose -f compose.yaml -f compose.dev.yaml up -d --build
+
+# Stop the live-local Docker setup
+stop-docker-local:
+	docker compose -f compose.yaml -f compose.dev.yaml down
 
 build-frontend:
 	npm run build:frontend

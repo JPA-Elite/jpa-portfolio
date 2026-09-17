@@ -4,12 +4,13 @@ import smtplib
 import ssl
 import time
 from email.message import EmailMessage
-from app.extensions import cache
 from app.Repositories.AuthRepository import AuthRepository
 
 class OtpService:
     _FIELD_ATTEMPTS = "admin_otp_attempts"
     _FIELD_COOLDOWN_UNTIL = "admin_otp_cooldown_until"
+    _FIELD_CODE = "admin_otp_code"
+    _FIELD_EXPIRES_AT = "admin_otp_expires_at"
 
     def __init__(self):
         self.otp_ttl_seconds: int = self._env_int("ADMIN_OTP_TTL_SECONDS", 300)
@@ -41,9 +42,6 @@ class OtpService:
             return int(raw)
         except (TypeError, ValueError):
             return default
-
-    def _otp_key(self, user_id: str):
-        return f"admin_otp:{user_id}"
 
     def _now(self):
         return time.time()
@@ -79,6 +77,33 @@ class OtpService:
             },
         )
 
+    def _get_stored_otp(self, user_id: str):
+        user_doc = AuthRepository().find_by_id(str(user_id)) or {}
+        code_text = str(user_doc.get(self._FIELD_CODE, "") or "").strip()
+        try:
+            expires_at = float(user_doc.get(self._FIELD_EXPIRES_AT, 0))
+        except (TypeError, ValueError):
+            expires_at = 0.0
+        return code_text, expires_at
+
+    def _store_otp(self, user_id: str, otp: str):
+        AuthRepository().update_user(
+            str(user_id),
+            {
+                self._FIELD_CODE: str(otp),
+                self._FIELD_EXPIRES_AT: float(self._now() + self.otp_ttl_seconds),
+            },
+        )
+
+    def _clear_stored_otp(self, user_id: str):
+        AuthRepository().update_user(
+            str(user_id),
+            {
+                self._FIELD_CODE: "",
+                self._FIELD_EXPIRES_AT: 0.0,
+            },
+        )
+
     def get_cooldown_remaining_seconds(self, user_id: str):
         attempts, cooldown_until = self._get_user_otp_state(user_id)
         now = self._now()
@@ -101,7 +126,7 @@ class OtpService:
         AuthRepository().update_user(user_id, {"email": email})
 
         otp = self._generate_otp()
-        cache.set(self._otp_key(user_id), otp, timeout=self.otp_ttl_seconds)
+        self._store_otp(user_id, otp)
 
         self._set_user_otp_state(user_id, attempts=0, cooldown_until=0.0)
 
@@ -148,16 +173,16 @@ class OtpService:
                 "retry_after_seconds": retry_after,
             }
 
-        key = self._otp_key(user_id)
-        expected = cache.get(key)
+        expected, expires_at = self._get_stored_otp(user_id)
 
-        if expected is None:
-            return self._handle_invalid_attempt(user_id, attempts)
+        if not expected or expires_at <= now:
+            self._clear_stored_otp(user_id)
+            return self._handle_invalid_attempt(user_id, attempts, expired=True)
 
         if str(expected) != otp:
-            return self._handle_invalid_attempt(user_id, attempts)
+            return self._handle_invalid_attempt(user_id, attempts, expired=False)
 
-        cache.delete(key)
+        self._clear_stored_otp(user_id)
         self._set_user_otp_state(user_id, attempts=0, cooldown_until=0.0)
 
         return {
@@ -168,7 +193,7 @@ class OtpService:
             "retry_after_seconds": None,
         }
 
-    def _handle_invalid_attempt(self, user_id: str, attempts: int):
+    def _handle_invalid_attempt(self, user_id: str, attempts: int, expired: bool):
         attempts = attempts + 1
         attempts_remaining = max(0, self.otp_max_attempts - attempts)
         now = self._now()
@@ -187,10 +212,19 @@ class OtpService:
 
         self._set_user_otp_state(user_id, attempts=attempts, cooldown_until=0.0)
 
+        if expired:
+            return {
+                "ok": False,
+                "reason": "expired",
+                "message": "OTP expired. Please request a new code.",
+                "attempts_remaining": attempts_remaining,
+                "retry_after_seconds": None,
+            }
+
         return {
             "ok": False,
-            "reason": "expired",
-            "message": f"OTP expired or invalid. Attempts remaining: {attempts_remaining}.",
+            "reason": "invalid",
+            "message": f"Incorrect code. Attempts remaining: {attempts_remaining}.",
             "attempts_remaining": attempts_remaining,
             "retry_after_seconds": None,
         }

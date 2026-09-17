@@ -20,7 +20,6 @@ from app.configurations import (
     ERROR_404_PAGE,
     GALLERY_PAGE,
     IMAGE_PATH,
-    MODES,
     PROFILE_IMAGE,
     PROFILE_IMAGE_GIF,
     INTRO_PAGE,
@@ -888,9 +887,6 @@ def portfolio_redirect():
     return redirect("/portfolio", code=301)
 
 def handle_log_parameter():
-    if request.args.get('mode') and request.args.get('mode') not in MODES:
-        return render_template(ERROR_404_PAGE, title="Not Found"), 404
-
     log_query = request.args.get("log", "").lower()
     if log_query == "true":
         cloudinary_url, error = capture_image()

@@ -59,6 +59,48 @@ let typingIndicatorRow = null;
 let chatSpeech = null;
 let chatMuted = localStorage.getItem(cacheChatMuted) === 'true';
 let chatRequestPending = false;
+let chatTypingActive = null;
+let chatTypingToken = 0;
+
+function isChatSpeaking() {
+    try {
+        return ("speechSynthesis" in window) && window.speechSynthesis.speaking;
+    } catch {
+        return false;
+    }
+}
+
+function updateChatStopButton() {
+    const stopButton = document.getElementById("stopChat");
+    const sendButton = document.getElementById("sendChat");
+    const busy = Boolean(chatTypingActive) || isChatSpeaking();
+    if (stopButton) {
+        if (busy) stopButton.removeAttribute("hidden");
+        else stopButton.setAttribute("hidden", "");
+    }
+    if (sendButton) {
+        if (busy) sendButton.setAttribute("hidden", "");
+        else sendButton.removeAttribute("hidden");
+    }
+}
+
+function cancelChatTyping() {
+    chatTypingToken++;
+    chatTypingActive = null;
+    updateChatStopButton();
+}
+
+function stopChatResponse() {
+    const active = chatTypingActive;
+    cancelChatTyping();
+    stopChatSpeech();
+    if (active && active.element) {
+        active.element.textContent = active.text;
+        linkifyChatMessage(active.element);
+        scrollChatToBottom("auto");
+    }
+    updateChatStopButton();
+}
 
 function setChatComposerLoading(isLoading) {
     const input = document.getElementById("chatInput");
@@ -134,10 +176,17 @@ function stopChatSpeech() {
     if (!("speechSynthesis" in window)) return;
     window.speechSynthesis.cancel();
     chatSpeech = null;
+    updateChatStopButton();
+}
+
+function chatLocaleAllowsSpeech() {
+    const locale = String(window.pageLocale || "en").toLowerCase();
+    return locale === "en" || locale.startsWith("en-") || locale.startsWith("en_");
 }
 
 function speakChatAnswer(text) {
     if (!("speechSynthesis" in window) || chatMuted || !text) return;
+    if (!chatLocaleAllowsSpeech()) return;
     window.speechSynthesis.cancel();
     const speech = new SpeechSynthesisUtterance(text);
     const language = typeof window.getVoiceLocale === "function"
@@ -157,13 +206,21 @@ function speakChatAnswer(text) {
     speech.pitch = 1;
     speech.rate = 1;
     speech.volume = 1;
+    speech.onstart = () => updateChatStopButton();
+    speech.onend = () => updateChatStopButton();
+    speech.onerror = () => updateChatStopButton();
     chatSpeech = speech;
     window.speechSynthesis.speak(speech);
+    updateChatStopButton();
 }
 
 function syncChatMuteToggle() {
     const toggle = document.getElementById("chatMuteToggle");
     if (!toggle) return;
+    if (!chatLocaleAllowsSpeech()) {
+        toggle.style.display = "none";
+        return;
+    }
     const icon = toggle.querySelector("ion-icon");
     if (icon) icon.setAttribute("name", chatMuted ? "volume-mute-outline" : "volume-high-outline");
     toggle.setAttribute("aria-pressed", String(chatMuted));
@@ -235,7 +292,7 @@ function formatChatTime(timestamp = Date.now()) {
 function getRoleLabel(role = "bot") {
     return role === "user"
         ? tChat("roleYou", "You")
-        : tChat("roleBot", "AI Assistant");
+        : tChat("roleBot", "Josh");
 }
 
 function createMessageRow(role = "bot", timestamp = Date.now()) {
@@ -337,7 +394,7 @@ function initializeChatOptions(qaArray = []) {
     chatOptions.innerHTML = "";
     qaArray.slice(0, 10).forEach(item => {
         const button = document.createElement("button");
-        button.textContent = item.question;
+        button.textContent = item.display_question || item.question;
         button.onclick = () => sendPredefinedMessage(item.question, qaArray);
         chatOptions.appendChild(button);
     });
@@ -507,9 +564,19 @@ function linkifyChatMessage(element) {
 }
 
 function addTypingEffect(element, text, typeEffect = true) {
+    if (!typeEffect) {
+        element.textContent = text;
+        linkifyChatMessage(element);
+        scrollChatToBottom("auto");
+        return;
+    }
+    const token = ++chatTypingToken;
+    chatTypingActive = { element, text };
+    updateChatStopButton();
     let index = 0;
 
     function typeNextCharacter() {
+        if (token !== chatTypingToken) return;
         if (index < text.length) {
             element.textContent += text.charAt(index);
             index++;
@@ -517,19 +584,16 @@ function addTypingEffect(element, text, typeEffect = true) {
             if (chatMessages) {
                 scrollChatToBottom("auto");
             }
-            setTimeout(typeNextCharacter, 50); // Adjust speed as needed
+            setTimeout(typeNextCharacter, 50);
         } else {
-            linkifyChatMessage(element);
+            const active = chatTypingActive;
+            chatTypingActive = null;
+            updateChatStopButton();
+            if (active) linkifyChatMessage(active.element);
         }
     }
 
-    if (!typeEffect) {
-        element.textContent = text;
-        linkifyChatMessage(element);
-        scrollChatToBottom("auto");
-    } else {
-        typeNextCharacter();
-    }
+    typeNextCharacter();
 }
 
 function cacheMessages(message, role = "bot", timestamp = Date.now()) {
@@ -573,6 +637,7 @@ function wipeChatStorage() {
 
 function clearChat() {
     removeTypingIndicator();
+    cancelChatTyping();
     stopChatSpeech();
     wipeChatStorage();
     updateClearChatButtonVisibility();

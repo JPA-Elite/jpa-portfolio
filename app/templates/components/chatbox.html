@@ -92,6 +92,10 @@
                         <span class="chatbox-send__dot"></span>
                     </span>
                 </button>
+                <button id="stopChat" class="chatbox-stop" type="button" onclick="stopChatResponse()" aria-label="Stop response" hidden>
+                    <ion-icon name="stop-circle-outline" aria-hidden="true"></ion-icon>
+                    <span>Stop</span>
+                </button>
             </div>
             <button id="clearChat" onclick="clearChat()" style="display: none;">{{ _('chat_clear_button') }}</button>
         </div>

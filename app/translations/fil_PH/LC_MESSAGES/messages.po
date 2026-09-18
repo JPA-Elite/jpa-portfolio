@@ -223,7 +223,7 @@ msgid "chat_role_you"
 msgstr "Ikaw"
 
 msgid "chat_role_bot"
-msgstr "AI Assistant"
+msgstr "Josh"
 
 msgid "chat_typing_aria"
 msgstr "Nagta-type"
@@ -299,6 +299,9 @@ msgstr "Bakit mas gusto ng mga programmer ang dark mode? Dahil ang light ay umaa
 
 msgid "chat_redirect_reply"
 msgstr "Hindi ako sigurado diyan. Subukang i-rephrase, o pumili ng isa sa mga suggested questions sa ibaba."
+
+msgid "chat_work_only_reply"
+msgstr "Mga tanong na may kaugnayan sa trabaho lang ang sinasagot ko — tulad ng karanasan, kasanayan, mga proyekto, rates, availability, at booking ni Joshua. Pumili ng isa sa mga iminumungkahing tanong sa ibaba."
 
 msgid "chat_followup_more_intro"
 msgstr "Maaari kong sabihin ang higit pa tungkol sa mga ito:"

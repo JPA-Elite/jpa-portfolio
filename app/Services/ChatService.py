@@ -125,6 +125,35 @@ FOLLOW_UP_WHICH_PATTERNS = [
     "how about", "what about", "pick one", "choose one",
 ]
 
+PARTTIME_PATTERNS = [
+    "part time", "part-time", "parttime", "side job", "side gig",
+    "sideline", "second job", "extra income", "moonlight",
+]
+
+COMPLAINT_PATTERNS = [
+    "answer my question", "answer the question", "answer me",
+    "you did not answer", "you didnt answer", "you didn't answer",
+    "not answering", "never answered", "not what i asked",
+    "not what i am asking", "that is not what", "thats not what",
+    "that is not what i asked", "i am asking", "are you listening",
+]
+
+PERSONAL_TOPIC_STEMS = [
+    "your name", "pangalan", "ngalan",
+    "old are you", "edad", "taong gulang", "pila ka tuig",
+    "birthday", "kaarawan", "natawhan", "when were you born",
+    "do you live", "where do you live", "live alone",
+    "nagpuyo", "nakatira",
+    "crush", "uyab", "syota", "nobyo", "nobya",
+    "zodiac", "minyo", "ulitawo", "dalaga", "binata",
+    "favorite sport", "dula",
+    "favorite song", "kanta",
+    "hobby", "hobbies", "hilig", "for fun",
+    "favorite food", "pagkaon", "pagkain",
+    "favorite movie", "pelikula",
+    "favorite color", "kolor",
+]
+
 ORDINAL_WORDS = {
     "first": 0, "1st": 0,
     "second": 1, "2nd": 1,
@@ -336,6 +365,80 @@ TOPIC_HANDLERS = [
 
 TOPIC_METHODS = {name: method for name, _, method in TOPIC_HANDLERS}
 
+PROFESSIONAL_QUESTION_HEADINGS = frozenset([
+    "Tell me about yourself",
+    "Summary",
+    "What is your professional mindset?",
+    "What are your goals?",
+    "What is your job?",
+    "What is your dream job?",
+    "Skills",
+    "What programming languages do you know?",
+    "What frameworks do you use?",
+    "What databases and tools do you use?",
+    "What is your experience with Python?",
+    "What is your experience with JavaScript?",
+    "What do you use Java for?",
+    "What is your experience with Angular?",
+    "What is your experience with React?",
+    "What is your experience with Laravel?",
+    "What is your experience with Vue?",
+    "What is your experience with Flask?",
+    "Certifications",
+    "Education",
+    "What is your career journey?",
+    "How did you get into software engineering?",
+    "What did you learn from your internships?",
+    "Do you have team experience?",
+    "Which project are you most proud of?",
+    "What is your development process?",
+    "What motivates you?",
+    "What are your strengths?",
+    "What are your weaknesses?",
+    "Do you prefer working alone?",
+    "What advice do you have for aspiring developers?",
+    "What is on the Portfolio page?",
+    "Is there a resume?",
+    "What technology is this website built with?",
+    "What is professional mode?",
+    "Contact",
+    "Are you available for work?",
+    "Are you open to freelance work?",
+    "Are you open to part-time work?",
+    "Booking",
+    "How much do you charge?",
+    "How long does a project take?",
+    "Do you provide support after a project?",
+])
+
+WORK_QUESTION_HEADINGS = frozenset(
+    list(PROFESSIONAL_QUESTION_HEADINGS)
+    + [
+        "Concern",
+        "Who made this website?",
+        "What is this chat assistant?",
+        "What can this chat do?",
+        "What should I do if you don't understand my question?",
+    ]
+)
+
+WORK_QUESTION_LABELS = {
+    "Tell me about yourself": "Can you tell me about yourself?",
+    "Summary": "What is your professional summary?",
+    "Skills": "What are your skills?",
+    "Certifications": "What certifications do you have?",
+    "Education": "What is your educational background?",
+    "Contact": "How can I contact you?",
+    "Booking": "How do I book your services?",
+    "Concern": "How can I share my concern?",
+}
+
+QUESTION_STARTERS = frozenset([
+    "what", "when", "where", "who", "whom", "whose", "why", "how", "which",
+    "are", "is", "do", "does", "did", "can", "could", "should", "would",
+    "will", "have", "has", "may",
+])
+
 DEVELOPERS_PATTERNS = [
     "who made this", "who built this", "who developed this", "who created this",
     "who designed", "credits", "who made the site",
@@ -434,12 +537,64 @@ class ChatService:
                 return body
         return gettext(fallback_key)
 
-    def get_qa_data(self):
+    def get_qa_data(self, professional_only=None):
         locale = self._current_locale()
-        return [
+        items = [
             self._qa_item(section, locale)
             for section in self._knowledge_base().sections()
         ]
+        if self.knowledge_base_service is not None:
+            return items
+        if professional_only is None:
+            professional_only = self._is_professional_site()
+        allowed = PROFESSIONAL_QUESTION_HEADINGS if professional_only else WORK_QUESTION_HEADINGS
+        filtered = self._work_qa(items, allowed)
+        if filtered:
+            return filtered
+        return items
+
+    def _is_professional_site(self):
+        try:
+            from app.domains import current_site
+
+            return current_site() == "professional"
+        except Exception:
+            return False
+
+    def _work_only_refusal(self):
+        self._last_topic = None
+        self._last_item = None
+        self._last_reply_items = None
+        return self._reply(gettext("chat_work_only_reply"), action="expand_options")
+
+    def _mentions_girlfriend(self, normalized):
+        return bool(
+            self._resolve_girlfriend_contact(normalized)
+            or self._resolve_girlfriend_followup_contact(normalized)
+            or self._resolve_girlfriend_company(normalized)
+            or self._resolve_girlfriend_followup_company(normalized)
+            or self._resolve_girlfriend_age(normalized)
+            or self._resolve_girlfriend_followup_age(normalized)
+            or self._resolve_girlfriend(normalized)
+            or self._resolve_girlfriend_followup(normalized)
+            or self._is_girlfriend_question(normalized)
+        )
+
+    def _work_qa(self, qa_data, allowed=None):
+        allowed_set = allowed if allowed is not None else WORK_QUESTION_HEADINGS
+        labeled = []
+        for item in (qa_data or []):
+            key = item.get("source_heading") or item.get("question")
+            if key not in allowed_set:
+                continue
+            labeled.append({
+                **item,
+                "display_question": WORK_QUESTION_LABELS.get(key, item.get("question")),
+            })
+        return labeled
+
+    def _option_label(self, item):
+        return item.get("display_question") or item.get("question") or ""
 
     def _qa_item(self, section, locale):
         localized = section.get("localized") or {}
@@ -548,7 +703,7 @@ class ChatService:
             return self._reply(gettext("chat_emoji_only_reply"))
 
         if self._is_quick_questions(normalized):
-            questions = " • ".join(item["question"] for item in (qa_data or self.get_qa_data())[:10])
+            questions = " • ".join(self._option_label(item) for item in (qa_data or self.get_qa_data())[:10])
             return self._reply(
                 f"{gettext('chat_quick_questions_intro')} {questions}",
                 action="expand_options",
@@ -567,7 +722,7 @@ class ChatService:
             return self._reply(gettext("chat_how_are_you_reply"))
 
         if self._is_qr_question(normalized):
-            return self._reply(gettext("chat_qr_reply").format(url=self._site_url(PAGE_PATHS["donation"])))
+            return self._work_only_refusal()
 
         survey_reply = self._resolve_survey_question(normalized)
         if survey_reply:
@@ -577,51 +732,29 @@ class ChatService:
         if url_reply:
             return self._reply(url_reply)
 
-        girlfriend_contact = self._resolve_girlfriend_contact(normalized)
-        if girlfriend_contact:
-            return self._reply(girlfriend_contact)
+        parttime_reply = self._resolve_parttime_question(normalized)
+        if parttime_reply:
+            return self._reply(parttime_reply)
 
-        girlfriend_followup_contact = self._resolve_girlfriend_followup_contact(normalized)
-        if girlfriend_followup_contact:
-            return self._reply(girlfriend_followup_contact)
-
-        girlfriend_company = self._resolve_girlfriend_company(normalized)
-        if girlfriend_company:
-            return self._reply(girlfriend_company)
-
-        girlfriend_followup_company = self._resolve_girlfriend_followup_company(normalized)
-        if girlfriend_followup_company:
-            return self._reply(girlfriend_followup_company)
-
-        girlfriend_age = self._resolve_girlfriend_age(normalized)
-        if girlfriend_age:
-            return self._reply(girlfriend_age)
-
-        girlfriend_followup_age = self._resolve_girlfriend_followup_age(normalized)
-        if girlfriend_followup_age:
-            return self._reply(girlfriend_followup_age)
-
-        if self._is_girlfriend_question(normalized):
-            self._last_topic = "girlfriend"
+        if self._mentions_girlfriend(normalized):
+            return self._work_only_refusal()
 
         if self._is_unrelated(normalized, expanded):
             return self._reply(gettext("chat_unrelated_reply"))
 
-        ai_answer = self._ai_chat_answer(message)
+        if any(self._contains_word(expanded, word) for word in ("she", "her", "hers", "herself")):
+            ai_answer = None
+        else:
+            ai_answer = self._ai_chat_answer(message)
         if ai_answer:
             return self._reply(ai_answer)
-
-        girlfriend_reply = self._resolve_girlfriend(normalized)
-        if girlfriend_reply:
-            return self._reply(girlfriend_reply)
-
-        girlfriend_followup = self._resolve_girlfriend_followup(normalized)
-        if girlfriend_followup:
-            return self._reply(girlfriend_followup)
 
         content = self._resolve_content(normalized, expanded)
         if content:
             return content
+
+        if any(self._contains_word(expanded, word) for word in ("she", "her", "hers", "herself")):
+            return self._work_only_refusal()
 
         if self._is_developers(normalized):
             return self._reply(gettext("chat_developers_reply"))
@@ -641,7 +774,7 @@ class ChatService:
             return self._reply(gettext("chat_negative_reply"))
 
         if self._is_joke(normalized):
-            return self._reply(gettext("chat_joke_reply"))
+            return self._work_only_refusal()
 
         if self._is_redirect(normalized):
             return self._reply(gettext("chat_redirect_reply"), action="expand_options")
@@ -650,6 +783,18 @@ class ChatService:
         if followup:
             return followup
 
+        if self._is_complaint(expanded):
+            return self._reply(gettext("chat_redirect_reply"), action="expand_options")
+
+        qa = qa_data if qa_data is not None else self.get_qa_data()
+
+        exact = self._get_exact_answer(message, qa)
+        if exact:
+            return self._reply(exact, matched_question=message)
+
+        if any(self._contains_word(expanded, phrase) for phrase in PERSONAL_TOPIC_STEMS):
+            return self._work_only_refusal()
+
         topic = self._search_topics_content(expanded)
         if topic:
             return getattr(self, TOPIC_METHODS[topic])(normalized, expanded)
@@ -657,12 +802,6 @@ class ChatService:
         fuzzy = self._fuzzy_topic_match(normalized)
         if fuzzy:
             return getattr(self, fuzzy[2])(normalized, expanded)
-
-        qa = qa_data if qa_data is not None else self.get_qa_data()
-
-        exact = self._get_exact_answer(message, qa)
-        if exact:
-            return self._reply(exact, matched_question=message)
 
         best = self._find_best_qa(expanded, qa)
         if best and best["score"] >= CHAT_MATCH_THRESHOLD:
@@ -682,9 +821,7 @@ class ChatService:
         if suggested:
             return self._reply(suggested, action="expand_options")
 
-        return self._reply(
-            f"{gettext('chat_unknown_fallback_intro')} {gettext('chat_unknown_fallback')}"
-        )
+        return self._work_only_refusal()
 
     def _reply(self, answer, action=None, matched_question=None):
         result = {"answer": answer, "action": action, "matched_question": matched_question}
@@ -775,6 +912,18 @@ class ChatService:
             ):
                 return None
         return gettext("chat_survey_reply").format(url=self._survey_url())
+
+    def _is_parttime_question(self, normalized):
+        return any(pattern in normalized for pattern in PARTTIME_PATTERNS)
+
+    def _resolve_parttime_question(self, normalized):
+        if not self._is_parttime_question(normalized):
+            return None
+        self._last_topic = "booking"
+        return self._kb_section_reply("parttime", "chat_booking_reply")
+
+    def _is_complaint(self, expanded):
+        return any(pattern in expanded for pattern in COMPLAINT_PATTERNS)
 
     def _url_topic_from_text(self, normalized):
         for topic, keywords in PAGE_TOPIC_KEYWORDS:
@@ -954,13 +1103,40 @@ class ChatService:
 
     def _ai_context(self):
         base = self._site_base_url()
+        try:
+            professional_site = self._is_professional_site()
+        except Exception:
+            professional_site = False
+        if professional_site:
+            site_mode_line = (
+                "SITE MODE: professional. You are on Joshua's professional portfolio "
+                "site speaking with a potential employer or client. Prioritize his "
+                "portfolio, skills, experience, projects, education, certifications, "
+                "contact and booking information. Keep answers concise and professional. "
+                "SCOPE: Only answer work-related questions about Joshua's career, "
+                "skills, projects, hiring and booking. Politely decline anything "
+                "else and steer the visitor back to work topics."
+            )
+            survey_line = f"CONCERN SURVEY LINK: {SURVEY_URL_PROFESSIONAL}"
+        else:
+            site_mode_line = (
+                "SITE MODE: social. You are on Joshua's personal portfolio site. "
+                "Answer warmly about anything on the site. "
+                "SCOPE: Only answer work-related questions about Joshua's career, "
+                "skills, projects, hiring and booking. Politely decline anything "
+                "else and steer the visitor back to work topics."
+            )
+            survey_line = (
+                f"CONCERN SURVEY LINK: {SURVEY_URL_DEFAULT}"
+                f" (professional site: {SURVEY_URL_PROFESSIONAL})"
+            )
         parts = [
+            site_mode_line,
             "SITE BASE URL: " + (base or "(use relative paths)"),
             "PAGE LINKS: " + ", ".join(
                 f"{key}={self._site_url(path)}" for key, path in PAGE_PATHS.items()
             ),
-            f"CONCERN SURVEY LINK: {SURVEY_URL_DEFAULT}"
-            f" (professional mode: {SURVEY_URL_PROFESSIONAL})",
+            survey_line,
             "GIRLFRIEND: Fiona Samantha Escarro is the girlfriend of the site owner.",
             "GIRLFRIEND PERSONALITY: She is an introvert and smart. Her face often looks "
             "angry but she is actually pretty. She is a small girl, and in the site owner's "
@@ -1536,126 +1712,16 @@ class ChatService:
         return self._reply(self._kb_section_reply("education", "chat_education_reply"))
 
     def _topic_gallery(self, normalized, expanded):
-        self._last_topic = "gallery"
-        kb = self._kb_match(expanded)
-        if kb:
-            return kb
-        service = self.gallery_service
-        if service is None:
-            return self._reply(gettext("chat_content_unavailable"))
-        try:
-            items, total = service.search_gallery_paginated(
-                "", "", self._locale, 1, 6, SortOrder.DESC
-            )
-        except Exception:
-            return self._reply(gettext("chat_content_unavailable"))
-        if self._is_count_question(expanded):
-            return self._reply(gettext("chat_gallery_count_reply").format(total=total))
-        items = [self._as_dict(item) for item in (items or [])]
-        if not items:
-            return self._reply(gettext("chat_content_empty"))
-
-        for item in items:
-            title = self._localize_text(item.get("title"))
-            if title and self._contains_word(expanded, self._normalize_spacing(title.lower())):
-                return self._topic_item_reply(self._item_record("gallery", item), "gallery")
-
-        best = self._best_content_item(expanded, items, ["title", "description", "tags"])
-        if best:
-            return self._topic_item_reply(self._item_record("gallery", best), "gallery")
-
-        titles = [self._localize_text(item.get("title")) for item in items]
-        titles = [t for t in titles if t]
-        shown, total = self._cap_list(titles, total)
-        self._last_reply_items = [self._item_record("gallery", item) for item in items[:6]]
-        answer = f"{gettext('chat_gallery_intro')} {' • '.join(shown)}"
-        if total > len(shown):
-            answer += self._count_suffix(total)
-        return self._reply(answer)
+        return self._work_only_refusal()
 
     def _topic_vlog(self, normalized, expanded):
-        self._last_topic = "vlog"
-        kb = self._kb_match(expanded)
-        if kb:
-            return kb
-        service = self.video_service
-        if service is None:
-            return self._reply(gettext("chat_content_unavailable"))
-        try:
-            items, total = service.search_video_paginated(
-                "", "", self._locale, 1, 6, SortOrder.DESC
-            )
-        except Exception:
-            return self._reply(gettext("chat_content_unavailable"))
-        if self._is_count_question(expanded):
-            return self._reply(gettext("chat_vlog_count_reply").format(total=total))
-        items = [self._as_dict(item) for item in (items or [])]
-        if not items:
-            return self._reply(gettext("chat_content_empty"))
-
-        for item in items:
-            title = self._localize_text(item.get("title"))
-            if title and self._contains_word(expanded, self._normalize_spacing(title.lower())):
-                return self._topic_item_reply(self._item_record("vlog", item), "vlog")
-
-        best = self._best_content_item(expanded, items, ["title", "description", "tags"])
-        if best:
-            return self._topic_item_reply(self._item_record("vlog", best), "vlog")
-
-        titles = [self._localize_text(item.get("title")) for item in items]
-        titles = [t for t in titles if t]
-        shown, total = self._cap_list(titles, total)
-        self._last_reply_items = [self._item_record("vlog", item) for item in items[:6]]
-        answer = f"{gettext('chat_vlog_intro')} {' • '.join(shown)}"
-        if total > len(shown):
-            answer += self._count_suffix(total)
-        return self._reply(answer)
+        return self._work_only_refusal()
 
     def _topic_music(self, normalized, expanded):
-        self._last_topic = "music"
-        kb = self._kb_match(expanded)
-        if kb:
-            return kb
-        service = self.music_service
-        if service is None:
-            return self._reply(gettext("chat_content_unavailable"))
-        try:
-            items, total = service.get_paginated_music_list(1, 6, SortOrder.DESC, "", "")
-        except Exception:
-            return self._reply(gettext("chat_content_unavailable"))
-        if self._is_count_question(expanded):
-            return self._reply(gettext("chat_music_count_reply").format(total=total))
-        items = [self._as_dict(item) for item in (items or [])]
-        if not items:
-            return self._reply(gettext("chat_content_empty"))
-
-        for item in items:
-            title = str(item.get("title") or "").strip()
-            artist = str(item.get("artist") or "").strip()
-            if title and self._contains_word(expanded, self._normalize_spacing(title.lower())):
-                return self._topic_item_reply(self._item_record("music", item), "music")
-            if artist and self._contains_word(expanded, self._normalize_spacing(artist.lower())):
-                return self._topic_item_reply(self._item_record("music", item), "music")
-
-        best = self._best_content_item(expanded, items, ["title", "artist"])
-        if best:
-            return self._topic_item_reply(self._item_record("music", best), "music")
-
-        songs = []
-        for item in items:
-            record = self._item_record("music", item)
-            if record["detail"]:
-                songs.append(record["detail"])
-        shown, total = self._cap_list(songs, total)
-        self._last_reply_items = [self._item_record("music", item) for item in items[:6]]
-        answer = f"{gettext('chat_music_intro')} {' • '.join(shown)}"
-        if total > len(shown):
-            answer += self._count_suffix(total)
-        return self._reply(answer)
+        return self._work_only_refusal()
 
     def _topic_donation(self, normalized, expanded):
-        self._last_topic = "donation"
-        return self._reply(self._kb_section_reply("donation", "chat_donation_reply"))
+        return self._work_only_refusal()
 
     def _topic_booking(self, normalized, expanded):
         self._last_topic = "booking"
@@ -1859,6 +1925,6 @@ class ChatService:
         for item in qa_data:
             score = self._score_qa(text, item)
             if score >= CHAT_SUGGEST_THRESHOLD:
-                scored.append((score, item["question"]))
+                scored.append((score, self._option_label(item)))
         scored.sort(key=lambda pair: pair[0], reverse=True)
         return [question for _, question in scored[:limit]]

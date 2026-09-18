@@ -780,6 +780,35 @@
     transform: none;
 }
 
+.chatbox-stop {
+    border: 1px solid #dc3545;
+    background: #dc3545;
+    color: #fff;
+    min-height: 38px;
+    padding: 8px 12px;
+    border-radius: 10px;
+    font-size: 0.82rem;
+    font-weight: 700;
+    cursor: pointer;
+    white-space: nowrap;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.chatbox-stop[hidden] {
+    display: none;
+}
+
+.chatbox-stop ion-icon {
+    font-size: 0.95rem;
+    flex-shrink: 0;
+}
+
+.chatbox-stop span {
+    line-height: 1;
+}
+
 .chatbox-send__dot {
     width: 5px;
     height: 5px;

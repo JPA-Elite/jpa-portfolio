@@ -656,6 +656,111 @@ document.addEventListener("DOMContentLoaded", function () {
             if (activeLink && activeLink.parentElement) {
                 activeLink.parentElement.classList.add("active");
             }
+            positionSpyByHash(hash);
+        }
+
+        var isProHost = window.isProfessionalMode === "True";
+        var desktopSpyQuery = window.matchMedia ? window.matchMedia("(min-width: 769px)") : null;
+
+        function spyEl() {
+            if (!isProHost) return null;
+            var list = document.getElementById("navList");
+            if (!list) return null;
+            var el = list.querySelector(".nav-spy");
+            if (!el) {
+                el = document.createElement("span");
+                el.className = "nav-spy";
+                el.setAttribute("aria-hidden", "true");
+                list.appendChild(el);
+            }
+            return el;
+        }
+
+        function spyLinkX(link, list) {
+            var x = 0;
+            var el = link;
+            while (el && el !== list) {
+                x += el.offsetLeft || 0;
+                el = el.offsetParent;
+            }
+            return x;
+        }
+
+        function positionSpyByHash(hash) {
+            var el = spyEl();
+            if (!el) return;
+            if (!desktopSpyQuery || !desktopSpyQuery.matches) {
+                el.style.opacity = "0";
+                return;
+            }
+            var list = document.getElementById("navList");
+            var link = list ? list.querySelector('a[href$="' + hash + '"]') : null;
+            if (!link) {
+                el.style.opacity = "0";
+                return;
+            }
+            el.style.opacity = "1";
+            el.style.width = link.offsetWidth + "px";
+            el.style.transform = "translateX(" + spyLinkX(link, list) + "px)";
+        }
+
+        if (isProHost) {
+            var spySectionIds = [];
+            document.querySelectorAll('#navList a[href*="#"]').forEach(function (anchor) {
+                var parts = (anchor.getAttribute("href") || "").split("#");
+                var id = parts[1];
+                if (id && document.getElementById(id) && spySectionIds.indexOf(id) === -1) {
+                    spySectionIds.push(id);
+                }
+            });
+            var lastSpyId = null;
+            function spyHeaderOffset() {
+                var bar = document.querySelector("header");
+                return (bar ? bar.offsetHeight : 0) + 8;
+            }
+            function spySectionFromScroll() {
+                var line = window.pageYOffset + spyHeaderOffset() + window.innerHeight * 0.25;
+                var current = null;
+                spySectionIds.forEach(function (id) {
+                    var section = document.getElementById(id);
+                    if (section && section.getBoundingClientRect().top + window.pageYOffset <= line) {
+                        current = id;
+                    }
+                });
+                return current;
+            }
+            var spyTicking = false;
+            function spyOnScroll() {
+                if (spyTicking) return;
+                spyTicking = true;
+                window.requestAnimationFrame(function () {
+                    spyTicking = false;
+                    var id = spySectionFromScroll();
+                    if (id && id !== lastSpyId) {
+                        lastSpyId = id;
+                        activateLinkByHash("#" + id);
+                        positionSpyByHash("#" + id);
+                    }
+                });
+            }
+            if (spySectionIds.length) {
+                window.addEventListener("scroll", spyOnScroll, { passive: true });
+                window.addEventListener("resize", function () {
+                    lastSpyId = null;
+                    spyOnScroll();
+                });
+                window.addEventListener("load", function () {
+                    lastSpyId = null;
+                    spyOnScroll();
+                });
+                if (document.fonts && document.fonts.ready) {
+                    document.fonts.ready.then(function () {
+                        lastSpyId = null;
+                        spyOnScroll();
+                    });
+                }
+                spyOnScroll();
+            }
         }
 
         document.querySelectorAll('a[href*="#"]').forEach(function (anchor) {

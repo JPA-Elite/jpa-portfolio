@@ -198,7 +198,14 @@ def static_asset(path: str):
     mapped = asset_map.get(clean_path)
     if mapped:
         return url_for("static", filename=mapped)
-    return url_for("static", filename=clean_path)
+    try:
+        version = int(os.path.getmtime(os.path.join(app.static_folder or "", clean_path)))
+    except (OSError, ValueError, OverflowError):
+        version = 0
+    base_url = url_for("static", filename=clean_path)
+    if version:
+        return f"{base_url}?v={version}"
+    return base_url
 
 
 def vite_hmr():

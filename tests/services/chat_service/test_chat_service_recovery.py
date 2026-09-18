@@ -1,7 +1,7 @@
 import unittest
 from unittest.mock import patch
 
-from app.Services.ChatService import ChatService, WORK_QUESTION_HEADINGS
+from app.Services.ChatService import ChatService, PROFESSIONAL_QUESTION_HEADINGS
 
 from tests.services._service_fixtures import build_test_app
 
@@ -44,7 +44,7 @@ class ChatServiceRecoveryTests(unittest.TestCase):
 
     def test_parttime_section_is_a_professional_question(self):
         self.assertIn(
-            "Are you open to part-time work?", WORK_QUESTION_HEADINGS
+            "Are you open to part-time work?", PROFESSIONAL_QUESTION_HEADINGS
         )
 
     def test_bare_asking_complaint_redirects_to_rephrase(self):

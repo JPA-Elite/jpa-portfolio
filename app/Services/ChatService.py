@@ -411,18 +411,7 @@ PROFESSIONAL_QUESTION_HEADINGS = frozenset([
     "Do you provide support after a project?",
 ])
 
-WORK_QUESTION_HEADINGS = frozenset(
-    list(PROFESSIONAL_QUESTION_HEADINGS)
-    + [
-        "Concern",
-        "Who made this website?",
-        "What is this chat assistant?",
-        "What can this chat do?",
-        "What should I do if you don't understand my question?",
-    ]
-)
-
-WORK_QUESTION_LABELS = {
+PROFESSIONAL_QUESTION_LABELS = {
     "Tell me about yourself": "Can you tell me about yourself?",
     "Summary": "What is your professional summary?",
     "Skills": "What are your skills?",
@@ -430,7 +419,6 @@ WORK_QUESTION_LABELS = {
     "Education": "What is your educational background?",
     "Contact": "How can I contact you?",
     "Booking": "How do I book your services?",
-    "Concern": "How can I share my concern?",
 }
 
 QUESTION_STARTERS = frozenset([
@@ -547,8 +535,9 @@ class ChatService:
             return items
         if professional_only is None:
             professional_only = self._is_professional_site()
-        allowed = PROFESSIONAL_QUESTION_HEADINGS if professional_only else WORK_QUESTION_HEADINGS
-        filtered = self._work_qa(items, allowed)
+        if not professional_only:
+            return items
+        filtered = self._work_qa(items)
         if filtered:
             return filtered
         return items
@@ -580,16 +569,15 @@ class ChatService:
             or self._is_girlfriend_question(normalized)
         )
 
-    def _work_qa(self, qa_data, allowed=None):
-        allowed_set = allowed if allowed is not None else WORK_QUESTION_HEADINGS
+    def _work_qa(self, qa_data):
         labeled = []
         for item in (qa_data or []):
             key = item.get("source_heading") or item.get("question")
-            if key not in allowed_set:
+            if key not in PROFESSIONAL_QUESTION_HEADINGS:
                 continue
             labeled.append({
                 **item,
-                "display_question": WORK_QUESTION_LABELS.get(key, item.get("question")),
+                "display_question": PROFESSIONAL_QUESTION_LABELS.get(key, item.get("question")),
             })
         return labeled
 
@@ -695,6 +683,7 @@ class ChatService:
         expanded = self._normalize_spacing(self._expand_message(normalized))
         self._prune_sessions()
         self._remember_user(message)
+        work_restricted = self._is_professional_site()
 
         if self._is_sensitive(normalized):
             return self._reply(gettext("chat_sensitive_refusal"), action="expand_options")
@@ -722,7 +711,9 @@ class ChatService:
             return self._reply(gettext("chat_how_are_you_reply"))
 
         if self._is_qr_question(normalized):
-            return self._work_only_refusal()
+            if work_restricted:
+                return self._work_only_refusal()
+            return self._reply(gettext("chat_qr_reply").format(url=self._site_url(PAGE_PATHS["donation"])))
 
         survey_reply = self._resolve_survey_question(normalized)
         if survey_reply:
@@ -736,24 +727,61 @@ class ChatService:
         if parttime_reply:
             return self._reply(parttime_reply)
 
-        if self._mentions_girlfriend(normalized):
+        if work_restricted and self._mentions_girlfriend(normalized):
             return self._work_only_refusal()
+
+        girlfriend_contact = self._resolve_girlfriend_contact(normalized)
+        if girlfriend_contact:
+            return self._reply(girlfriend_contact)
+
+        girlfriend_followup_contact = self._resolve_girlfriend_followup_contact(normalized)
+        if girlfriend_followup_contact:
+            return self._reply(girlfriend_followup_contact)
+
+        girlfriend_company = self._resolve_girlfriend_company(normalized)
+        if girlfriend_company:
+            return self._reply(girlfriend_company)
+
+        girlfriend_followup_company = self._resolve_girlfriend_followup_company(normalized)
+        if girlfriend_followup_company:
+            return self._reply(girlfriend_followup_company)
+
+        girlfriend_age = self._resolve_girlfriend_age(normalized)
+        if girlfriend_age:
+            return self._reply(girlfriend_age)
+
+        girlfriend_followup_age = self._resolve_girlfriend_followup_age(normalized)
+        if girlfriend_followup_age:
+            return self._reply(girlfriend_followup_age)
+
+        if self._is_girlfriend_question(normalized):
+            if work_restricted:
+                return self._work_only_refusal()
+            self._last_topic = "girlfriend"
 
         if self._is_unrelated(normalized, expanded):
             return self._reply(gettext("chat_unrelated_reply"))
 
-        if any(self._contains_word(expanded, word) for word in ("she", "her", "hers", "herself")):
+        if work_restricted and any(self._contains_word(expanded, word) for word in ("she", "her", "hers", "herself")):
             ai_answer = None
         else:
             ai_answer = self._ai_chat_answer(message)
         if ai_answer:
             return self._reply(ai_answer)
 
+        girlfriend_reply = self._resolve_girlfriend(normalized)
+        if girlfriend_reply:
+            return self._reply(girlfriend_reply)
+
+        girlfriend_followup = self._resolve_girlfriend_followup(normalized)
+        if girlfriend_followup:
+            return self._reply(girlfriend_followup)
+
         content = self._resolve_content(normalized, expanded)
         if content:
             return content
 
-        if any(self._contains_word(expanded, word) for word in ("she", "her", "hers", "herself")):
+        if work_restricted and any(self._contains_word(expanded, word) for word in ("she", "her", "hers", "herself")):
             return self._work_only_refusal()
 
         if self._is_developers(normalized):
@@ -774,7 +802,9 @@ class ChatService:
             return self._reply(gettext("chat_negative_reply"))
 
         if self._is_joke(normalized):
-            return self._work_only_refusal()
+            if work_restricted:
+                return self._work_only_refusal()
+            return self._reply(gettext("chat_joke_reply"))
 
         if self._is_redirect(normalized):
             return self._reply(gettext("chat_redirect_reply"), action="expand_options")
@@ -792,7 +822,7 @@ class ChatService:
         if exact:
             return self._reply(exact, matched_question=message)
 
-        if any(self._contains_word(expanded, phrase) for phrase in PERSONAL_TOPIC_STEMS):
+        if work_restricted and any(self._contains_word(expanded, phrase) for phrase in PERSONAL_TOPIC_STEMS):
             return self._work_only_refusal()
 
         topic = self._search_topics_content(expanded)
@@ -821,7 +851,11 @@ class ChatService:
         if suggested:
             return self._reply(suggested, action="expand_options")
 
-        return self._work_only_refusal()
+        if work_restricted:
+            return self._work_only_refusal()
+        return self._reply(
+            f"{gettext('chat_unknown_fallback_intro')} {gettext('chat_unknown_fallback')}"
+        )
 
     def _reply(self, answer, action=None, matched_question=None):
         result = {"answer": answer, "action": action, "matched_question": matched_question}
@@ -1121,10 +1155,7 @@ class ChatService:
         else:
             site_mode_line = (
                 "SITE MODE: social. You are on Joshua's personal portfolio site. "
-                "Answer warmly about anything on the site. "
-                "SCOPE: Only answer work-related questions about Joshua's career, "
-                "skills, projects, hiring and booking. Politely decline anything "
-                "else and steer the visitor back to work topics."
+                "Answer warmly about anything on the site."
             )
             survey_line = (
                 f"CONCERN SURVEY LINK: {SURVEY_URL_DEFAULT}"
@@ -1712,16 +1743,134 @@ class ChatService:
         return self._reply(self._kb_section_reply("education", "chat_education_reply"))
 
     def _topic_gallery(self, normalized, expanded):
-        return self._work_only_refusal()
+        if self._is_professional_site():
+            return self._work_only_refusal()
+        self._last_topic = "gallery"
+        kb = self._kb_match(expanded)
+        if kb:
+            return kb
+        service = self.gallery_service
+        if service is None:
+            return self._reply(gettext("chat_content_unavailable"))
+        try:
+            items, total = service.search_gallery_paginated(
+                "", "", self._locale, 1, 6, SortOrder.DESC
+            )
+        except Exception:
+            return self._reply(gettext("chat_content_unavailable"))
+        if self._is_count_question(expanded):
+            return self._reply(gettext("chat_gallery_count_reply").format(total=total))
+        items = [self._as_dict(item) for item in (items or [])]
+        if not items:
+            return self._reply(gettext("chat_content_empty"))
+
+        for item in items:
+            title = self._localize_text(item.get("title"))
+            if title and self._contains_word(expanded, self._normalize_spacing(title.lower())):
+                return self._topic_item_reply(self._item_record("gallery", item), "gallery")
+
+        best = self._best_content_item(expanded, items, ["title", "description", "tags"])
+        if best:
+            return self._topic_item_reply(self._item_record("gallery", best), "gallery")
+
+        titles = [self._localize_text(item.get("title")) for item in items]
+        titles = [t for t in titles if t]
+        shown, total = self._cap_list(titles, total)
+        self._last_reply_items = [self._item_record("gallery", item) for item in items[:6]]
+        answer = f"{gettext('chat_gallery_intro')} {' • '.join(shown)}"
+        if total > len(shown):
+            answer += self._count_suffix(total)
+        return self._reply(answer)
 
     def _topic_vlog(self, normalized, expanded):
-        return self._work_only_refusal()
+        if self._is_professional_site():
+            return self._work_only_refusal()
+        self._last_topic = "vlog"
+        kb = self._kb_match(expanded)
+        if kb:
+            return kb
+        service = self.video_service
+        if service is None:
+            return self._reply(gettext("chat_content_unavailable"))
+        try:
+            items, total = service.search_video_paginated(
+                "", "", self._locale, 1, 6, SortOrder.DESC
+            )
+        except Exception:
+            return self._reply(gettext("chat_content_unavailable"))
+        if self._is_count_question(expanded):
+            return self._reply(gettext("chat_vlog_count_reply").format(total=total))
+        items = [self._as_dict(item) for item in (items or [])]
+        if not items:
+            return self._reply(gettext("chat_content_empty"))
+
+        for item in items:
+            title = self._localize_text(item.get("title"))
+            if title and self._contains_word(expanded, self._normalize_spacing(title.lower())):
+                return self._topic_item_reply(self._item_record("vlog", item), "vlog")
+
+        best = self._best_content_item(expanded, items, ["title", "description", "tags"])
+        if best:
+            return self._topic_item_reply(self._item_record("vlog", best), "vlog")
+
+        titles = [self._localize_text(item.get("title")) for item in items]
+        titles = [t for t in titles if t]
+        shown, total = self._cap_list(titles, total)
+        self._last_reply_items = [self._item_record("vlog", item) for item in items[:6]]
+        answer = f"{gettext('chat_vlog_intro')} {' • '.join(shown)}"
+        if total > len(shown):
+            answer += self._count_suffix(total)
+        return self._reply(answer)
 
     def _topic_music(self, normalized, expanded):
-        return self._work_only_refusal()
+        if self._is_professional_site():
+            return self._work_only_refusal()
+        self._last_topic = "music"
+        kb = self._kb_match(expanded)
+        if kb:
+            return kb
+        service = self.music_service
+        if service is None:
+            return self._reply(gettext("chat_content_unavailable"))
+        try:
+            items, total = service.get_paginated_music_list(1, 6, SortOrder.DESC, "", "")
+        except Exception:
+            return self._reply(gettext("chat_content_unavailable"))
+        if self._is_count_question(expanded):
+            return self._reply(gettext("chat_music_count_reply").format(total=total))
+        items = [self._as_dict(item) for item in (items or [])]
+        if not items:
+            return self._reply(gettext("chat_content_empty"))
+
+        for item in items:
+            title = str(item.get("title") or "").strip()
+            artist = str(item.get("artist") or "").strip()
+            if title and self._contains_word(expanded, self._normalize_spacing(title.lower())):
+                return self._topic_item_reply(self._item_record("music", item), "music")
+            if artist and self._contains_word(expanded, self._normalize_spacing(artist.lower())):
+                return self._topic_item_reply(self._item_record("music", item), "music")
+
+        best = self._best_content_item(expanded, items, ["title", "artist"])
+        if best:
+            return self._topic_item_reply(self._item_record("music", best), "music")
+
+        songs = []
+        for item in items:
+            record = self._item_record("music", item)
+            if record["detail"]:
+                songs.append(record["detail"])
+        shown, total = self._cap_list(songs, total)
+        self._last_reply_items = [self._item_record("music", item) for item in items[:6]]
+        answer = f"{gettext('chat_music_intro')} {' • '.join(shown)}"
+        if total > len(shown):
+            answer += self._count_suffix(total)
+        return self._reply(answer)
 
     def _topic_donation(self, normalized, expanded):
-        return self._work_only_refusal()
+        if self._is_professional_site():
+            return self._work_only_refusal()
+        self._last_topic = "donation"
+        return self._reply(self._kb_section_reply("donation", "chat_donation_reply"))
 
     def _topic_booking(self, normalized, expanded):
         self._last_topic = "booking"

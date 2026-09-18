@@ -89,7 +89,7 @@
     </style>
 </head>
 
-<body>
+<body class="{% if current_site == 'professional' %}site-professional{% endif %}">
     <!-- Page Loading Overlay — 3-dot wave, full screen -->
     <div id="pageLoadingOverlay" aria-label="Loading..." role="status">
         <div class="loading-dots-wrap">
@@ -101,11 +101,28 @@
     <canvas id="brainCanvas"></canvas>
     <div class="container">
         <header>
+            {% if current_site == 'professional' %}
+            <a class="brand-lockup" href="{{ url_for('pages.portfolio') }}" aria-label="Joshua Algadipe — Portfolio">
+                <img src="{{ profile_image }}" alt="" class="brand-lockup__avatar" loading="lazy" decoding="async">
+                <span class="brand-lockup__text">
+                    <strong>Joshua Algadipe</strong>
+                    <small>Software Engineer</small>
+                </span>
+            </a>
+            {% else %}
             <h1 id="animated-heading">{% block head %}My Portfolio{% endblock %}</h1>
+            {% endif %}
             <nav>
                 <div class="nav-toggle" id="toggleButton" onclick="toggleNav()">
                     <ion-icon class="nav-toggle-icon" name="menu-outline"></ion-icon>
                 </div>
+                {% if current_site == 'professional' %}
+                <a class="mobile-brand" href="{{ url_for('pages.portfolio') }}" aria-label="Joshua Algadipe — Portfolio">
+                    <img src="{{ profile_image }}" alt="" class="mobile-brand__avatar" loading="lazy" decoding="async">
+                    <span class="mobile-brand__text"><strong>Joshua Algadipe</strong></span>
+                </a>
+                <a class="mobile-hire" href="{{ url_for('pages.portfolio') }}#contact">Hire Me</a>
+                {% endif %}
 
                 <!-- Desktop Navigation -->
                 <ul id="navList">
@@ -169,13 +186,26 @@
                             </a>
                         </li>
                     {% endif %}
+                    {% if current_site != 'professional' %}
                     <li class="{% if request.endpoint == 'pages.concern' %}active{% endif %}">
                         <a href="{{ url_for('pages.concern') }}">
                             <ion-icon name="chatbubbles-outline"></ion-icon>
                             Concern
                         </a>
                     </li>
+                    {% endif %}
                 </ul>
+                {% if current_site == 'professional' %}
+                <div class="pro-header-actions">
+                    <a class="pro-social" href="https://www.linkedin.com/in/joshua-algadipe-53933924b/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+                        <ion-icon name="logo-linkedin"></ion-icon>
+                    </a>
+                    <a class="pro-social" href="https://github.com/JPA-Elite" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
+                        <ion-icon name="logo-github"></ion-icon>
+                    </a>
+                    <a class="hire-cta" href="{{ url_for('pages.portfolio') }}#contact">Hire Me</a>
+                </div>
+                {% endif %}
 
                 <!-- Mobile Sidebar -->
                 <div class="sidebar" id="sidebar">
@@ -261,23 +291,33 @@
                         <ion-icon name="settings-outline"></ion-icon>
                         <span>Admin</span>
                     </a>
+                    {% else %}
+                    <a class="sidebar-booknow-btn" href="{{ url_for('pages.portfolio') }}#contact">
+                        Hire Me
+                    </a>
+                    <div class="sidebar-social-row">
+                        <a href="https://www.linkedin.com/in/joshua-algadipe-53933924b/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+                            <ion-icon name="logo-linkedin"></ion-icon>
+                        </a>
+                        <a href="https://github.com/JPA-Elite" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
+                            <ion-icon name="logo-github"></ion-icon>
+                        </a>
+                    </div>
                     {% endif %}
                 </div>
 
+                {% if current_site != 'professional' %}
                 <div class="language-selector">
                     <a class="mobile-concern-btn"
-                        style="margin-right: {{ '15px' if current_site == 'professional' else '0px' }};"
                         href="{{ url_for('pages.concern') }}">
                         Concern
                     </a>
-                    {% if current_site != 'professional' %}
-                        <a class="booknow-btn" href="{{ url_for('pages.booking') }}">
-                            Build Now
-                        </a>
-                        <a class="donation-btn" href="{{ url_for('pages.donation') }}">
-                            <img src="{{ url_for('static', filename='images/peso.webp') }}" alt="donation" class="flag-icon">
-                        </a>
-                    {% endif %}
+                    <a class="booknow-btn" href="{{ url_for('pages.booking') }}">
+                        Build Now
+                    </a>
+                    <a class="donation-btn" href="{{ url_for('pages.donation') }}">
+                        <img src="{{ url_for('static', filename='images/peso.webp') }}" alt="donation" class="flag-icon">
+                    </a>
                     <div class="dropdown">
                         <button class="lang-pill">
                             {% if get_locale() == en_locale %}
@@ -317,6 +357,7 @@
                         </div>
                     </div>
                 </div>
+                {% endif %}
             </nav>
 
         </header>
@@ -347,10 +388,7 @@
     {% include 'components/name_edit_modal.html' %}
     <!-- Include the confirm modal component -->
     {% include 'components/confirm_modal.html' %}
-    {% if current_site != 'professional' %}
-        <!-- Include the chatbox component -->
-        {% include 'components/chatbox.html' %}
-    {% endif %}
+    {% include 'components/chatbox.html' %}
     <script>
         // Pass background image URL to JavaScript
         window.backgroundImageUrl = "{{ url_for('static', filename=background_image) }}";

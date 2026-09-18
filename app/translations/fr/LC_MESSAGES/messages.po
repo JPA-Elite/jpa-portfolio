@@ -217,7 +217,7 @@ msgid "chat_role_you"
 msgstr "Vous"
 
 msgid "chat_role_bot"
-msgstr "Assistant IA"
+msgstr "Josh"
 
 msgid "chat_typing_aria"
 msgstr "Saisie en cours"
@@ -293,6 +293,9 @@ msgstr "Pourquoi les programmeurs préfèrent-ils le mode sombre ? Parce que la 
 
 msgid "chat_redirect_reply"
 msgstr "Je ne suis pas sûr de comprendre. Essayez de reformuler, ou choisissez l'une des questions suggérées ci-dessous."
+
+msgid "chat_work_only_reply"
+msgstr "Je ne réponds qu'aux questions liées au travail — expérience, compétences, projets, tarifs, disponibilités et réservation de Joshua. Veuillez choisir l'une des questions suggérées ci-dessous."
 
 msgid "chat_followup_more_intro"
 msgstr "Je peux vous en dire plus à ce sujet :"

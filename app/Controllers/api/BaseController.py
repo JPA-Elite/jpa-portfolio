@@ -7,7 +7,6 @@ from app.Repositories.VisitRepository import VisitRepository
 from app.Services.MusicService import MusicService
 from app.Repositories.MusicRepository import MusicRepository
 from app.Services.ChatService import ChatService
-from app.Services.KnowledgeBaseService import KnowledgeBaseService
 from app.Services.KeyProjectService import KeyProjectService
 from app.Repositories.KeyProjectRepository import KeyProjectRepository
 from app.Services.CompanyRoadmapService import CompanyRoadmapService
@@ -35,7 +34,6 @@ chat_service = ChatService(
     gallery_service=gallery_service,
     video_service=video_service,
     music_service=music_service,
-    knowledge_base_service=KnowledgeBaseService(),
 )
 
 # ************************** API Controller ********************************

@@ -714,6 +714,17 @@ Heading-fil_PH: Bukas ka ba sa freelance work?
 Body-fil_PH: Oo, sa kasalukuyan ay available ako para sa trabaho, kasama na ang freelance at contract na mga proyekto. Pumunta sa Booking page upang mag-iskedyul ng session at talakayin ang iyong proyekto.
 Aliases-fil_PH: freelance, freelance work, contract work, part time, gigs
 
+## Are you open to part-time work?
+Key: parttime
+Yes — even though I work full-time as a Software Engineer at Chronostep, I take on part-time and freelance projects for extra income, to keep my skills sharp across different stacks, and to help clients ship. If you have something in mind, head to the Booking page and let's discuss the scope and rates.
+Aliases: part time, part-time, parttime, part time job, side job, side gig, sideline, second job, extra income, moonlighting, why freelance, why part time, need part time, want part time
+Heading-ceb: Bukas ka ba sa part-time nga trabaho?
+Body-ceb: Oo — bisan full-time ko nga Software Engineer sa Chronostep, modawat ko og part-time ug freelance nga mga proyekto para sa dugang kita, aron mahait ang akong kahanas sa nagkalain-laing stacks, ug aron makatabang sa mga kliyente nga makahuman. Kung naa kay proyekto sa hunahuna, adto sa Booking page ug hisgotan nato ang sakup ug rates.
+Aliases-ceb: part time, part-time, side job, sideline, dugang kita, extra income, nganong freelance
+Heading-fil_PH: Bukas ka ba sa part-time work?
+Body-fil_PH: Oo — kahit full-time akong Software Engineer sa Chronostep, tumatanggap ako ng part-time at freelance na mga proyekto para sa dagdag na kita, para manatiling hasa ang aking kasanayan sa iba't ibang stacks, at para makatulong sa mga kliyenteng makapagship. Kung mayroon kang proyektong nasa isip, pumunta sa Booking page at pag-usapan natin ang saklaw at rates.
+Aliases-fil_PH: part time, part-time, side job, sideline, dagdag na kita, extra income, bakit freelance
+
 ## What should I do if you don't understand my question?
 If the bot doesn't match your question, it will suggest related questions you can tap to try. Just rephrase your question or pick one of the suggested options and it'll point you in the right direction.
 Aliases: what if you dont understand, what if you dont know, rephrase, suggested questions, do you understand me

@@ -100,10 +100,23 @@ def get_cache_data(func_name, args=None, timeout=None, default=None):
 
 
 def clear_cache_by_prefix(prefix: str):
-    for key in list(cache.cache._cache.keys()):
-        if key.startswith(prefix):
-            print("Deleting cache key:", key)
-            cache.delete(key)
+    try:
+        store = getattr(cache.cache, "_cache", None)
+    except Exception:
+        store = None
+    if isinstance(store, dict):
+        for key in list(store.keys()):
+            if isinstance(key, str) and key.startswith(prefix):
+                print("Deleting cache key:", key)
+                try:
+                    cache.delete(key)
+                except Exception:
+                    pass
+        return
+    try:
+        cache.clear()
+    except Exception:
+        pass
 
 
 def num_to_alpha_lower(num_str: str):

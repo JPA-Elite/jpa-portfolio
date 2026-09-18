@@ -5,7 +5,7 @@ from unittest.mock import patch
 from app.Services.ChatService import (
     ChatService,
     PROFESSIONAL_QUESTION_HEADINGS,
-    WORK_QUESTION_HEADINGS,
+    PROFESSIONAL_QUESTION_HEADINGS,
 )
 
 from tests.services._service_fixtures import build_test_app
@@ -40,7 +40,7 @@ class ChatServiceProfessionalTests(unittest.TestCase):
         self.assertNotIn("What kind of songs do you like?", headings)
         self.assertNotIn("Who is your crush?", headings)
 
-    def test_work_subset_is_smaller_than_full_guide(self):
+    def test_professional_subset_is_smaller_than_full_guide(self):
         from app.Services.KnowledgeBaseService import KnowledgeBaseService
 
         service = self._service()
@@ -49,24 +49,24 @@ class ChatServiceProfessionalTests(unittest.TestCase):
         total_sections = len(KnowledgeBaseService().sections())
         self.assertTrue(0 < len(work_items) < total_sections)
 
-    def test_social_host_returns_same_work_question_list(self):
+    def test_social_host_returns_full_question_list(self):
         service = self._service()
         with self.app.test_request_context("/", base_url="http://jpastack.local"):
             self.assertFalse(service._is_professional_site())
             items = service.get_qa_data()
         headings = [item["source_heading"] for item in items]
         self.assertIn("Skills", headings)
-        self.assertIn("Concern", headings)
-        self.assertNotIn("What kind of songs do you like?", headings)
-        self.assertNotIn("Who is your crush?", headings)
+        self.assertIn("What kind of songs do you like?", headings)
+        self.assertIn("Who is your crush?", headings)
+        self.assertFalse(any("display_question" in item for item in items))
 
-    def test_no_request_context_returns_work_question_list(self):
+    def test_no_request_context_returns_full_question_list(self):
         service = self._service()
         self.assertFalse(service._is_professional_site())
         items = service.get_qa_data()
         self.assertTrue(len(items) > 0)
-        for item in items:
-            self.assertIn(item["source_heading"], WORK_QUESTION_HEADINGS)
+        headings = [item["source_heading"] for item in items]
+        self.assertIn("What kind of songs do you like?", headings)
 
     def test_ai_context_is_professional_on_professional_host(self):
         service = self._service()

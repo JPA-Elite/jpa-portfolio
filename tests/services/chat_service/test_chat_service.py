@@ -71,11 +71,6 @@ def _fake_gettext(key):
     }.get(key, key)
 
 
-def _assert_work_only_refusal(test_case, result):
-    test_case.assertEqual(result["answer"], "chat_work_only_reply")
-    test_case.assertEqual(result["action"], "expand_options")
-
-
 def _make_service(method, result):
     service = MagicMock()
     getattr(service, method).return_value = result
@@ -120,12 +115,12 @@ class ChatServiceTests(unittest.TestCase):
         self.assertEqual(result["matched_question"], "What is your name?")
 
     def test_rephrase_route_age(self):
-        result = self._resolve("how old are you")
-        _assert_work_only_refusal(self, result)
+        result = self._resolve("how old are you?")
+        self.assertIn("years old", result["answer"])
 
     def test_typo_route_location(self):
         result = self._resolve("whre do u live?")
-        _assert_work_only_refusal(self, result)
+        self.assertIn("Cabulihan", result["answer"])
 
     def test_alias_route_home(self):
         result = self._resolve("where are you from")
@@ -270,7 +265,7 @@ class ChatServiceIntentTests(unittest.TestCase):
 
     def test_joke(self):
         result = self._resolve("tell me a joke")
-        _assert_work_only_refusal(self, result)
+        self.assertIn("dark mode", result["answer"])
 
     def test_redirect(self):
         result = self._resolve("i don't understand")
@@ -294,7 +289,7 @@ class ChatServiceIntentTests(unittest.TestCase):
 
     def test_donation_topic(self):
         result = self._resolve("how can I donate?")
-        _assert_work_only_refusal(self, result)
+        self.assertIn("GCash", result["answer"])
 
     def test_booking_topic(self):
         result = self._resolve("I want to book a website")
@@ -306,11 +301,12 @@ class ChatServiceIntentTests(unittest.TestCase):
 
     def test_qr_question_returns_donation_reply(self):
         result = self._resolve("do you have qr code for this?")
-        _assert_work_only_refusal(self, result)
+        self.assertIn("/donation", result["answer"])
+        self.assertNotIn("Python", result["answer"])
 
     def test_qr_question_without_donation_context(self):
         result = self._resolve("where is the qr code?")
-        _assert_work_only_refusal(self, result)
+        self.assertIn("Donation", result["answer"])
 
     def test_url_question_with_page(self):
         result = self._resolve("what is the url of the donation page?")
@@ -347,28 +343,28 @@ class ChatServiceIntentTests(unittest.TestCase):
 
     def test_girlfriend_question_replies_name(self):
         result = self._resolve("do you have a girlfriend?")
-        _assert_work_only_refusal(self, result)
+        self.assertEqual(result["answer"], "Fiona Samantha Escarro.")
 
     def test_girlfriend_alias_replies_name(self):
         result = self._resolve("who is fiona?")
-        _assert_work_only_refusal(self, result)
+        self.assertEqual(result["answer"], "Fiona Samantha Escarro.")
 
     def test_girlfriend_contact_question_refuses(self):
         result = self._resolve("what is your girlfriend's contact number?")
-        _assert_work_only_refusal(self, result)
+        self.assertEqual(result["answer"], "I don't know about her contacts.")
 
     def test_girlfriend_email_question_refuses(self):
         result = self._resolve("can i have fiona's email address?")
-        _assert_work_only_refusal(self, result)
+        self.assertEqual(result["answer"], "I don't know about her contacts.")
 
     def test_girlfriend_contact_question_beats_contact_intent(self):
         result = self._resolve("what is fiona's facebook?")
-        _assert_work_only_refusal(self, result)
+        self.assertEqual(result["answer"], "I don't know about her contacts.")
         self.assertNotIn("algadipej962@gmail.com", result["answer"])
 
     def test_girlfriend_company_question_replies_teleperformance(self):
         result = self._resolve("what company does your girlfriend work at?")
-        _assert_work_only_refusal(self, result)
+        self.assertEqual(result["answer"], "She works at Teleperformance in IT Park.")
 
     def test_girlfriend_company_question_beats_ai(self):
         gemini = MagicMock()
@@ -377,7 +373,7 @@ class ChatServiceIntentTests(unittest.TestCase):
         with patch("app.Services.ChatService.gettext", side_effect=_fake_gettext), \
              patch("app.Services.ChatService.ChatService._get_gemini_service", new=lambda self: self.gemini_service):
             result = service.resolve("what company does fiona work for?", QA)
-        _assert_work_only_refusal(self, result)
+        self.assertEqual(result["answer"], "She works at Teleperformance in IT Park.")
         gemini.answer.assert_not_called()
 
     def test_survey_link_question_returns_google_form(self):
@@ -422,7 +418,7 @@ class ChatServiceAiTests(unittest.TestCase):
         gemini = MagicMock()
         gemini.answer.return_value = None
         result = self._resolve("what is the meaning of life?", gemini=gemini)
-        _assert_work_only_refusal(self, result)
+        self.assertIn("couldn't find anything", result["answer"])
         gemini.answer.assert_called_once()
 
     def test_ai_not_called_for_unrelated_math(self):
@@ -460,27 +456,27 @@ class ChatServiceAiTests(unittest.TestCase):
 
     def test_no_ai_without_gemini(self):
         result = self._resolve("what are joshua's pets?")
-        _assert_work_only_refusal(self, result)
+        self.assertIn("couldn't find anything", result["answer"])
 
     def test_ai_answers_girlfriend_question_in_detail(self):
         gemini = MagicMock()
         gemini.answer.return_value = "Fiona Samantha Escarro is a wonderful person who loves traveling and trying new food."
         result = self._resolve("tell me about your girlfriend", gemini=gemini)
-        _assert_work_only_refusal(self, result)
-        gemini.answer.assert_not_called()
+        self.assertEqual(result["answer"], "Fiona Samantha Escarro is a wonderful person who loves traveling and trying new food.")
+        gemini.answer.assert_called_once()
 
     def test_girlfriend_contact_refusal_beats_ai(self):
         gemini = MagicMock()
         gemini.answer.return_value = "AI answer."
         result = self._resolve("what is your girlfriend's contact number?", gemini=gemini)
-        _assert_work_only_refusal(self, result)
+        self.assertEqual(result["answer"], "I don't know about her contacts.")
         gemini.answer.assert_not_called()
 
     def test_girlfriend_age_question_beats_ai(self):
         gemini = MagicMock()
         gemini.answer.return_value = "AI answer."
         result = self._resolve("how old is fiona?", gemini=gemini)
-        _assert_work_only_refusal(self, result)
+        self.assertEqual(result["answer"], f"Fiona is {_girlfriend_age()} years old. Her birthday is April 11, 2005.")
         gemini.answer.assert_not_called()
 
     def test_girlfriend_age_confirmation_beats_ai(self):
@@ -488,7 +484,7 @@ class ChatServiceAiTests(unittest.TestCase):
         gemini.answer.return_value = "AI answer."
         age = _girlfriend_age()
         result = self._resolve(f"is fiona {age} years old today", gemini=gemini)
-        _assert_work_only_refusal(self, result)
+        self.assertEqual(result["answer"], f"Yes, she is {age} years old! Fiona was born on April 11, 2005.")
         gemini.answer.assert_not_called()
 
     def test_ai_context_includes_girlfriend_info(self):
@@ -576,7 +572,7 @@ class ChatServiceAiTests(unittest.TestCase):
         service = ChatService()
         with patch("app.Services.ChatService.get_locale", return_value=Locale.parse("ceb")):
             qa = service.get_qa_data()
-        self.assertEqual(qa[0]["question"], "Unsa ang imong trabaho?")
+        self.assertEqual(qa[0]["question"], "Unsa ang imong pangalan?")
 
     def test_resolve_uses_string_locale_for_aliases(self):
         from babel import Locale
@@ -586,7 +582,7 @@ class ChatServiceAiTests(unittest.TestCase):
              patch("app.Services.ChatService.get_locale", return_value=Locale.parse("ceb")), \
              patch("app.Services.ChatService.ChatService._get_gemini_service", new=lambda self: self.gemini_service):
             result = service.resolve("Unsa ang imong pangalan?", QA)
-        _assert_work_only_refusal(self, result)
+        self.assertEqual(result["answer"], "My name is Joshua P. Algadipe.")
         self.assertEqual(service._locale, "ceb")
 
     def test_ai_context_includes_company_details_from_roadmaps(self):
@@ -693,57 +689,64 @@ class ChatServiceContentTests(unittest.TestCase):
     def test_gallery_lists_titles_with_count(self):
         items = [{"title": {"en": f"Photo {i + 1}"}} for i in range(8)]
         result = self._resolve("gallery photos", gallery=_make_service("search_gallery_paginated", (items, 8)))
-        _assert_work_only_refusal(self, result)
+        self.assertIn("Gallery photos:", result["answer"])
+        self.assertIn("Photo 6", result["answer"])
+        self.assertNotIn("Photo 7", result["answer"])
+        self.assertIn("and 2 more", result["answer"])
 
     def test_gallery_empty(self):
         result = self._resolve("gallery", gallery=_make_service("search_gallery_paginated", ([], 0)))
-        _assert_work_only_refusal(self, result)
+        self.assertIn("No items found", result["answer"])
 
     def test_gallery_count_from_db(self):
         result = self._resolve(
             "how many photos do you have",
             gallery=_make_service("search_gallery_paginated", ([{"title": {"en": "X"}}], 8)),
         )
-        _assert_work_only_refusal(self, result)
+        self.assertEqual(result["answer"], "I have 8 photos in my gallery.")
 
     def test_vlog_count_from_db(self):
         result = self._resolve(
             "how many vlogs do you have",
             video=_make_service("search_video_paginated", ([{"title": {"en": "V"}}], 3)),
         )
-        _assert_work_only_refusal(self, result)
+        self.assertEqual(result["answer"], "I have 3 vlogs in my collection.")
 
     def test_music_count_from_db(self):
         result = self._resolve(
             "how many songs do you have",
             music=_make_service("get_paginated_music_list", ([{"title": "A", "artist": "B"}], 5)),
         )
-        _assert_work_only_refusal(self, result)
+        self.assertEqual(result["answer"], "I have 5 songs in my collection.")
 
     def test_kb_guard_answers_music_categories(self):
         result = self._resolve("what music categories are there")
-        _assert_work_only_refusal(self, result)
+        self.assertIn("Rap", result["answer"])
+        self.assertIn("Focus", result["answer"])
 
     def test_kb_guard_answers_download(self):
         result = self._resolve("can i download the songs")
-        _assert_work_only_refusal(self, result)
+        self.assertIn("downloaded", result["answer"])
 
     def test_kb_guard_answers_visualizer(self):
         result = self._resolve("does your music player have a visualizer")
-        _assert_work_only_refusal(self, result)
+        self.assertIn("8 beat visualizer modes", result["answer"])
 
     def test_kb_guard_answers_like_comment(self):
         result = self._resolve("can i like your photos")
-        _assert_work_only_refusal(self, result)
+        self.assertEqual(result["matched_question"], "How do I like a photo?")
+        self.assertIn("like action", result["answer"])
 
     def test_kb_guard_answers_page_description(self):
         result = self._resolve("what is on the gallery page")
-        _assert_work_only_refusal(self, result)
+        self.assertEqual(result["matched_question"], "What is on the Gallery page?")
+        self.assertIn("gallery channel", result["answer"])
 
     def test_vlog_lists_titles(self):
         items = [{"title": {"en": f"Vlog {i}"}} for i in range(3)]
         result = self._resolve("your vlog", video=_make_service("search_video_paginated", (items, 3)))
-        _assert_work_only_refusal(self, result)
+        self.assertIn("Recent vlogs:", result["answer"])
+        self.assertIn("Vlog 2", result["answer"])
 
     def test_music_lists_songs(self):
         items = [
@@ -751,7 +754,8 @@ class ChatServiceContentTests(unittest.TestCase):
             {"title": "Song B", "artist": "Artist B"},
         ]
         result = self._resolve("music", music=_make_service("get_paginated_music_list", (items, 2)))
-        _assert_work_only_refusal(self, result)
+        self.assertIn("Songs:", result["answer"])
+        self.assertIn("Song A - Artist A", result["answer"])
 
 
 class ChatServiceSuggestTests(unittest.TestCase):
@@ -828,17 +832,17 @@ class ChatServiceMultiTurnTests(unittest.TestCase):
     def test_girlfriend_pronoun_follow_up(self):
         self._resolve("tell me your gf")
         result = self._resolve("who is she")
-        _assert_work_only_refusal(self, result)
+        self.assertEqual(result["answer"], "Fiona Samantha Escarro.")
 
     def test_girlfriend_pronoun_follow_up_her(self):
         self._resolve("tell me about fiona")
         result = self._resolve("tell me more about her")
-        _assert_work_only_refusal(self, result)
+        self.assertEqual(result["answer"], "Fiona Samantha Escarro.")
 
     def test_girlfriend_pronoun_follow_up_contact_refused(self):
         self._resolve("tell me your gf")
         result = self._resolve("what is her contact number?")
-        _assert_work_only_refusal(self, result)
+        self.assertEqual(result["answer"], "I don't know about her contacts.")
 
     def test_girlfriend_pronoun_follow_up_needs_context(self):
         result = self._resolve("who is she")
@@ -851,24 +855,24 @@ class ChatServiceMultiTurnTests(unittest.TestCase):
     def test_girlfriend_pronoun_follow_up_company(self):
         self._resolve("tell me your gf")
         result = self._resolve("what company does she work at?")
-        _assert_work_only_refusal(self, result)
+        self.assertEqual(result["answer"], "She works at Teleperformance in IT Park.")
 
     def test_girlfriend_pronoun_follow_up_age(self):
         self._resolve("tell me your gf")
         result = self._resolve("what is her age?")
-        _assert_work_only_refusal(self, result)
+        self.assertEqual(result["answer"], f"Fiona is {_girlfriend_age()} years old. Her birthday is April 11, 2005.")
 
     def test_girlfriend_pronoun_follow_up_age_confirmation_yes(self):
         self._resolve("tell me your gf")
         age = _girlfriend_age()
         result = self._resolve(f"is she {age} years old today or not")
-        _assert_work_only_refusal(self, result)
+        self.assertEqual(result["answer"], f"Yes, she is {age} years old! Fiona was born on April 11, 2005.")
 
     def test_girlfriend_pronoun_follow_up_age_confirmation_no(self):
         self._resolve("tell me your gf")
         age = _girlfriend_age()
         result = self._resolve(f"is she {age + 1} years old")
-        _assert_work_only_refusal(self, result)
+        self.assertEqual(result["answer"], f"No, she is {age} years old, not {age + 1}. Fiona was born on April 11, 2005.")
 
     def test_girlfriend_age_follow_up_needs_context(self):
         result = self._resolve("what is her age?")
@@ -881,7 +885,8 @@ class ChatServiceMultiTurnTests(unittest.TestCase):
         self._resolve("tell me your gf")
         gemini.answer.reset_mock()
         result = self._resolve("is she 21 years old today or not")
-        _assert_work_only_refusal(self, result)
+        self.assertIn("years old", result["answer"])
+        self.assertIn("Fiona", result["answer"])
         gemini.answer.assert_not_called()
 
     def test_context_suggestions_on_fallback(self):
@@ -956,12 +961,13 @@ class ChatServiceContentMatchTests(unittest.TestCase):
             {"title": "Song B", "artist": "Artist B"},
         ]
         result = self._resolve("tell me about artist b", music=_make_service("get_paginated_music_list", (items, 2)))
-        _assert_work_only_refusal(self, result)
+        self.assertEqual(result["matched_question"], "Song B")
 
     def test_generic_list_does_not_pick_item(self):
         items = [{"title": {"en": f"Photo {i}"}, "description": {"en": ""}, "tags": []} for i in range(3)]
         result = self._resolve("gallery photos", gallery=_make_service("search_gallery_paginated", (items, 3)))
-        _assert_work_only_refusal(self, result)
+        self.assertEqual(result["action"], None)
+        self.assertIn("Gallery photos:", result["answer"])
 
     def test_gallery_description_lookup(self):
         items = [
@@ -969,7 +975,7 @@ class ChatServiceContentMatchTests(unittest.TestCase):
             {"title": {"en": "Beach Day"}, "description": {"en": "Sand and sea"}, "tags": []},
         ]
         result = self._resolve("show me the sunset hills photo", gallery=_make_service("search_gallery_paginated", (items, 2)))
-        _assert_work_only_refusal(self, result)
+        self.assertEqual(result["matched_question"], "Sunset")
 
     def test_hyphen_title_matches_space_query(self):
         long_desc = (
@@ -1003,7 +1009,7 @@ class ChatServiceContentMatchTests(unittest.TestCase):
             {"title": {"en": "City Tour"}, "description": {"en": ""}, "tags": []},
         ]
         result = self._resolve("tell me about beach vibes", video=_make_service("search_video_paginated", (items, 2)))
-        _assert_work_only_refusal(self, result)
+        self.assertEqual(result["matched_question"], "Beach-Vibes Vlog")
 
     def test_hyphen_title_gallery_lookup(self):
         items = [
@@ -1011,7 +1017,7 @@ class ChatServiceContentMatchTests(unittest.TestCase):
             {"title": {"en": "Mountain-View"}, "description": {"en": ""}, "tags": []},
         ]
         result = self._resolve("show mountain view photo", gallery=_make_service("search_gallery_paginated", (items, 2)))
-        _assert_work_only_refusal(self, result)
+        self.assertEqual(result["matched_question"], "Mountain-View")
 
 
 class ChatServiceFuzzyTopicTests(unittest.TestCase):
@@ -1052,11 +1058,11 @@ class ChatServiceLocalizedAliasTests(unittest.TestCase):
 
     def test_ceb_alias_lives(self):
         result = self._resolve("asa ka nagpuyo", "ceb")
-        _assert_work_only_refusal(self, result)
+        self.assertIn("Cabulihan", result["answer"])
 
     def test_fil_alias_name(self):
         result = self._resolve("ano pangalan mo", "fil_PH")
-        _assert_work_only_refusal(self, result)
+        self.assertIn("Joshua", result["answer"])
 
 
 KB_TEXT = """\
@@ -1177,15 +1183,16 @@ class ChatServiceKnowledgeBaseTests(unittest.TestCase):
 
     def test_new_fact_answered_from_guide_heading(self):
         result = self._resolve("what is your hobby?")
-        _assert_work_only_refusal(self, result)
+        self.assertEqual(result["matched_question"], "What is your hobby?")
+        self.assertIn("drawing and coding", result["answer"])
 
     def test_new_fact_answered_from_guide_alias(self):
         result = self._resolve("what do you do for fun?")
-        _assert_work_only_refusal(self, result)
+        self.assertIn("drawing and coding", result["answer"])
 
     def test_guide_key_section_answered(self):
         result = self._resolve("I want to know your favorite food")
-        _assert_work_only_refusal(self, result)
+        self.assertIn("adobo", result["answer"])
 
     def test_static_topic_reads_from_guide_key(self):
         result = self._resolve("tell me about yourself")
@@ -1193,7 +1200,7 @@ class ChatServiceKnowledgeBaseTests(unittest.TestCase):
 
     def test_real_guide_file_loads_and_answers(self):
         result = self._resolve("what genre do you like?", service=ChatService())
-        _assert_work_only_refusal(self, result)
+        self.assertIn("rap", result["answer"])
 
     def test_kb_answers_career_journey_not_ai(self):
         result = self._resolve("how did you start", service=ChatService())
@@ -1207,7 +1214,8 @@ class ChatServiceKnowledgeBaseTests(unittest.TestCase):
 
     def test_share_question_answered_by_like_comment_section(self):
         result = self._resolve("how do i share a photo", service=ChatService())
-        _assert_work_only_refusal(self, result)
+        self.assertEqual(result["matched_question"], "Can I like or comment on photos and videos?")
+        self.assertIn("sharing", result["answer"])
 
     def test_typo_alias_answered_via_fuzzy_matching(self):
         kb = KnowledgeBaseService(text=KB_TEXT_FUZZY)
@@ -1261,17 +1269,17 @@ class ChatServiceKnowledgeBaseLocalizedTests(unittest.TestCase):
 
     def test_resolve_answers_in_tagalog(self):
         result = self._resolve("ano pangalan mo", "fil_PH")
-        _assert_work_only_refusal(self, result)
+        self.assertEqual(result["answer"], "Si Joshua ako.")
 
     def test_key_section_reply_localized(self):
         result = self._resolve("unsa imong hobby", "ceb")
-        _assert_work_only_refusal(self, result)
+        self.assertEqual(result["answer"], "Ganahan ko mag-coding.")
 
     def test_untranslated_section_falls_back_to_english(self):
         kb = KnowledgeBaseService(text=KB_TEXT)
         service = ChatService(knowledge_base_service=kb)
         result = self._resolve("what is your hobby?", "ceb", service=service)
-        _assert_work_only_refusal(self, result)
+        self.assertEqual(result["answer"], "I like drawing and coding.")
 
 
 class ChatServiceLocalizedCountTests(unittest.TestCase):
@@ -1296,7 +1304,7 @@ class ChatServiceLocalizedCountTests(unittest.TestCase):
             {"chat_gallery_count_reply": "Naa koy {total} nga mga litrato sa akong gallery."},
             gallery=_make_service("search_gallery_paginated", ([{"title": {"en": "X"}}], 8)),
         )
-        _assert_work_only_refusal(self, result)
+        self.assertEqual(result["answer"], "Naa koy 8 nga mga litrato sa akong gallery.")
 
     def test_ceb_vlog_count(self):
         result = self._resolve(
@@ -1305,7 +1313,7 @@ class ChatServiceLocalizedCountTests(unittest.TestCase):
             {"chat_vlog_count_reply": "Naa koy {total} nga mga vlog sa akong koleksyon."},
             video=_make_service("search_video_paginated", ([{"title": {"en": "V"}}], 3)),
         )
-        _assert_work_only_refusal(self, result)
+        self.assertEqual(result["answer"], "Naa koy 3 nga mga vlog sa akong koleksyon.")
 
     def test_fil_music_count(self):
         result = self._resolve(
@@ -1314,7 +1322,7 @@ class ChatServiceLocalizedCountTests(unittest.TestCase):
             {"chat_music_count_reply": "Mayroon akong {total} na mga kanta sa aking koleksyon."},
             music=_make_service("get_paginated_music_list", ([{"title": "A", "artist": "B"}], 5)),
         )
-        _assert_work_only_refusal(self, result)
+        self.assertEqual(result["answer"], "Mayroon akong 5 na mga kanta sa aking koleksyon.")
 
 
 class ChatServiceDynamicJobTests(unittest.TestCase):
@@ -1387,18 +1395,17 @@ class RealGuideLocalizationTests(unittest.TestCase):
     def test_real_guide_localized_qna_resolves(self):
         service = ChatService()
         cases = [
-            ("asa ka nagpuyo", "ceb"),
-            ("ano pangalan mo", "fil_PH"),
-            ("unsa imong pangalan", "ceb"),
-            ("saan ka nakatira", "fil_PH"),
+            ("asa ka nagpuyo", "ceb", "Cabulihan"),
+            ("ano pangalan mo", "fil_PH", "Joshua"),
+            ("unsa imong pangalan", "ceb", "Joshua"),
+            ("saan ka nakatira", "fil_PH", "Cabulihan"),
         ]
-        for message, locale in cases:
+        for message, locale, needle in cases:
             with patch("app.Services.ChatService.gettext", side_effect=_fake_gettext), \
                  patch("app.Services.ChatService.get_locale", return_value=locale), \
                  patch("app.Services.ChatService.ChatService._get_gemini_service", new=lambda self: self.gemini_service):
                 result = service.resolve(message)
-            self.assertEqual(result["answer"], "chat_work_only_reply", f"{message} in {locale}")
-            self.assertEqual(result["action"], "expand_options")
+            self.assertIn(needle, result["answer"], f"{message} in {locale}")
 
 
 if __name__ == "__main__":

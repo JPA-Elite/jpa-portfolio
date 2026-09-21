@@ -9,8 +9,8 @@ class VisitService:
     def __init__(self, repository: IVisitRepository):
         self.repository = repository
 
-    def get_paginated_system_info(self, page, per_page, order: SortOrder = SortOrder.DESC):
-        documents, total_docs = self.repository.get_paginated_documents(page, per_page, order)
+    def get_paginated_system_info(self, page, per_page, order: SortOrder = SortOrder.DESC, search: str = ""):
+        documents, total_docs = self.repository.get_paginated_documents(page, per_page, order, search)
         system_info_list = [SystemInfo(**doc) for doc in documents]
         return system_info_list, total_docs
 
@@ -37,7 +37,15 @@ class VisitService:
 
     def delete_all_visitors(self):
         try:
-            all_docs = list(self.repository.collection.find({})) if hasattr(self.repository, 'collection') else []
+            collection = getattr(self.repository, 'collection', None)
+            if collection is not None and hasattr(collection, "find"):
+                try:
+                    cursor = collection.find({}, projection={"image_capture": 1})
+                except TypeError:
+                    cursor = collection.find({})
+                all_docs = list(cursor)
+            else:
+                all_docs = []
             image_urls = [doc.get("image_capture") for doc in all_docs if doc.get("image_capture")]
             result = self.repository.delete_all_visitors()
             for url in image_urls:

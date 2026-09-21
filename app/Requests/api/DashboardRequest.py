@@ -27,6 +27,14 @@ class DashboardRequest(BaseRequest):
     def _validate_visits_list(self):
         page = self._get_int("page", 1)
         per_page = self._get_int("perPage", 10)
+        try:
+            page = max(1, int(page))
+        except (TypeError, ValueError):
+            page = 1
+        try:
+            per_page = max(1, min(int(per_page), 100))
+        except (TypeError, ValueError):
+            per_page = 10
         order_str = str(self._get_args("order", "desc")).lower()
         search = str(self._get_args("search", "")).strip().lower()
         order = SortOrder.DESC if order_str == "desc" else SortOrder.ASC
@@ -55,9 +63,31 @@ class DashboardRequest(BaseRequest):
         return self._success_response({})
 
     def _validate_recent_activity(self):
-        limit = self._get_int("limit", 50)
-        return self._success_response({"limit": limit})
+        page = self._get_int("page", 1)
+        per_page = self._get_int("perPage", 10)
+        try:
+            page = max(1, int(page))
+        except (TypeError, ValueError):
+            page = 1
+        try:
+            per_page = max(1, min(int(per_page), 100))
+        except (TypeError, ValueError):
+            per_page = 10
+        order_str = str(self._get_args("order", "desc")).lower()
+        search = str(self._get_args("search", "")).strip()
+        order = SortOrder.DESC if order_str == "desc" else SortOrder.ASC
+
+        return self._success_response({
+            "page": page,
+            "per_page": per_page,
+            "order": order,
+            "search": search,
+        })
 
     def _validate_summary(self):
-        recent_limit = self._get_int("recent_limit", 20)
+        recent_limit = self._get_int("recent_limit", 0)
+        try:
+            recent_limit = max(0, min(int(recent_limit), 100))
+        except (TypeError, ValueError):
+            recent_limit = 0
         return self._success_response({"recent_limit": recent_limit})

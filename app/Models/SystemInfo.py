@@ -17,6 +17,8 @@ class SystemInfo:
         os_version=None,
         page=None,
         timestamp=None,
+        occurred_at=None,
+        visit_date=None,
         ip_address=None,
         city=None,
         region=None,
@@ -26,6 +28,7 @@ class SystemInfo:
         image_capture=None
     ):
         self._id = _id
+        self.visit_date = visit_date
         self.system = system
         self.node = node
         self.release = release
@@ -42,6 +45,7 @@ class SystemInfo:
         self.os_version = os_version
         self.page = page
         self.timestamp = timestamp
+        self.occurred_at = occurred_at
         self.image_capture = image_capture
         self.ip_address = ip_address
         self.city = city
@@ -67,6 +71,8 @@ class SystemInfo:
             "os_version": self.os_version,
             "page": self.page,
             "timestamp": self.timestamp,
+            "occurred_at": self.occurred_at,
+            "visit_date": self.visit_date,
             "image_capture": self.image_capture,
             "ip_address": self.ip_address,
             "city": self.city,

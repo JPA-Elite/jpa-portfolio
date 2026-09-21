@@ -22,6 +22,8 @@ from werkzeug.middleware.proxy_fix import ProxyFix
 from app.extensions import cache
 from app.domains import current_site, get_domain_config, resolve_domain_redirect
 from app.security import init_ddos_guard
+from app.Services.PortfolioService import PortfolioService
+from app.Repositories.PortfolioRepository import PortfolioRepository
 from dotenv import load_dotenv
 
 def _env_bool(name: str, default: bool):
@@ -265,6 +267,33 @@ def template_livereload():
 
 cache.init_app(app)
 init_ddos_guard(app)
+
+TRACKED_VISIT_ENDPOINTS = frozenset({
+    "pages.portfolio",
+    "pages.gallery",
+    "pages.vlog",
+    "pages.music",
+    "pages.concern",
+    "pages.donation",
+    "pages.booking",
+    "pages.add_portfolio_form",
+    "pages.admin_login",
+})
+
+visit_tracker = PortfolioService(repository=PortfolioRepository())
+
+
+@app.before_request
+def record_page_visit():
+    if request.method != "GET":
+        return None
+    if request.endpoint not in TRACKED_VISIT_ENDPOINTS:
+        return None
+    try:
+        visit_tracker.record_visit(page=request.path)
+    except Exception:
+        pass
+    return None
 
 babel = Babel(app)
 babel.init_app(app, locale_selector=get_locale)

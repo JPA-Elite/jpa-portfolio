@@ -19,16 +19,28 @@ function animateCount(element, start, end, duration) {
     }, stepTime);
 }
 
-function formatTimestamp(date = new Date()) {
-    return date.toLocaleString(undefined, {
+function formatTimestamp(date = new Date(), timeZone) {
+    const options = {
         year: "numeric",
         month: "short",
         day: "2-digit",
         hour: "2-digit",
         minute: "2-digit",
         second: "2-digit",
-    });
+    };
+    if (timeZone) options.timeZone = timeZone;
+    return date.toLocaleString(undefined, options);
 }
+
+function formatVisitTimestamp(item) {
+    if (item.occurred_at) {
+        const occurred = new Date(item.occurred_at);
+        if (!isNaN(occurred.getTime())) return formatTimestamp(occurred, "Asia/Manila");
+    }
+    return item.timestamp || "-";
+}
+
+const SEARCH_DEBOUNCE_MS = 300;
 
 document.addEventListener("DOMContentLoaded", async () => {
     const dashboardService = new AdminDashboardService();
@@ -41,9 +53,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     const companyRoadmapCount = document.getElementById("companyRoadmapCount");
     const lastUpdated = document.getElementById("dashboardLastUpdated");
 
-    try {
-        const summary = await dashboardService.fetchSummary();
-
+    const summaryPromise = dashboardService.fetchSummary({ recent_limit: 0 });
+    function renderSummary(summary) {
         animateCount(visitorCount, 0, Number(summary?.visitor_total_count || 0), 800);
         animateCount(botCount, 0, Number(summary?.bot_total_count || 0), 800);
         animateCount(musicCount, 0, Number(summary?.total_music || 0), 700);
@@ -51,20 +62,12 @@ document.addEventListener("DOMContentLoaded", async () => {
         animateCount(videoCount, 0, Number(summary?.total_video || 0), 700);
         animateCount(keyProjectCount, 0, Number(summary?.total_projects || 0), 700);
         animateCount(companyRoadmapCount, 0, Number(summary?.total_roadmaps || 0), 700);
-
         if (lastUpdated) {
             lastUpdated.textContent = formatTimestamp();
         }
-
-        if (summary?.recent_activity && Array.isArray(summary.recent_activity)) {
-            window.__dashboard_recent_activity = summary.recent_activity;
-        }
-
-    } catch (err) {
-        console.error("Dashboard Error:", err);
-        if (lastUpdated) lastUpdated.textContent = formatTimestamp();
     }
 
+    // ─── Recent Activity Table (server paginated) ───────────────────────
     (function () {
         const tableBody = document.getElementById("recentActivityTableBody");
         const perPageSelect = document.getElementById("activityPerPage");
@@ -78,54 +81,34 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         let activityData = [];
         let currentPage = 1;
+        let total = 0;
+        let requestToken = 0;
+        let searchTimer = null;
 
-        function getFilteredActivityData() {
-            const searchValue = String(searchInput?.value || "").trim().toLowerCase();
-            const filtered = !searchValue
-                ? [...activityData]
-                : activityData.filter((item) => {
-                    let details = "";
-                    if (item.body) {
-                        try {
-                            details = JSON.stringify(item.body);
-                        } catch (error) {
-                            details = String(item.body);
-                        }
-                    } else if (item.status_code) {
-                        details = `Status: ${item.status_code}`;
-                    }
+        function perPageValue() {
+            return Number(perPageSelect.value) || 10;
+        }
 
-                    const searchable = [
-                        item.timestamp || "",
-                        item.user_id || item.user || "",
-                        item.method || "",
-                        item.path || item.action || "",
-                        details || "",
-                    ].join(" ").toLowerCase();
+        function totalPages() {
+            return Math.max(1, Math.ceil(total / perPageValue()));
+        }
 
-                    return searchable.includes(searchValue);
-                });
-
-            const order = String(orderSelect?.value || "desc").toLowerCase();
-            filtered.sort((a, b) => {
-                const aTime = new Date(a.timestamp || 0).getTime() || 0;
-                const bTime = new Date(b.timestamp || 0).getTime() || 0;
-                return order === "asc" ? aTime - bTime : bTime - aTime;
-            });
-
-            return filtered;
+        function activityDetails(item) {
+            if (item.body) {
+                try {
+                    return JSON.stringify(item.body);
+                } catch (error) {
+                    return String(item.body);
+                }
+            }
+            if (item.status_code) {
+                return `Status: ${item.status_code}`;
+            }
+            return "";
         }
 
         function renderPage() {
-            const filteredData = getFilteredActivityData();
-            const perPage = Number(perPageSelect.value) || 10;
-            const total = filteredData.length;
-            const totalPages = Math.max(1, Math.ceil(total / perPage));
-            if (currentPage > totalPages) currentPage = totalPages;
-            const start = (currentPage - 1) * perPage;
-            const end = Math.min(total, start + perPage);
-            const atFirstPage = currentPage <= 1;
-            const atLastPage = currentPage >= totalPages;
+            if (currentPage > totalPages()) currentPage = totalPages();
 
             if (total === 0) {
                 tableBody.innerHTML = '<tr><td colspan="6" class="text-center text-muted">No recent activity.</td></tr>';
@@ -140,21 +123,15 @@ document.addEventListener("DOMContentLoaded", async () => {
             const clearBtn = document.getElementById("clearActivityBtn");
             if (clearBtn) clearBtn.disabled = false;
 
-            const rows = filteredData.slice(start, end).map((item) => {
+            const start = (currentPage - 1) * perPageValue() + 1;
+            const end = start + activityData.length - 1;
+
+            const rows = activityData.map((item) => {
                 const ts = item.timestamp ? new Date(item.timestamp) : new Date();
                 const user = item.user_id || item.user || "-";
                 const method = item.method || "-";
                 const action = item.path || item.action || "";
-                let details = "";
-                if (item.body) {
-                    try {
-                        details = JSON.stringify(item.body);
-                    } catch (error) {
-                        details = String(item.body);
-                    }
-                } else if (item.status_code) {
-                    details = `Status: ${item.status_code}`;
-                }
+                let details = activityDetails(item);
                 if (details.length > 200) details = `${details.slice(0, 200)}...`;
 
                 return `
@@ -173,9 +150,9 @@ document.addEventListener("DOMContentLoaded", async () => {
             }).join("");
 
             tableBody.innerHTML = rows;
-            pageInfo.textContent = `${start + 1}-${end} of ${total}`;
-            prevBtn.disabled = atFirstPage;
-            nextBtn.disabled = atLastPage;
+            pageInfo.textContent = `${start}-${end} of ${total}`;
+            prevBtn.disabled = currentPage <= 1;
+            nextBtn.disabled = currentPage >= totalPages();
 
             // Attach delete handlers
             tableBody.querySelectorAll(".activity-delete-btn").forEach((btn) => {
@@ -193,8 +170,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                         if (json.ok) {
                             bootstrap.Modal.getInstance(document.getElementById("deleteConfirmModal")).hide();
                             window.notify(json.message || "Record deleted.", "success");
-                            activityData = activityData.filter((v) => (v._id || "") !== recordId);
-                            renderPage();
+                            loadActivity();
                         } else {
                             window.notify(json.message || "Delete failed.", "error");
                         }
@@ -204,37 +180,42 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
 
         async function loadActivity() {
+            const token = ++requestToken;
             tableBody.innerHTML = '<tr><td colspan="6" class="text-center">Loading...</td></tr>';
-            if (window.__dashboard_recent_activity && Array.isArray(window.__dashboard_recent_activity)) {
-                activityData = window.__dashboard_recent_activity;
-                currentPage = 1;
-                renderPage();
-                return;
-            }
-
             try {
-                const data = await dashboardService.fetchRecentActivity();
-                activityData = Array.isArray(data) ? data : [];
-                currentPage = 1;
+                const json = await dashboardService.fetchRecentActivity({
+                    page: currentPage,
+                    perPage: perPageValue(),
+                    order: orderSelect?.value || "desc",
+                    search: String(searchInput?.value || "").trim(),
+                });
+                if (token !== requestToken) return;
+                activityData = Array.isArray(json?.data) ? json.data : [];
+                total = Number(json?.total || 0);
                 renderPage();
             } catch (err) {
+                if (token !== requestToken) return;
                 console.error("Failed to load recent activity", err);
                 activityData = [];
+                total = 0;
                 renderPage();
             }
         }
 
         perPageSelect.addEventListener("change", () => {
             currentPage = 1;
-            renderPage();
+            loadActivity();
         });
         searchInput?.addEventListener("input", () => {
-            currentPage = 1;
-            renderPage();
+            clearTimeout(searchTimer);
+            searchTimer = setTimeout(() => {
+                currentPage = 1;
+                loadActivity();
+            }, SEARCH_DEBOUNCE_MS);
         });
         orderSelect?.addEventListener("change", () => {
             currentPage = 1;
-            renderPage();
+            loadActivity();
         });
         document.getElementById("clearActivityBtn")?.addEventListener("click", () => {
             window.confirmDelete("Clear all recent activity records?", async () => {
@@ -243,8 +224,8 @@ document.addEventListener("DOMContentLoaded", async () => {
                 if (json.ok) {
                     bootstrap.Modal.getInstance(document.getElementById("deleteConfirmModal")).hide();
                     window.notify(json.message || "All activity cleared.", "success");
-                    activityData = [];
-                    renderPage();
+                    currentPage = 1;
+                    loadActivity();
                 } else {
                     window.notify(json.message || "Failed to clear activity.", "error");
                 }
@@ -253,22 +234,20 @@ document.addEventListener("DOMContentLoaded", async () => {
         prevBtn.addEventListener("click", () => {
             if (currentPage > 1) {
                 currentPage--;
-                renderPage();
+                loadActivity();
             }
         });
         nextBtn.addEventListener("click", () => {
-            const perPage = Number(perPageSelect.value) || 10;
-            const totalPages = Math.max(1, Math.ceil(getFilteredActivityData().length / perPage));
-            if (currentPage < totalPages) {
+            if (currentPage < totalPages()) {
                 currentPage++;
-                renderPage();
+                loadActivity();
             }
         });
 
         loadActivity();
     })();
 
-    // ─── Visits Table ───────────────────────────────────────────────────
+    // ─── Visits Table (server paginated) ────────────────────────────────
     (function () {
         const tableBody = document.getElementById("visitsTableBody");
         const perPageSelect = document.getElementById("visitsPerPage");
@@ -280,40 +259,25 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         if (!tableBody) return;
 
-        let allVisits = []; // full unfiltered list from server
+        let visitsData = [];
         let currentPage = 1;
+        let total = 0;
+        let requestToken = 0;
+        let searchTimer = null;
 
-        function getFilteredVisits() {
-            const searchValue = String(searchInput?.value || "").trim().toLowerCase();
-            if (!searchValue) return [...allVisits];
-            return allVisits.filter((item) => {
-                const searchable = [
-                    item.system || "",
-                    item.device || "",
-                    item.browser || "",
-                    item.os || "",
-                    item.ip_address || "",
-                    item.city || "",
-                    item.country || "",
-                    item.timestamp || "",
-                ].join(" ").toLowerCase();
-                return searchable.includes(searchValue);
-            });
+        function perPageValue() {
+            return Number(perPageSelect?.value) || 10;
+        }
+
+        function totalPages() {
+            return Math.max(1, Math.ceil(total / perPageValue()));
         }
 
         function renderPage() {
-            const filtered = getFilteredVisits();
-            const perPage = Number(perPageSelect?.value) || 10;
-            const total = filtered.length;
-            const totalPages = Math.max(1, Math.ceil(total / perPage));
-            if (currentPage > totalPages) currentPage = totalPages;
-            const start = (currentPage - 1) * perPage;
-            const end = Math.min(total, start + perPage);
-            const atFirst = currentPage <= 1;
-            const atLast = currentPage >= totalPages;
+            if (currentPage > totalPages()) currentPage = totalPages();
 
             if (total === 0) {
-                tableBody.innerHTML = '<tr><td colspan="9" class="text-center text-muted">No visit records found.</td></tr>';
+                tableBody.innerHTML = '<tr><td colspan="10" class="text-center text-muted">No visit records found.</td></tr>';
                 pageInfo.textContent = "";
                 prevBtn.disabled = true;
                 nextBtn.disabled = true;
@@ -325,9 +289,11 @@ document.addEventListener("DOMContentLoaded", async () => {
             const clearBtn = document.getElementById("clearVisitsBtn");
             if (clearBtn) clearBtn.disabled = false;
 
-            const rows = filtered.slice(start, end).map((item) => {
-                const ts = item.timestamp ? new Date(item.timestamp) : null;
-                const location = [item.city, item.country].filter(Boolean).join(", ") || "Unknown";
+            const start = (currentPage - 1) * perPageValue() + 1;
+            const end = start + visitsData.length - 1;
+
+            const rows = visitsData.map((item) => {
+                const tsText = formatVisitTimestamp(item);
                 const ip = item.ip_address || "Unknown";
                 const _id = item._id?.$oid || item._id || "";
                 return `
@@ -336,10 +302,11 @@ document.addEventListener("DOMContentLoaded", async () => {
                         <td>${item.device || "-"}</td>
                         <td>${item.browser || "-"}</td>
                         <td>${item.os || "-"}</td>
+                        <td>${item.page || "-"}</td>
                         <td>${ip}</td>
                         <td>${item.city || "-"}</td>
                         <td>${item.country || "-"}</td>
-                        <td class="small text-muted">${ts ? formatTimestamp(ts) : "-"}</td>
+                        <td class="small text-muted">${tsText}</td>
                         <td>
                             <button class="btn btn-outline-danger btn-sm py-0 px-1 visit-delete-btn"
                                 title="Delete">
@@ -350,9 +317,9 @@ document.addEventListener("DOMContentLoaded", async () => {
             }).join("");
 
             tableBody.innerHTML = rows;
-            pageInfo.textContent = `${start + 1}-${end} of ${total}`;
-            prevBtn.disabled = atFirst;
-            nextBtn.disabled = atLast;
+            pageInfo.textContent = `${start}-${end} of ${total}`;
+            prevBtn.disabled = currentPage <= 1;
+            nextBtn.disabled = currentPage >= totalPages();
 
             // Attach delete handlers
             tableBody.querySelectorAll(".visit-delete-btn").forEach((btn) => {
@@ -366,8 +333,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                         if (json.ok) {
                             bootstrap.Modal.getInstance(document.getElementById("deleteConfirmModal")).hide();
                             window.notify("Record deleted.", "success");
-                            allVisits = allVisits.filter((v) => (v._id || "") !== recordId);
-                            renderPage();
+                            loadVisits();
                         } else {
                             window.notify(json.message || "Delete failed.", "error");
                         }
@@ -377,24 +343,43 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
 
         async function loadVisits() {
-            tableBody.innerHTML = '<tr><td colspan="9" class="text-center">Loading...</td></tr>';
+            const token = ++requestToken;
+            tableBody.innerHTML = '<tr><td colspan="10" class="text-center">Loading...</td></tr>';
             try {
-                const BASE = "/admin/api";
-                const res = await fetch(`${BASE}/visits-list?page=1&perPage=200`);
-                const json = await res.json();
-                allVisits = Array.isArray(json.data) ? json.data : [];
-                currentPage = 1;
+                const json = await dashboardService.fetchVisits({
+                    page: currentPage,
+                    perPage: perPageValue(),
+                    order: orderSelect?.value || "desc",
+                    search: String(searchInput?.value || "").trim(),
+                });
+                if (token !== requestToken) return;
+                visitsData = Array.isArray(json?.data) ? json.data : [];
+                total = Number(json?.total || 0);
                 renderPage();
             } catch (err) {
+                if (token !== requestToken) return;
                 console.error("Failed to load visits", err);
-                allVisits = [];
+                visitsData = [];
+                total = 0;
                 renderPage();
             }
         }
 
-        perPageSelect?.addEventListener("change", () => { currentPage = 1; renderPage(); });
-        searchInput?.addEventListener("input", () => { currentPage = 1; renderPage(); });
-        orderSelect?.addEventListener("change", () => { currentPage = 1; renderPage(); });
+        perPageSelect?.addEventListener("change", () => {
+            currentPage = 1;
+            loadVisits();
+        });
+        searchInput?.addEventListener("input", () => {
+            clearTimeout(searchTimer);
+            searchTimer = setTimeout(() => {
+                currentPage = 1;
+                loadVisits();
+            }, SEARCH_DEBOUNCE_MS);
+        });
+        orderSelect?.addEventListener("change", () => {
+            currentPage = 1;
+            loadVisits();
+        });
         document.getElementById("clearVisitsBtn")?.addEventListener("click", () => {
             window.confirmDelete("Clear all visitor records?", async () => {
                 const res = await fetch("/admin/api/clear-all-visitors", { method: "DELETE" });
@@ -402,20 +387,33 @@ document.addEventListener("DOMContentLoaded", async () => {
                 if (json.ok) {
                     bootstrap.Modal.getInstance(document.getElementById("deleteConfirmModal")).hide();
                     window.notify(json.message || "All visitors cleared.", "success");
-                    allVisits = [];
-                    renderPage();
+                    currentPage = 1;
+                    loadVisits();
                 } else {
                     window.notify(json.message || "Failed to clear visitors.", "error");
                 }
             });
         });
-        prevBtn.addEventListener("click", () => { if (currentPage > 1) { currentPage--; renderPage(); } });
+        prevBtn.addEventListener("click", () => {
+            if (currentPage > 1) {
+                currentPage--;
+                loadVisits();
+            }
+        });
         nextBtn.addEventListener("click", () => {
-            const perPage = Number(perPageSelect?.value) || 10;
-            const totalPages = Math.max(1, Math.ceil(getFilteredVisits().length / perPage));
-            if (currentPage < totalPages) { currentPage++; renderPage(); }
+            if (currentPage < totalPages()) {
+                currentPage++;
+                loadVisits();
+            }
         });
 
         loadVisits();
     })();
+
+    try {
+        renderSummary(await summaryPromise);
+    } catch (err) {
+        console.error("Dashboard Error:", err);
+        if (lastUpdated) lastUpdated.textContent = formatTimestamp();
+    }
 });

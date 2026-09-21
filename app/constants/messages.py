@@ -65,4 +65,5 @@ BOOKING_EMAIL_SENT_MSG = "Your booking request has been sent successfully! We wi
 
 # System / Records Messages
 SYSTEM_INFO_ADD_MSG = "System information added successfully"
+VISIT_ALREADY_RECORDED_MSG = "Visit already recorded for this page today."
 DISPLAY_RECORDS_DELETE_MSG = "Displayed records deleted successfully."

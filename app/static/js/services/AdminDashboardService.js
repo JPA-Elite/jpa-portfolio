@@ -7,18 +7,27 @@ export class AdminDashboardService {
         this.repository = new AdminDashboardRepository();
     }
 
-    async fetchSummary() {
+    async fetchSummary(params = { recent_limit: 0 }) {
         try {
-            return await this.repository.fetchSummary();
+            return await this.repository.fetchSummary(params);
         } catch (error) {
             console.error("AdminDashboardService Error:", error);
             throw error;
         }
     }
 
-    async fetchRecentActivity() {
+    async fetchRecentActivity(params) {
         try {
-            return await this.repository.fetchRecentActivity();
+            return await this.repository.fetchRecentActivity(params);
+        } catch (error) {
+            console.error("AdminDashboardService Error:", error);
+            throw error;
+        }
+    }
+
+    async fetchVisits(params) {
+        try {
+            return await this.repository.fetchVisits(params);
         } catch (error) {
             console.error("AdminDashboardService Error:", error);
             throw error;

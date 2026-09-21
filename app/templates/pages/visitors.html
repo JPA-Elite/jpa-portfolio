@@ -51,8 +51,10 @@
                         {% endif %}
                     </td>
                     <td>
+                        {% if document.image_capture %}
                         <img class="capture_image" src="{{ document.image_capture }}" alt="captured image"
                             onclick="previewImage('{{ document.image_capture }}')" />
+                        {% endif %}
                     </td>
                 </tr>
                 {% endfor %}

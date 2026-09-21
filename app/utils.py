@@ -1,9 +1,7 @@
 import cloudinary.uploader
 from dotenv import load_dotenv
-import cv2
 import os
 import cloudinary
-from datetime import datetime
 import random
 from app.constants.cloudinary import CloudinaryFolders, CloudinaryResourceType
 from werkzeug.urls import url_encode
@@ -221,35 +219,6 @@ cloudinary.config(
     api_key=os.getenv('CLOUDINARY_API_KEY'),
     api_secret=os.getenv('CLOUDINARY_API_SECRET')
 )
-
-def capture_image(save_dir="captured_images"):
-    os.makedirs(save_dir, exist_ok=True)
-    cap = cv2.VideoCapture(0)
-    if not cap.isOpened():
-        return None, "Error: Could not access the camera."
-
-    ret, frame = cap.read()
-    if ret:
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        filename = os.path.join(save_dir, f"capture_{timestamp}.jpg")
-        cv2.imwrite(filename, frame)
-        try:
-            upload_result = cloudinary.uploader.upload(
-                filename,
-                folder="capture_images"
-            )
-            cloudinary_url = upload_result['secure_url']
-            os.remove(filename)
-
-            return cloudinary_url, None
-
-        except Exception as e:
-            os.remove(filename)
-            return None, f"Error uploading image to Cloudinary: {str(e)}"
-
-    cap.release()
-    return None, "Error: Failed to capture image."
-
 
 def delete_image_from_cloudinary(image_url):
     try:

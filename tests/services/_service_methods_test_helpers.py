@@ -211,6 +211,7 @@ def _build_service_instance(service_cls):
 
     repo.get_paginated_documents.return_value = ([_system_info_doc()], 1)
     repo.count_visits.return_value = 1
+    repo.find_visit_for_day.return_value = None
 
     repo.find_by_username.return_value = {"_id": VALID_OBJECT_ID, "username": "admin", "password": "hashed"}
     repo.find_by_id.return_value = {"_id": VALID_OBJECT_ID, "username": "admin", "password": "hashed"}
@@ -335,7 +336,6 @@ def _patch_targets():
         ("app.Services.CompanyRoadmapService.upload_file_to_cloudinary", lambda *a, **k: "/uploaded.webp"),
         ("app.Services.VisitService.delete_image_from_cloudinary", lambda *a, **k: None),
         ("app.Services.PortfolioService.parse", lambda *_a, **_k: _fake_user_agent()),
-        ("app.Services.PortfolioService.url_for", lambda *_a, **_k: "/profile"),
         ("app.Services.PortfolioService.requests.get", lambda *_a, **_k: SimpleNamespace(json=lambda: {})),
         ("app.Services.PortfolioService.pytz.timezone", lambda *_a, **_k: timezone.utc),
         ("app.Services.PortfolioService.platform.system", lambda: "Windows"),

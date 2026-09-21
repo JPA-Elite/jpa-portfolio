@@ -21,7 +21,16 @@ class VisitServiceTests(unittest.TestCase):
 
         self.assertEqual(total, 1)
         self.assertEqual(items[0].system, "Windows")
-        self.repo.get_paginated_documents.assert_called_once_with(1, 10, SortOrder.DESC)
+        self.repo.get_paginated_documents.assert_called_once_with(1, 10, SortOrder.DESC, "")
+
+    def test_get_paginated_system_info_forwards_search(self):
+        self.repo.get_paginated_documents.return_value = ([system_info_doc()], 1)
+
+        items, total = self.service.get_paginated_system_info(2, 5, SortOrder.ASC, "chrome")
+
+        self.assertEqual(total, 1)
+        self.assertEqual(items[0].page, "/profile")
+        self.repo.get_paginated_documents.assert_called_once_with(2, 5, SortOrder.ASC, "chrome")
 
     @patch("app.Services.VisitService.delete_image_from_cloudinary")
     def test_delete_page_system_info_deletes_records_and_images(self, mock_delete_cloudinary):

@@ -1,12 +1,12 @@
 from app.Repositories.Interfaces.IPortfolioRepository import IPortfolioRepository
 from app.Models.SystemInfo import SystemInfo
-from flask import request, url_for
+from flask import request
 from user_agents import parse
 import platform
 from datetime import datetime
 import pytz
 import requests
-from app.constants.messages import SYSTEM_INFO_ADD_MSG
+from app.constants.messages import SYSTEM_INFO_ADD_MSG, VISIT_ALREADY_RECORDED_MSG
 
 class PortfolioService:
     def __init__(self, repository: IPortfolioRepository):
@@ -31,17 +31,20 @@ class PortfolioService:
         except Exception:
             return {"ip": ip, "city": "Unknown", "region": "Unknown", "country": "Unknown", "location": "Unknown"}
 
-    def add_system_info(self, cloudinary_url=None):
+    def record_visit(self, page):
         try:
-            user_agent_string = request.headers.get("User-Agent")
-            user_agent = parse(user_agent_string)
-
             user_ip = self.get_client_ip()
-            location_info = self.get_ip_location(user_ip)
 
             tz = pytz.timezone("Asia/Manila")
             current_time = datetime.now(tz)
-            formatted_time = current_time.strftime("%m/%d/%Y - %I:%M %p")
+            visit_date = current_time.strftime("%Y-%m-%d")
+
+            if self.repository.find_visit_for_day(user_ip, page, visit_date):
+                return {"message": VISIT_ALREADY_RECORDED_MSG, "status": "skipped"}
+
+            user_agent_string = request.headers.get("User-Agent")
+            user_agent = parse(user_agent_string)
+            location_info = self.get_ip_location(user_ip)
 
             system_info = SystemInfo(
                 system=platform.system(),
@@ -58,9 +61,10 @@ class PortfolioService:
                 browser_version=user_agent.browser.version_string,
                 os=user_agent.os.family,
                 os_version=user_agent.os.version_string,
-                page=url_for(request.endpoint),
-                timestamp=formatted_time,
-                image_capture=cloudinary_url,
+                page=page,
+                timestamp=current_time.strftime("%m/%d/%Y - %I:%M %p"),
+                occurred_at=current_time.isoformat(),
+                visit_date=visit_date,
                 ip_address=location_info["ip"],
                 city=location_info["city"],
                 region=location_info["region"],
@@ -77,4 +81,3 @@ class PortfolioService:
 
         except Exception as e:
             return {"message": str(e), "status": "error"}
-

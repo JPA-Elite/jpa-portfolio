@@ -208,7 +208,7 @@ def _build_service_mock(name="service"):
 
     svc.count_visits.return_value = {"visitor_total_count": 1, "bot_total_count": 0}
     svc.delete_page_system_info.return_value = {"status": "success", "message": "ok"}
-    svc.add_system_info.return_value = {"status": "success", "message": "ok"}
+    svc.record_visit.return_value = {"status": "success", "message": "ok"}
 
     svc.get_paginated_system_info.return_value = (_dummy_model_list("visit"), 1)
     svc.get_paginated_login_attempt_list.return_value = (_dummy_model_list("login_attempt"), 1)

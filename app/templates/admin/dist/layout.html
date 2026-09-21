@@ -73,11 +73,11 @@
                     </li>
                     <li class="nav-item dropdown user-menu">
                         <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
-                            <img src="{{ admin_avatar }}" class="user-image rounded-circle shadow" alt="User Image" />
+                            <img src="{{ admin_avatar }}" class="user-image rounded-circle" alt="User Image" />
                         </a>
                         <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
                             <li class="user-header text-bg-primary">
-                                <img src="{{ admin_avatar }}" class="rounded-circle shadow" alt="User Image" />
+                                <img src="{{ admin_avatar }}" class="rounded-circle" alt="User Image" />
                                 <p>
                                     {{ admin_username }}
                                     <small>Administrator</small>
@@ -97,11 +97,11 @@
 
         <!-- Sidebar -->
         {% block sidebar %}
-        <aside id="adminSidebar" class="app-sidebar bg-body-secondary shadow">
+        <aside id="adminSidebar" class="app-sidebar bg-body-secondary">
             <div class="sidebar-brand">
                 <a href="/admin/dashboard" class="brand-link">
                     <img src="{{ url_for('static', filename='admin/assets/img/AdminLTELogo.png', _external=True) }}"
-                        alt="AdminLTE Logo" class="brand-image opacity-75 shadow" />
+                        alt="AdminLTE Logo" class="brand-image opacity-75" />
                     <span class="brand-text fw-light">JPA ADMIN</span>
                 </a>
             </div>

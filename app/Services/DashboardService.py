@@ -6,9 +6,11 @@ from app.Repositories.CompanyRoadmapRepository import CompanyRoadmapRepository
 from app.Repositories.ActivityLogRepository import ActivityLogRepository
 from app.Services.VisitService import VisitService
 from app.Repositories.VisitRepository import VisitRepository
+from app.configurations import SortOrder
 from flask import current_app
 import os
 import json
+import re
 from collections import deque
 
 class DashboardService:
@@ -21,8 +23,13 @@ class DashboardService:
         self.activity_repo = ActivityLogRepository()
         self.visit_service = VisitService(repository=VisitRepository())
 
-    def get_summary(self, recent_limit: int = 20):
+    def get_summary(self, recent_limit: int = 0):
         try:
+            try:
+                recent_limit = int(recent_limit)
+            except (TypeError, ValueError):
+                recent_limit = 0
+            recent_limit = max(0, min(recent_limit, 100))
             visit_counts = {"visitor_total_count": 0, "bot_total_count": 0}
             try:
                 coll = getattr(self.visit_service, "repository", None)
@@ -82,15 +89,16 @@ class DashboardService:
 
             recent = []
             try:
-                coll = getattr(self.activity_repo, "collection", None)
-                if coll is not None and hasattr(coll, "find"):
-                    proj = {"method": 1, "path": 1, "status_code": 1, "user_id": 1, "user": 1, "timestamp": 1, "body": 1}
-                    cursor = coll.find({}, projection=proj).sort([("_id", -1)]).limit(recent_limit)
-                    for doc in cursor:
-                        doc["_id"] = str(doc.get("_id"))
-                        recent.append(doc)
-                else:
-                    current_app.logger.debug("Activity collection not available; skipping DB read for recent activity")
+                if recent_limit > 0:
+                    coll = getattr(self.activity_repo, "collection", None)
+                    if coll is not None and hasattr(coll, "find"):
+                        proj = {"method": 1, "path": 1, "status_code": 1, "user_id": 1, "user": 1, "timestamp": 1, "body": 1}
+                        cursor = coll.find({}, projection=proj).sort([("_id", -1)]).limit(recent_limit)
+                        for doc in cursor:
+                            doc["_id"] = str(doc.get("_id"))
+                            recent.append(doc)
+                    else:
+                        current_app.logger.debug("Activity collection not available; skipping DB read for recent activity")
             except Exception:
                 current_app.logger.exception("Failed to read activity_logs collection in DashboardService")
 
@@ -129,6 +137,54 @@ class DashboardService:
         except Exception as e:
             current_app.logger.exception("Failed to delete activity logs")
             return {"status": "error", "message": str(e)}
+
+    def get_paginated_recent_activity(self, page: int = 1, per_page: int = 10, order: SortOrder = SortOrder.DESC, search: str = ""):
+        try:
+            try:
+                page = max(1, int(page))
+            except (TypeError, ValueError):
+                page = 1
+            try:
+                per_page = int(per_page)
+            except (TypeError, ValueError):
+                per_page = 10
+            per_page = max(1, min(per_page, 100))
+            collection = self.activity_repo.collection
+            query = {}
+            needle = str(search or "").strip()
+            if needle:
+                pattern = re.escape(needle)
+                query = {
+                    "$or": [
+                        {"method": {"$regex": pattern, "$options": "i"}},
+                        {"path": {"$regex": pattern, "$options": "i"}},
+                        {"user_id": {"$regex": pattern, "$options": "i"}},
+                        {"remote_addr": {"$regex": pattern, "$options": "i"}},
+                        {"timestamp": {"$regex": pattern, "$options": "i"}},
+                    ]
+                }
+
+            total = int(collection.count_documents(query))
+            if total == 0:
+                return [], 0
+            sort_direction = -1 if order == SortOrder.DESC else 1
+            skip = (page - 1) * per_page
+            projection = {"method": 1, "path": 1, "status_code": 1, "user_id": 1, "user": 1, "timestamp": 1, "body": 1, "remote_addr": 1}
+            cursor = (
+                collection.find(query, projection=projection)
+                .sort([("_id", sort_direction)])
+                .skip(skip)
+                .limit(per_page)
+            )
+
+            items = []
+            for doc in cursor:
+                doc["_id"] = str(doc.get("_id"))
+                items.append(doc)
+            return items, total
+        except Exception:
+            current_app.logger.exception("Failed to read paginated activity_logs from DB in DashboardService")
+            return [], 0
 
     def get_recent_activity(self, limit: int = 50):
         try:

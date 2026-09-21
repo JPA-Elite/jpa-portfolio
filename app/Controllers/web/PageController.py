@@ -1,7 +1,5 @@
 import math
 from flask import redirect, url_for, render_template, request
-from app.Services.PortfolioService import PortfolioService
-from app.Repositories.PortfolioRepository import PortfolioRepository
 from app.Services.VideoService import VideoService
 from app.Repositories.VideoRepository import VideoRepository
 from app.Services.GalleryService import GalleryService
@@ -13,7 +11,7 @@ from app.Repositories.CompanyRoadmapRepository import CompanyRoadmapRepository
 from app.Services.GalleryLikeService import GalleryLikeService
 from app.Repositories.GalleryLikeRepository import GalleryLikeRepository
 from app.Requests.web.PageRequest import PageRequest
-from app.utils import capture_image, get_random_tags
+from app.utils import get_random_tags
 from app.configurations import (
     ADD_PORTFOLIO_PAGE,
     CONCERN_PAGE,
@@ -37,7 +35,6 @@ from markupsafe import escape
 import requests
 
 # Initialize Services
-portfolio_service = PortfolioService(repository=PortfolioRepository())
 gallery_service = GalleryService(repository=GalleryRepository())
 video_service = VideoService(repository=VideoRepository())
 key_project_service = KeyProjectService(repository=KeyProjectRepository())
@@ -603,9 +600,6 @@ def _resolve_project_stack_display(stack_value, locale_value, seed_stack_map=Non
     return stack_text
 
 def index_route():
-    log_result = handle_log_parameter()
-    if log_result is not None:
-        return log_result
     return redirect(url_for("pages.profile"))
 
 def profile_route():
@@ -777,7 +771,7 @@ def profile_route():
             "accent_color": str(entry.get("accent_color") or "#2962ff"),
         })
 
-    return handle_log_parameter() or render_template(
+    return render_template(
         PROFILE_PAGE,
         profile_image=PROFILE_IMAGE,
         profile_image_gif=PROFILE_IMAGE_GIF,
@@ -819,7 +813,7 @@ def gallery_route():
     voice_icon = url_for("static", filename="images/voice.webp", _external=True)
     random_tags = get_random_tags(gallery_service.get_all_tags(100), 12)
 
-    return handle_log_parameter() or render_template(
+    return render_template(
         GALLERY_PAGE,
         image_path=IMAGE_PATH,
         gallery_data=gallery_data,
@@ -856,7 +850,7 @@ def vlog_route():
     total_pages = math.ceil(total / items_per_page)
     random_tags = get_random_tags(video_service.get_all_tags(100), 12)
 
-    return handle_log_parameter() or render_template(
+    return render_template(
         VLOG_PAGE,
         vlogs=vlog_data,
         current_page=page,
@@ -868,36 +862,23 @@ def vlog_route():
     )
 
 def music_route():
-    return handle_log_parameter() or render_template(MUSIC_PAGE, title="My Fav Music")
+    return render_template(MUSIC_PAGE, title="My Fav Music")
 
 def concern_route():
-    return handle_log_parameter() or render_template(CONCERN_PAGE, title="My Concern")
+    return render_template(CONCERN_PAGE, title="My Concern")
 
 def add_portfolio_form_route():
-    return handle_log_parameter() or render_template(ADD_PORTFOLIO_PAGE)
+    return render_template(ADD_PORTFOLIO_PAGE)
 
 def donation_route():
-    return handle_log_parameter() or render_template(DONATION_PAGE)
+    return render_template(DONATION_PAGE)
 
 def booking_route():
-    return handle_log_parameter() or render_template(BOOKING_PAGE)
+    return render_template(BOOKING_PAGE)
 
 def portfolio_redirect():
     from flask import redirect
     return redirect("/portfolio", code=301)
-
-def handle_log_parameter():
-    log_query = request.args.get("log", "").lower()
-    if log_query == "true":
-        cloudinary_url, error = capture_image()
-        print(cloudinary_url)
-        print(error)
-
-        result = portfolio_service.add_system_info(cloudinary_url=cloudinary_url)
-        print(result)
-        return redirect(url_for(request.endpoint))
-
-    return None
 
 def is_philippines():
 

@@ -3,7 +3,7 @@ from app.configurations import SortOrder
 
 class IVisitRepository(ABC):
     @abstractmethod
-    def get_paginated_documents(self, page, per_page, order: SortOrder):
+    def get_paginated_documents(self, page, per_page, order: SortOrder, search: str = ""):
         pass
 
     @abstractmethod

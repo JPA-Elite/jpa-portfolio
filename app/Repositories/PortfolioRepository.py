@@ -12,3 +12,10 @@ class PortfolioRepository(IPortfolioRepository, BaseRepository):
     def insert_system_info(self, system_info):
         return self.insert_one(system_info)
 
+    def find_visit_for_day(self, ip_address, page, visit_date):
+        return self.find_one({
+            "ip_address": ip_address,
+            "page": page,
+            "visit_date": visit_date,
+        })
+

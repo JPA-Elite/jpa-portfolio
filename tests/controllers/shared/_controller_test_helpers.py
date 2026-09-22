@@ -274,6 +274,10 @@ def _build_service_mock(name="service"):
 
     svc.get_gallery_likes_count_by_id.return_value = 1
     svc.get_gallery_likes_by_id_and_ip.return_value = _dummy_like_doc()
+    svc.get_likes_count.return_value = 1
+    svc.get_dislikes_count.return_value = 0
+    svc.get_user_vote.return_value = None
+    svc.toggle_vote.return_value = {"action": "added", "is_like": True}
     svc.get_vlog_likes_count_by_id.return_value = 1
     svc.get_vlog_likes_counts_by_ids.return_value = {"v1": 1, "v2": 0}
     svc.get_vlog_liked_states_by_ids_and_ip.return_value = {"v1": True, "v2": False}

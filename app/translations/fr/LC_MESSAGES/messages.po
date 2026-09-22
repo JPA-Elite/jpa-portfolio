@@ -508,6 +508,9 @@ msgstr "tags"
 msgid "Action_Like"
 msgstr "Like"
 
+msgid "Action_Dislike"
+msgstr "Dislike"
+
 msgid "Action_Comment"
 msgstr "Comment"
 
@@ -863,3 +866,9 @@ msgstr "Bientôt disponible"
 
 msgid "App_Details_Download_Soon_Hint"
 msgstr "Cette version ne peut pas encore être téléchargée — elle chauffe encore à l'atelier. Revenez bientôt pour la nouveauté !"
+
+msgid "App_Share_Default_Title"
+msgstr "Applications"
+
+msgid "App_Share_Default_Text"
+msgstr "Découvrez cette application que j'ai créée."

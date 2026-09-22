@@ -174,8 +174,158 @@
         render();
     }
 
+    function setupAppActions(root) {
+        var appId = root.getAttribute("data-app-id") || "";
+        if (!appId) return;
+        var likeBtn = root.querySelector('[data-app-vote="1"]');
+        var dislikeBtn = root.querySelector('[data-app-vote="0"]');
+        var likeCount = root.querySelector("[data-app-like-count]");
+        var dislikeCount = root.querySelector("[data-app-dislike-count]");
+        var shareBtn = root.querySelector("[data-app-share]");
+        var ratioFill = root.querySelector("[data-app-ratio-fill]");
+        var appDetailsI18n = window.appDetailsI18n || {};
+        var busy = false;
+
+        function renderVotes(data) {
+            var likes = Number(data.like_counts || 0);
+            var dislikes = Number(data.dislike_counts || 0);
+            var total = likes + dislikes;
+            if (likeCount) likeCount.textContent = String(likes);
+            if (dislikeCount) dislikeCount.textContent = String(dislikes);
+            if (ratioFill) {
+                ratioFill.hidden = total < 1;
+                ratioFill.style.height = total < 1 ? "0%" : String(Math.round((likes / total) * 100)) + "%";
+            }
+            if (likeBtn) {
+                likeBtn.classList.toggle("is-voted", data.user_vote === true);
+                likeBtn.querySelector("ion-icon")?.setAttribute("name", data.user_vote === true ? "thumbs-up" : "thumbs-up-outline");
+            }
+            if (dislikeBtn) {
+                dislikeBtn.classList.toggle("is-voted", data.user_vote === false);
+                dislikeBtn.querySelector("ion-icon")?.setAttribute("name", data.user_vote === false ? "thumbs-down" : "thumbs-down-outline");
+            }
+        }
+
+        function loadVotes() {
+            fetch("/api/built-app-like/counts?app_id=" + encodeURIComponent(appId))
+                .then(function (response) { return response.json(); })
+                .then(renderVotes)
+                .catch(function () {});
+        }
+
+        function sendVote(isLike, button) {
+            if (busy) return;
+            busy = true;
+            button.disabled = true;
+            fetch("/api/built-app-like/vote", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ app_id: appId, is_like: isLike })
+            })
+                .then(function (response) { return response.json(); })
+                .then(function () {
+                    return fetch("/api/built-app-like/counts?app_id=" + encodeURIComponent(appId));
+                })
+                .then(function (response) { return response.json(); })
+                .then(renderVotes)
+                .catch(function () {})
+                .finally(function () {
+                    busy = false;
+                    button.disabled = false;
+                });
+        }
+
+        if (likeBtn) likeBtn.addEventListener("click", function () { sendVote(true, likeBtn); });
+        if (dislikeBtn) dislikeBtn.addEventListener("click", function () { sendVote(false, dislikeBtn); });
+
+        function shareText(key, fallback) {
+            return appDetailsI18n[key] || fallback;
+        }
+
+        function normalizeShareUrl(rawUrl) {
+            if (!rawUrl) return window.location.href;
+            try {
+                return new URL(rawUrl, window.location.origin).href;
+            } catch (error) {
+                return window.location.href;
+            }
+        }
+
+        function setShareButtonState(button, labelText) {
+            var label = button ? button.querySelector(".action-state-label") : null;
+            if (label) {
+                label.textContent = labelText;
+            }
+        }
+
+        function revertShareButton(button) {
+            setShareButtonState(button, shareText("shareStateShare", "Share"));
+            button.classList.remove("is-shared");
+        }
+
+        async function shareApp() {
+            if (!shareBtn) return;
+            var title = shareBtn.getAttribute("data-share-title") || shareText("shareDefaultTitle", document.title);
+            var text = shareBtn.getAttribute("data-share-text") || shareText("shareDefaultText", "");
+            var url = normalizeShareUrl(shareBtn.getAttribute("data-share-url"));
+            try {
+                if (navigator.share) {
+                    await navigator.share({ title: title, text: text, url: url });
+                    setShareButtonState(shareBtn, shareText("shareStateShared", "Shared"));
+                    shareBtn.classList.add("is-shared");
+                    setTimeout(function () { revertShareButton(shareBtn); }, 1200);
+                    return;
+                }
+                var copied = false;
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    try {
+                        await navigator.clipboard.writeText(url);
+                        copied = true;
+                    } catch (clipboardError) {
+                        copied = copyTextFallback(url);
+                    }
+                } else {
+                    copied = copyTextFallback(url);
+                }
+                if (copied) {
+                    setShareButtonState(shareBtn, shareText("shareStateCopied", "Copied"));
+                    shareBtn.classList.add("is-shared");
+                    setTimeout(function () { revertShareButton(shareBtn); }, 1200);
+                    return;
+                }
+                window.prompt(shareText("sharePromptCopyLink", "Copy this link:"), url);
+            } catch (error) {
+                if (error && error.name === "AbortError") return;
+                setShareButtonState(shareBtn, shareText("shareStateError", "Error"));
+                setTimeout(function () { revertShareButton(shareBtn); }, 1200);
+            }
+        }
+
+        function copyTextFallback(text) {
+            try {
+                var area = document.createElement("textarea");
+                area.value = text;
+                area.setAttribute("readonly", "");
+                area.style.position = "fixed";
+                area.style.opacity = "0";
+                document.body.appendChild(area);
+                area.select();
+                area.setSelectionRange(0, area.value.length);
+                var copied = document.execCommand("copy");
+                document.body.removeChild(area);
+                return copied;
+            } catch (fallbackError) {
+                return false;
+            }
+        }
+
+        if (shareBtn) shareBtn.addEventListener("click", shareApp);
+        loadVotes();
+    }
+
     function init() {
         document.querySelectorAll("[data-app-slideshow]").forEach(setupSlideshow);
+        document.querySelectorAll("[data-app-actions]").forEach(setupAppActions);
     }
 
     if (document.readyState === "loading") {

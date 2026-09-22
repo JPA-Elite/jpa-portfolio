@@ -54,6 +54,30 @@
             </p>
             {% endif %}
         </div>
+        <aside class="app-details__reactions" data-app-actions data-app-id="{{ built_app.id }}" aria-label="{{ built_app.name }}">
+            <div class="app-details__split-card">
+                <span class="app-details__ratio-fill" data-app-ratio-fill hidden></span>
+                <button type="button" class="app-details__half app-details__half--like" data-app-vote="1" aria-label="{{ _('Action_Like') }} {{ built_app.name }}">
+                    <ion-icon name="thumbs-up-outline" aria-hidden="true"></ion-icon>
+                    <span class="app-details__half-count" data-app-like-count>0</span>
+                    <span class="app-details__half-label">{{ _('Action_Like') }}</span>
+                </button>
+                <span class="app-details__split-divider" aria-hidden="true"></span>
+                <button type="button" class="app-details__half app-details__half--dislike" data-app-vote="0" aria-label="{{ _('Action_Dislike') }} {{ built_app.name }}">
+                    <ion-icon name="thumbs-down-outline" aria-hidden="true"></ion-icon>
+                    <span class="app-details__half-count" data-app-dislike-count>0</span>
+                    <span class="app-details__half-label">{{ _('Action_Dislike') }}</span>
+                </button>
+            </div>
+            <button type="button" class="app-details__share-wide" data-app-share
+                data-share-title="{{ built_app.name }}"
+                data-share-text="{{ _('App_Share_Default_Text') }}"
+                data-share-url="{{ request.url }}"
+                aria-label="{{ _('Action_Share') }} {{ built_app.name }}">
+                <ion-icon name="share-social-outline" aria-hidden="true"></ion-icon>
+                <span class="action-state-label">{{ _('Action_Share') }}</span>
+            </button>
+        </aside>
     </header>
 
     <section class="app-details__section" aria-labelledby="appSnapshotsTitle">
@@ -142,5 +166,16 @@
         {% endif %}
     </section>
 </div>
+<script>
+    window.appDetailsI18n = {
+        shareDefaultTitle: {{ _('App_Share_Default_Title') | tojson }},
+        shareDefaultText: {{ _('App_Share_Default_Text') | tojson }},
+        shareStateShared: {{ _('Share_State_Shared') | tojson }},
+        shareStateShare: {{ _('Action_Share') | tojson }},
+        shareStateCopied: {{ _('Share_State_Copied') | tojson }},
+        shareStateError: {{ _('Share_State_Error') | tojson }},
+        sharePromptCopyLink: {{ _('Share_Copy_Link_Prompt') | tojson }}
+    };
+</script>
 <script src="{{ static_asset('js/pages/app_details.js') }}"></script>
 {% endblock %}

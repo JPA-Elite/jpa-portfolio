@@ -611,6 +611,9 @@ msgstr "tags"
 msgid "Action_Like"
 msgstr "Like"
 
+msgid "Action_Dislike"
+msgstr "Dislike"
+
 msgid "Action_Comment"
 msgstr "Comment"
 
@@ -966,3 +969,9 @@ msgstr "Moabotay pa"
 
 msgid "App_Details_Download_Soon_Hint"
 msgstr "Dili pa ma-download kini nga build karon — gipainit pa kini sa workshop. Balik lang unya alang sa bag-ong release!"
+
+msgid "App_Share_Default_Title"
+msgstr "Mga Apps"
+
+msgid "App_Share_Default_Text"
+msgstr "Tan-awa kining app nga akong gibuhat."

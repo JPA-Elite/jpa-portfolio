@@ -6,6 +6,7 @@ class BuiltApp:
         platform="Mobile",
         version="",
         icon="apps-outline",
+        icon_image_url="",
         name=None,
         short_description=None,
         full_description=None,
@@ -28,6 +29,7 @@ class BuiltApp:
         self.platform = platform or "Mobile"
         self.version = version or ""
         self.icon = icon or "apps-outline"
+        self.icon_image_url = icon_image_url or ""
         self.name = name or {}
         self.short_description = short_description or {}
         self.full_description = full_description or {}
@@ -43,6 +45,7 @@ class BuiltApp:
             "platform": self.platform,
             "version": self.version,
             "icon": self.icon,
+            "icon_image_url": self.icon_image_url,
             "name": self.name,
             "short_description": self.short_description,
             "full_description": self.full_description,
@@ -74,6 +77,7 @@ class BuiltApp:
             platform=data.get("platform", "Mobile"),
             version=data.get("version", ""),
             icon=data.get("icon", "apps-outline"),
+            icon_image_url=data.get("icon_image_url", ""),
             name=data.get("name", {}),
             short_description=data.get("short_description", {}),
             full_description=data.get("full_description", {}),

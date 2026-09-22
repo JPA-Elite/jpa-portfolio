@@ -48,10 +48,18 @@
     display: grid;
     place-items: center;
     border-radius: 22px;
+    overflow: hidden;
     color: #fff;
     font-size: 2.6rem;
     background: radial-gradient(circle at 20% 20%, rgba(255, 86, 154, .25), transparent 60%), radial-gradient(circle at 80% 80%, rgba(56, 189, 248, .3), transparent 60%), linear-gradient(180deg, #1e293b, #0f172a);
     border: 1px solid rgba(255, 255, 255, .1)
+}
+
+.app-details__icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block
 }
 
 .app-details__head {
@@ -390,10 +398,18 @@
     display: grid;
     place-items: center;
     border-radius: 12px;
+    overflow: hidden;
     color: #fff;
     font-size: 1.3rem;
     background: radial-gradient(circle at 20% 20%, rgba(255, 86, 154, .25), transparent 60%), radial-gradient(circle at 80% 80%, rgba(56, 189, 248, .3), transparent 60%), linear-gradient(180deg, #1e293b, #0f172a);
     border: 1px solid rgba(255, 255, 255, .1)
+}
+
+.app-details__more-icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block
 }
 
 .app-details__more-meta {

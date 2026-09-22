@@ -2,7 +2,11 @@
 <article class="store-card" style="--i: {{ index }}">
     <div class="store-card__head">
         <div class="store-card__icon">
+            {% if app.icon_image_url %}
+            <img src="{{ app.icon_image_url }}" alt="{{ app.name }} icon" loading="lazy" decoding="async">
+            {% else %}
             <ion-icon name="{{ app.icon }}" aria-hidden="true"></ion-icon>
+            {% endif %}
         </div>
         <div class="store-card__meta">
             <h5 class="store-card__name">{{ app.name }}</h5>

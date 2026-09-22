@@ -147,13 +147,17 @@ async function loadBuiltApps(page = 1) {
             const safeName = escapeHtml(app.name?.en || app.slug || "Untitled");
             const safeSlug = escapeHtml(app.slug || "");
             const snapshotCount = Array.isArray(app.snapshots) ? app.snapshots.length : 0;
+            const iconThumb = app.icon_image_url
+                ? `<img src="${escapeHtml(app.icon_image_url)}" alt="" style="width:28px;height:28px;object-fit:cover;border-radius:8px;border:1px solid #ddd;flex-shrink:0;">`
+                : "";
 
             tbody.insertAdjacentHTML("beforeend", `
                 <tr>
                     <td>${rowNo}</td>
                     <td>
-                        <div style="max-width: 220px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="${safeName}">
-                            ${safeName}
+                        <div style="display:flex;align-items:center;gap:8px;max-width:220px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="${safeName}">
+                            ${iconThumb}
+                            <span style="overflow:hidden;text-overflow:ellipsis;">${safeName}</span>
                         </div>
                     </td>
                     <td><code>${safeSlug}</code></td>
@@ -276,6 +280,13 @@ function buildEditModal(app, modalId, page, index) {
                 <div class="col-md-6"><label class="form-label">Icon (ion-icon name)</label><input type="text" id="editIcon${suffix}" class="form-control" value="${escapeHtml(app.icon || "")}"></div>
                 <div class="col-md-6"><label class="form-label">Download URL</label><input type="url" id="editDownloadUrl${suffix}" class="form-control" value="${escapeHtml(app.download_url || "")}"></div>
 
+                <div class="col-12">
+                  <label class="form-label">App Icon Image (optional)</label>
+                  ${app.icon_image_url ? `<div class="mb-2"><img src="${escapeHtml(app.icon_image_url)}" alt="App icon preview" style="width:64px;height:64px;object-fit:cover;border-radius:14px;border:1px solid #ddd;"></div>` : ""}
+                  <input type="file" id="editIconImage${suffix}" class="form-control" accept="image/*">
+                  <div class="form-text">${app.icon_image_url ? "Upload to replace the icon image." : "Shown on the portfolio showcase card and the app details header."}</div>
+                </div>
+
                 <div class="col-12"><label class="form-label">Short Description (EN)</label><textarea id="editShortEn${suffix}" class="form-control" rows="2">${escapeHtml(shortDescription.en)}</textarea></div>
                 <div class="col-md-4"><label class="form-label">Short Description (Ceb)</label><textarea id="editShortCeb${suffix}" class="form-control" rows="2">${escapeHtml(shortDescription.ceb)}</textarea></div>
                 <div class="col-md-4"><label class="form-label">Short Description (Fr)</label><textarea id="editShortFr${suffix}" class="form-control" rows="2">${escapeHtml(shortDescription.fr)}</textarea></div>
@@ -295,7 +306,7 @@ function buildEditModal(app, modalId, page, index) {
                       </button>
                     </div>
                     <div class="card-body">
-                      <p class="text-muted small mb-2">Removing a row deletes its image from Cloudinary on save.</p>
+                      <p class="text-muted small mb-2">Removing a row deletes its image on save.</p>
                       <div id="editSnapshotsContainer${suffix}" class="d-grid gap-2">${snapshotsMarkup}</div>
                     </div>
                   </div>
@@ -346,6 +357,9 @@ async function addBuiltApp() {
         formData.append("sort_order", document.getElementById("addSortOrder").value || "0");
         formData.append("is_active", document.getElementById("addIsActive").checked ? "true" : "false");
 
+        const iconImageInput = document.getElementById("addIconImage");
+        if (iconImageInput?.files?.[0]) formData.append("icon_image_file", iconImageInput.files[0]);
+
         const filesInput = document.getElementById("addSnapshotFiles");
         Array.from(filesInput?.files || []).forEach((file) => formData.append("snapshot_files", file));
 
@@ -386,6 +400,9 @@ async function updateBuiltApp(appId, suffix) {
         formData.append("download_url", document.getElementById(`editDownloadUrl${suffix}`).value.trim());
         formData.append("sort_order", document.getElementById(`editSortOrder${suffix}`).value || "0");
         formData.append("is_active", document.getElementById(`editIsActive${suffix}`).checked ? "true" : "false");
+
+        const editIconImageInput = document.getElementById(`editIconImage${suffix}`);
+        if (editIconImageInput?.files?.[0]) formData.append("icon_image_file", editIconImageInput.files[0]);
 
         const editContainer = document.getElementById(`editSnapshotsContainer${suffix}`);
         formData.append("snapshots_meta", JSON.stringify(serializeSnapshotRows(editContainer, formData)));

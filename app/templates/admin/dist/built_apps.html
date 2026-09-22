@@ -156,6 +156,12 @@
             <div class="col-md-6"><label class="form-label">Icon (ion-icon name)</label><input type="text" id="addIcon" class="form-control" placeholder="apps-outline"></div>
             <div class="col-md-6"><label class="form-label">Download URL</label><input type="url" id="addDownloadUrl" class="form-control" placeholder="https://mediafire.com/... or https://drive.google.com/..."></div>
 
+            <div class="col-12">
+              <label class="form-label">App Icon Image (optional)</label>
+              <input type="file" id="addIconImage" class="form-control" accept="image/*">
+              <div class="form-text">Shown on the portfolio showcase card and the app details header. Falls back to the ion-icon when empty.</div>
+            </div>
+
             <div class="col-12"><label class="form-label">Short Description (EN)</label><textarea id="addShortEn" class="form-control" rows="2"></textarea></div>
             <div class="col-md-4"><label class="form-label">Short Description (Ceb)</label><textarea id="addShortCeb" class="form-control" rows="2"></textarea></div>
             <div class="col-md-4"><label class="form-label">Short Description (Fr)</label><textarea id="addShortFr" class="form-control" rows="2"></textarea></div>
@@ -167,7 +173,7 @@
             <div class="col-md-4"><label class="form-label">Full Description (Fil)</label><textarea id="addFullFil" class="form-control" rows="4"></textarea></div>
 
             <div class="col-12">
-              <label class="form-label">Snapshots (optional images saved to Cloudinary)</label>
+              <label class="form-label">Snapshots (optional images)</label>
               <input type="file" id="addSnapshotFiles" class="form-control" accept="image/*" multiple>
               <div class="form-text">Each image becomes a snapshot slide on the app details page.</div>
             </div>

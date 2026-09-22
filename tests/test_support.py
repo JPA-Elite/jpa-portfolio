@@ -218,6 +218,7 @@ def dummy_repo_param(name):
             "platform": "Mobile",
             "version": "v1.0.0",
             "icon": "apps-outline",
+            "icon_image_url": "",
             "name": {"en": "TaskFlow"},
             "short_description": {"en": "Task manager."},
             "full_description": {"en": ["Paragraph."]},

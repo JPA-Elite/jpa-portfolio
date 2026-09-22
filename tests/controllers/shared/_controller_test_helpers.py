@@ -127,6 +127,7 @@ def _built_app_doc():
         "platform": "Mobile",
         "version": "v1.2.0",
         "icon": "checkmark-done-outline",
+        "icon_image_url": "",
         "name": {"en": "TaskFlow"},
         "short_description": {"en": "Task manager."},
         "full_description": {"en": ["Paragraph one."]},

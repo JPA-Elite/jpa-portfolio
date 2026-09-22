@@ -221,6 +221,58 @@ class BuiltAppServiceTests(unittest.TestCase):
         self.assertEqual(updated["name"]["en"], "Updated")
         self.assertEqual(updated["snapshots"], existing["snapshots"])
 
+    def test_add_built_app_uploads_icon_image_file(self):
+        self.repo.add_built_app.return_value = "app-new"
+
+        with patch.object(
+            self.service, "_upload_snapshot_file", return_value="/icon.webp"
+        ) as mock_upload:
+            result = self.service.add_built_app(
+                {
+                    "name": {"en": "TaskFlow"},
+                    "snapshot_files": None,
+                    "snapshots_meta": None,
+                    "icon_image_file": _png_file_storage(),
+                }
+            )
+
+            self.assertEqual(result, "app-new")
+            mock_upload.assert_called_once()
+        saved = self.repo.add_built_app.call_args[0][0].to_dict()
+        self.assertEqual(saved["icon_image_url"], "/icon.webp")
+
+    def test_update_built_app_replaces_icon_image_and_cleans_old(self):
+        existing = built_app_doc()
+        existing["icon_image_url"] = "https://res.cloudinary.com/demo/image/upload/old-icon.webp"
+        self.repo.get_built_app_by_id.return_value = existing
+        self.repo.update_built_app.return_value = True
+
+        with patch.object(
+            self.service, "_upload_snapshot_file", return_value="/new-icon.webp"
+        ):
+            with patch.object(self.service, "_cleanup_image_url") as mock_cleanup:
+                result = self.service.update_built_app(
+                    "app1",
+                    {"icon_image_file": _png_file_storage()},
+                )
+
+        self.assertTrue(result)
+        updated = self.repo.update_built_app.call_args[0][1].to_dict()
+        self.assertEqual(updated["icon_image_url"], "/new-icon.webp")
+        mock_cleanup.assert_called_once_with("https://res.cloudinary.com/demo/image/upload/old-icon.webp")
+
+    def test_update_built_app_keeps_existing_icon_without_new_file(self):
+        existing = built_app_doc()
+        existing["icon_image_url"] = "/icon.webp"
+        self.repo.get_built_app_by_id.return_value = existing
+        self.repo.update_built_app.return_value = True
+
+        result = self.service.update_built_app("app1", {"name": {"en": "Updated"}})
+
+        self.assertTrue(result)
+        updated = self.repo.update_built_app.call_args[0][1].to_dict()
+        self.assertEqual(updated["icon_image_url"], "/icon.webp")
+
     def test_delete_built_app_returns_false_when_missing(self):
         self.repo.get_built_app_by_id.return_value = None
 
@@ -235,6 +287,7 @@ class BuiltAppServiceTests(unittest.TestCase):
             {"id": "s1", "image_url": "https://res.cloudinary.com/demo/image/upload/s1.webp", "sort_order": 0},
             {"id": "s2", "image_url": None, "sort_order": 1},
         ]
+        existing["icon_image_url"] = "https://res.cloudinary.com/demo/image/upload/icon.webp"
         self.repo.get_built_app_by_id.return_value = existing
         self.repo.delete_built_app.return_value = True
 
@@ -242,7 +295,8 @@ class BuiltAppServiceTests(unittest.TestCase):
             result = self.service.delete_built_app("app1")
 
         self.assertTrue(result)
-        mock_cleanup.assert_called_once_with("https://res.cloudinary.com/demo/image/upload/s1.webp")
+        mock_cleanup.assert_any_call("https://res.cloudinary.com/demo/image/upload/s1.webp")
+        mock_cleanup.assert_any_call("https://res.cloudinary.com/demo/image/upload/icon.webp")
         self.repo.delete_built_app.assert_called_once_with("app1")
 
     def test_seed_returns_zero_when_collection_not_empty(self):
@@ -271,6 +325,7 @@ class BuiltAppServiceTests(unittest.TestCase):
         self.assertEqual(first["full_description"]["en"], BUILT_APPS[0]["full_description"])
         self.assertEqual(first["snapshots"], [])
         self.assertEqual(first["sort_order"], 1)
+        self.assertEqual(first["icon_image_url"], "")
 
 
 if __name__ == "__main__":

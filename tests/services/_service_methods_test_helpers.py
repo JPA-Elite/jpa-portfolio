@@ -79,6 +79,7 @@ def _base_existing_built_app():
         "platform": "Mobile",
         "version": "v1.2.0",
         "icon": "checkmark-done-outline",
+        "icon_image_url": "",
         "name": {"en": "TaskFlow"},
         "short_description": {"en": "Task manager."},
         "full_description": {"en": ["Paragraph one.", "Paragraph two."]},

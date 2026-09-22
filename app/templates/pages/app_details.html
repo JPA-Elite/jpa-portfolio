@@ -19,7 +19,11 @@
 
     <header class="app-details__hero">
         <div class="app-details__icon">
+            {% if built_app.icon_image_url %}
+            <img src="{{ built_app.icon_image_url }}" alt="{{ built_app.name }} icon" loading="lazy" decoding="async">
+            {% else %}
             <ion-icon name="{{ built_app.icon }}" aria-hidden="true"></ion-icon>
+            {% endif %}
         </div>
         <div class="app-details__head">
             <h1>{{ built_app.name }}</h1>
@@ -113,7 +117,11 @@
             {% for other in other_apps %}
             <a href="{{ url_for('pages.built_app_details', slug=other.slug) }}" class="app-details__more-card">
                 <span class="app-details__more-icon">
+                    {% if other.icon_image_url %}
+                    <img src="{{ other.icon_image_url }}" alt="{{ other.name }} icon" loading="lazy" decoding="async">
+                    {% else %}
                     <ion-icon name="{{ other.icon }}" aria-hidden="true"></ion-icon>
+                    {% endif %}
                 </span>
                 <span class="app-details__more-meta">
                     <strong>{{ other.name }}</strong>

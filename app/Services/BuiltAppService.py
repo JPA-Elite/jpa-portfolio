@@ -56,6 +56,11 @@ class BuiltAppService:
 
         uploaded_urls = []
         try:
+            icon_image_file = data.pop("icon_image_file", None)
+            if icon_image_file:
+                icon_image_url = self._upload_snapshot_file(icon_image_file)
+                uploaded_urls.append(icon_image_url)
+                data["icon_image_url"] = icon_image_url
             data["snapshots"] = self._build_new_snapshots(
                 data.pop("snapshot_files", None),
                 uploaded_urls,
@@ -96,6 +101,7 @@ class BuiltAppService:
             "platform": data.get("platform") or existing.get("platform", "Mobile"),
             "version": data.get("version") if data.get("version") is not None else existing.get("version", ""),
             "icon": data.get("icon") if data.get("icon") is not None else existing.get("icon", "apps-outline"),
+            "icon_image_url": existing.get("icon_image_url", ""),
             "download_url": data.get("download_url") if data.get("download_url") is not None else existing.get("download_url", ""),
             "sort_order": data.get("sort_order") if data.get("sort_order") is not None else existing.get("sort_order", 0),
             "is_active": data.get("is_active") if data.get("is_active") is not None else existing.get("is_active", True),
@@ -105,6 +111,13 @@ class BuiltAppService:
         uploaded_urls = []
 
         try:
+            icon_image_file = data.pop("icon_image_file", None)
+            if icon_image_file:
+                new_icon_image_url = self._upload_snapshot_file(icon_image_file)
+                uploaded_urls.append(new_icon_image_url)
+                update_data["icon_image_url"] = new_icon_image_url
+                self._cleanup_image_url(existing.get("icon_image_url", ""))
+
             if snapshots_meta is None:
                 update_data["snapshots"] = existing.get("snapshots", [])
             else:
@@ -130,6 +143,7 @@ class BuiltAppService:
             url = (snapshot or {}).get("image_url")
             if url:
                 self._cleanup_image_url(url)
+        self._cleanup_image_url(existing.get("icon_image_url", ""))
         return self.repository.delete_built_app(app_id)
 
     def seed_default_built_apps_if_empty(self):
@@ -147,6 +161,7 @@ class BuiltAppService:
                 "platform": row["platform"],
                 "version": row["version"],
                 "icon": row["icon"],
+                "icon_image_url": row.get("icon_image_url", ""),
                 "snapshots": [],
                 "download_url": row.get("download_url", "#"),
                 "sort_order": index,

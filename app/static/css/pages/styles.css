@@ -94,15 +94,9 @@ nav ul li:hover {
     transition: opacity 0.3s ease;
 }
 
-nav ul li.active {
-    border-bottom: 2px solid var(--accent-color);
-}
-
 nav ul li.active a {
     color: var(--text-primary);
     pointer-events: none;
-    /* font-weight: 500; */
-    /* font-style: italic; */
 }
 
 /* Override pointer-events: none for megamenu items when the dropdown is open */
@@ -110,13 +104,7 @@ nav ul li.media-dropdown.is-open .media-megamenu__item {
     pointer-events: auto;
 }
 
-/* Active state: blue bottom border when on Gallery/Vlog/Music page — toggle via is-open */
-nav ul li.media-dropdown.active {
-    border-bottom: 2px solid var(--accent-color);
-    border-radius: 5px;
-}
-
-/* Show megamenu only via is-open class (JS toggle); 'active' only gives the underline */
+/* Show megamenu only via is-open class (JS toggle); 'active' marks the current media page */
 nav ul li.media-dropdown.is-open .media-megamenu {
     display: flex;
 }
@@ -1041,35 +1029,68 @@ nav #navList li a {
     display: none;
 }
 
-.admin-float-btn {
+.admin-float-wrap {
     position: fixed;
     top: 50%;
-    left: -3%;
+    left: 0;
     transform: translateY(-50%);
-    background: #007bff;
-    color: white;
-    width: 130px;
-    height: 48px;
     display: flex;
     align-items: center;
-    justify-content: flex-end;
-    font-size: 16px;
-    font-weight: 500;
-    border-radius: 0 25px 25px 0;
-    padding-right: 18px;
-    box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.25);
-    cursor: pointer;
-    text-decoration: none;
     z-index: 9999;
-    overflow: visible;
-    transition: all 0.3s ease;
     /* Hidden while page loading overlay is visible */
     visibility: hidden;
 }
 
-/* Show the admin float button once page load is complete */
-body.loading-done .admin-float-btn {
+/* Show the admin float once page load is complete */
+body.loading-done .admin-float-wrap {
     visibility: visible;
+}
+
+.admin-float-btn {
+    background: #007bff;
+    color: white;
+    max-width: 130px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    font-size: 16px;
+    font-weight: 500;
+    border-radius: 0 25px 25px 0;
+    padding-left: 12px;
+    padding-right: 18px;
+    box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.25);
+    cursor: pointer;
+    text-decoration: none;
+    overflow: hidden;
+    white-space: nowrap;
+    transform-origin: left center;
+    transition:
+        max-width 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+        padding-left 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+        padding-right 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+        transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+        opacity 0.3s ease,
+        background 0.3s ease,
+        box-shadow 0.35s ease,
+        border-radius 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Minimized state (default): collapse and tuck the Admin button toward the edge */
+.admin-float-wrap:not(.is-maximized) .admin-float-btn {
+    max-width: 0;
+    opacity: 0;
+    padding-left: 0;
+    padding-right: 0;
+    transform: translateX(-24px) scale(0.95);
+    pointer-events: none;
+}
+
+/* Maximized state: slide in from the edge with a soft fade pop;
+   right edge squares off so the pill aligns flush with the chevron container */
+.admin-float-wrap.is-maximized .admin-float-btn {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+    border-radius: 0;
 }
 
 /* Hover animation */
@@ -1082,17 +1103,56 @@ body.loading-done .admin-float-btn {
     font-size: 20px;
     margin-left: 12px;
     margin-right: 8px;
-    transition: transform 0.3s ease;
 }
 
-.admin-float-btn:hover ion-icon {
-    transform: rotate(90deg);
-}
-
-/* Label text (optional) */
+/* Label text fades in alongside the pill expansion */
 .admin-float-btn span {
     font-weight: 600;
     font-size: 14px;
+    opacity: 0;
+    transform: translateX(-8px);
+    transition: opacity 0.25s ease, transform 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.admin-float-wrap.is-maximized .admin-float-btn span {
+    opacity: 1;
+    transform: translateX(0);
+    transition-delay: 0.09s;
+}
+
+/* Chevron toggle for maximize/minimize */
+.admin-float-toggle {
+    width: 26px;
+    height: 44px;
+    border: none;
+    background: #007bff;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0 12px 12px 0;
+    box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.25);
+    cursor: pointer;
+    padding: 0;
+    transition: background 0.3s ease;
+}
+
+.admin-float-toggle:hover {
+    background: #0056b3;
+}
+
+.admin-float-toggle:focus-visible {
+    outline: 2px solid #ffffff;
+    outline-offset: -4px;
+}
+
+.admin-float-toggle ion-icon {
+    font-size: 16px;
+    transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.admin-float-wrap.is-maximized .admin-float-toggle ion-icon {
+    transform: rotate(180deg);
 }
 
 /* =============================================
@@ -1255,6 +1315,7 @@ ion-icon { pointer-events: none !important; }
         font-weight: 500;
     }
 
+    .admin-float-wrap,
     .admin-float-btn {
         display: none !important;
     }

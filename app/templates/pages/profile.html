@@ -419,6 +419,38 @@ endblock %}
             </div>
         </div>
 
+        <section id="built-apps" class="built-apps">
+            <div class="built-apps__header">
+                <span class="built-apps__eyebrow">
+                    <ion-icon name="grid-outline" aria-hidden="true"></ion-icon>
+                    {{ _('Built_Apps_Eyebrow') }}
+                </span>
+                <h4>{{ _('Built_Apps_Heading') }}</h4>
+                <p>{{ _('Built_Apps_Description') }}</p>
+            </div>
+            {% from 'pages/_built_app_card.html' import app_card with context %}
+            <div class="built-apps__grid">
+                {% for app in built_apps[:10] %}
+                {{ app_card(app, loop.index0) }}
+                {% endfor %}
+            </div>
+            {% if built_apps|length > 10 %}
+            <div class="built-apps__extra" id="builtAppsExtra" hidden>
+                <div class="built-apps__grid">
+                    {% for app in built_apps[10:] %}
+                    {{ app_card(app, loop.index0) }}
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="built-apps__more">
+                <button type="button" class="built-apps__show-more" id="builtAppsShowMore">
+                    <ion-icon name="chevron-down-outline" aria-hidden="true"></ion-icon>
+                    {{ _('Built_Apps_Show_More') }}
+                </button>
+            </div>
+            {% endif %}
+        </section>
+
         <section class="enable-animation" id="profile-marquee-section">
             <div class="tech-stack-showcase">
                 <div class="tech-stack-showcase__header">

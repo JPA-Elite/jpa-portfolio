@@ -24,6 +24,12 @@ from app.Controllers.api.CompanyRoadmapController import (
     delete_company_roadmap_route,
     update_company_roadmap_route,
 )
+from app.Controllers.api.BuiltAppController import (
+    add_built_app_route,
+    built_app_list_route,
+    delete_built_app_route,
+    update_built_app_route,
+)
 from app.Controllers.api.VideoController import add_video_route, delete_video_route, update_video_route, video_list_route
 from app.Controllers.api.GalleryController import add_gallery_route, delete_gallery_route, gallery_list_route, update_gallery_route
 from app.Controllers.api.GalleryLikeController import (
@@ -317,6 +323,27 @@ def update_key_project(project_id):
 @admin_login_required
 def delete_key_project(project_id):
     return delete_key_project_route(project_id)
+
+# Built Apps API
+@api_bp.route("/admin/api/built-app-list", methods=[http.GET])
+@admin_login_required
+def built_app_list():
+    return built_app_list_route()
+
+@api_bp.route("/admin/api/add-built-app", methods=[http.POST])
+@admin_login_required
+def add_built_app():
+    return add_built_app_route()
+
+@api_bp.route("/admin/api/update-built-app/<app_id>", methods=[http.PUT])
+@admin_login_required
+def update_built_app(app_id):
+    return update_built_app_route(app_id)
+
+@api_bp.route("/admin/api/delete-built-app/<app_id>", methods=[http.DELETE])
+@admin_login_required
+def delete_built_app(app_id):
+    return delete_built_app_route(app_id)
 
 # Company Roadmaps API
 @api_bp.route("/admin/api/company-roadmap-list", methods=[http.GET])

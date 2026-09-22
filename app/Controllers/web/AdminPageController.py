@@ -9,6 +9,7 @@ from app.configurations import (
     ADMIN_MUSIC_PAGE,
     ADMIN_KEY_PROJECTS_PAGE,
     ADMIN_COMPANY_ROADMAPS_PAGE,
+    ADMIN_BUILT_APPS_PAGE,
     ADMIN_SETTINGS_PAGE,
     ADMIN_VIDEO_PAGE,
     ADMIN_FACE_RECOGNITION_PAGE,
@@ -194,6 +195,9 @@ def admin_key_projects_route():
 
 def admin_company_roadmaps_route():
     return render_template(ADMIN_COMPANY_ROADMAPS_PAGE, title="Admin Company Roadmaps")
+
+def admin_built_apps_route():
+    return render_template(ADMIN_BUILT_APPS_PAGE, title="Admin Built Apps")
 
 def admin_settings_route():
     response = make_response(render_template(ADMIN_SETTINGS_PAGE, title="Admin Settings"))

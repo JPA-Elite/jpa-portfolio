@@ -625,8 +625,23 @@ themeToggle.addEventListener("click", () => {
     localStorage.setItem("theme", newTheme);
 });
 
+function setupAdminFloatToggle() {
+    const wrap = document.getElementById("adminFloat");
+    const toggle = wrap ? wrap.querySelector(".admin-float-toggle") : null;
+    if (!wrap || !toggle) return;
+    toggle.addEventListener("click", () => {
+        const maximized = wrap.classList.toggle("is-maximized");
+        toggle.setAttribute("aria-expanded", String(maximized));
+        toggle.setAttribute(
+            "aria-label",
+            maximized ? "Minimize Admin Panel" : "Maximize Admin Panel"
+        );
+    });
+}
+
 document.addEventListener("DOMContentLoaded", function () {
     setupLazyReveal();
+    setupAdminFloatToggle();
 
     if (window.isProfessionalMode) {
         const header = document.querySelector(

@@ -1179,10 +1179,6 @@ nav #navbarMenu > li {
 }
 
 nav #navbarMenu > li.active {
-    border-bottom: 2px solid var(--accent-color);
-}
-
-nav #navbarMenu > li.active {
     color: var(--text-primary);
     pointer-events: none;
     /* font-style: italic; */

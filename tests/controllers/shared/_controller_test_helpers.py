@@ -14,6 +14,10 @@ class _DummyModel:
     def __init__(self, data):
         self._data = dict(data)
 
+    def __getattr__(self, item):
+        data = self.__dict__.get("_data", {})
+        return data.get(item)
+
     def to_dict(self):
         return dict(self._data)
 
@@ -115,6 +119,24 @@ def _key_project_doc():
     }
 
 
+def _built_app_doc():
+    return {
+        "_id": VALID_OBJECT_ID,
+        "id": "app1",
+        "slug": "taskflow",
+        "platform": "Mobile",
+        "version": "v1.2.0",
+        "icon": "checkmark-done-outline",
+        "name": {"en": "TaskFlow"},
+        "short_description": {"en": "Task manager."},
+        "full_description": {"en": ["Paragraph one."]},
+        "snapshots": [],
+        "download_url": "#",
+        "sort_order": 1,
+        "is_active": True,
+    }
+
+
 def _company_roadmap_doc():
     return {
         "_id": VALID_OBJECT_ID,
@@ -194,6 +216,8 @@ def _dummy_model_list(kind: str):
         return [_DummyModel(_key_project_doc())]
     if kind == "company_roadmap":
         return [_DummyModel(_company_roadmap_doc())]
+    if kind == "built_app":
+        return [_DummyModel(_built_app_doc())]
     if kind == "visit":
         return [_DummyModel(_system_info_doc())]
     if kind == "login_attempt":
@@ -269,6 +293,16 @@ def _build_service_mock(name="service"):
     svc.add_company_roadmap.return_value = "roadmap-1"
     svc.update_company_roadmap.return_value = True
     svc.delete_company_roadmap.return_value = True
+
+    svc.get_paginated_built_apps.return_value = (_dummy_model_list("built_app"), 1)
+    svc.get_active_built_apps.return_value = _dummy_model_list("built_app")
+    svc.seed_default_built_apps_if_empty.return_value = 0
+    svc.get_built_app_by_id.return_value = _built_app_doc()
+    svc.find_active_built_app_by_slug.return_value = _built_app_doc()
+    svc.get_active_built_app_by_slug.return_value = _DummyModel(_built_app_doc())
+    svc.add_built_app.return_value = "app-1"
+    svc.update_built_app.return_value = True
+    svc.delete_built_app.return_value = True
 
     svc.get_all_tags.return_value = ["tag1", "tag2"]
     svc.resolve.return_value = {"answer": "ok", "action": None, "matched_question": None}

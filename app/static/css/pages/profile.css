@@ -4733,3 +4733,320 @@ ion-icon.voice-icon {
         font-size: .75rem
     }
 }
+
+.built-apps {
+    width: min(96%, 1280px);
+    margin: 28px auto;
+    padding: 28px 22px 24px;
+    border-radius: 22px;
+    background: radial-gradient(130% 120% at 0 0, rgba(56, 189, 248, .1), transparent 58%), radial-gradient(130% 120% at 100% 100%, rgba(255, 86, 154, .1), transparent 58%), linear-gradient(180deg, rgba(255, 255, 255, .02), rgba(255, 255, 255, .01));
+    border: 1px solid rgba(255, 255, 255, .06);
+    box-shadow: 0 22px 48px rgba(0, 0, 0, .16)
+}
+
+.built-apps__header {
+    text-align: center;
+    margin-bottom: 20px
+}
+
+.built-apps__eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 10px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: .04em;
+    color: var(--text-primary);
+    border: 1px solid rgba(255, 255, 255, .1);
+    background: rgba(255, 255, 255, .03)
+}
+
+.built-apps__eyebrow ion-icon {
+    font-size: 14px
+}
+
+.built-apps__header h4 {
+    margin: 12px 0 6px;
+    font-size: 1.7rem;
+    color: var(--text-primary)
+}
+
+.built-apps__header p {
+    margin: 0 auto;
+    max-width: 560px;
+    color: var(--text-secondary, #9ca3af);
+    font-size: .95rem
+}
+
+.built-apps__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 16px
+}
+
+.store-card {
+    --i: 0;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    gap: 10px;
+    padding: 14px;
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, .07);
+    background: linear-gradient(180deg, rgba(255, 255, 255, .03), rgba(255, 255, 255, .015));
+    box-shadow: 0 12px 22px rgba(0, 0, 0, .1);
+    transition: transform .22s ease, border-color .22s ease, box-shadow .22s ease
+}
+
+.store-card:hover {
+    transform: translateY(-3px);
+    border-color: rgba(255, 255, 255, .14);
+    box-shadow: 0 14px 26px rgba(0, 0, 0, .14)
+}
+
+.store-card__head {
+    display: flex;
+    align-items: center;
+    gap: 12px
+}
+
+.store-card__icon {
+    flex-shrink: 0;
+    width: 56px;
+    height: 56px;
+    display: grid;
+    place-items: center;
+    border-radius: 14px;
+    color: #fff;
+    font-size: 1.6rem;
+    background: radial-gradient(circle at 20% 20%, rgba(255, 86, 154, .25), transparent 60%), radial-gradient(circle at 80% 80%, rgba(56, 189, 248, .3), transparent 60%), linear-gradient(180deg, #1e293b, #0f172a);
+    border: 1px solid rgba(255, 255, 255, .1)
+}
+
+.store-card__meta {
+    min-width: 0;
+    display: grid;
+    gap: 3px
+}
+
+.store-card__name {
+    margin: 0;
+    font-size: 1rem;
+    line-height: 1.3;
+    color: var(--text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis
+}
+
+.store-card__platform {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    width: fit-content;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-size: .72rem;
+    font-weight: 700;
+    letter-spacing: .03em
+}
+
+.store-card__platform ion-icon {
+    font-size: 12px
+}
+
+.store-card__platform--mobile {
+    color: #7dd3fc;
+    border: 1px solid rgba(125, 211, 252, .35);
+    background: rgba(125, 211, 252, .08)
+}
+
+.store-card__platform--desktop {
+    color: #fda4af;
+    border: 1px solid rgba(253, 164, 175, .35);
+    background: rgba(253, 164, 175, .08)
+}
+
+.store-card__version {
+    font-size: .78rem;
+    color: var(--text-secondary, #9ca3af)
+}
+
+.store-card__desc {
+    margin: 0;
+    font-size: .88rem;
+    line-height: 1.45;
+    color: var(--text-secondary, #9ca3af);
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden
+}
+
+.store-card__actions {
+    display: flex
+}
+
+.store-card__download {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    width: 100%;
+    padding: 9px 14px;
+    border-radius: 10px;
+    font-size: .88rem;
+    font-weight: 700;
+    text-decoration: none;
+    color: #fff;
+    background: linear-gradient(135deg, #2962ff, #1e88e5);
+    border: 1px solid rgba(255, 255, 255, .12);
+    transition: filter .2s ease, transform .2s ease
+}
+
+.store-card__download:hover {
+    filter: brightness(1.12);
+    transform: translateY(-1px)
+}
+
+.store-card__download ion-icon {
+    font-size: 15px
+}
+
+.store-card__view {
+    background: rgba(41, 98, 255, .12);
+    border-color: rgba(96, 165, 250, .35);
+    color: #93c5fd
+}
+
+.store-card__view:hover {
+    filter: none;
+    background: rgba(41, 98, 255, .2)
+}
+
+[data-theme=light] .store-card__view {
+    color: #1d4ed8
+}
+
+.built-apps__extra {
+    overflow: hidden;
+    max-height: 0;
+    opacity: 0;
+    transition: max-height .7s ease, opacity .7s ease
+}
+
+.built-apps__extra.is-open {
+    max-height: 4000px;
+    opacity: 1
+}
+
+.built-apps__extra .store-card {
+    opacity: 0;
+    transform: translateY(18px) scale(.97)
+}
+
+.built-apps__extra.is-open .store-card {
+    animation: builtAppReveal .55s cubic-bezier(.22, 1, .36, 1) forwards;
+    animation-delay: calc(var(--i) * 90ms)
+}
+
+@keyframes builtAppReveal {
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1)
+    }
+}
+
+.built-apps__more {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px
+}
+
+.built-apps__show-more {
+    all: unset;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 22px;
+    border-radius: 999px;
+    font-size: .92rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    border: 1px solid rgba(255, 255, 255, .12);
+    background: rgba(255, 255, 255, .03);
+    transition: border-color .2s ease, background .2s ease
+}
+
+.built-apps__show-more:hover {
+    border-color: rgba(255, 255, 255, .24);
+    background: rgba(255, 255, 255, .06)
+}
+
+.built-apps__show-more ion-icon {
+    font-size: 15px;
+    transition: transform .3s ease
+}
+
+.built-apps__show-more.is-hidden {
+    display: none
+}
+
+[data-theme=light] .built-apps {
+    border-color: rgba(0, 0, 0, .08);
+    background: radial-gradient(130% 120% at 0 0, rgba(56, 189, 248, .08), transparent 58%), radial-gradient(130% 120% at 100% 100%, rgba(255, 86, 154, .08), transparent 58%), linear-gradient(180deg, #ffffff, #f8fafc)
+}
+
+[data-theme=light] .store-card {
+    border-color: rgba(0, 0, 0, .08);
+    background: linear-gradient(180deg, #ffffff, #f8fafc);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, .06)
+}
+
+[data-theme=light] .store-card__icon {
+    border-color: rgba(0, 0, 0, .1)
+}
+
+[data-theme=light] .built-apps__show-more {
+    border-color: rgba(0, 0, 0, .12);
+    background: rgba(0, 0, 0, .02)
+}
+
+@media (max-width:992px) {
+    .built-apps__grid {
+        grid-template-columns: repeat(auto-fill, minmax(210px, 1fr))
+    }
+}
+
+@media (max-width:480px) {
+    .built-apps {
+        padding: 22px 14px 18px
+    }
+
+    .built-apps__grid {
+        grid-template-columns: 1fr
+    }
+
+    .built-apps__header h4 {
+        font-size: 1.4rem
+    }
+}
+
+@media (prefers-reduced-motion:reduce) {
+
+    .built-apps__extra,
+    .built-apps__extra .store-card,
+    .built-apps__show-more ion-icon,
+    .store-card,
+    .store-card__download {
+        transition: none;
+        animation: none
+    }
+
+    .built-apps__extra.is-open .store-card {
+        opacity: 1;
+        transform: none
+    }
+}

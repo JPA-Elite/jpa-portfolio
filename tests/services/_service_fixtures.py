@@ -64,6 +64,24 @@ def key_project_doc():
     }
 
 
+def built_app_doc():
+    return {
+        "_id": VALID_OBJECT_ID,
+        "id": "app1",
+        "slug": "taskflow",
+        "platform": "Mobile",
+        "version": "v1.2.0",
+        "icon": "checkmark-done-outline",
+        "name": {"en": "TaskFlow"},
+        "short_description": {"en": "Task manager."},
+        "full_description": {"en": ["Paragraph one.", "Paragraph two."]},
+        "snapshots": [],
+        "download_url": "#",
+        "sort_order": 1,
+        "is_active": True,
+    }
+
+
 def roadmap_doc():
     return {
         "_id": VALID_OBJECT_ID,

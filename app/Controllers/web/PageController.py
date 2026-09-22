@@ -838,7 +838,7 @@ def built_app_details_route(slug):
         if a.slug != app.slug
     ][:6]
 
-    return handle_log_parameter() or render_template(
+    return render_template(
         APP_DETAILS_PAGE,
         title=f"{app_data['name']} — Built Apps",
         built_app=app_data,

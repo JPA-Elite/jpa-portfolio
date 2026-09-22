@@ -34,30 +34,69 @@
                 </span>
                 <span class="app-details__version">{{ built_app.version }} • {{ _('Built_Apps_Free') }}</span>
             </div>
-            <a href="{{ built_app.download_url }}" class="app-details__download">
+            {% if built_app.download_url %}
+            <a href="{{ built_app.download_url }}" class="app-details__download" target="_blank" rel="noopener">
                 <ion-icon name="download-outline" aria-hidden="true"></ion-icon>
                 {{ _('App_Details_Download') }}
             </a>
+            {% else %}
+            <span class="app-details__download app-details__download--disabled" aria-disabled="true">
+                <ion-icon name="hourglass-outline" aria-hidden="true"></ion-icon>
+                {{ _('App_Details_Download_Soon') }}
+            </span>
+            <p class="app-details__download-hint">
+                <ion-icon name="sparkles-outline" aria-hidden="true"></ion-icon>
+                {{ _('App_Details_Download_Soon_Hint') }}
+            </p>
+            {% endif %}
         </div>
     </header>
 
     <section class="app-details__section" aria-labelledby="appSnapshotsTitle">
-        <h2 id="appSnapshotsTitle">{{ _('App_Details_Snapshots') }}</h2>
-        <div class="app-details__snapshots" data-mobile-slider data-mobile-slider-label="{{ _('App_Details_Snapshots') }}">
-            {% for snapshot in built_app.snapshots %}
-            <figure class="app-details__snapshot" style="--i: {{ loop.index0 }}">
-                {% if snapshot.image_url %}
-                <img src="{{ snapshot.image_url }}" alt="{{ built_app.name }} {{ _('App_Details_Snapshot_Label') }} {{ loop.index }}" loading="lazy" decoding="async"
-                    onclick='openModal(`{{ snapshot.image_url }}`, `{{ built_app.name |e }} — {{ _("App_Details_Snapshots") }} {{ loop.index }}`, ``)'>
-                {% else %}
-                <div class="app-details__snapshot-placeholder">
-                    <ion-icon name="image-outline" aria-hidden="true"></ion-icon>
-                </div>
-                {% endif %}
-                <figcaption>{{ built_app.name }} {{ _('App_Details_Snapshot_Label') }} {{ loop.index }}</figcaption>
-            </figure>
-            {% endfor %}
+        <div class="app-details__snap-head">
+            <h2 id="appSnapshotsTitle">{{ _('App_Details_Snapshots') }}</h2>
+            {% if built_app.snapshots %}
+            <span class="app-details__snap-count" data-app-slideshow-count>1 / {{ built_app.snapshots|length }}</span>
+            {% endif %}
         </div>
+        {% if built_app.snapshots %}
+        <div class="app-details__slideshow" data-app-slideshow>
+            <button type="button" class="app-details__slide-btn app-details__slide-btn--prev" data-app-slideshow-prev aria-label="{{ _('Slider_Previous_Image') }}">
+                <ion-icon name="chevron-back-outline" aria-hidden="true"></ion-icon>
+            </button>
+            <div class="app-details__slideshow-viewport" data-app-slideshow-track tabindex="0" aria-label="{{ _('App_Details_Snapshots') }}">
+                {% for snapshot in built_app.snapshots %}
+                <figure class="app-details__slide" data-app-slide>
+                    <div class="app-details__slide-media">
+                        {% if snapshot.image_url %}
+                        <img src="{{ snapshot.image_url }}" alt="{{ built_app.name }} {{ _('App_Details_Snapshot_Label') }} {{ loop.index }}" loading="lazy" decoding="async"
+                            onclick='openModal(`{{ snapshot.image_url }}`, `{{ built_app.name |e }} — {{ _("App_Details_Snapshots") }} {{ loop.index }}`, ``)'>
+                        {% else %}
+                        <div class="app-details__snapshot-placeholder">
+                            <ion-icon name="image-outline" aria-hidden="true"></ion-icon>
+                        </div>
+                        {% endif %}
+                    </div>
+                    <figcaption>{{ built_app.name }} {{ _('App_Details_Snapshot_Label') }} {{ loop.index }} / {{ built_app.snapshots|length }}</figcaption>
+                </figure>
+                {% endfor %}
+            </div>
+            <button type="button" class="app-details__slide-btn app-details__slide-btn--next" data-app-slideshow-next aria-label="{{ _('Slider_Next_Image') }}">
+                <ion-icon name="chevron-forward-outline" aria-hidden="true"></ion-icon>
+            </button>
+        </div>
+        <div class="app-details__slideshow-foot">
+            <div class="app-details__dots" data-app-slideshow-dots role="tablist" aria-label="{{ _('App_Details_Snapshots') }}"></div>
+        </div>
+        {% else %}
+        <div class="app-details__more-empty">
+            <span class="app-details__more-empty-icon">
+                <ion-icon name="image-outline" aria-hidden="true"></ion-icon>
+            </span>
+            <strong>{{ _('App_Details_Snapshots') }}</strong>
+            <p>{{ _('App_Details_More_Apps_Empty_Text') }}</p>
+        </div>
+        {% endif %}
     </section>
 
     <section class="app-details__section" aria-labelledby="appAboutTitle">
@@ -69,6 +108,7 @@
 
     <section class="app-details__section" aria-labelledby="appMoreTitle">
         <h2 id="appMoreTitle">{{ _('App_Details_More_Apps') }}</h2>
+        {% if other_apps %}
         <div class="app-details__more-grid">
             {% for other in other_apps %}
             <a href="{{ url_for('pages.built_app_details', slug=other.slug) }}" class="app-details__more-card">
@@ -83,6 +123,16 @@
             </a>
             {% endfor %}
         </div>
+        {% else %}
+        <div class="app-details__more-empty">
+            <span class="app-details__more-empty-icon">
+                <ion-icon name="rocket-outline" aria-hidden="true"></ion-icon>
+            </span>
+            <strong>{{ _('App_Details_More_Apps_Empty_Title') }}</strong>
+            <p>{{ _('App_Details_More_Apps_Empty_Text') }}</p>
+        </div>
+        {% endif %}
     </section>
 </div>
+<script src="{{ static_asset('js/pages/app_details.js') }}"></script>
 {% endblock %}

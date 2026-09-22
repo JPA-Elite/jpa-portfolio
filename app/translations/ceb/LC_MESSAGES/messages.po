@@ -954,3 +954,15 @@ msgstr "Mahitungod niining app"
 
 msgid "App_Details_More_Apps"
 msgstr "Ubang Apps"
+
+msgid "App_Details_More_Apps_Empty_Title"
+msgstr "Kini nga app nag-inusara sa pagkakaron"
+
+msgid "App_Details_More_Apps_Empty_Text"
+msgstr "Wala pay laing apps nga ipakita — naa pay bag-ong builds nga ginabuhat. Balik ra unya!"
+
+msgid "App_Details_Download_Soon"
+msgstr "Moabotay pa"
+
+msgid "App_Details_Download_Soon_Hint"
+msgstr "Dili pa ma-download kini nga build karon — gipainit pa kini sa workshop. Balik lang unya alang sa bag-ong release!"

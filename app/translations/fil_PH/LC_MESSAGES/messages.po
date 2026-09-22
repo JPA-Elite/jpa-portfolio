@@ -954,3 +954,15 @@ msgstr "Tungkol sa app na ito"
 
 msgid "App_Details_More_Apps"
 msgstr "Ibang Apps"
+
+msgid "App_Details_More_Apps_Empty_Title"
+msgstr "Solo flight muna ang app na ito"
+
+msgid "App_Details_More_Apps_Empty_Text"
+msgstr "Wala pang ibang apps na maipakita — may mga bagong builds pang ginagawa. Balik ka ulit!"
+
+msgid "App_Details_Download_Soon"
+msgstr "Malapit na"
+
+msgid "App_Details_Download_Soon_Hint"
+msgstr "Hindi pa mada-download ang build na ito — pinapainit pa ito sa workshop. Balik ka ulit para sa bagong release!"

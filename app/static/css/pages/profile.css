@@ -5009,6 +5009,13 @@ ion-icon.voice-icon {
     border-color: rgba(0, 0, 0, .1)
 }
 
+[data-theme=light] .store-card__platform--mobile,
+[data-theme=light] .store-card__platform--desktop {
+    color: #000;
+    border-color: rgba(0, 0, 0, .22);
+    background: rgba(0, 0, 0, .05)
+}
+
 [data-theme=light] .built-apps__show-more {
     border-color: rgba(0, 0, 0, .12);
     background: rgba(0, 0, 0, .02)

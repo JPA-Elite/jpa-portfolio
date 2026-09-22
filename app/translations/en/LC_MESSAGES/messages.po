@@ -954,3 +954,15 @@ msgstr "About this app"
 
 msgid "App_Details_More_Apps"
 msgstr "More Apps"
+
+msgid "App_Details_More_Apps_Empty_Title"
+msgstr "This app is flying solo for now"
+
+msgid "App_Details_More_Apps_Empty_Text"
+msgstr "No other apps to show yet — fresh builds are still on the workbench. Check back soon!"
+
+msgid "App_Details_Download_Soon"
+msgstr "Coming soon"
+
+msgid "App_Details_Download_Soon_Hint"
+msgstr "This build can't be downloaded just yet — it's still warming up in the workshop. Check back soon for the fresh release!"

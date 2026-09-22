@@ -851,3 +851,15 @@ msgstr "À propos de cette application"
 
 msgid "App_Details_More_Apps"
 msgstr "Plus d'applications"
+
+msgid "App_Details_More_Apps_Empty_Title"
+msgstr "Cette app vole en solo pour l'instant"
+
+msgid "App_Details_More_Apps_Empty_Text"
+msgstr "Aucune autre app à montrer pour le moment — de nouvelles créations sont encore sur l'établi. Revenez bientôt !"
+
+msgid "App_Details_Download_Soon"
+msgstr "Bientôt disponible"
+
+msgid "App_Details_Download_Soon_Hint"
+msgstr "Cette version ne peut pas encore être téléchargée — elle chauffe encore à l'atelier. Revenez bientôt pour la nouveauté !"

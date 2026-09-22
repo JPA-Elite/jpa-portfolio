@@ -133,6 +133,36 @@
     font-size: 17px
 }
 
+.app-details__download--disabled {
+    cursor: not-allowed;
+    opacity: .65;
+    background: linear-gradient(135deg, #475569, #334155);
+    border-style: dashed
+}
+
+.app-details__download--disabled:hover {
+    filter: none;
+    transform: none
+}
+
+.app-details__download-hint {
+    display: flex;
+    align-items: flex-start;
+    gap: 6px;
+    margin: 8px 0 0;
+    max-width: 420px;
+    font-size: .82rem;
+    line-height: 1.5;
+    color: var(--text-secondary, #9ca3af)
+}
+
+.app-details__download-hint ion-icon {
+    flex-shrink: 0;
+    margin-top: 2px;
+    font-size: 15px;
+    color: #fbbf24
+}
+
 .app-details__hero,
 .app-details__section {
     margin-bottom: 0
@@ -146,68 +176,177 @@
     background: linear-gradient(180deg, rgba(255, 255, 255, .02), rgba(255, 255, 255, .01))
 }
 
+.app-details__snap-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 14px
+}
+
+.app-details__snap-head h2 {
+    margin: 0
+}
+
 .app-details__section h2 {
     margin: 0 0 14px;
     font-size: 1.3rem;
     color: var(--text-primary)
 }
 
-.app-details__snapshots {
-    --i: 0;
+.app-details__snap-head h2 {
+    margin: 0
+}
+
+.app-details__snap-count {
+    flex-shrink: 0;
+    min-width: 64px;
+    padding: 4px 12px;
+    text-align: center;
+    border-radius: 999px;
+    font-size: .78rem;
+    font-weight: 700;
+    letter-spacing: .04em;
+    color: var(--text-secondary, #9ca3af);
+    border: 1px solid rgba(255, 255, 255, .1);
+    background: rgba(255, 255, 255, .03)
+}
+
+.app-details__slideshow {
     display: grid;
-    grid-auto-flow: column;
-    grid-auto-columns: minmax(220px, 280px);
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 12px
+}
+
+.app-details__slideshow-viewport {
+    display: flex;
     gap: 16px;
     overflow-x: auto;
-    padding-bottom: 8px;
+    overflow-y: hidden;
+    padding: 2px 2px 8px;
     scroll-snap-type: x mandatory;
-    scrollbar-width: thin
+    scroll-behavior: smooth;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+    border-radius: 14px
 }
 
-.app-details__snapshot {
+.app-details__slideshow-viewport::-webkit-scrollbar {
+    display: none
+}
+
+.app-details__slideshow-viewport:focus-visible {
+    outline: 2px solid rgba(59, 130, 246, .6);
+    outline-offset: 2px
+}
+
+.app-details__slide {
     margin: 0;
+    flex: 0 0 calc((100% - 48px) / 4);
+    min-width: calc((100% - 48px) / 4);
+    max-width: calc((100% - 48px) / 4);
     scroll-snap-align: start;
-    animation: appSnapshotReveal .5s ease both;
-    animation-delay: calc(var(--i) * 90ms)
+    scroll-snap-stop: always;
+    opacity: 1;
+    transform: scale(1) translateY(0);
+    transition: transform .45s ease
 }
 
-@keyframes appSnapshotReveal {
-    from {
-        opacity: 0;
-        transform: translateY(14px)
-    }
+.app-details__slide.is-active {
+    opacity: 1;
+    transform: scale(1) translateY(0)
+}
 
-    to {
-        opacity: 1;
-        transform: translateY(0)
-    }
+.app-details__slide-media {
+    overflow: hidden;
+    border-radius: 14px;
+    border: 1px solid rgba(255, 255, 255, .08);
+    background: linear-gradient(180deg, #111827, #0f172a)
+}
+
+.app-details__slide img {
+    width: 100%;
+    aspect-ratio: 16/10;
+    object-fit: cover;
+    display: block;
+    cursor: zoom-in;
+    transition: transform .45s ease
+}
+
+.app-details__slide.is-active img {
+    transform: scale(1)
+}
+
+.app-details__slide figcaption {
+    margin-top: 8px;
+    font-size: .78rem;
+    text-align: center;
+    color: var(--text-secondary, #9ca3af)
+}
+
+.app-details__slide-btn {
+    width: 44px;
+    height: 44px;
+    flex-shrink: 0;
+    display: grid;
+    place-items: center;
+    border-radius: 999px;
+    font-size: 1.25rem;
+    cursor: pointer;
+    color: var(--text-primary);
+    border: 1px solid rgba(255, 255, 255, .14);
+    background: rgba(17, 24, 39, .72);
+    backdrop-filter: blur(8px);
+    transition: transform .2s ease, border-color .2s ease, opacity .2s ease, background .2s ease
+}
+
+.app-details__slide-btn:hover:not(:disabled) {
+    transform: translateY(-1px);
+    border-color: rgba(59, 130, 246, .45)
+}
+
+.app-details__slide-btn:disabled {
+    opacity: .35;
+    cursor: not-allowed
+}
+
+.app-details__slideshow-foot {
+    display: flex;
+    justify-content: center;
+    margin-top: 12px
+}
+
+.app-details__dots {
+    display: flex;
+    align-items: center;
+    gap: 8px
+}
+
+.app-details__dot {
+    width: 8px;
+    height: 8px;
+    padding: 0;
+    border: 0;
+    border-radius: 999px;
+    cursor: pointer;
+    background: rgba(255, 255, 255, .24);
+    transition: width .25s ease, background-color .25s ease, transform .25s ease
+}
+
+.app-details__dot.is-active {
+    width: 22px;
+    background: #3b82f6;
+    transform: scale(1.02)
 }
 
 .app-details__snapshot-placeholder {
     aspect-ratio: 16/10;
     display: grid;
     place-items: center;
-    border-radius: 14px;
     color: rgba(255, 255, 255, .35);
     font-size: 2.2rem;
-    background: radial-gradient(circle at 25% 25%, rgba(56, 189, 248, .08), transparent 60%), radial-gradient(circle at 75% 75%, rgba(255, 86, 154, .08), transparent 60%), linear-gradient(180deg, #111827, #0f172a);
-    border: 1px dashed rgba(255, 255, 255, .12)
-}
-
-.app-details__snapshot img {
-    width: 100%;
-    aspect-ratio: 16/10;
-    object-fit: cover;
-    border-radius: 14px;
-    display: block;
-    cursor: zoom-in
-}
-
-.app-details__snapshot figcaption {
-    margin-top: 8px;
-    font-size: .78rem;
-    text-align: center;
-    color: var(--text-secondary, #9ca3af)
+    background: radial-gradient(circle at 25% 25%, rgba(56, 189, 248, .08), transparent 60%), radial-gradient(circle at 75% 75%, rgba(255, 86, 154, .08), transparent 60%), linear-gradient(180deg, #111827, #0f172a)
 }
 
 .app-details__section p {
@@ -279,6 +418,41 @@
     font-size: 16px
 }
 
+.app-details__more-empty {
+    display: grid;
+    justify-items: center;
+    gap: 8px;
+    padding: 28px 20px;
+    text-align: center;
+    border-radius: 14px;
+    border: 1px dashed rgba(255, 255, 255, .14);
+    background: linear-gradient(180deg, rgba(255, 255, 255, .03), rgba(255, 255, 255, .01))
+}
+
+.app-details__more-empty-icon {
+    width: 52px;
+    height: 52px;
+    display: grid;
+    place-items: center;
+    border-radius: 16px;
+    color: #fff;
+    font-size: 1.6rem;
+    background: radial-gradient(circle at 20% 20%, rgba(255, 86, 154, .25), transparent 60%), radial-gradient(circle at 80% 80%, rgba(56, 189, 248, .3), transparent 60%), linear-gradient(180deg, #1e293b, #0f172a);
+    border: 1px solid rgba(255, 255, 255, .1)
+}
+
+.app-details__more-empty strong {
+    font-size: .98rem;
+    color: var(--text-primary)
+}
+
+.app-details__more-empty p {
+    margin: 0;
+    max-width: 420px;
+    font-size: .86rem;
+    color: var(--text-secondary, #9ca3af)
+}
+
 [data-theme=light] .app-details__hero,
 [data-theme=light] .app-details__section {
     border-color: rgba(0, 0, 0, .08);
@@ -290,6 +464,31 @@
     border-color: rgba(0, 0, 0, .1)
 }
 
+[data-theme=light] .app-details__snap-count {
+    color: rgba(15, 23, 42, .65);
+    border-color: rgba(15, 23, 42, .12);
+    background: rgba(15, 23, 42, .04)
+}
+
+[data-theme=light] .app-details__slide-media {
+    border-color: rgba(15, 23, 42, .1)
+}
+
+[data-theme=light] .app-details__slide-btn {
+    color: #0f172a;
+    border-color: rgba(15, 23, 42, .12);
+    background: linear-gradient(180deg, rgba(255, 255, 255, .96), rgba(248, 250, 252, .94));
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .95), 0 6px 14px rgba(15, 23, 42, .08)
+}
+
+[data-theme=light] .app-details__dot {
+    background: rgba(15, 23, 42, .16)
+}
+
+[data-theme=light] .app-details__dot.is-active {
+    background: #2563eb
+}
+
 [data-theme=light] .app-details__snapshot-placeholder {
     color: rgba(0, 0, 0, .35);
     background: linear-gradient(180deg, #f1f5f9, #e2e8f0);
@@ -299,6 +498,26 @@
 [data-theme=light] .app-details__more-card {
     border-color: rgba(0, 0, 0, .08);
     background: linear-gradient(180deg, #ffffff, #f8fafc)
+}
+
+[data-theme=light] .app-details__more-empty {
+    border-color: rgba(0, 0, 0, .14);
+    background: linear-gradient(180deg, #f8fafc, #eef2f7)
+}
+
+[data-theme=light] .store-card__platform--mobile,
+[data-theme=light] .store-card__platform--desktop {
+    color: #000;
+    border-color: rgba(0, 0, 0, .22);
+    background: rgba(0, 0, 0, .05)
+}
+
+@media (max-width:1024px) {
+    .app-details__slide {
+        flex-basis: calc((100% - 32px) / 3);
+        min-width: calc((100% - 32px) / 3);
+        max-width: calc((100% - 32px) / 3)
+    }
 }
 
 @media (max-width:768px) {
@@ -316,6 +535,39 @@
     .app-details__head h1 {
         font-size: 1.55rem
     }
+
+    .app-details__slideshow {
+        position: relative;
+        display: block
+    }
+
+    .app-details__slideshow-viewport {
+        gap: 12px
+    }
+
+    .app-details__slide {
+        flex-basis: calc((100% - 12px) / 2);
+        min-width: calc((100% - 12px) / 2);
+        max-width: calc((100% - 12px) / 2)
+    }
+
+    .app-details__slide-btn {
+        position: absolute;
+        top: 36%;
+        z-index: 2;
+        width: 40px;
+        height: 40px;
+        font-size: 1.15rem;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, .28)
+    }
+
+    .app-details__slide-btn--prev {
+        left: 10px
+    }
+
+    .app-details__slide-btn--next {
+        right: 10px
+    }
 }
 
 @media (max-width:480px) {
@@ -324,17 +576,38 @@
         justify-content: center
     }
 
-    .app-details__snapshots {
-        grid-auto-columns: minmax(180px, 1fr)
+    .app-details__slide {
+        flex-basis: 100%;
+        min-width: 100%;
+        max-width: 100%
+    }
+
+    .app-details__slide-btn {
+        width: 36px;
+        height: 36px;
+        font-size: 1.05rem
+    }
+
+    .app-details__slide-btn--prev {
+        left: 8px
+    }
+
+    .app-details__slide-btn--next {
+        right: 8px
     }
 }
 
 @media (prefers-reduced-motion:reduce) {
 
-    .app-details__snapshot,
+    .app-details__slideshow-viewport,
+    .app-details__slide,
+    .app-details__slide img,
+    .app-details__slide-btn,
+    .app-details__dot,
     .app-details__download,
     .app-details__more-card {
         transition: none;
-        animation: none
+        animation: none;
+        scroll-behavior: auto
     }
 }

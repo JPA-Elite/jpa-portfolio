@@ -164,9 +164,6 @@ async function loadBuiltApps(page = 1) {
                     <td>${app.is_active === false ? '<span class="badge text-bg-secondary">No</span>' : '<span class="badge text-bg-success">Yes</span>'}</td>
                     <td>
                         <div class="ba-admin-actions">
-                            <a class="btn btn-sm btn-outline-secondary" href="/apps/${safeSlug}" target="_blank" rel="noopener" title="View public page">
-                                <i class="bi bi-eye"></i>
-                            </a>
                             <button class="btn btn-sm btn-primary me-1" data-bs-toggle="modal" data-bs-target="#${editModalId}">
                                 <i class="bi bi-pencil"></i> Edit
                             </button>

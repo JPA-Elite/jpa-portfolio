@@ -915,3 +915,42 @@ msgstr "Email copied to clipboard!"
 msgid "Contact_Copied_Label"
 msgstr "Copied!"
 
+
+msgid "Built_Apps_Eyebrow"
+msgstr "PAGPAKITA SA MGA APP"
+
+msgid "Built_Apps_Heading"
+msgstr "Mga App nga Akong Gibuhat"
+
+msgid "Built_Apps_Description"
+msgstr "Mga mobile ug desktop apps nga akong gibuhat — libreng i-download."
+
+msgid "Built_Apps_Download"
+msgstr "I-download"
+
+msgid "Built_Apps_Free"
+msgstr "Libre"
+
+msgid "Built_Apps_Show_More"
+msgstr "Ipakita Pa"
+
+msgid "Apps_View_Details"
+msgstr "Tan-awa ang Detalye"
+
+msgid "App_Details_Back_To_Apps"
+msgstr "Balik sa Built Apps"
+
+msgid "App_Details_Download"
+msgstr "I-download"
+
+msgid "App_Details_Snapshots"
+msgstr "Mga Snapshot"
+
+msgid "App_Details_Snapshot_Label"
+msgstr "Snapshot"
+
+msgid "App_Details_About"
+msgstr "Mahitungod niining app"
+
+msgid "App_Details_More_Apps"
+msgstr "Ubang Apps"

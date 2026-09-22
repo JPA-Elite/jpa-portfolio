@@ -778,6 +778,52 @@ function animateCertCount(el) {
     tick();
 }
 
+function setupBuiltAppsShowMore() {
+    const showMoreBtn = document.getElementById("builtAppsShowMore");
+    const extraGrid = document.getElementById("builtAppsExtra");
+    if (!showMoreBtn || !extraGrid) return;
+
+    showMoreBtn.addEventListener("click", () => {
+        extraGrid.hidden = false;
+        requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+                extraGrid.classList.add("is-open");
+            });
+        });
+        showMoreBtn.classList.add("is-hidden");
+        setTimeout(() => {
+            extraGrid.scrollIntoView({ behavior: "smooth", block: "nearest" });
+        }, 350);
+    });
+}
+
+function setupBuiltAppsHashScroll() {
+    if (window.location.hash !== "#built-apps") return;
+    const target = document.getElementById("built-apps");
+    if (!target) return;
+    let node = target.parentElement;
+    while (node) {
+        if (node.classList && node.classList.contains("lazy-reveal")) {
+            node.classList.add("is-revealed");
+        }
+        node = node.parentElement;
+    }
+    const scrollToApps = () => {
+        requestAnimationFrame(() => {
+            target.scrollIntoView({ behavior: "smooth", block: "start" });
+        });
+    };
+    const scheduleScroll = () => {
+        setTimeout(scrollToApps, 150);
+        setTimeout(scrollToApps, 600);
+    };
+    if (document.readyState === "complete") {
+        scheduleScroll();
+    } else {
+        window.addEventListener("load", scheduleScroll);
+    }
+}
+
 document.addEventListener("DOMContentLoaded", () => {
     setupCarousel();
     setupProfileGifHover();
@@ -793,5 +839,7 @@ document.addEventListener("DOMContentLoaded", () => {
     parallaxScroll("#portfolio", ".summary-hero__panel", { sMin: 0.85, oMin: 0.75, yMax: -30 });
 
     setupTagTooltips();
+    setupBuiltAppsShowMore();
+    setupBuiltAppsHashScroll();
     // setupLazyReveal() lives in base.js — shared across all pages
 });

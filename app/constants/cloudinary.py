@@ -6,6 +6,7 @@ class CloudinaryFolders(Enum):
     VIDEO = "portfolio_videos"
     PROJECT = "portfolio_projects"
     ROADMAP = "portfolio_company_roadmap"
+    BUILT_APPS = "portfolio_built_apps"
     PDF = "portfolio_pdf"
     GALLERY = "portfolio_gallery"
     AVATAR = "portfolio_avatars"

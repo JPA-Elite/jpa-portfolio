@@ -71,6 +71,24 @@ def _base_existing_key_project():
     }
 
 
+def _base_existing_built_app():
+    return {
+        "_id": VALID_OBJECT_ID,
+        "id": "app-1",
+        "slug": "taskflow",
+        "platform": "Mobile",
+        "version": "v1.2.0",
+        "icon": "checkmark-done-outline",
+        "name": {"en": "TaskFlow"},
+        "short_description": {"en": "Task manager."},
+        "full_description": {"en": ["Paragraph one.", "Paragraph two."]},
+        "snapshots": [],
+        "download_url": "#",
+        "sort_order": 1,
+        "is_active": True,
+    }
+
+
 def _base_existing_roadmap():
     return {
         "_id": VALID_OBJECT_ID,
@@ -153,7 +171,8 @@ def _build_service_instance(service_cls):
 
     for m in (
         "add_gallery", "add_video", "add_music", "add_key_project", "add_company_roadmap",
-        "add_gallery_like", "add_vlog_like", "add_comment", "insert_portfolio", "insert_system_info"
+        "add_gallery_like", "add_vlog_like", "add_comment", "insert_portfolio", "insert_system_info",
+        "add_built_app"
     ):
         getattr(repo, m).return_value = "new-id"
 
@@ -162,6 +181,7 @@ def _build_service_instance(service_cls):
         "update_gallery_like", "update_vlog_like", "update_comment", "update_user",
         "delete_gallery", "delete_video", "delete_music", "delete_key_project", "delete_company_roadmap",
         "delete_login_attempt", "delete_system_info_by_id",
+        "update_built_app", "delete_built_app"
     ):
         getattr(repo, m).return_value = True
 
@@ -187,6 +207,13 @@ def _build_service_instance(service_cls):
     repo.get_active_company_roadmaps.return_value = [_base_existing_roadmap()]
     repo.get_company_roadmap_by_id.return_value = _base_existing_roadmap()
     repo.count_company_roadmaps.return_value = 1
+
+    repo.get_paginated_built_apps.return_value = ([_base_existing_built_app()], 1)
+    repo.get_active_built_apps.return_value = [_base_existing_built_app()]
+    repo.get_built_app_by_id.return_value = _base_existing_built_app()
+    repo.get_active_built_app_by_slug.return_value = _base_existing_built_app()
+    repo.count_built_apps.return_value = 1
+    repo.find.return_value = []
 
     repo.find__paginate_comments_by_gallery.return_value = [_comment_doc("gallery_id")]
     repo.count_comments_by_gallery.return_value = 1
@@ -241,6 +268,10 @@ def _dummy_service_arg(service_name, method_name, param_name):
         return "project-1"
     if param_name == "roadmap_id":
         return "roadmap-1"
+    if param_name == "app_id":
+        return VALID_OBJECT_ID
+    if param_name == "slug":
+        return "taskflow"
     if param_name == "login_attempt_id":
         return "127.0.0.1"
     if param_name in {"page"}:
@@ -308,6 +339,17 @@ def _dummy_service_arg(service_name, method_name, param_name):
                 }
             if method_name == "update_company_roadmap":
                 return {"summary": "Updated"}
+        if service_name == "BuiltAppService":
+            if method_name == "add_built_app":
+                return {
+                    "name": {"en": "TaskFlow"},
+                    "short_description": {"en": "Task manager."},
+                    "full_description": {"en": ["Paragraph."]},
+                    "platform": "Mobile",
+                    "version": "v1.0.0",
+                }
+            if method_name == "update_built_app":
+                return {"name": {"en": "TaskFlow Updated"}}
         if service_name in {"GalleryLikeService", "VlogLikeService"}:
             return {"ip_address": "127.0.0.1, 10.0.0.1", "gallery_id": "g-1", "vlog_id": "v-1", "like": True}
         return {}
@@ -334,6 +376,9 @@ def _patch_targets():
         ("app.Services.CompanyRoadmapService.cleanup_uploaded_files", lambda *a, **k: None),
         ("app.Services.CompanyRoadmapService.convert_to_webp", lambda path: path),
         ("app.Services.CompanyRoadmapService.upload_file_to_cloudinary", lambda *a, **k: "/uploaded.webp"),
+        ("app.Services.BuiltAppService.cleanup_uploaded_files", lambda *a, **k: None),
+        ("app.Services.BuiltAppService.convert_to_webp", lambda path: path),
+        ("app.Services.BuiltAppService.upload_file_to_cloudinary", lambda *a, **k: "/uploaded.webp"),
         ("app.Services.VisitService.delete_image_from_cloudinary", lambda *a, **k: None),
         ("app.Services.PortfolioService.parse", lambda *_a, **_k: _fake_user_agent()),
         ("app.Services.PortfolioService.requests.get", lambda *_a, **_k: SimpleNamespace(json=lambda: {})),

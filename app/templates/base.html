@@ -377,10 +377,15 @@
         </footer>
     </div>
     {% if current_site != 'professional' %}
-        <a href="/admin/login" class="admin-float-btn" title="Admin Panel">
-            <ion-icon name="settings-outline"></ion-icon>
-            <span>Admin</span>
-        </a>
+        <div class="admin-float-wrap" id="adminFloat">
+            <a href="/admin/login" class="admin-float-btn" title="Admin Panel">
+                <ion-icon name="settings-outline"></ion-icon>
+                <span>Admin</span>
+            </a>
+            <button type="button" class="admin-float-toggle" aria-expanded="false" aria-label="Maximize Admin Panel">
+                <ion-icon name="chevron-forward-outline"></ion-icon>
+            </button>
+        </div>
     {% endif %}
     <!-- Include the modal component -->
     {% include 'components/modal.html' %}

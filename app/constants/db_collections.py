@@ -20,5 +20,6 @@ class MongoCollections:
     LOGIN_ATTEMPTS = "login_attempts"
     ACTIVITY_LOGS = "activity_logs"
     MUSIC_LIKES = "music_likes"
+    BUILT_APP_LIKES = "built_app_likes"
     BOOKING_REQUESTS = "booking_requests"
     USER_NAMES = "user_names"

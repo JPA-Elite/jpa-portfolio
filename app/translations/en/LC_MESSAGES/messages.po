@@ -611,6 +611,9 @@ msgstr "tags"
 msgid "Action_Like"
 msgstr "Like"
 
+msgid "Action_Dislike"
+msgstr "Dislike"
+
 msgid "Action_Comment"
 msgstr "Comment"
 
@@ -966,3 +969,9 @@ msgstr "Coming soon"
 
 msgid "App_Details_Download_Soon_Hint"
 msgstr "This build can't be downloaded just yet — it's still warming up in the workshop. Check back soon for the fresh release!"
+
+msgid "App_Share_Default_Title"
+msgstr "Built Apps"
+
+msgid "App_Share_Default_Text"
+msgstr "Check out this app I built."

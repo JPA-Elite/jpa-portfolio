@@ -7,6 +7,8 @@
     display: flex;
     justify-content: flex-start;
     width: auto;
+    margin: 0;
+    padding: 0;
     z-index: auto
 }
 
@@ -14,6 +16,8 @@
     display: inline-flex;
     align-items: center;
     gap: 6px;
+    margin: 0;
+    padding: 0;
     font-size: .9rem;
     font-weight: 600;
     color: var(--text-secondary, #9ca3af);
@@ -30,7 +34,7 @@
     justify-content: flex-start;
     align-items: center;
     gap: 20px;
-    position: static;
+    position: relative;
     z-index: auto;
     height: auto;
     margin-top: 8px;
@@ -169,6 +173,136 @@
     margin-top: 2px;
     font-size: 15px;
     color: #fbbf24
+}
+
+.app-details__reactions {
+    flex-shrink: 0;
+    align-self: center;
+    margin-left: auto;
+    display: grid;
+    gap: 10px;
+    width: 118px
+}
+.app-details__split-card {
+    position: relative;
+    display: grid;
+    border-radius: 20px;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, .1);
+    background: linear-gradient(180deg, rgba(17, 24, 39, .85), rgba(15, 23, 42, .72));
+    backdrop-filter: blur(10px);
+    box-shadow: 0 14px 30px rgba(0, 0, 0, .28)
+}
+
+.app-details__ratio-fill {
+    position: absolute;
+    inset: auto 0 0 0;
+    height: 0%;
+    background: linear-gradient(180deg, rgba(74, 222, 128, .16), rgba(74, 222, 128, .05));
+    transition: height .45s ease;
+    pointer-events: none
+}
+
+.app-details__half {
+    position: relative;
+    display: grid;
+    justify-items: center;
+    gap: 2px;
+    padding: 12px 4px 10px;
+    border: 0;
+    cursor: pointer;
+    font-family: inherit;
+    color: var(--text-secondary, #9ca3af);
+    background: transparent;
+    transition: color .2s ease, background .2s ease
+}
+
+.app-details__half ion-icon {
+    font-size: 1.4rem
+}
+
+.app-details__half:hover {
+    color: var(--text-primary);
+    background: rgba(255, 255, 255, .05)
+}
+
+.app-details__half:disabled {
+    opacity: .5;
+    cursor: wait
+}
+
+.app-details__half-count {
+    font-size: .9rem;
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+    line-height: 1
+}
+
+.app-details__half-label {
+    font-size: .62rem;
+    font-weight: 700;
+    letter-spacing: .06em;
+    text-transform: uppercase
+}
+
+.app-details__split-divider {
+    height: 1px;
+    background: rgba(255, 255, 255, .1)
+}
+
+.app-details__half--like.is-voted {
+    color: #4ade80;
+    animation: appActionPop .35s ease
+}
+
+.app-details__half--dislike.is-voted {
+    color: #fb7185;
+    animation: appActionPop .35s ease
+}
+
+.app-details__share-wide {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 10px 8px;
+    border-radius: 14px;
+    border: 1px solid rgba(125, 211, 252, .3);
+    cursor: pointer;
+    font-family: inherit;
+    font-size: .78rem;
+    font-weight: 800;
+    letter-spacing: .04em;
+    color: #7dd3fc;
+    background: rgba(125, 211, 252, .08);
+    transition: filter .2s ease, transform .2s ease, background .2s ease
+}
+
+.app-details__share-wide:hover {
+    filter: brightness(1.15);
+    transform: translateY(-1px)
+}
+
+.app-details__share-wide ion-icon {
+    font-size: 1.05rem
+}
+
+.app-details__share-wide.is-shared {
+    color: #fff;
+    background: linear-gradient(135deg, #2962ff, #1e88e5);
+    border-color: transparent
+}
+
+@keyframes appActionPop {
+    0% {
+        transform: scale(.85)
+    }
+    55% {
+        transform: scale(1.12)
+    }
+    100% {
+        transform: scale(1)
+    }
 }
 
 .app-details__hero,
@@ -505,6 +639,39 @@
     background: #2563eb
 }
 
+[data-theme=light] .app-details__split-card {
+    border-color: rgba(15, 23, 42, .1);
+    background: linear-gradient(180deg, rgba(255, 255, 255, .96), rgba(248, 250, 252, .94));
+    box-shadow: 0 10px 24px rgba(15, 23, 42, .1)
+}
+
+[data-theme=light] .app-details__half {
+    color: rgba(15, 23, 42, .6)
+}
+
+[data-theme=light] .app-details__half:hover {
+    color: #0f172a;
+    background: rgba(15, 23, 42, .05)
+}
+
+[data-theme=light] .app-details__split-divider {
+    background: rgba(15, 23, 42, .1)
+}
+
+[data-theme=light] .app-details__half--like.is-voted {
+    color: #16a34a
+}
+
+[data-theme=light] .app-details__half--dislike.is-voted {
+    color: #e11d48
+}
+
+[data-theme=light] .app-details__share-wide {
+    color: #0284c7;
+    border-color: rgba(2, 132, 199, .3);
+    background: rgba(2, 132, 199, .08)
+}
+
 [data-theme=light] .app-details__snapshot-placeholder {
     color: rgba(0, 0, 0, .35);
     background: linear-gradient(180deg, #f1f5f9, #e2e8f0);
@@ -536,6 +703,38 @@
     }
 }
 
+@media (max-width:900px) {
+    .app-details__hero {
+        flex-wrap: wrap
+    }
+
+    .app-details__head {
+        flex: 1 1 55%;
+        padding-right: 0
+    }
+
+    .app-details__reactions {
+        flex: 1 1 100%;
+        width: 100%;
+        margin-left: 0;
+        margin-top: 12px
+    }
+
+    .app-details__split-card {
+        grid-template-columns: 1fr 1px 1fr
+    }
+
+    .app-details__split-divider {
+        width: 1px;
+        height: auto;
+        min-height: 100%
+    }
+
+    .app-details__share-wide {
+        width: 100%
+    }
+}
+
 @media (max-width:768px) {
     .app-details {
         width: min(94%, 1080px);
@@ -546,6 +745,31 @@
         flex-direction: column;
         align-items: flex-start;
         padding: 22px 18px
+    }
+
+    .app-details__head {
+        padding-right: 0;
+        width: 100%
+    }
+
+    .app-details__reactions {
+        width: 100%;
+        margin-left: 0;
+        margin-top: 4px
+    }
+
+    .app-details__split-card {
+        grid-template-columns: 1fr 1px 1fr
+    }
+
+    .app-details__split-divider {
+        width: 1px;
+        height: auto;
+        min-height: 100%
+    }
+
+    .app-details__share-wide {
+        width: 100%
     }
 
     .app-details__head h1 {
@@ -587,8 +811,51 @@
 }
 
 @media (max-width:480px) {
+    .app-details {
+        width: 100%;
+        box-sizing: border-box;
+        margin-top: 16px;
+        padding: 0 4px
+    }
+
+    .app-details__hero {
+        padding: 20px 14px;
+        gap: 14px
+    }
+
+    .app-details__icon {
+        width: 72px;
+        height: 72px;
+        font-size: 2rem
+    }
+
+    .app-details__head {
+        width: 100%
+    }
+
+    .app-details__head h1 {
+        overflow-wrap: anywhere
+    }
+
+    .app-details__section {
+        padding: 18px 14px
+    }
+
+    .app-details__more-grid {
+        grid-template-columns: 1fr
+    }
+
+    .app-details__section p,
+    .app-details__download-hint,
+    .app-details__slide figcaption,
+    .app-details__more-meta {
+        overflow-wrap: anywhere
+    }
+
     .app-details__download {
         width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
         justify-content: center
     }
 
@@ -620,6 +887,9 @@
     .app-details__slide img,
     .app-details__slide-btn,
     .app-details__dot,
+    .app-details__half,
+    .app-details__share-wide,
+    .app-details__ratio-fill,
     .app-details__download,
     .app-details__more-card {
         transition: none;

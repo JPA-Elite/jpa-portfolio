@@ -42,6 +42,10 @@ from app.Controllers.api.MusicLikeController import (
     music_like_counts_batch_route,
     music_toggle_vote_route,
 )
+from app.Controllers.api.BuiltAppLikeController import (
+    built_app_like_counts_route,
+    built_app_toggle_vote_route,
+)
 from app.Controllers.api.DashboardController import visits_info_route, recent_activity_route, dashboard_summary_route, visits_list_route, visits_delete_route, recent_activity_delete_route, clear_all_visitors_route, clear_all_activity_route
 from app.Repositories.ActivityLogRepository import ActivityLogRepository
 from app.Controllers.api.LoginAttemptController import login_attempt_list_route, delete_login_attempt_route
@@ -185,6 +189,15 @@ def music_like_counts_batch():
 @api_bp.route("/api/music-like/vote", methods=[http.POST])
 def music_toggle_vote():
     return music_toggle_vote_route()
+
+# Built App Likes API
+@api_bp.route("/api/built-app-like/counts", methods=[http.GET])
+def built_app_like_counts():
+    return built_app_like_counts_route()
+
+@api_bp.route("/api/built-app-like/vote", methods=[http.POST])
+def built_app_toggle_vote():
+    return built_app_toggle_vote_route()
 
 # Gallery Comments API
 @api_bp.route("/api/gallery-comments", methods=[http.GET, http.POST])

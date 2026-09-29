@@ -141,7 +141,7 @@ function startChatTypingPlaceholder() {
     if (!chatPlaceholderText) {
         chatPlaceholderText = input.placeholder;
     }
-    const base = tChat("typingMessage", "Josh is typing");
+    const base = tChat("typingMessage", "Josh is Thinking");
     let dotIndex = 0;
     const update = () => {
         input.placeholder = base + CHAT_TYPING_DOTS[dotIndex];

@@ -229,7 +229,7 @@ msgid "chat_typing_aria"
 msgstr "Typing"
 
 msgid "chat_typing_message"
-msgstr "Josh is typing"
+msgstr "Josh is Thinking"
 
 msgid "chat_current_role_reply"
 msgstr "I am currently working as a {role} at {company}."

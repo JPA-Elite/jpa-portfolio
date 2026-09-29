@@ -223,7 +223,7 @@ msgid "chat_typing_aria"
 msgstr "Saisie en cours"
 
 msgid "chat_typing_message"
-msgstr "Josh est en train de taper"
+msgstr "Josh est en train de réfléchir"
 
 msgid "chat_current_role_reply"
 msgstr "Je travaille actuellement comme {role} chez {company}."

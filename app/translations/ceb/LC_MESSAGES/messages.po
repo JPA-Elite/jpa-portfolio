@@ -229,7 +229,7 @@ msgid "chat_typing_aria"
 msgstr "Nagatype"
 
 msgid "chat_typing_message"
-msgstr "Nagatype si Josh"
+msgstr "Naghunahuna si Josh"
 
 msgid "chat_current_role_reply"
 msgstr "Kasamtangan nagtrabaho ko isip {role} sa {company}."

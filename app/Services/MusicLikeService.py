@@ -1,8 +1,8 @@
-from app.Repositories.MusicLikeRepository import MusicLikeRepository
+from app.Repositories.Interfaces.IMusicLikeRepository import IMusicLikeRepository
 from app.Models.MusicLike import MusicLike
 
 class MusicLikeService:
-    def __init__(self, repository: MusicLikeRepository):
+    def __init__(self, repository: IMusicLikeRepository):
         self.repository = repository
 
     def get_likes_count(self, music_id: str):

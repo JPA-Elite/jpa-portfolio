@@ -8,3 +8,11 @@ class Portfolio:
             "name": self.name,
             "email": self.email
         }
+
+    @staticmethod
+    def from_dict(data):
+        data = data or {}
+        return Portfolio(
+            name=data.get("name", ""),
+            email=data.get("email", ""),
+        )

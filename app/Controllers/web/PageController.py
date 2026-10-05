@@ -52,210 +52,27 @@ from app.data.seeds.key_project_seeds import KEY_PROJECT_SEED_I18N as _KEY_PROJE
 from app.data.seeds.career_roadmap_seeds import CAREER_ROADMAP_SEED_I18N as _CAREER_ROADMAP_SEED_I18N
 
 
-def _locale_key(locale_value):
-    locale_str = str(locale_value or "en")
-    if locale_str.startswith("fil"):
-        return "fil_PH"
-    if locale_str.startswith("ceb"):
-        return "ceb"
-    if locale_str.startswith("fr"):
-        return "fr"
-    return "en"
+from app.utils_i18n import locale_key as _locale_key
+from app.utils_i18n import normalized_text_map as _normalized_project_text_map
+from app.utils_i18n import merge_seed_localized_map as _merge_seed_localized_map
+from app.utils_i18n import localized_value_from_map as _localized_value_from_map
+from app.utils_i18n import normalized_list_map as _normalized_localized_list_map
+from app.utils_i18n import merge_seed_localized_list_map as _merge_seed_localized_list_map
+from app.utils_i18n import localized_list_from_map as _localized_list_from_map
 
-def _normalized_project_text_map(value):
-    if isinstance(value, dict):
-        return {
-            locale: str(value.get(locale, "") or "").strip()
-            for locale in _KEY_PROJECT_LOCALES
-        }
 
-    if isinstance(value, str):
-        text = value.strip()
-        if text:
-            return {
-                "en": text,
-                "ceb": "",
-                "fil_PH": "",
-                "fr": "",
-            }
+from app.Services.PortfolioDisplayService import localized_roadmap_employment_type as _employment_type_source
+from app.Services.PortfolioDisplayService import resolve_project_stack_display as _resolve_project_stack_display
+from app.Services.PortfolioDisplayService import resolve_built_app_display as _built_app_display_source
 
-    return {locale: "" for locale in _KEY_PROJECT_LOCALES}
-
-def _merge_seed_localized_map(value, seed_map=None):
-    base = _normalized_project_text_map(value)
-    if not seed_map:
-        return base
-
-    seed_map = {
-        locale: str(seed_map.get(locale, "") or "").strip()
-        for locale in _KEY_PROJECT_LOCALES
-    }
-    english_value = (base.get("en") or "").strip()
-    merged = dict(base)
-
-    for locale in _KEY_PROJECT_LOCALES:
-        current = (merged.get(locale) or "").strip()
-        seed_value = (seed_map.get(locale) or "").strip()
-
-        if not current and seed_value:
-            merged[locale] = seed_value
-            continue
-
-        if (
-            locale != "en"
-            and seed_value
-            and english_value
-            and current == english_value
-        ):
-            merged[locale] = seed_value
-
-    if not merged.get("en") and seed_map.get("en"):
-        merged["en"] = seed_map["en"]
-
-    return merged
-
-def _localized_value_from_map(value_map, locale_value, default_value=""):
-    locale = _locale_key(locale_value)
-    return (
-        (value_map.get(locale) or "").strip()
-        or (value_map.get("en") or "").strip()
-        or default_value
-    )
-
-def _normalized_localized_list_map(value):
-    if isinstance(value, dict):
-        normalized = {}
-        for locale in _KEY_PROJECT_LOCALES:
-            locale_value = value.get(locale)
-            if isinstance(locale_value, list):
-                normalized[locale] = [str(x).strip() for x in locale_value if str(x).strip()]
-            elif isinstance(locale_value, str):
-                normalized[locale] = [line.strip() for line in locale_value.splitlines() if line.strip()]
-            else:
-                normalized[locale] = []
-        return normalized
-
-    if isinstance(value, list):
-        english_list = [str(x).strip() for x in value if str(x).strip()]
-        return {
-            "en": english_list,
-            "ceb": [],
-            "fil_PH": [],
-            "fr": [],
-        }
-
-    if isinstance(value, str):
-        english_list = [line.strip() for line in value.splitlines() if line.strip()]
-        return {
-            "en": english_list,
-            "ceb": [],
-            "fil_PH": [],
-            "fr": [],
-        }
-
-    return {locale: [] for locale in _KEY_PROJECT_LOCALES}
-
-def _merge_seed_localized_list_map(value, seed_map=None):
-    base = _normalized_localized_list_map(value)
-    if not seed_map:
-        return base
-
-    normalized_seed = {}
-    for locale in _KEY_PROJECT_LOCALES:
-        seed_value = seed_map.get(locale, []) if isinstance(seed_map, dict) else []
-        if isinstance(seed_value, list):
-            normalized_seed[locale] = [str(x).strip() for x in seed_value if str(x).strip()]
-        elif isinstance(seed_value, str):
-            normalized_seed[locale] = [line.strip() for line in seed_value.splitlines() if line.strip()]
-        else:
-            normalized_seed[locale] = []
-
-    merged = {locale: list(base.get(locale, [])) for locale in _KEY_PROJECT_LOCALES}
-    english_value = merged.get("en", [])
-
-    for locale in _KEY_PROJECT_LOCALES:
-        current = merged.get(locale, [])
-        seed_value = normalized_seed.get(locale, [])
-
-        if not current and seed_value:
-            merged[locale] = seed_value
-            continue
-
-        if locale != "en" and seed_value and english_value and current == english_value:
-            merged[locale] = seed_value
-
-    if not merged.get("en") and normalized_seed.get("en"):
-        merged["en"] = normalized_seed["en"]
-
-    return merged
-
-def _localized_list_from_map(value_map, locale_value):
-    locale = _locale_key(locale_value)
-    selected = value_map.get(locale) or value_map.get("en") or []
-    return [str(x).strip() for x in selected if str(x).strip()]
 
 def _localized_roadmap_employment_type(value):
-    text = str(value or "").strip()
-    if not text:
-        return ""
+    return _employment_type_source(value, gettext_fn=gettext)
 
-    normalized = text.lower().replace("_", "-").replace(" ", "-")
-    label_map = {
-        "internship": gettext("Career_Roadmap_Employment_Internship"),
-        "full-time": gettext("Career_Roadmap_Employment_Full_Time"),
-        "contract": gettext("Career_Roadmap_Employment_Contract"),
-        "freelance": gettext("Career_Roadmap_Employment_Freelance"),
-        "experience": gettext("Career_Roadmap_Employment_Experience"),
-    }
-    return label_map.get(normalized, text)
-
-def _resolve_project_stack_display(stack_value, locale_value, seed_stack_map=None):
-    locale = _locale_key(locale_value)
-
-    if isinstance(stack_value, dict):
-        stack_map = _merge_seed_localized_map(stack_value, seed_stack_map)
-        return _localized_value_from_map(stack_map, locale, "")
-
-    stack_text = str(stack_value or "").strip()
-    if seed_stack_map:
-        seed_stack_map = {
-            key: str(seed_stack_map.get(key, "") or "").strip()
-            for key in _KEY_PROJECT_LOCALES
-        }
-        english_seed = seed_stack_map.get("en", "")
-        if not stack_text or stack_text == english_seed:
-            return (
-                seed_stack_map.get(locale)
-                or seed_stack_map.get("en")
-                or stack_text
-            )
-
-    return stack_text
 
 def _resolve_built_app_display(app_dict):
-    locale = _locale_key(get_locale())
-    name_map = app_dict.get("name") or {}
-    short_map = app_dict.get("short_description") or {}
-    full_map = app_dict.get("full_description") or {}
+    return _built_app_display_source(app_dict, locale_value=get_locale())
 
-    paragraphs = full_map.get(locale) or full_map.get("en") or []
-    snapshots = [
-        {
-            "id": (s or {}).get("id"),
-            "image_url": (s or {}).get("image_url"),
-            "sort_order": (s or {}).get("sort_order", index),
-        }
-        for index, s in enumerate(app_dict.get("snapshots") or [])
-        if isinstance(s, dict) and s.get("image_url")
-    ]
-
-    return {
-        **app_dict,
-        "name": (name_map.get(locale) or name_map.get("en") or "").strip(),
-        "short_description": (short_map.get(locale) or short_map.get("en") or "").strip(),
-        "full_description": [str(p).strip() for p in paragraphs if str(p).strip()],
-        "snapshots": snapshots,
-    }
 
 
 def index_route():

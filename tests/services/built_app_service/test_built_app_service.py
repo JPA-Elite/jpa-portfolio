@@ -22,6 +22,7 @@ class BuiltAppServiceTests(unittest.TestCase):
     def setUp(self):
         self.repo = MagicMock()
         self.repo.find.return_value = []
+        self.repo.find_by_slug_like.return_value = []
         self.service = BuiltAppService(repository=self.repo)
 
     def test_get_built_app_by_id_returns_repository_value(self):
@@ -110,7 +111,7 @@ class BuiltAppServiceTests(unittest.TestCase):
         self.assertTrue(saved["is_active"])
 
     def test_add_built_app_generates_unique_slug_suffix(self):
-        self.repo.find.return_value = [{"_id": "x", "slug": "taskflow"}]
+        self.repo.find_by_slug_like.return_value = [{"_id": "x", "slug": "taskflow"}]
         self.repo.add_built_app.return_value = "app-new"
 
         self.service.add_built_app(

@@ -147,9 +147,13 @@ class BuiltAppService:
         return self.repository.delete_built_app(app_id)
 
     def seed_default_built_apps_if_empty(self):
-        if self.repository.count_built_apps() > 0:
-            return 0
+        from app.Services.SeedService import SeedService
+        return SeedService.ensure_seeded(
+            self.repository.count_built_apps,
+            self._seed_default_built_apps,
+        )
 
+    def _seed_default_built_apps(self):
         seeded = []
         for index, row in enumerate(BUILT_APPS, start=1):
             seeded.append(BuiltApp.from_dict({
@@ -271,7 +275,7 @@ class BuiltAppService:
         return slug or f"app-{uuid.uuid4().hex[:6]}"
 
     def _ensure_unique_slug(self, base_slug, exclude_id=None):
-        candidates = self.repository.find({"slug": {"$regex": f"^{re.escape(base_slug)}(-\\d+)?$", "$options": "i"}})
+        candidates = self.repository.find_by_slug_like(base_slug)
         taken = set()
         for item in candidates:
             if exclude_id and str(item.get("_id")) == str(exclude_id):

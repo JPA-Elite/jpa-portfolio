@@ -5,6 +5,7 @@ import ssl
 import time
 from email.message import EmailMessage
 from app.Repositories.AuthRepository import AuthRepository
+from app.Repositories.Interfaces.IAuthRepository import IAuthRepository
 
 class OtpService:
     _FIELD_ATTEMPTS = "admin_otp_attempts"
@@ -12,7 +13,8 @@ class OtpService:
     _FIELD_CODE = "admin_otp_code"
     _FIELD_EXPIRES_AT = "admin_otp_expires_at"
 
-    def __init__(self):
+    def __init__(self, repository: IAuthRepository = None):
+        self.repository = repository
         self.otp_ttl_seconds: int = self._env_int("ADMIN_OTP_TTL_SECONDS", 300)
         self.otp_length: int = self._env_int("ADMIN_OTP_LENGTH", 6)
         self.smtp_host: str = os.getenv("SMTP_HOST", "")
@@ -51,8 +53,11 @@ class OtpService:
         otp = random.randint(0, upper - 1)
         return str(otp).zfill(self.otp_length)
 
+    def _auth_repo(self):
+        return self.repository or AuthRepository()
+
     def _get_user_otp_state(self, user_id: str):
-        user_doc = AuthRepository().find_by_id(str(user_id)) or {}
+        user_doc = self._auth_repo().find_by_id(str(user_id)) or {}
         attempts_raw = user_doc.get(self._FIELD_ATTEMPTS, 0)
         cooldown_until_raw = user_doc.get(self._FIELD_COOLDOWN_UNTIL, 0)
 
@@ -69,7 +74,7 @@ class OtpService:
         return attempts_int, cooldown_until
 
     def _set_user_otp_state(self, user_id: str, attempts: int, cooldown_until: float):
-        AuthRepository().update_user(
+        self._auth_repo().update_user(
             str(user_id),
             {
                 self._FIELD_ATTEMPTS: int(attempts),
@@ -78,7 +83,7 @@ class OtpService:
         )
 
     def _get_stored_otp(self, user_id: str):
-        user_doc = AuthRepository().find_by_id(str(user_id)) or {}
+        user_doc = self._auth_repo().find_by_id(str(user_id)) or {}
         code_text = str(user_doc.get(self._FIELD_CODE, "") or "").strip()
         try:
             expires_at = float(user_doc.get(self._FIELD_EXPIRES_AT, 0))
@@ -87,7 +92,7 @@ class OtpService:
         return code_text, expires_at
 
     def _store_otp(self, user_id: str, otp: str):
-        AuthRepository().update_user(
+        self._auth_repo().update_user(
             str(user_id),
             {
                 self._FIELD_CODE: str(otp),
@@ -96,13 +101,19 @@ class OtpService:
         )
 
     def _clear_stored_otp(self, user_id: str):
-        AuthRepository().update_user(
+        self._auth_repo().update_user(
             str(user_id),
             {
                 self._FIELD_CODE: "",
                 self._FIELD_EXPIRES_AT: 0.0,
             },
         )
+
+    def get_user_email(self, user_id: str):
+        return self._auth_repo().get_user_email(str(user_id))
+
+    def update_user_email(self, user_id: str, email: str):
+        return self._auth_repo().update_user(str(user_id), {"email": email})
 
     def get_cooldown_remaining_seconds(self, user_id: str):
         attempts, cooldown_until = self._get_user_otp_state(user_id)
@@ -123,7 +134,7 @@ class OtpService:
                 "SMTP is not configured. Please set SMTP_HOST, SMTP_PORT, SMTP_USERNAME, SMTP_PASSWORD, SMTP_FROM."
             )
 
-        AuthRepository().update_user(user_id, {"email": email})
+        self._auth_repo().update_user(user_id, {"email": email})
 
         otp = self._generate_otp()
         self._store_otp(user_id, otp)

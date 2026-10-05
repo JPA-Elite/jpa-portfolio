@@ -1,5 +1,4 @@
 from flask import jsonify, request, session
-from app.Repositories.AuthRepository import AuthRepository
 from app.Services.OtpService import OtpService
 from app.Requests.api.AdminOtpRequest import AdminOtpRequest
 
@@ -20,8 +19,7 @@ def admin_otp_send_route():
 
         if not email:
             try:
-                user_doc = AuthRepository().find_by_id(str(user_id)) or {}
-                email = (user_doc.get("email") or "").strip()
+                email = svc.get_user_email(str(user_id))
             except Exception:
                 email = ""
 
@@ -107,10 +105,9 @@ def admin_otp_email_get_route():
         if not user_id:
             return jsonify({"ok": False, "message": "Not authenticated"}), 401
 
-        user_doc = AuthRepository().find_by_id(str(user_id)) or {}
-        email = (user_doc.get("email") or "").strip()
-
         svc = OtpService()
+        email = svc.get_user_email(str(user_id))
+
         retry_after_seconds = svc.get_cooldown_remaining_seconds(str(user_id))
 
         return jsonify(
@@ -141,7 +138,8 @@ def admin_otp_email_save_route():
         if not user_id:
             return jsonify({"ok": False, "message": "Not authenticated"}), 401
 
-        AuthRepository().update_user(str(user_id), {"email": email})
+        svc = OtpService()
+        svc.update_user_email(str(user_id), email)
         return jsonify({"ok": True, "message": "OTP email updated"})
     except Exception as e:
         return jsonify({"ok": False, "message": str(e)}), 400

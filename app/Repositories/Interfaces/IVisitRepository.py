@@ -18,3 +18,11 @@ class IVisitRepository(ABC):
     def delete_all_visitors(self) -> dict:
         pass
 
+    @abstractmethod
+    def get_visit_type_counts(self):
+        pass
+
+    @abstractmethod
+    def find_all_image_captures(self):
+        pass
+

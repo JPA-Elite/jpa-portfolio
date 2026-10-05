@@ -75,6 +75,9 @@ class BuiltAppRepository(IBuiltAppRepository, BaseRepository):
             "is_active": {"$ne": False},
         })
 
+    def find_by_slug_like(self, base_slug: str):
+        return self.find({"slug": {"$regex": f"^{re.escape(base_slug)}(-\\d+)?$", "$options": "i"}})
+
     def count_built_apps(self):
         return self.count_documents({})
 

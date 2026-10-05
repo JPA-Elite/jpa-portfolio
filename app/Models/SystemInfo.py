@@ -85,3 +85,34 @@ class SystemInfo:
             data["_id"] = str(self._id)
 
         return data
+
+    @staticmethod
+    def from_dict(data):
+        data = data or {}
+        return SystemInfo(
+            system=data.get("system"),
+            node=data.get("node"),
+            release=data.get("release"),
+            version=data.get("version"),
+            platform=data.get("platform"),
+            architecture=data.get("architecture"),
+            user_agent=data.get("user_agent"),
+            device=data.get("device"),
+            brand=data.get("brand"),
+            model=data.get("model"),
+            browser=data.get("browser"),
+            browser_version=data.get("browser_version"),
+            os=data.get("os"),
+            os_version=data.get("os_version"),
+            page=data.get("page"),
+            timestamp=data.get("timestamp"),
+            occurred_at=data.get("occurred_at"),
+            visit_date=data.get("visit_date"),
+            ip_address=data.get("ip_address"),
+            city=data.get("city"),
+            region=data.get("region"),
+            country=data.get("country"),
+            location=data.get("location"),
+            _id=str(data.get("_id")) if data.get("_id") is not None else None,
+            image_capture=data.get("image_capture"),
+        )

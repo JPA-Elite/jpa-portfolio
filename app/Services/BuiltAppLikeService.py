@@ -1,8 +1,8 @@
-from app.Repositories.BuiltAppLikeRepository import BuiltAppLikeRepository
+from app.Repositories.Interfaces.IBuiltAppLikeRepository import IBuiltAppLikeRepository
 from app.Models.BuiltAppLike import BuiltAppLike
 
 class BuiltAppLikeService:
-    def __init__(self, repository: BuiltAppLikeRepository):
+    def __init__(self, repository: IBuiltAppLikeRepository):
         self.repository = repository
 
     def get_likes_count(self, app_id: str):

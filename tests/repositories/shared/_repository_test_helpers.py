@@ -92,10 +92,23 @@ def _assert_repository_method_contract(testcase, class_name: str, method_name: s
         testcase.assertIn("attempts", result)
         testcase.assertIn("lockout_until", result)
         return
-    if class_name == "VisitRepository" and method_name == "count_visits":
+    if class_name == "VisitRepository" and method_name in {"count_visits", "get_visit_type_counts"}:
         testcase.assertIsInstance(result, dict)
         testcase.assertIn("visitor_total_count", result)
         testcase.assertIn("bot_total_count", result)
+        return
+    if class_name == "AuthRepository" and method_name == "get_user_email":
+        testcase.assertIsInstance(result, str)
+        return
+    if class_name == "ActivityLogRepository" and method_name in {"delete_by_ids", "delete_all"}:
+        testcase.assertIsInstance(result, dict)
+        testcase.assertIn("status", result)
+        return
+    if method_name == "get_paginated":
+        testcase.assertIsInstance(result, tuple)
+        testcase.assertEqual(len(result), 2)
+        testcase.assertIsInstance(result[0], list)
+        testcase.assertIsInstance(result[1], int)
         return
     if class_name in {"VlogLikeRepository", "VlogCommentRepository"} and method_name in {
         "get_vlog_likes_counts_by_ids",

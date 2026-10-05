@@ -7,23 +7,17 @@ from app.extensions import cache
 from app.Requests.api.CompanyRoadmapRequest import CompanyRoadmapRequest
 from app.utils import clear_cache_by_prefix, get_cache_data
 
+from app.utils_i18n import get_i18n_text_map as _get_i18n_text_map_source
+
 company_roadmap_service = CompanyRoadmapService(repository=CompanyRoadmapRepository())
 
 
 def _get_i18n_text_map(field_name: str):
-    return {
-        "en": request.form.get(field_name, "").strip(),
-        "ceb": request.form.get(f"{field_name}_ceb", "").strip(),
-        "fil_PH": request.form.get(f"{field_name}_fil", "").strip(),
-    }
+    return _get_i18n_text_map_source(request.form, field_name)
 
 
 def _get_i18n_highlights_map():
-    return {
-        "en": request.form.get("highlights", ""),
-        "ceb": request.form.get("highlights_ceb", ""),
-        "fil_PH": request.form.get("highlights_fil", ""),
-    }
+    return _get_i18n_text_map_source(request.form, "highlights")
 
 
 def company_roadmap_list_route():

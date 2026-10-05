@@ -6,8 +6,7 @@ from app.Repositories.Interfaces.ICompanyRoadmapRepository import ICompanyRoadma
 from app.configurations import SortOrder
 from app.constants.cloudinary import CloudinaryFolders, CloudinaryResourceType
 from app.utils import cleanup_uploaded_files, convert_to_webp, upload_file_to_cloudinary
-
-_ROADMAP_I18N_LOCALES = ("en", "ceb", "fil_PH")
+from app.constants.portfolio_locales import KEY_PROJECT_LOCALES as _ROADMAP_I18N_LOCALES
 
 class CompanyRoadmapService:
     def __init__(self, repository: ICompanyRoadmapRepository):
@@ -171,9 +170,13 @@ class CompanyRoadmapService:
         return self.repository.delete_company_roadmap(roadmap_id)
 
     def seed_default_company_roadmaps_if_empty(self):
-        if self.repository.count_company_roadmaps() > 0:
-            return 0
+        from app.Services.SeedService import SeedService
+        return SeedService.ensure_seeded(
+            self.repository.count_company_roadmaps,
+            self._seed_default_company_roadmaps,
+        )
 
+    def _seed_default_company_roadmaps(self):
         placeholder = "/static/images/no-project.webp"
         seeded = [
             CompanyRoadmap.from_dict({

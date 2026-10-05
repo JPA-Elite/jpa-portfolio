@@ -1,5 +1,6 @@
 from datetime import date
 
+from app.Models.UserDisplayName import UserDisplayName
 from app.Repositories.Interfaces.IUserDisplayNameRepository import IUserDisplayNameRepository
 
 
@@ -11,6 +12,11 @@ class UserDisplayNameService:
     def __init__(self, repository: IUserDisplayNameRepository):
         self.repository = repository
 
+    def _normalize_record(self, record):
+        if not isinstance(record, dict):
+            return record
+        return UserDisplayName.from_dict(record).to_dict()
+
     def _normalize_ip(self, ip_address):
         if not ip_address:
             return ip_address
@@ -20,14 +26,14 @@ class UserDisplayNameService:
 
     def get_display_name(self, ip_address):
         ip_address = self._normalize_ip(ip_address)
-        record = self.repository.find_by_ip(ip_address)
+        record = self._normalize_record(self.repository.find_by_ip(ip_address))
         if not record:
             return None, self.DAILY_NAME_CHANGE_LIMIT
         return record.get("display_name"), self._remaining_changes(record)
 
     def get_profile(self, ip_address):
         ip_address = self._normalize_ip(ip_address)
-        record = self.repository.find_by_ip(ip_address)
+        record = self._normalize_record(self.repository.find_by_ip(ip_address))
         if not record:
             return None, None, self.DAILY_NAME_CHANGE_LIMIT
         return record.get("display_name"), record.get("avatar_url"), self._remaining_changes(record)
@@ -48,7 +54,7 @@ class UserDisplayNameService:
         ip_address = self._normalize_ip(ip_address)
         display_name = display_name.strip()[: self.MAX_NAME_LENGTH]
         today = date.today().isoformat()
-        record = self.repository.find_by_ip(ip_address)
+        record = self._normalize_record(self.repository.find_by_ip(ip_address))
 
         if not record:
             self.repository.upsert_display_name(ip_address, display_name, 1, today)
@@ -71,14 +77,14 @@ class UserDisplayNameService:
 
     def get_avatar_status(self, ip_address):
         ip_address = self._normalize_ip(ip_address)
-        record = self.repository.find_by_ip(ip_address)
+        record = self._normalize_record(self.repository.find_by_ip(ip_address))
         if not record:
             return None, self.DAILY_AVATAR_CHANGE_LIMIT
         return record.get("avatar_url"), self._remaining_avatar_changes(record)
 
     def save_avatar(self, ip_address, avatar_url):
         ip_address = self._normalize_ip(ip_address)
-        record = self.repository.find_by_ip(ip_address)
+        record = self._normalize_record(self.repository.find_by_ip(ip_address))
         previous_url = record.get("avatar_url") if record else None
         today = date.today().isoformat()
 

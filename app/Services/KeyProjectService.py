@@ -125,9 +125,13 @@ class KeyProjectService:
         return self.repository.delete_key_project(project_id)
 
     def seed_default_projects_if_empty(self):
-        if self.repository.count_key_projects() > 0:
-            return 0
+        from app.Services.SeedService import SeedService
+        return SeedService.ensure_seeded(
+            self.repository.count_key_projects,
+            self._seed_default_projects,
+        )
 
+    def _seed_default_projects(self):
         defaults = self._default_project_seed_data()
         seeded = []
         for row in defaults:
@@ -264,40 +268,15 @@ class KeyProjectService:
         cleanup_uploaded_files(None, url)
 
     def _localized_map(self, value, fallback=None):
-        if isinstance(value, dict):
-            normalized = {
-                "en": (value.get("en") or "").strip(),
-                "ceb": (value.get("ceb") or "").strip(),
-                "fr": (value.get("fr") or "").strip(),
-                "fil_PH": (value.get("fil_PH") or "").strip(),
-            }
-            if any(normalized.values()):
-                return normalized
-
-        if isinstance(value, str):
-            text = value.strip()
-            if text:
-                return {
-                    "en": text,
-                    "ceb": text,
-                    "fr": text,
-                    "fil_PH": text,
-                }
-
+        from app.utils_i18n import normalized_text_map
+        if isinstance(value, dict) and any(str(value.get(locale) or "").strip() for locale in ("en", "ceb", "fr", "fil_PH")):
+            return normalized_text_map(value)
+        if isinstance(value, str) and value.strip():
+            from app.utils_i18n import same_text_map
+            return same_text_map(value.strip())
         if isinstance(fallback, dict):
-            return {
-                "en": (fallback.get("en") or "").strip(),
-                "ceb": (fallback.get("ceb") or "").strip(),
-                "fr": (fallback.get("fr") or "").strip(),
-                "fil_PH": (fallback.get("fil_PH") or "").strip(),
-            }
-
-        return {
-            "en": "",
-            "ceb": "",
-            "fr": "",
-            "fil_PH": "",
-        }
+            return normalized_text_map(fallback)
+        return normalized_text_map(None)
 
     def _default_project_seed_data(self):
         same_title = lambda text: {"en": text, "ceb": text, "fr": text, "fil_PH": text}

@@ -1,7 +1,6 @@
 from app.Repositories.Interfaces.IVisitRepository import IVisitRepository
 from app.Models.SystemInfo import SystemInfo
 from app.configurations import SortOrder
-from bson import ObjectId
 from app.constants.messages import DISPLAY_RECORDS_DELETE_MSG
 from app.utils import delete_image_from_cloudinary
 
@@ -20,9 +19,7 @@ class VisitService:
                 record_id = record.get("_id")
                 image_url = record.get("image_capture")
 
-                object_id = ObjectId(record_id)
-
-                self.repository.delete_system_info_by_id(object_id)
+                self.repository.delete_system_info_by_id(str(record_id))
 
                 if image_url:
                     delete_image_from_cloudinary(image_url)
@@ -37,16 +34,7 @@ class VisitService:
 
     def delete_all_visitors(self):
         try:
-            collection = getattr(self.repository, 'collection', None)
-            if collection is not None and hasattr(collection, "find"):
-                try:
-                    cursor = collection.find({}, projection={"image_capture": 1})
-                except TypeError:
-                    cursor = collection.find({})
-                all_docs = list(cursor)
-            else:
-                all_docs = []
-            image_urls = [doc.get("image_capture") for doc in all_docs if doc.get("image_capture")]
+            image_urls = self.repository.find_all_image_captures()
             result = self.repository.delete_all_visitors()
             for url in image_urls:
                 if url:

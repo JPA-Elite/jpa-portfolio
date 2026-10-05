@@ -70,14 +70,14 @@ def visits_delete_route(record_id):
         clear_cache_by_prefix("admin.api.dashboard_summary:")
     return jsonify({"ok": result.get("status") == "success", "message": result.get("message", "")})
 
-def recent_activity_delete_route(record_ids: list):
+def recent_activity_delete_route(record_ids: list = None):
     try:
         form = DashboardRequest()
         data, error_response, status_code = form.validated()
         if error_response:
             return error_response, status_code
 
-        result = dashboard_service.delete_activity_logs(data["record_ids"])
+        result = dashboard_service.delete_activity_logs(data["record_ids"] if data.get("record_ids") else (record_ids or []))
         if MagicMock and isinstance(result, MagicMock):
             if hasattr(result, 'return_value') and isinstance(result.return_value, dict):
                 result = result.return_value

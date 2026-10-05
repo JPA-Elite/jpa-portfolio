@@ -96,6 +96,9 @@ class VisitRepository(IVisitRepository, BaseRepository):
             return self._legacy_paginated_documents(page, per_page, order, search)
 
     def delete_system_info_by_id(self, object_id):
+        from bson import ObjectId
+        if not isinstance(object_id, ObjectId):
+            object_id = ObjectId(str(object_id))
         self.delete_one({"_id": object_id})
 
     def count_visits(self, where_condition: dict = None):
@@ -135,4 +138,38 @@ class VisitRepository(IVisitRepository, BaseRepository):
             return False
         except Exception:
             return False
+
+    def get_visit_type_counts(self):
+        try:
+            pipeline = [
+                {
+                    "$group": {
+                        "_id": {
+                            "$cond": [
+                                {"$eq": [{"$toLower": "$os"}, "other"]},
+                                "bot",
+                                "visitor",
+                            ]
+                        },
+                        "count": {"$sum": 1},
+                    }
+                }
+            ]
+            agg = list(self.aggregate(pipeline))
+            counts = {"visitor_total_count": 0, "bot_total_count": 0}
+            for entry in agg:
+                if entry.get("_id") == "bot":
+                    counts["bot_total_count"] = int(entry.get("count", 0))
+                else:
+                    counts["visitor_total_count"] = int(entry.get("count", 0))
+            return counts
+        except Exception:
+            return self.count_visits()
+
+    def find_all_image_captures(self):
+        try:
+            docs = self.find({}, projection={"image_capture": 1})
+        except TypeError:
+            docs = self.find({})
+        return [doc.get("image_capture") for doc in docs if doc.get("image_capture")]
 

@@ -29,6 +29,10 @@ class IBuiltAppRepository(ABC):
         pass
 
     @abstractmethod
+    def find_by_slug_like(self, base_slug: str):
+        pass
+
+    @abstractmethod
     def count_built_apps(self):
         pass
 

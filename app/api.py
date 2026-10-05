@@ -4,11 +4,12 @@ from app.Controllers.api.VlogLikeController import (
     get_vlog_likes_counts_batch_route,
 )
 from app.configurations import HTTPMethod as http
-from flask import Blueprint, request, request, current_app
+from flask import Blueprint, request, current_app
 from datetime import datetime
 import json
 import os
 from app.Controllers.api.BaseController import change_language_route, delete_page_system_info_route, download_song_route, get_client_ip_route, profile_config_route, chat_route, proxy_audio_route
+from app.Services.ActivityLogService import ActivityLogService
 from app.Repositories.ActivityLogRepository import ActivityLogRepository
 from flask import session
 from app.Controllers.api.MusicController import add_music_route, delete_music_route, music_categories_route, music_list_route, update_music_route
@@ -47,7 +48,6 @@ from app.Controllers.api.BuiltAppLikeController import (
     built_app_toggle_vote_route,
 )
 from app.Controllers.api.DashboardController import visits_info_route, recent_activity_route, dashboard_summary_route, visits_list_route, visits_delete_route, recent_activity_delete_route, clear_all_visitors_route, clear_all_activity_route
-from app.Repositories.ActivityLogRepository import ActivityLogRepository
 from app.Controllers.api.LoginAttemptController import login_attempt_list_route, delete_login_attempt_route
 from app.Controllers.api.GalleryCommentController import (
     gallery_comments_route,
@@ -86,7 +86,7 @@ api_bp = Blueprint("api", __name__)
 @api_bp.after_request
 def _log_admin_activity(response):
     try:
-        if request.path.startswith("/admin/api/") and request.method in ("POST", "PUT", "DELETE"):
+        if request.path.startswith("/admin/api/") and request.method in (http.POST, http.PUT, http.DELETE):
             entry = {
                 "timestamp": datetime.utcnow().isoformat() + "Z",
                 "method": request.method,
@@ -109,8 +109,8 @@ def _log_admin_activity(response):
                 pass
 
             try:
-                repo = ActivityLogRepository()
-                repo.insert(entry)
+                activity_service = ActivityLogService(repository=ActivityLogRepository())
+                activity_service.log_admin_activity(entry)
             except Exception:
                 logs_dir = os.path.join(os.path.dirname(__file__), "logs")
                 os.makedirs(logs_dir, exist_ok=True)
@@ -139,11 +139,11 @@ def profile_config():
 def chat():
     return chat_route()
 
-@api_bp.route('/api/download_song')
+@api_bp.route('/api/download_song', methods=[http.GET])
 def download_song():
     return download_song_route()
 
-@api_bp.route("/api/proxy-audio")
+@api_bp.route("/api/proxy-audio", methods=[http.GET])
 def proxy_audio():
     return proxy_audio_route()
 
@@ -269,8 +269,7 @@ def delete_visits(record_id):
 @api_bp.route("/admin/api/delete-activity", methods=[http.DELETE])
 @admin_login_required
 def delete_activity():
-    ids = request.json.get("record_ids", []) if request.json else []
-    return recent_activity_delete_route(ids)
+    return recent_activity_delete_route()
 
 @api_bp.route("/admin/api/clear-all-visitors", methods=[http.DELETE])
 @admin_login_required

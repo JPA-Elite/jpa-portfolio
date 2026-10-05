@@ -2,13 +2,17 @@ import base64
 from datetime import datetime
 import cv2
 import numpy as np
-from bson import ObjectId
 from flask import jsonify, request, session
+from app.Services.AuthService import AuthService
 from app.Repositories.AuthRepository import AuthRepository
+from app.Repositories.LoginAttemptRepository import LoginAttemptRepository
 from app.Requests.api.AdminFaceRequest import AdminFaceRequest
 
 _FACE_CASCADE = cv2.CascadeClassifier(cv2.data.haarcascades + "haarcascade_frontalface_default.xml")
-_auth_repo_for_faces = AuthRepository()
+auth_service = AuthService(
+    repository=AuthRepository(),
+    attempt_repository=LoginAttemptRepository(),
+)
 
 def _require_image_b64(payload: dict) -> str:
     if not payload:
@@ -108,17 +112,10 @@ def admin_face_register_route():
         if not user_id:
             return jsonify({"ok": False, "message": "Not authenticated"}), 401
 
-        _auth_repo_for_faces.collection.update_one(
-            {"_id": ObjectId(user_id)},
-            {
-                "$set": {
-                    "face_reference_crop_b64": face_crop_b64,
-
-                    "face_reference_hash": "",
-                    "face_last_registered_at": datetime.utcnow().isoformat() + "Z",
-                }
-            },
-            upsert=False,
+        auth_service.save_face_reference(
+            str(user_id),
+            face_crop_b64,
+            datetime.utcnow().isoformat() + "Z",
         )
 
         return jsonify({"ok": True, "message": "Face reference registered"})
@@ -137,7 +134,7 @@ def admin_face_records_route():
         if not user_id:
             return jsonify({"ok": False, "message": "Not authenticated"}), 401
 
-        user_doc = _auth_repo_for_faces.collection.find_one({"_id": ObjectId(user_id)}) or {}
+        user_doc = auth_service.get_face_records(str(user_id))
 
         registered_at = user_doc.get("face_last_registered_at")
         verified_at = user_doc.get("face_last_verified_at")
@@ -189,7 +186,7 @@ def admin_face_verify_route():
         if not user_id:
             return jsonify({"ok": False, "message": "Not authenticated"}), 401
 
-        user_doc = _auth_repo_for_faces.collection.find_one({"_id": ObjectId(user_id)})
+        user_doc = auth_service.get_face_records(str(user_id))
         ref_crop_b64 = (user_doc or {}).get("face_reference_crop_b64")
         if not ref_crop_b64:
             return jsonify({"ok": False, "message": "No registered face found. Please register first."}), 400
@@ -212,15 +209,10 @@ def admin_face_verify_route():
                 403,
             )
 
-        _auth_repo_for_faces.collection.update_one(
-            {"_id": ObjectId(user_id)},
-            {
-                "$set": {
-                    "face_last_verified_at": datetime.utcnow().isoformat() + "Z",
-                    "face_last_verify_distance": dist,
-                }
-            },
-            upsert=False,
+        auth_service.mark_face_verified(
+            str(user_id),
+            datetime.utcnow().isoformat() + "Z",
+            dist,
         )
 
         session["face_verified"] = True

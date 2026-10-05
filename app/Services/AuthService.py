@@ -105,6 +105,21 @@ class AuthService:
             "profile_image": session.get("profile_image"),
         }), 200
 
+    def get_face_records(self, user_id: str):
+        return self.repository.get_face_records(str(user_id))
+
+    def save_face_reference(self, user_id: str, face_crop_b64: str, registered_at: str):
+        return self.repository.update_face_reference(str(user_id), face_crop_b64, registered_at)
+
+    def mark_face_verified(self, user_id: str, verified_at: str, distance: float):
+        return self.repository.update_face_verified(str(user_id), verified_at, distance)
+
+    def get_user_email(self, user_id: str):
+        return self.repository.get_user_email(str(user_id))
+
+    def update_user_email(self, user_id: str, email: str):
+        return self.repository.update_user(str(user_id), {"email": email})
+
     @staticmethod
     def _clear_admin_page_cache():
         for key in (

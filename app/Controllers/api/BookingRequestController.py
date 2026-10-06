@@ -36,3 +36,15 @@ def delete_booking_request_route(booking_id):
         return jsonify({"message": BOOKING_REQUEST_DELETE_MSG}), 200
     else:
         return jsonify({"message": BOOKING_REQUEST_NOT_FOUND_ERROR}), 404
+
+def clear_all_booking_requests_route():
+    try:
+        form = BookingRequestRequest()
+        _, error_response, status_code = form.validated()
+        if error_response:
+            return error_response, status_code
+
+        result = booking_request_service.delete_all_booking_requests()
+        return jsonify({"ok": result.get("status") == "success", "message": result.get("message", "")})
+    except Exception as e:
+        return jsonify({"ok": False, "message": str(e)})

@@ -22,4 +22,8 @@ export class AdminBookingRequestsRepository extends IAdminBookingRequestsReposit
     async remove(id) {
         return fetch(`${this.baseUrl}/delete-booking-request/${id}`, { method: "DELETE" });
     }
+
+    async clearAll() {
+        return fetch(`${this.baseUrl}/clear-all-booking-requests`, { method: "DELETE" });
+    }
 }

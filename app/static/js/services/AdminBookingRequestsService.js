@@ -18,6 +18,10 @@ export class AdminBookingRequestsService {
         return this.#toResult(this.repository.remove(id));
     }
 
+    async clearAll() {
+        return this.#toResult(this.repository.clearAll());
+    }
+
     async #toResult(responsePromise) {
         try {
             const response = await responsePromise;

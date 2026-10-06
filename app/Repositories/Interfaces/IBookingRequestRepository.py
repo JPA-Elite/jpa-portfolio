@@ -20,5 +20,9 @@ class IBookingRequestRepository(ABC):
         pass
 
     @abstractmethod
+    def delete_all(self):
+        pass
+
+    @abstractmethod
     def count_by_ip_in_window(self, ip_address: str, since: float):
         pass

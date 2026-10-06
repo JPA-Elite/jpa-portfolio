@@ -41,6 +41,9 @@ class BookingRequestRepository(IBookingRequestRepository, BaseRepository):
         result = self.delete_one(query)
         return result.deleted_count > 0
 
+    def delete_all(self):
+        return self.delete_many({})
+
     def count_by_ip_in_window(self, ip_address: str, since: float):
         from datetime import datetime
         since_dt = datetime.utcfromtimestamp(since)

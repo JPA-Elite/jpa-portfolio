@@ -31,6 +31,116 @@ function escapeHtml(value = "") {
         .replace(/'/g, "&#39;");
 }
 
+function isImageFile(file) {
+    return Boolean(file && file.type && file.type.startsWith("image/"));
+}
+
+function makeFileDropzone(input, previewEl, multiple) {
+    if (!input || input.dataset.dropzoneInit) return;
+    input.dataset.dropzoneInit = "1";
+    let box = new DataTransfer();
+    let dragDepth = 0;
+
+    const zone = document.createElement("div");
+    zone.className = "ba-dropzone";
+    zone.setAttribute("role", "button");
+    zone.setAttribute("tabindex", "0");
+    zone.innerHTML = `<i class="bi bi-cloud-upload"></i><span>Drag photo here or click to browse</span>`;
+    input.classList.add("ba-input-hidden");
+    input.after(zone);
+
+    const render = () => {
+        if (!previewEl) return;
+        previewEl.querySelectorAll("img[data-blob]").forEach((img) => URL.revokeObjectURL(img.src));
+        previewEl.innerHTML = "";
+        Array.from(box.files).forEach((file) => {
+            const url = URL.createObjectURL(file);
+            const thumb = document.createElement("div");
+            thumb.className = "ba-dropthumb";
+            const img = document.createElement("img");
+            img.src = url;
+            img.alt = file.name;
+            img.dataset.blob = "1";
+            const removeBtn = document.createElement("button");
+            removeBtn.type = "button";
+            removeBtn.setAttribute("aria-label", "Remove photo");
+            removeBtn.textContent = "×";
+            removeBtn.addEventListener("click", (event) => {
+                event.stopPropagation();
+                const next = new DataTransfer();
+                Array.from(box.files).forEach((kept) => {
+                    if (kept !== file) next.items.add(kept);
+                });
+                box = next;
+                input.files = box.files;
+                render();
+            });
+            thumb.appendChild(img);
+            thumb.appendChild(removeBtn);
+            previewEl.appendChild(thumb);
+        });
+    };
+
+    const addFiles = (fileList) => {
+        let added = false;
+        Array.from(fileList || []).forEach((file) => {
+            if (!isImageFile(file)) {
+                window.notify("Only image files are allowed.", "warning");
+                return;
+            }
+            if (!multiple) box = new DataTransfer();
+            box.items.add(file);
+            added = true;
+        });
+        if (added) {
+            input.files = box.files;
+            render();
+        }
+    };
+
+    zone.addEventListener("click", () => input.click());
+    zone.addEventListener("keydown", (event) => {
+        if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault();
+            input.click();
+        }
+    });
+    zone.addEventListener("dragenter", (event) => {
+        event.preventDefault();
+        dragDepth += 1;
+        zone.classList.add("dragover");
+    });
+    zone.addEventListener("dragover", (event) => {
+        event.preventDefault();
+        zone.classList.add("dragover");
+    });
+    zone.addEventListener("dragleave", (event) => {
+        event.preventDefault();
+        dragDepth = Math.max(0, dragDepth - 1);
+        if (dragDepth === 0) zone.classList.remove("dragover");
+    });
+    zone.addEventListener("drop", (event) => {
+        event.preventDefault();
+        dragDepth = 0;
+        zone.classList.remove("dragover");
+        addFiles(event.dataTransfer?.files);
+    });
+    input.addEventListener("change", () => {
+        addFiles(input.files);
+        input.value = "";
+        input.files = box.files;
+    });
+}
+
+function initFileDropzones(scope) {
+    const root = scope || document;
+    root.querySelectorAll("input[data-dropzone]").forEach((input) => {
+        const previewId = input.getAttribute("data-drop-preview");
+        const previewEl = previewId ? document.getElementById(previewId) : input.closest("[data-snapshot-row]")?.querySelector("[data-snapshot-preview]");
+        makeFileDropzone(input, previewEl || null, input.getAttribute("data-dropzone") === "multiple");
+    });
+}
+
 function getLocalizedMap(baseId, suffix = "") {
     const get = (localeKey) => document.getElementById(`${baseId}${localeKey}${suffix}`);
     return {
@@ -71,8 +181,9 @@ function buildSnapshotRowMarkup(snapshot = {}) {
       <div class="row g-2 align-items-start">
         <div class="col-md-4">
           ${imageUrl ? `<div class="mb-1"><img src="${escapeHtml(imageUrl)}" alt="Snapshot preview" style="width:100%;max-height:90px;object-fit:cover;border-radius:6px;border:1px solid #ddd;"></div>` : ""}
-          <input type="file" class="form-control form-control-sm" accept="image/*" data-snapshot-file>
-          <div class="form-text">${imageUrl ? "Upload to replace this snapshot." : "Upload snapshot image."}</div>
+          <input type="file" class="form-control form-control-sm" accept="image/*" data-snapshot-file data-dropzone="single">
+          <div class="ba-drop-preview" data-snapshot-preview></div>
+          <div class="form-text">${imageUrl ? "Drag a photo here or upload to replace this snapshot." : "Drag a photo here or upload snapshot image."}</div>
         </div>
         <div class="col-md-8 d-flex align-items-end justify-content-end">
           <button type="button" class="btn btn-outline-danger btn-sm" data-remove-snapshot-row title="Remove snapshot">
@@ -182,6 +293,7 @@ async function loadBuiltApps(page = 1) {
             `);
 
             modalContainer.insertAdjacentHTML("beforeend", buildEditModal(app, editModalId, page, index));
+            initFileDropzones(document.getElementById(editModalId));
         });
 
         pageInfo.textContent = `Page ${page} | ${data.total_pages || 1}`;
@@ -283,8 +395,9 @@ function buildEditModal(app, modalId, page, index) {
                 <div class="col-12">
                   <label class="form-label">App Icon Image (optional)</label>
                   ${app.icon_image_url ? `<div class="mb-2"><img src="${escapeHtml(app.icon_image_url)}" alt="App icon preview" style="width:64px;height:64px;object-fit:cover;border-radius:14px;border:1px solid #ddd;"></div>` : ""}
-                  <input type="file" id="editIconImage${suffix}" class="form-control" accept="image/*">
-                  <div class="form-text">${app.icon_image_url ? "Upload to replace the icon image." : "Shown on the portfolio showcase card and the app details header."}</div>
+                  <input type="file" id="editIconImage${suffix}" class="form-control" accept="image/*" data-dropzone="single" data-drop-preview="editIconImagePreview${suffix}">
+                  <div class="ba-drop-preview" id="editIconImagePreview${suffix}"></div>
+                  <div class="form-text">${app.icon_image_url ? "Drag a photo here or upload to replace the icon image." : "Drag a photo here or upload. Shown on the portfolio showcase card and the app details header."}</div>
                 </div>
 
                 <div class="col-12"><label class="form-label">Short Description (EN)</label><textarea id="editShortEn${suffix}" class="form-control" rows="2">${escapeHtml(shortDescription.en)}</textarea></div>
@@ -423,6 +536,7 @@ async function updateBuiltApp(appId, suffix) {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+    initFileDropzones(document);
     const addMaxBtn = document.getElementById("addBuiltAppMaximizeBtn");
     if (addMaxBtn) {
         addMaxBtn.dataset.targetModal = "addAppModal";
@@ -444,6 +558,8 @@ document.addEventListener("DOMContentLoaded", () => {
             const targetSelector = addRowBtn.getAttribute("data-target");
             const container = targetSelector ? document.querySelector(targetSelector) : null;
             container?.insertAdjacentHTML("beforeend", buildSnapshotRowMarkup({}));
+            const newRow = container?.lastElementChild;
+            if (newRow?.hasAttribute("data-snapshot-row")) initFileDropzones(newRow);
             return;
         }
 

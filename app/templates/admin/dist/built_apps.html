@@ -3,6 +3,100 @@
 {% block head %}
 
 <style>
+  .ba-input-hidden {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    padding: 0 !important;
+    margin: -1px !important;
+    overflow: hidden !important;
+    clip: rect(0, 0, 0, 0) !important;
+    white-space: nowrap !important;
+    border: 0 !important;
+  }
+
+  .ba-dropzone {
+    border: 2px dashed #adb5bd;
+    border-radius: 10px;
+    padding: 22px 14px;
+    text-align: center;
+    color: #6c757d;
+    background: #f8f9fa;
+    cursor: pointer;
+    transition: border-color .15s ease, background-color .15s ease, color .15s ease;
+  }
+
+  .ba-dropzone:hover,
+  .ba-dropzone.dragover {
+    border-color: #0d6efd;
+    background: #eef4ff;
+    color: #0d6efd;
+  }
+
+  .ba-dropzone i {
+    display: block;
+    font-size: 1.6rem;
+    margin-bottom: 4px;
+  }
+
+  .ba-dropzone span {
+    font-size: .85rem;
+  }
+
+  .ba-drop-preview {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 8px;
+  }
+
+  .ba-drop-preview:empty {
+    display: none;
+  }
+
+  .ba-dropthumb {
+    position: relative;
+    width: 72px;
+    height: 72px;
+    flex-shrink: 0;
+  }
+
+  .ba-dropthumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    display: block;
+  }
+
+  .ba-dropthumb button {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    width: 22px;
+    height: 22px;
+    padding: 0;
+    line-height: 1;
+    border-radius: 50%;
+    border: 1px solid #dc3545;
+    background: #fff;
+    color: #dc3545;
+    font-size: 14px;
+    cursor: pointer;
+  }
+
+  @media (max-width: 480px) {
+    .ba-dropzone {
+      padding: 16px 10px;
+    }
+
+    .ba-dropthumb {
+      width: 56px;
+      height: 56px;
+    }
+  }
+
   .ba-admin-actions {
     display: flex;
     flex-wrap: wrap;
@@ -158,8 +252,9 @@
 
             <div class="col-12">
               <label class="form-label">App Icon Image (optional)</label>
-              <input type="file" id="addIconImage" class="form-control" accept="image/*">
-              <div class="form-text">Shown on the portfolio showcase card and the app details header. Falls back to the ion-icon when empty.</div>
+              <input type="file" id="addIconImage" class="form-control" accept="image/*" data-dropzone="single" data-drop-preview="addIconImagePreview">
+              <div class="ba-drop-preview" id="addIconImagePreview"></div>
+              <div class="form-text">Drag a photo here or click to browse. Shown on the portfolio showcase card and the app details header. Falls back to the ion-icon when empty.</div>
             </div>
 
             <div class="col-12"><label class="form-label">Short Description (EN)</label><textarea id="addShortEn" class="form-control" rows="2"></textarea></div>
@@ -174,8 +269,9 @@
 
             <div class="col-12">
               <label class="form-label">Snapshots (optional images)</label>
-              <input type="file" id="addSnapshotFiles" class="form-control" accept="image/*" multiple>
-              <div class="form-text">Each image becomes a snapshot slide on the app details page.</div>
+              <input type="file" id="addSnapshotFiles" class="form-control" accept="image/*" multiple data-dropzone="multiple" data-drop-preview="addSnapshotFilesPreview">
+              <div class="ba-drop-preview" id="addSnapshotFilesPreview"></div>
+              <div class="form-text">Drag photos here or click to browse. Each image becomes a snapshot slide on the app details page.</div>
             </div>
 
             <div class="col-12 form-check mt-2 ms-2">

@@ -1,19 +1,14 @@
-from flask import jsonify, request
+from flask import jsonify
 from app.Repositories.BuiltAppRepository import BuiltAppRepository
 from app.Services.BuiltAppService import BuiltAppService
 from app.configurations import SortOrder
-from app.extensions import cache
 from app.Requests.api.BuiltAppRequest import BuiltAppRequest
-from app.utils import clear_cache_by_prefix, get_cache_data
+from app.utils import clear_cache_by_prefix
 
 built_app_service = BuiltAppService(repository=BuiltAppRepository())
 
 
 def built_app_list_route():
-    cached_data, cache_key = get_cache_data("admin.api.built_app_list", request.args)
-    if cached_data:
-        return jsonify(cached_data)
-
     try:
         built_app_service.seed_default_built_apps_if_empty()
     except Exception:
@@ -40,7 +35,6 @@ def built_app_list_route():
         "platform": data["platform_filter"],
         "is_active": data["is_active_filter"],
     }
-    cache.set(cache_key, response_data, timeout=300)
     return jsonify(response_data)
 
 
@@ -84,6 +78,5 @@ def delete_built_app_route(app_id):
 
 
 def _clear_built_app_caches():
-    clear_cache_by_prefix("admin.api.built_app_list:")
     clear_cache_by_prefix("portfolio_")
     clear_cache_by_prefix("app_details_")

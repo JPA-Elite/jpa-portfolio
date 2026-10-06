@@ -3,9 +3,8 @@ from flask import jsonify, request
 from app.Repositories.CompanyRoadmapRepository import CompanyRoadmapRepository
 from app.Services.CompanyRoadmapService import CompanyRoadmapService
 from app.configurations import SortOrder, SortOrderStr
-from app.extensions import cache
 from app.Requests.api.CompanyRoadmapRequest import CompanyRoadmapRequest
-from app.utils import clear_cache_by_prefix, get_cache_data
+from app.utils import clear_cache_by_prefix
 
 from app.utils_i18n import get_i18n_text_map as _get_i18n_text_map_source
 
@@ -21,10 +20,6 @@ def _get_i18n_highlights_map():
 
 
 def company_roadmap_list_route():
-    cached_data, cache_key = get_cache_data("admin.api.company_roadmap_list", request.args)
-    if cached_data:
-        return jsonify(cached_data)
-
     try:
         company_roadmap_service.seed_default_company_roadmaps_if_empty()
     except Exception:
@@ -51,7 +46,6 @@ def company_roadmap_list_route():
         "employment_type": data["employment_type_filter"],
         "is_active": data["is_active_filter"],
     }
-    cache.set(cache_key, response_data, timeout=300)
     return jsonify(response_data)
 
 
@@ -95,6 +89,5 @@ def delete_company_roadmap_route(roadmap_id):
 
 
 def _clear_company_roadmap_caches():
-    clear_cache_by_prefix("admin.api.company_roadmap_list:")
     clear_cache_by_prefix("profile_ui_")
 

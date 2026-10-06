@@ -1,20 +1,15 @@
 import json
-from flask import jsonify, request
+from flask import jsonify
 from app.Repositories.KeyProjectRepository import KeyProjectRepository
 from app.Services.KeyProjectService import KeyProjectService
 from app.configurations import SortOrder, SortOrderStr
-from app.extensions import cache
 from app.Requests.api.KeyProjectRequest import KeyProjectRequest
-from app.utils import clear_cache_by_prefix, get_cache_data
+from app.utils import clear_cache_by_prefix
 
 key_project_service = KeyProjectService(repository=KeyProjectRepository())
 
 
 def key_project_list_route():
-    cached_data, cache_key = get_cache_data("admin.api.key_project_list", request.args)
-    if cached_data:
-        return jsonify(cached_data)
-
     try:
         key_project_service.seed_default_projects_if_empty()
     except Exception:
@@ -41,7 +36,6 @@ def key_project_list_route():
         "status": data["status_filter"],
         "is_active": data["is_active_filter"],
     }
-    cache.set(cache_key, response_data, timeout=300)
     return jsonify(response_data)
 
 def add_key_project_route():
@@ -81,6 +75,5 @@ def delete_key_project_route(project_id):
     return jsonify({"message": "Key project deleted successfully."}), 200
 
 def _clear_key_project_caches():
-    clear_cache_by_prefix("admin.api.key_project_list:")
     clear_cache_by_prefix("profile_ui_")
 

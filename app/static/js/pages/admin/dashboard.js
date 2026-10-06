@@ -131,11 +131,13 @@ document.addEventListener("DOMContentLoaded", async () => {
                 const user = item.user_id || item.user || "-";
                 const method = item.method || "-";
                 const action = item.path || item.action || "";
+                const rawId = item._id;
+                const rowId = (rawId && typeof rawId === "object") ? (rawId.$oid || "") : (rawId || "");
                 let details = activityDetails(item);
                 if (details.length > 200) details = `${details.slice(0, 200)}...`;
 
                 return `
-                    <tr data-record-id="${item._id || ""}">
+                    <tr data-record-id="${rowId}">
                       <td class="small text-muted">${formatTimestamp(ts)}</td>
                       <td>${user}</td>
                       <td>${method}</td>
@@ -159,20 +161,42 @@ document.addEventListener("DOMContentLoaded", async () => {
                 btn.addEventListener("click", function () {
                     const row = this.closest("tr");
                     const recordId = row.dataset.recordId;
+                    if (!recordId) {
+                        window.notify("Delete failed.", "error");
+                        return;
+                    }
                     window.confirmDelete("Are you sure you want to delete this activity record?", async () => {
                         const BASE = "/admin/api";
-                        const res = await fetch(BASE + "/delete-activity", {
-                            method: "DELETE",
-                            headers: { "Content-Type": "application/json" },
-                            body: JSON.stringify({ record_ids: [recordId] }),
-                        });
-                        const json = await res.json();
-                        if (json.ok) {
-                            bootstrap.Modal.getInstance(document.getElementById("deleteConfirmModal")).hide();
+                        let json = null;
+                        try {
+                            const res = await fetch(BASE + "/delete-activity", {
+                                method: "DELETE",
+                                headers: { "Content-Type": "application/json" },
+                                body: JSON.stringify({ record_ids: [recordId] }),
+                            });
+                            try {
+                                json = await res.json();
+                            } catch (_) {
+                                json = null;
+                            }
+                            if (!res.ok) {
+                                window.notify((json && json.message) || "Delete failed.", "error");
+                                return;
+                            }
+                        } catch (_) {
+                            window.notify("Delete failed.", "error");
+                            return;
+                        }
+                        if (json && json.ok) {
+                            const modalEl = document.getElementById("deleteConfirmModal");
+                            if (modalEl && window.bootstrap && window.bootstrap.Modal) {
+                                const instance = window.bootstrap.Modal.getInstance(modalEl);
+                                if (instance) instance.hide();
+                            }
                             window.notify(json.message || "Record deleted.", "success");
                             loadActivity();
                         } else {
-                            window.notify(json.message || "Delete failed.", "error");
+                            window.notify((json && json.message) || "Delete failed.", "error");
                         }
                     });
                 });

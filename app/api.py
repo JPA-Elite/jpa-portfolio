@@ -82,10 +82,17 @@ from app.Controllers.api.BookingRequestController import booking_request_list_ro
 
 api_bp = Blueprint("api", __name__)
 
+_ACTIVITY_LOG_MANAGEMENT_PATHS = frozenset({
+    "/admin/api/delete-activity",
+    "/admin/api/clear-all-activity",
+})
+
 
 @api_bp.after_request
 def _log_admin_activity(response):
     try:
+        if request.path in _ACTIVITY_LOG_MANAGEMENT_PATHS:
+            return response
         if request.path.startswith("/admin/api/") and request.method in (http.POST, http.PUT, http.DELETE):
             entry = {
                 "timestamp": datetime.utcnow().isoformat() + "Z",

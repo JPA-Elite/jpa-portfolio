@@ -1,11 +1,10 @@
-from flask import request, jsonify
+from flask import jsonify
 from app.Services.GalleryService import GalleryService
 from app.Repositories.GalleryRepository import GalleryRepository
 from app.configurations import SortOrder, SortOrderStr
 from app.Requests.api.GalleryRequest import GalleryRequest
 from app.constants.messages import GALLERY_ADD_MSG, GALLERY_DELETE_MSG, GALLERY_NOT_FOUND_ERROR, GALLERY_UPDATE_ERROR, GALLERY_UPDATE_MSG
-from app.utils import clear_cache_by_prefix, get_cache_data
-from app.extensions import cache
+from app.utils import clear_cache_by_prefix
 
 # Initialize Services
 gallery_service = GalleryService(repository=GalleryRepository())
@@ -13,10 +12,6 @@ gallery_service = GalleryService(repository=GalleryRepository())
 # -------------------Administrator Controller------------------------
 # Gallery Controller
 def gallery_list_route():
-    cached_data, cache_key = get_cache_data("admin.api.gallery_list", request.args)
-    if cached_data:
-        return jsonify(cached_data)
-
     form = GalleryRequest()
     data, error_response, status_code = form.validated()
     if error_response:
@@ -46,7 +41,6 @@ def gallery_list_route():
         "search": search_query,
     }
 
-    cache.set(cache_key, response_data, timeout=300)
     return jsonify(response_data)
 
 def add_gallery_route():
@@ -56,7 +50,6 @@ def add_gallery_route():
         return error_response, status_code
 
     gallery_id = gallery_service.add_gallery(data)
-    clear_cache_by_prefix("admin.api.gallery_list:")
     clear_cache_by_prefix("gallery_")
     return jsonify({"message": GALLERY_ADD_MSG, "gallery_id": gallery_id}), 201
 
@@ -68,7 +61,6 @@ def update_gallery_route(gallery_id):
 
     success = gallery_service.update_gallery(gallery_id, data)
     if success:
-        clear_cache_by_prefix("admin.api.gallery_list:")
         clear_cache_by_prefix("gallery_")
         return jsonify({"message": GALLERY_UPDATE_MSG}), 200
     else:
@@ -82,7 +74,6 @@ def delete_gallery_route(gallery_id):
 
     success = gallery_service.delete_gallery(gallery_id)
     if success:
-        clear_cache_by_prefix("admin.api.gallery_list:")
         clear_cache_by_prefix("gallery_")
         return jsonify({"message": GALLERY_DELETE_MSG}), 200
     else:

@@ -27,6 +27,8 @@ class ActivityLogRepository(IActivityLogRepository, BaseRepository):
         if not object_ids:
             return {"status": "error", "message": "Invalid record IDs."}
         result = self.delete_many({"_id": {"$in": object_ids}})
+        if not result.deleted_count:
+            return {"status": "error", "message": "Activity record not found."}
         return {"status": "success", "deleted_count": result.deleted_count}
 
     def delete_all(self):

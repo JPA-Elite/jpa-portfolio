@@ -22,6 +22,20 @@
         ></video>
         <div id="caption"></div>
         <div id="imageModalGalleryCounter" class="image-modal-gallery-counter" hidden></div>
+        <aside class="modal-story" id="modalStory" hidden>
+            <p class="modal-story__eyebrow">{{ _('Built_Apps_Eyebrow') }}</p>
+            <h3 id="modalStoryTitle"></h3>
+            <p id="modalStoryDescription"></p>
+            <div class="modal-story__stack" id="modalStoryStack" hidden></div>
+            <div class="modal-story__actions">
+                <a id="modalStoryDemo" class="modal-story__btn" target="_blank" rel="noopener noreferrer" hidden>
+                    <ion-icon name="open-outline"></ion-icon><span>{{ _('KP_Action_Demo') }}</span>
+                </a>
+                <a id="modalStoryRepo" class="modal-story__btn modal-story__btn--secondary" target="_blank" rel="noopener noreferrer" hidden>
+                    <ion-icon name="logo-github"></ion-icon><span>{{ _('KP_Action_Repo') }}</span>
+                </a>
+            </div>
+        </aside>
         <div class="box-modal-container" style="display: none;">
             <div id="customCarousel" class="carousel">
                 <div class="carousel-indicators" id="carouselIndicators"></div>

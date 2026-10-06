@@ -15,9 +15,9 @@ endblock %}
             <div class="summary-avatar">
                 <span class="summary-avatar__ring"></span>
                 <span class="summary-avatar__glow"></span>
-                <img src="{{ profile_image }}" alt="Profile Image" width="300" height="300" fetchpriority="high" decoding="async" onclick="openModal(`{{ profile_image }}`, 
+                <img src="{{ profile_image }}" alt="Profile Image" width="300" height="300" fetchpriority="high" decoding="async" onclick="openModal(`{{ profile_image }}`,
                     `{{ profile_name | e }}`,
-                    `{{ profile_desc | e }}`.replace('{age}', calculateAge()))" data-original="{{ profile_image }}"
+                    `{{ profile_desc | e }}`.replace('{age}', calculateAge()), 'imageModal', false, null, {storyFromCaption: true})" data-original="{{ profile_image }}"
                     data-gif="{{ profile_image_gif }}" />
                 <span class="summary-badge">
                     <span class="summary-badge__dot"></span>

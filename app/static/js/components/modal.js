@@ -26,6 +26,7 @@ if (!window.__modal_js_loaded__) {
     const MAX_AVATAR_BYTES = 2 * 1024 * 1024;
     let imageGalleryData = [];
     let imageGalleryIndex = 0;
+    let imageGalleryMeta = null;
     let currentDisplayName = null;
     let remainingNameChanges = 5;
     const DEFAULT_AVATAR = "/static/images/user.webp";
@@ -224,7 +225,83 @@ if (!window.__modal_js_loaded__) {
     function clearImageGalleryNav() {
         imageGalleryData = [];
         imageGalleryIndex = 0;
+        imageGalleryMeta = null;
+        hideStoryPanel();
         syncImageGalleryNav(false);
+    }
+
+    function normalizeStoryMeta(meta) {
+        if (!meta || typeof meta !== "object") return null;
+        const title = String(meta.title || "").trim();
+        const description = String(meta.description || "").trim();
+        const stack = String(meta.stack || "")
+            .split("•")
+            .map((part) => part.trim())
+            .filter(Boolean)
+            .slice(0, 8);
+        const demoUrl = String(meta.demo_url || "").trim();
+        const repoUrl = String(meta.repo_url || "").trim();
+        if (!title && !description && !stack.length && !demoUrl && !repoUrl) return null;
+        return { title, description, stack, demoUrl, repoUrl, html: meta.html === true };
+    }
+
+    function hideStoryPanel() {
+        const story = document.getElementById("modalStory");
+        if (story) story.hidden = true;
+        const container = document.querySelector(".modal-content-container");
+        if (container) container.classList.remove("has-story");
+    }
+
+    function renderStoryPanel() {
+        const story = document.getElementById("modalStory");
+        const container = document.querySelector(".modal-content-container");
+        if (!story || !container || !imageGalleryMeta) {
+            hideStoryPanel();
+            return;
+        }
+        const titleEl = document.getElementById("modalStoryTitle");
+        const descEl = document.getElementById("modalStoryDescription");
+        const stackEl = document.getElementById("modalStoryStack");
+        const demoEl = document.getElementById("modalStoryDemo");
+        const repoEl = document.getElementById("modalStoryRepo");
+        if (titleEl) titleEl.textContent = imageGalleryMeta.title || "";
+        if (descEl) {
+            if (imageGalleryMeta.html) {
+                descEl.innerHTML = imageGalleryMeta.description || "";
+            } else {
+                descEl.textContent = imageGalleryMeta.description || "";
+            }
+        }
+        const caption = document.getElementById("caption");
+        if (caption) caption.style.display = "none";
+        if (stackEl) {
+            stackEl.innerHTML = "";
+            imageGalleryMeta.stack.forEach((tech) => {
+                const pill = document.createElement("span");
+                pill.className = "modal-story__pill";
+                pill.textContent = tech;
+                stackEl.appendChild(pill);
+            });
+            stackEl.hidden = imageGalleryMeta.stack.length === 0;
+        }
+        if (demoEl) {
+            if (imageGalleryMeta.demoUrl) {
+                demoEl.href = imageGalleryMeta.demoUrl;
+                demoEl.hidden = false;
+            } else {
+                demoEl.hidden = true;
+            }
+        }
+        if (repoEl) {
+            if (imageGalleryMeta.repoUrl) {
+                repoEl.href = imageGalleryMeta.repoUrl;
+                repoEl.hidden = false;
+            } else {
+                repoEl.hidden = true;
+            }
+        }
+        story.hidden = false;
+        container.classList.add("has-story");
     }
 
     function renderActiveImageGallerySlide() {
@@ -241,6 +318,7 @@ if (!window.__modal_js_loaded__) {
             null,
             { keepImageGallery: true }
         );
+        renderStoryPanel();
     }
 
     function pauseAllVideos() {
@@ -554,7 +632,7 @@ if (!window.__modal_js_loaded__) {
         commentBox.focus();
     }
 
-    window.openProjectSlidesModal = function (slides, startIndex = 0) {
+    window.openProjectSlidesModal = function (slides, startIndex = 0, meta = null) {
         const normalized = normalizeSlides(slides);
         if (!normalized.length) {
             return;
@@ -564,15 +642,16 @@ if (!window.__modal_js_loaded__) {
             title: (slide.titles && (slide.titles[currentLocale] || slide.titles.en)) || "",
             description: (slide.descriptions && (slide.descriptions[currentLocale] || slide.descriptions.en)) || "",
         }));
-        window.openImageGalleryModal(localizedSlides, startIndex);
+        window.openImageGalleryModal(localizedSlides, startIndex, meta);
     };
 
-    window.openImageGalleryModal = function (items, startIndex = 0) {
+    window.openImageGalleryModal = function (items, startIndex = 0, meta = null) {
         const normalized = normalizeImageGalleryItems(items);
         if (!normalized.length) return;
 
         imageGalleryData = normalized;
         imageGalleryIndex = Math.max(0, Math.min(Number(startIndex) || 0, normalized.length - 1));
+        imageGalleryMeta = normalizeStoryMeta(meta);
         renderActiveImageGallerySlide();
     };
 
@@ -666,6 +745,14 @@ if (!window.__modal_js_loaded__) {
                 if (description && description.trim() !== "") {
                     caption.innerHTML += "<p>" + description + "</p>";
                 }
+            }
+
+            if (!keepImageGallery) {
+                const storyOpt = options && options.story;
+                imageGalleryMeta = normalizeStoryMeta(
+                    storyOpt || ((options && options.storyFromCaption) ? { title, description, html: true } : null)
+                );
+                renderStoryPanel();
             }
         }
 

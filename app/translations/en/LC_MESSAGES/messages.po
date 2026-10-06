@@ -46,13 +46,13 @@ msgid "Summary"
 msgstr "Summary"
 
 msgid "Software_Expertise_Description"
-msgstr "Over the years, I have cultivated a deep and versatile expertise in software development by working across a broad spectrum of roles, industries, and technical environments. This journey has not only sharpened my coding and problem-solving skills but also given me a holistic understanding of how technology drives business value."
+msgstr "I am a Software Engineer with more than 2 years of experience in software development. I'm highly adaptable to modern technologies, frameworks, and tools, and I bring strong analytical and problem-solving skills to every project. By leveraging AI-assisted tools, I boost productivity while maintaining proper software architecture, coding standards, and best practices. My ultimate goal is to consistently deliver high-quality results that create value for businesses."
 
 msgid "Technology_Adaptability_Description"
-msgstr "I am highly adaptable when it comes to learning and applying new technologies. Whether working with legacy systems or modern frameworks, I quickly grasp the underlying principles and integrate them into solutions that align with business goals and enhance user experiences. My flexibility has allowed me to contribute meaningfully to projects involving everything from frontend development and app architecture to cloud infrastructure and automation."
+msgstr "I work across the full stack, from responsive interfaces and APIs to databases and deployment. I take features from idea to production, keeping code clean, tested, and easy to maintain as projects grow."
 
 msgid "Experience_Share_Description"
-msgstr "I am passionate about collaboration and continuously strive to contribute my skills in a way that fosters innovation, improves efficiency, and accelerates success. I'm eager to bring my experience, dedication, and proactive mindset to teams that value growth, creativity, and impactful results."
+msgstr "I value clear communication and ownership: breaking work into manageable pieces, reviewing code thoughtfully, and documenting decisions so teams move faster. I enjoy sharing what I learn and raising the bar for everyone I work with."
 
 msgid "Key_Projects"
 msgstr "Key Projects"
@@ -490,13 +490,13 @@ msgid "profile_age"
 msgstr "I am {age} years old from Vallehermoso, Negros Oriental."
 
 msgid "profile_introvert"
-msgstr "I'm an introvert and not great at starting conversations, so feel free to message me first—let's chat!"
+msgstr "I am a Software Engineer with more than 2 years of experience in software development. I’m highly adaptable to modern technologies, frameworks, and tools, and I bring strong analytical and problem‑solving skills to every project. By leveraging AI‑assisted tools, I boost productivity while maintaining proper software architecture, coding standards, and best practices. My ultimate goal is to consistently deliver high‑quality results that create value for businesses."
 
 msgid "profile_job"
-msgstr "I'm currently working as a Software Engineer,"
+msgstr ""
 
 msgid "profile_goals"
-msgstr "and I have big goals for the future, aiming to build wealth and achieve success."
+msgstr ""
 
 msgid "search_placeholder"
 msgstr "Search for something..."

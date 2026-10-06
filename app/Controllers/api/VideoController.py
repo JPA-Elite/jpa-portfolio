@@ -1,11 +1,10 @@
-from flask import request, jsonify
+from flask import jsonify
 from app.Services.VideoService import VideoService
 from app.Repositories.VideoRepository import VideoRepository
 from app.configurations import SortOrder, SortOrderStr
 from app.Requests.api.VideoRequest import VideoRequest
 from app.constants.messages import VIDEO_ADD_MSG, VIDEO_DELETE_MSG, VIDEO_NOT_FOUND_ERROR, VIDEO_UPDATE_FAILED_ERROR, VIDEO_UPDATE_MSG
-from app.utils import clear_cache_by_prefix, get_cache_data
-from app.extensions import cache
+from app.utils import clear_cache_by_prefix
 
 # Initialize Services
 video_service = VideoService(repository=VideoRepository())
@@ -13,10 +12,6 @@ video_service = VideoService(repository=VideoRepository())
 # -------------------Administrator Controller------------------------
 # Video Controller
 def video_list_route():
-    cached_data, cache_key = get_cache_data("admin.api.video_list", request.args)
-    if cached_data:
-        return jsonify(cached_data)
-
     form = VideoRequest()
     data, error_response, status_code = form.validated()
     if error_response:
@@ -46,7 +41,6 @@ def video_list_route():
         "search": search_query,
     }
 
-    cache.set(cache_key, response_data, timeout=300)
     return jsonify(response_data)
 
 def add_video_route():
@@ -56,7 +50,6 @@ def add_video_route():
         return error_response, status_code
 
     video_id = video_service.add_video(data)
-    clear_cache_by_prefix("admin.api.video_list:")
     clear_cache_by_prefix("vlog_")
     return jsonify({"message": VIDEO_ADD_MSG, "video_id": video_id}), 201
 
@@ -68,7 +61,6 @@ def update_video_route(video_id):
 
     success = video_service.update_video(video_id, data)
     if success:
-        clear_cache_by_prefix("admin.api.video_list:")
         clear_cache_by_prefix("vlog_")
         return jsonify({"message": VIDEO_UPDATE_MSG}), 200
     else:
@@ -82,7 +74,6 @@ def delete_video_route(video_id):
 
     success = video_service.delete_video(video_id)
     if success:
-        clear_cache_by_prefix("admin.api.video_list:")
         clear_cache_by_prefix("vlog_")
         return jsonify({"message": VIDEO_DELETE_MSG}), 200
     else:

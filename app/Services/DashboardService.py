@@ -227,6 +227,8 @@ class DashboardService:
                 result = delete_fn(list(record_ids or []))
                 if isinstance(result, dict) and result.get("status") == "success":
                     deleted = int(result.get("deleted_count", 0))
+                    if record_ids and not deleted:
+                        return {"status": "error", "message": "Activity record not found."}
                     return {"status": "success", "message": f"Deleted {deleted} record(s).", "deleted_count": deleted}
                 return {"status": "error", "message": result.get("message", "Invalid record IDs.") if isinstance(result, dict) else "Invalid record IDs."}
             coll = getattr(self.activity_repo, "collection", None)
@@ -246,6 +248,8 @@ class DashboardService:
             if not object_ids:
                 return {"status": "error", "message": "Invalid record IDs."}
             result = coll.delete_many({"_id": {"$in": object_ids}})
+            if not result.deleted_count:
+                return {"status": "error", "message": "Activity record not found."}
             return {"status": "success", "message": f"Deleted {result.deleted_count} record(s).", "deleted_count": result.deleted_count}
         except Exception as e:
             current_app.logger.exception("Failed to delete activity logs")

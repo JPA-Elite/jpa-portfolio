@@ -11,7 +11,7 @@ class DashboardRequest(BaseRequest):
             return self._validate_visits_list()
         if "visits" in route and "delete" in route:
             return self._validate_visits_delete()
-        if "recent" in route and "activity" in route and "delete" in route:
+        if "activity" in route and "delete" in route:
             return self._validate_recent_activity_delete()
         if "clear" in route and "visitors" in route:
             return self._validate_clear_all_visitors()

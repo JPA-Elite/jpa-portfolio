@@ -29,7 +29,7 @@
     <link rel="stylesheet" href="{{ static_asset('css/themes.css') }}" />
     <link rel="stylesheet" href="{{ static_asset('css/components/toast.css') }}" />
     <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='images/favicon.ico') }}">
-    <script src="{{ static_asset('js/utils.js') }}"></script>
+    <script defer src="{{ static_asset('js/utils.js') }}"></script>
     {{ vite_hmr() }}
     {{ template_livereload() }}
 
@@ -79,12 +79,15 @@
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
-            background-attachment: fixed;
             opacity: var(--bg-opacity, 0.2);
             z-index: -1;
             background-color: var(--bg-color);
             background-blend-mode: overlay;
-            transition: all 0.5s ease-in-out;
+        }
+        @media (min-width: 1025px) {
+            body::before {
+                transition: opacity 0.5s ease-in-out;
+            }
         }
     </style>
 </head>

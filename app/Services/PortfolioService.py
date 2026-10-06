@@ -18,7 +18,7 @@ class PortfolioService:
 
     def get_ip_location(self, ip):
         try:
-            response = requests.get(f"https://ipinfo.io/{ip}/json")
+            response = requests.get(f"https://ipinfo.io/{ip}/json", timeout=2.5)
             data = response.json()
 
             return {
@@ -31,9 +31,10 @@ class PortfolioService:
         except Exception:
             return {"ip": ip, "city": "Unknown", "region": "Unknown", "country": "Unknown", "location": "Unknown"}
 
-    def record_visit(self, page):
+    def record_visit(self, page, user_ip=None, user_agent_string=None):
         try:
-            user_ip = self.get_client_ip()
+            if user_ip is None:
+                user_ip = self.get_client_ip()
 
             tz = pytz.timezone("Asia/Manila")
             current_time = datetime.now(tz)
@@ -42,7 +43,8 @@ class PortfolioService:
             if self.repository.find_visit_for_day(user_ip, page, visit_date):
                 return {"message": VISIT_ALREADY_RECORDED_MSG, "status": "skipped"}
 
-            user_agent_string = request.headers.get("User-Agent")
+            if user_agent_string is None:
+                user_agent_string = request.headers.get("User-Agent")
             user_agent = parse(user_agent_string)
             location_info = self.get_ip_location(user_ip)
 

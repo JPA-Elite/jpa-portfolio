@@ -17,6 +17,7 @@ from app.sitemap import sitemap_bp
 import os
 import requests
 from markupsafe import Markup
+import threading
 import time
 from werkzeug.middleware.proxy_fix import ProxyFix
 from app.extensions import cache
@@ -283,6 +284,17 @@ TRACKED_VISIT_ENDPOINTS = frozenset({
 visit_tracker = PortfolioService(repository=PortfolioRepository())
 
 
+def _record_visit_in_background(page, user_ip, user_agent_string):
+    try:
+        visit_tracker.record_visit(
+            page=page,
+            user_ip=user_ip,
+            user_agent_string=user_agent_string,
+        )
+    except Exception:
+        pass
+
+
 @app.before_request
 def record_page_visit():
     if request.method != "GET":
@@ -290,7 +302,16 @@ def record_page_visit():
     if request.endpoint not in TRACKED_VISIT_ENDPOINTS:
         return None
     try:
-        visit_tracker.record_visit(page=request.path)
+        forwarded = request.headers.get("X-Forwarded-For", request.remote_addr or "")
+        user_ip = forwarded.split(",")[0].strip() if forwarded else (request.remote_addr or "")
+        user_agent_string = request.headers.get("User-Agent")
+        page = request.path
+        worker = threading.Thread(
+            target=_record_visit_in_background,
+            args=(page, user_ip, user_agent_string),
+            daemon=True,
+        )
+        worker.start()
     except Exception:
         pass
     return None
@@ -302,6 +323,11 @@ babel.init_app(app, locale_selector=get_locale)
 @app.after_request
 def remove_csp(response):
     response.headers.pop("Content-Security-Policy", None)
+    try:
+        if request.path.startswith("/static/") and response.status_code == 200:
+            response.headers.setdefault("Cache-Control", "public, max-age=31536000, immutable")
+    except Exception:
+        pass
     return response
 
 @app.context_processor

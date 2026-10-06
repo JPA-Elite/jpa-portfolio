@@ -34,7 +34,10 @@ function resizeCanvas() {
 }
 
 let nodes = [];
-const numNodes = window.innerWidth < 600 ? 75 : 150;
+const prefersReducedMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+const numNodes = prefersReducedMotion ? 0 : (window.innerWidth < 480 ? 40 : (window.innerWidth < 900 ? 60 : 90));
+let brainAnimationId = 0;
+let brainRunning = false;
 
 function initNodes() {
     nodes = [];
@@ -64,8 +67,11 @@ function drawConnections() {
 
         for (let j = i + 1; j < nodes.length; j++) {
             let nodeB = nodes[j];
-            let distance = Math.hypot(nodeA.x - nodeB.x, nodeA.y - nodeB.y);
-            if (distance < 100) {
+            let dx = nodeA.x - nodeB.x;
+            let dy = nodeA.y - nodeB.y;
+            let distSq = dx * dx + dy * dy;
+            if (distSq < 10000) {
+                let distance = Math.sqrt(distSq);
                 ctx.globalAlpha = 1 - distance / 100;
                 ctx.beginPath();
                 ctx.moveTo(nodeA.x, nodeA.y);
@@ -91,26 +97,45 @@ function updateNodes() {
 }
 
 function animateBrain() {
-    if (canvas.style.display === "none") return; // stop drawing if hidden
+    if (!brainRunning) return;
+    if (canvas.style.display === "none" || document.hidden) {
+        brainAnimationId = requestAnimationFrame(animateBrain);
+        return;
+    }
     drawConnections();
     updateNodes();
-    requestAnimationFrame(animateBrain);
+    brainAnimationId = requestAnimationFrame(animateBrain);
 }
 
-window.addEventListener("resize", resizeCanvas);
-
-// Initialize animation only when dark mode is active
 function startBrainAnimation() {
+    if (prefersReducedMotion || numNodes === 0) {
+        canvas.style.display = "none";
+        return;
+    }
     resizeCanvas();
     initNodes();
     canvas.style.display = "block";
-    animateBrain();
+    if (!brainRunning) {
+        brainRunning = true;
+        animateBrain();
+    }
 }
 
 function stopBrainAnimation() {
+    brainRunning = false;
+    if (brainAnimationId) {
+        cancelAnimationFrame(brainAnimationId);
+        brainAnimationId = 0;
+    }
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     canvas.style.display = "none";
 }
+
+window.addEventListener("resize", function () {
+    if (brainRunning) {
+        resizeCanvas();
+    }
+});
 
 // Check and apply theme-based display
 function handleBrainTheme(theme) {

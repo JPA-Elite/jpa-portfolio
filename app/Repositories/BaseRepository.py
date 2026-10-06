@@ -2,8 +2,12 @@ from dotenv import load_dotenv
 from pymongo import MongoClient
 from typing import Any, Dict, Iterable, List, Optional, Tuple, Union
 import os
+import threading
 
 load_dotenv()
+
+_shared_clients: Dict[str, Any] = {}
+_shared_clients_lock = threading.Lock()
 
 class BaseRepository:
     def __init__(self, collection_name: str):
@@ -12,8 +16,22 @@ class BaseRepository:
     def get_mongo_client(self, collection_name: str):
         mongo_uri = os.getenv("MONGO_URI")
         db_name = os.getenv("MONGO_DB")
+        cache_key = f"{mongo_uri}||{db_name}"
 
-        client = MongoClient(mongo_uri)
+        with _shared_clients_lock:
+            client = _shared_clients.get(cache_key)
+            if client is None:
+                client = MongoClient(
+                    mongo_uri,
+                    maxPoolSize=20,
+                    minPoolSize=1,
+                    serverSelectionTimeoutMS=5000,
+                    connectTimeoutMS=3000,
+                    socketTimeoutMS=10000,
+                    retryWrites=True,
+                )
+                _shared_clients[cache_key] = client
+
         db = client[db_name]
         collection = db[collection_name]
 

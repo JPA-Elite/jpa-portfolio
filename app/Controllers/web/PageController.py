@@ -1,4 +1,5 @@
 import math
+import time
 from flask import redirect, url_for, render_template, request
 from app.Services.VideoService import VideoService
 from app.Repositories.VideoRepository import VideoRepository
@@ -74,6 +75,17 @@ def _resolve_built_app_display(app_dict):
     return _built_app_display_source(app_dict, locale_value=get_locale())
 
 
+_seed_check_at: dict = {}
+
+
+def _should_seed(key, ttl_seconds=300):
+    now = time.monotonic()
+    last = _seed_check_at.get(key, 0.0)
+    if now - last < ttl_seconds:
+        return False
+    _seed_check_at[key] = now
+    return True
+
 
 def index_route():
     return redirect(url_for("pages.profile"))
@@ -89,21 +101,23 @@ def profile_route():
 
     voice_icon = url_for("static", filename="images/voice.webp", _external=True)
 
-    try:
-        key_project_service.seed_default_projects_if_empty()
-    except Exception as exc:
+    if _should_seed("key_projects"):
+        try:
+            key_project_service.seed_default_projects_if_empty()
+        except Exception as exc:
+            print(f"Key project default seed failed: {exc}")
 
-        print(f"Key project default seed failed: {exc}")
+    if _should_seed("company_roadmaps"):
+        try:
+            company_roadmap_service.seed_default_company_roadmaps_if_empty()
+        except Exception as exc:
+            print(f"Company roadmap default seed failed: {exc}")
 
-    try:
-        company_roadmap_service.seed_default_company_roadmaps_if_empty()
-    except Exception as exc:
-        print(f"Company roadmap default seed failed: {exc}")
-
-    try:
-        built_app_service.seed_default_built_apps_if_empty()
-    except Exception as exc:
-        print(f"Built app default seed failed: {exc}")
+    if _should_seed("built_apps"):
+        try:
+            built_app_service.seed_default_built_apps_if_empty()
+        except Exception as exc:
+            print(f"Built app default seed failed: {exc}")
 
     locale = _locale_key(get_locale())
     key_projects = [project.to_dict() for project in key_project_service.get_active_key_projects()]
@@ -268,10 +282,11 @@ def profile_route():
 
 
 def built_app_details_route(slug):
-    try:
-        built_app_service.seed_default_built_apps_if_empty()
-    except Exception as exc:
-        print(f"Built app default seed failed: {exc}")
+    if _should_seed("built_apps"):
+        try:
+            built_app_service.seed_default_built_apps_if_empty()
+        except Exception as exc:
+            print(f"Built app default seed failed: {exc}")
 
     app = built_app_service.get_active_built_app_by_slug(slug)
     if app is None:

@@ -47,4 +47,4 @@ ENV FRONTEND_DIST_TEMPLATES=1
 EXPOSE 8080
 
 # IMPORTANT: bind to :$PORT (Cloud Run injects PORT=8080)
-CMD ["sh", "-c", "gunicorn --bind :$PORT --workers 2 --threads 8 --timeout 0 app.app:app"]
+CMD ["sh", "-c", "gunicorn --bind :$PORT --workers 2 --threads 4 --timeout 30 --graceful-timeout 30 --keep-alive 5 app.app:app"]

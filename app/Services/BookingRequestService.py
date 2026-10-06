@@ -31,3 +31,11 @@ class BookingRequestService:
         if not existing:
             return False
         return self.repository.delete_booking(booking_id)
+
+    def delete_all_booking_requests(self):
+        try:
+            result = self.repository.delete_all()
+            deleted = int(getattr(result, "deleted_count", 0))
+            return {"status": "success", "message": f"Deleted {deleted} booking request(s).", "deleted_count": deleted}
+        except Exception as e:
+            return {"status": "error", "message": str(e)}

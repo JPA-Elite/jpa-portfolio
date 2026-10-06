@@ -78,7 +78,7 @@ from app.Controllers.api.AdminOtpController import (
     admin_otp_email_save_route,
 )
 from app.Controllers.api.BookingController import booking_send_route
-from app.Controllers.api.BookingRequestController import booking_request_list_route, delete_booking_request_route
+from app.Controllers.api.BookingRequestController import booking_request_list_route, delete_booking_request_route, clear_all_booking_requests_route
 
 api_bp = Blueprint("api", __name__)
 
@@ -518,3 +518,8 @@ def booking_requests():
 @admin_login_required
 def delete_booking_request(booking_id):
     return delete_booking_request_route(booking_id)
+
+@api_bp.route("/admin/api/clear-all-booking-requests", methods=[http.DELETE])
+@admin_login_required
+def clear_all_booking_requests():
+    return clear_all_booking_requests_route()

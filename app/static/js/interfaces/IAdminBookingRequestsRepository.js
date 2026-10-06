@@ -6,4 +6,8 @@ export class IAdminBookingRequestsRepository {
     async remove(id) {
         throw new Error("Method 'remove()' must be implemented.");
     }
+
+    async clearAll() {
+        throw new Error("Method 'clearAll()' must be implemented.");
+    }
 }

@@ -14,6 +14,14 @@ function escapeHtml(text) {
     return div.innerHTML;
 }
 
+function hideDeleteConfirmModal() {
+    const modalEl = document.getElementById("deleteConfirmModal");
+    if (modalEl && window.bootstrap && window.bootstrap.Modal) {
+        const instance = window.bootstrap.Modal.getInstance(modalEl);
+        if (instance) instance.hide();
+    }
+}
+
 async function loadBookingRequests(page = 1) {
     const tbody = document.getElementById("bookingRequestsTableBody");
     const pageInfo = document.getElementById("pageInfo");
@@ -30,11 +38,14 @@ async function loadBookingRequests(page = 1) {
 
         tbody.innerHTML = "";
 
+        const clearBtn = document.getElementById("clearBookingRequestsBtn");
         if (!data.booking_requests || data.booking_requests.length === 0) {
             tbody.innerHTML = `<tr><td colspan="8" class="text-center">No booking requests found</td></tr>`;
             pageInfo.textContent = `Page ${page} | ${data.total_pages}`;
+            if (clearBtn) clearBtn.disabled = true;
             return;
         }
+        if (clearBtn) clearBtn.disabled = false;
 
         data.booking_requests.forEach((req, index) => {
             const fullMsg = escapeHtml(req.message || "");
@@ -97,7 +108,7 @@ async function loadBookingRequests(page = 1) {
                     async function () {
                         const result = await service.remove(recordId);
                         if (result.ok) {
-                            bootstrap.Modal.getInstance(document.getElementById("deleteConfirmModal")).hide();
+                            hideDeleteConfirmModal();
                             window.notify(result.data?.message || "Deleted.", "success");
                             loadBookingRequests(currentPage);
                         } else {
@@ -155,5 +166,22 @@ document.addEventListener("DOMContentLoaded", function () {
         sortOrder = String(event.target.value || "desc");
         currentPage = 1;
         loadBookingRequests(currentPage);
+    });
+
+    document.getElementById("clearBookingRequestsBtn")?.addEventListener("click", function () {
+        window.confirmDelete(
+            "Are you sure you want to delete all booking requests?",
+            async function () {
+                const result = await service.clearAll();
+                if (result.ok) {
+                    hideDeleteConfirmModal();
+                    window.notify(result.data?.message || "All booking requests cleared.", "success");
+                    currentPage = 1;
+                    loadBookingRequests(currentPage);
+                } else {
+                    window.notify("Failed to clear booking requests.", "error");
+                }
+            }
+        );
     });
 });

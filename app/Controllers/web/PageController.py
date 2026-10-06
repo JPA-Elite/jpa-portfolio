@@ -96,8 +96,19 @@ def profile_route():
     profile_age = gettext("profile_age")
     profile_introvert = gettext("profile_introvert")
     profile_job = gettext("profile_job")
+    if profile_job.strip() in ("", "profile_job"):
+        profile_job = ""
     profile_goals = gettext("profile_goals")
-    profile_desc = f"{escape(profile_intro)} {escape(profile_age)}<br>{escape(profile_introvert)}<br>{escape(profile_job)} {escape(profile_goals)}"
+    if profile_goals.strip() in ("", "profile_goals"):
+        profile_goals = ""
+    profile_desc = "<br>".join(
+        part for part in [
+            f"{escape(profile_intro)} {escape(profile_age)}".strip(),
+            f"{escape(profile_introvert)}".strip(),
+            f"{escape(profile_job)} {escape(profile_goals)}".strip(),
+        ]
+        if part
+    )
 
     voice_icon = url_for("static", filename="images/voice.webp", _external=True)
 

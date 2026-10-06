@@ -4564,14 +4564,12 @@ ion-icon.voice-icon {
     border: 1px solid var(--border-color);
     background: var(--bg-secondary);
     opacity: 0;
-    transform: translateY(20px);
-    transition: opacity .5s ease, transform .5s ease;
+    transition: opacity .5s ease;
     transition-delay: calc(var(--stat-index, 0) * 120ms)
 }
 
 .summary-stat.is-revealed {
-    opacity: 1;
-    transform: translateY(0)
+    opacity: 1
 }
 
 .summary-stat__num {

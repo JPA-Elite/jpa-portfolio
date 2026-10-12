@@ -159,6 +159,12 @@ msgstr "Naging Software Engineer sa Chronostep (2024-2026)"
 msgid "Job_Projects_Description"
 msgstr "Nakagawa ng iba't ibang mga proyekto gamit ang iba't ibang teknolohiya na iniayon upang matugunan ang mga partikular na pangangailangan ng kliyente."
 
+msgid "Freelance_Engineer"
+msgstr "Freelance Engineer (2025)"
+
+msgid "Freelance_Engineer_Description"
+msgstr "Gumagawa ng mga website para sa freelance clients, hinahawakan ang frontend at backend development, independently dine-deploy ang bawat website na may custom domain, at nagbibigay ng patuloy na maintenance at support."
+
 msgid "Detailed_Resume_Description"
 msgstr "Para sa mas detalyadong view, maaari mong tingnan at i-download ang aking resume"
 

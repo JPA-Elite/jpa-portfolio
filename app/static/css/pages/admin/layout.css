@@ -191,6 +191,27 @@ html[data-bs-theme="dark"] .theme-switch>.form-check-input::before {
     object-fit: cover;
 }
 
+.app-sidebar .sidebar-brand {
+    justify-content: flex-start;
+    padding-left: 1rem;
+}
+
+.sidebar-mini.sidebar-collapse .app-sidebar .sidebar-brand,
+.sidebar-mini.sidebar-collapse .app-sidebar:hover .sidebar-brand {
+    justify-content: center;
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.sidebar-mini.sidebar-collapse .app-sidebar .sidebar-brand .brand-link {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.sidebar-mini.sidebar-collapse .app-sidebar .sidebar-brand .brand-text {
+    margin-left: 0;
+}
+
 .app-sidebar .sidebar-wrapper {
     display: flex;
     flex-direction: column;

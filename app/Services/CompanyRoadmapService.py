@@ -228,12 +228,12 @@ class CompanyRoadmapService:
             CompanyRoadmap.from_dict({
                 "id": "cr-chronostep-intern",
                 "company_name": "Chronostep",
-                "role_title": "App Development Intern",
+                "role_title": "Software Development Intern",
                 "period": "2023",
                 "employment_type": "Internship",
                 "location": "Cebu City",
-                "definition": "app internship focused on internal projects and building maintainable features using Laravel and Vue in a client-driven environment.",
-                "summary": "Contributed to internal systems while strengthening app architecture and implementation skills.",
+                "definition": "Software internship focused on internal projects and building maintainable features using Laravel and Vue in a client-driven environment.",
+                "summary": "Contributed to internal systems while strengthening software architecture and implementation skills.",
                 "highlights": [
                     "Developed internal projects for company use.",
                     "Used Laravel and Vue for feature implementation.",
@@ -242,7 +242,7 @@ class CompanyRoadmapService:
                 "cover_image_url": placeholder,
                 "activities": [
                     {"id": str(uuid.uuid4()), "sort_order": 0, "image_url": placeholder, "title": "Internal Projects", "caption": "Building internal company tools and features."},
-                    {"id": str(uuid.uuid4()), "sort_order": 1, "image_url": placeholder, "title": "app Workflow", "caption": "Laravel-based app implementation and testing."},
+                    {"id": str(uuid.uuid4()), "sort_order": 1, "image_url": placeholder, "title": "Software Workflow", "caption": "Laravel-based software implementation and testing."},
                 ],
                 "accent_color": "#f59e0b",
                 "sort_order": 3,

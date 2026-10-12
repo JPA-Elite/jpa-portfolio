@@ -125,10 +125,10 @@ CAREER_ROADMAP_SEED_I18N = {
     },
     "cr-chronostep-intern": {
         "role_title": {
-            "en": "App Development Intern",
-            "ceb": "App Development Intern",
-            "fil_PH": "App Development Intern",
-            "fr": "App Development Intern",
+            "en": "Software Development Intern",
+            "ceb": "Software Development Intern",
+            "fil_PH": "Software Development Intern",
+            "fr": "Software Development Intern",
         },
         "definition": {
             "en": "app internship focused on internal projects and building maintainable features using Laravel and Vue in a client-driven environment.",

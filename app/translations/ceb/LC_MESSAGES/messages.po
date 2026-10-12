@@ -145,7 +145,7 @@ msgid "app_Frontend_Description"
 msgstr "Nagtukod sa app gamit ang Spring Boot ug frontend gamit ang Angular."
 
 msgid "Chronostep_Internship"
-msgstr "App Development Intern sa Chronostep, 6th Floor, Gagfa Building, Cebu City (2023)"
+msgstr "Software Development Intern sa Chronostep, 6th Floor, Gagfa Building, Cebu City (2023)"
 
 msgid "Internal_Projects_Description"
 msgstr "Nakahimo og mga internal nga proyekto alang sa paggamit sa kompanya."

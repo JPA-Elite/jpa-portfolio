@@ -88,6 +88,13 @@
             {% endif %}
         </div>
         {% if built_app.snapshots %}
+        <script>
+            window.appSnapshotsGallery = [
+                {% for snapshot in built_app.snapshots %}
+                { image_url: {{ snapshot.image_url | tojson }}, title: {{ (built_app.name ~ ' — ' ~ _('App_Details_Snapshots') ~ ' ' ~ loop.index) | tojson }} }{{ ',' if not loop.last }}
+                {% endfor %}
+            ];
+        </script>
         <div class="app-details__slideshow" data-app-slideshow>
             <button type="button" class="app-details__slide-btn app-details__slide-btn--prev" data-app-slideshow-prev aria-label="{{ _('Slider_Previous_Image') }}">
                 <ion-icon name="chevron-back-outline" aria-hidden="true"></ion-icon>
@@ -98,7 +105,7 @@
                     <div class="app-details__slide-media">
                         {% if snapshot.image_url %}
                         <img src="{{ snapshot.image_url }}" alt="{{ built_app.name }} {{ _('App_Details_Snapshot_Label') }} {{ loop.index }}" loading="lazy" decoding="async"
-                            onclick='openModal(`{{ snapshot.image_url }}`, `{{ built_app.name |e }} — {{ _("App_Details_Snapshots") }} {{ loop.index }}`, ``)'>
+                            onclick='openImageGalleryModal(window.appSnapshotsGallery || [], {{ loop.index0 }})'>
                         {% else %}
                         <div class="app-details__snapshot-placeholder">
                             <ion-icon name="image-outline" aria-hidden="true"></ion-icon>

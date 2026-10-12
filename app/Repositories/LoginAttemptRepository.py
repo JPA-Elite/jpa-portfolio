@@ -7,6 +7,7 @@ from app.Repositories.Interfaces.ILoginAttemptRepository import ILoginAttemptRep
 from bson import ObjectId, errors as bson_errors
 from app.configurations import SortOrder
 from app.security import get_request_ip
+from user_agents import parse as parse_user_agent
 
 MAX_ATTEMPTS = 3
 LOCKOUT_HOURS = 1
@@ -18,12 +19,26 @@ class LoginAttemptRepository(ILoginAttemptRepository, BaseRepository):
     def _get_client_ip(self):
         return get_request_ip() or (request.remote_addr or "unknown_ip")
 
+    def _get_client_device(self):
+        try:
+            user_agent_string = request.headers.get("User-Agent", "")
+            if not user_agent_string:
+                return "Unknown"
+            user_agent = parse_user_agent(user_agent_string)
+            family = (user_agent.device.family or "").strip()
+            if family and family.lower() not in ("other", "unknown", "spider"):
+                return family
+            os_family = (user_agent.os.family or "").strip()
+            return os_family or "Unknown"
+        except Exception:
+            return "Unknown"
+
     def get_attempt_info(self):
         client_ip = self._get_client_ip()
         data = self.find_one({"_id": client_ip})
 
         if not data:
-            data = {"_id": client_ip, "attempts": 0, "lockout_until": None}
+            data = {"_id": client_ip, "attempts": 0, "lockout_until": None, "device": self._get_client_device()}
             self.insert_one(data)
         return data
 
@@ -33,7 +48,7 @@ class LoginAttemptRepository(ILoginAttemptRepository, BaseRepository):
         attempt = self.get_attempt_info()
 
         if success:
-            update_data = {"attempts": 0, "lockout_until": None}
+            update_data = {"attempts": 0, "lockout_until": None, "device": self._get_client_device()}
         else:
             attempts = attempt.get("attempts", 0) + 1
             lockout_until = attempt.get("lockout_until")
@@ -41,7 +56,7 @@ class LoginAttemptRepository(ILoginAttemptRepository, BaseRepository):
             if attempts >= MAX_ATTEMPTS:
                 lockout_until = now.replace(microsecond=0) + timedelta(hours=LOCKOUT_HOURS)
 
-            update_data = {"attempts": attempts, "lockout_until": lockout_until}
+            update_data = {"attempts": attempts, "lockout_until": lockout_until, "device": self._get_client_device()}
 
         self.update_one(
             {"_id": client_ip},
@@ -73,6 +88,7 @@ class LoginAttemptRepository(ILoginAttemptRepository, BaseRepository):
             escaped = re.escape(search_query.strip())
             or_filters = [
                 {"_id": {"$regex": escaped, "$options": "i"}},
+                {"device": {"$regex": escaped, "$options": "i"}},
             ]
             if search_query.strip().isdigit():
                 or_filters.append({"attempts": int(search_query.strip())})

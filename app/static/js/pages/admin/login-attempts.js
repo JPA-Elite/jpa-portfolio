@@ -9,6 +9,15 @@ let searchQuery = "";
 let sortOrder = "desc";
 let searchDebounceTimer = null;
 
+function escapeHtml(value) {
+    return String(value ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#39;");
+}
+
 async function getCurrentIP() {
     try {
         const data = await loginAttemptsService.fetchClientIp();
@@ -49,9 +58,10 @@ async function loadLoginAttempt(page = 1) {
             <tr ${isCurrent ? 'class="table-success"' : ""}>
                 <td>${(page - 1) * perPage + (index + 1)}</td>
                 <td>
-                    ${loginAttempt._id}
+                    ${escapeHtml(loginAttempt._id)}
                     ${isCurrent ? '<span class="badge bg-success ms-2">(Current Device)</span>' : ''}
                 </td>
+                <td>${escapeHtml(loginAttempt.device || "-")}</td>
                 <td>${loginAttempt.attempts}</td>
                 <td>${loginAttempt.lockout_until}</td>
                 <td>

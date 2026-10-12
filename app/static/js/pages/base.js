@@ -692,10 +692,12 @@ document.addEventListener("DOMContentLoaded", function () {
         function activateLinkByHash(hash) {
             if (!hash) return;
             clearActiveClasses();
-            const activeLink = document.querySelector(`a[href$="${hash}"]`);
-            if (activeLink && activeLink.parentElement) {
-                activeLink.parentElement.classList.add("active");
-            }
+            document.querySelectorAll(`a[href$="${hash}"]`).forEach((activeLink) => {
+                const parent = activeLink && activeLink.parentElement;
+                if (parent && parent.tagName === "LI") {
+                    parent.classList.add("active");
+                }
+            });
             positionSpyByHash(hash);
         }
 
@@ -754,6 +756,17 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
             });
             var lastSpyId = null;
+            var spyLockedId = null;
+            var spyLockTimer = null;
+            function lockSpy(id) {
+                spyLockedId = id;
+                if (spyLockTimer) window.clearTimeout(spyLockTimer);
+                spyLockTimer = window.setTimeout(function () {
+                    spyLockedId = null;
+                    spyLockTimer = null;
+                    lastSpyId = id;
+                }, 900);
+            }
             function spyHeaderOffset() {
                 var bar = document.querySelector("header");
                 return (bar ? bar.offsetHeight : 0) + 8;
@@ -775,6 +788,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 spyTicking = true;
                 window.requestAnimationFrame(function () {
                     spyTicking = false;
+                    if (spyLockedId) return;
                     var id = spySectionFromScroll();
                     if (id && id !== lastSpyId) {
                         lastSpyId = id;
@@ -811,8 +825,15 @@ document.addEventListener("DOMContentLoaded", function () {
                 if (url.pathname === window.location.pathname && hash) {
                     e.preventDefault();
                     activateLinkByHash(hash);
+                    if (isProHost && typeof lockSpy === "function") {
+                        lockSpy(hash.replace("#", ""));
+                    }
                     scrollToHash(hash, true);
                     history.pushState(null, "", url.pathname + url.search + hash);
+                    var sidebar = document.getElementById("sidebar");
+                    if (sidebar && sidebar.classList.contains("active") && typeof toggleNav === "function") {
+                        toggleNav();
+                    }
                 }
             });
         });

@@ -1386,6 +1386,15 @@ ion-icon { pointer-events: none !important; }
     #mobileNavList .mobile-media-submenu li {
         padding: 2px 0 !important;
     }
+
+    #mobileNavList li.active {
+        background: rgba(41, 98, 255, 0.08);
+        box-shadow: inset 3px 0 0 var(--accent-color, #2962ff);
+    }
+
+    #mobileNavList li.active a {
+        color: var(--accent-color, #2962ff);
+    }
 }
 
 .brand-lockup,

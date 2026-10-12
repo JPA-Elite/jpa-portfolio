@@ -154,7 +154,7 @@ msgid "Primary_Technologies_Description"
 msgstr "Used Laravel and Vue as primary technologies."
 
 msgid "Chronostep_Employee"
-msgstr "Become A Software Engineer at Chronostep (2024)"
+msgstr "Become A Software Engineer at Chronostep (2024-2026)"
 
 msgid "Job_Projects_Description"
 msgstr "Created a wide range of projects utilizing diverse technologies tailored to meet client-specific requirements."

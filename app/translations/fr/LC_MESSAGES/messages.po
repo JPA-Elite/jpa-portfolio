@@ -153,6 +153,18 @@ msgstr "Développement de projets internes pour l'utilisation de l'entreprise."
 msgid "Primary_Technologies_Description"
 msgstr "Utilisation de Laravel et Vue comme principales technologies."
 
+msgid "Chronostep_Employee"
+msgstr "Devenu Ingénieur Logiciel chez Chronostep (2024-2026)"
+
+msgid "Job_Projects_Description"
+msgstr "Création d'un large éventail de projets utilisant diverses technologies adaptées aux besoins spécifiques des clients."
+
+msgid "Freelance_Engineer"
+msgstr "Ingénieur Freelance (2025)"
+
+msgid "Freelance_Engineer_Description"
+msgstr "Création de sites web pour des clients freelance, en gérant le développement frontend et backend, en déployant chaque site de manière indépendante avec un domaine personnalisé, et en assurant la maintenance et le support continus."
+
 msgid "Detailed_Resume_Description"
 msgstr "Pour une vue détaillée, vous pouvez consulter et télécharger mon CV"
 

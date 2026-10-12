@@ -159,6 +159,12 @@ msgstr "Become A Software Engineer at Chronostep (2024-2026)"
 msgid "Job_Projects_Description"
 msgstr "Created a wide range of projects utilizing diverse technologies tailored to meet client-specific requirements."
 
+msgid "Freelance_Engineer"
+msgstr "Freelance Engineer (2025)"
+
+msgid "Freelance_Engineer_Description"
+msgstr "Build websites for freelance clients, handling both frontend and backend development, independently deploying each website with a custom domain, and providing ongoing maintenance and support."
+
 msgid "Detailed_Resume_Description"
 msgstr "For a detailed view, you can view and download my resume"
 

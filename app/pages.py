@@ -64,7 +64,7 @@ def add_portfolio_form():
     return add_portfolio_form_route()
 
 @pages_bp.route("/apps/<slug>", methods=[http.GET])
-@cache.cached(key_prefix=lambda: f"app_details_{get_locale()}_{request.view_args.get('slug', '')}")
+@cache.cached(key_prefix=lambda: f"app_details_{get_locale()}_{request.view_args.get('slug', '')}", unless=skip_cache_on_professional_host)
 def built_app_details(slug):
     return built_app_details_route(slug)
 

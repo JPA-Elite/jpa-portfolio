@@ -31,6 +31,17 @@ Languages: flask (python)
 1. run command: `npm install` in the project root directory
 2. run command: `make start-build`
 
+## SEO METADATA
+
+All page titles, descriptions, keywords, canonical URLs, and social (Open Graph / Twitter) tags live in one place: `app/seo.py`.
+
+- `SITE_DEFAULTS` — fallback metadata per site (`professional` vs `social`).
+- `PAGE_SEO` — per-page metadata for each site, keyed by page name (`portfolio`, `gallery`, `vlog`, `music`, `concern`, `donation`, `build`, `app_details`, ...).
+- `ENDPOINT_PAGE_KEYS` — maps Flask endpoints to those page keys.
+- `PROFESSIONAL_EXCLUDED_PAGES` — personal pages (`vlog`, `music`, `concern`, `donation`, `visitors`) that stay out of the professional sitemap and render as `noindex,nofollow` on the professional site.
+
+The `inject_page_seo()` context processor exposes `page_seo` to every template, and `app/templates/components/seo_meta.html` renders the tags. To change what Google shows for a page, edit `app/seo.py` only — no template edits needed. Per-request overrides (built app details, 404) pass a `page_seo=page_seo_context(overrides={...})` argument to `render_template`.
+
 ## DOCKER
 
 Prerequisites: Docker Desktop installed and running.

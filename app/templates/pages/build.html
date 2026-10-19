@@ -1,15 +1,10 @@
 {% extends 'base.html' %}
 
-{% block title %}{{ _('Build Now | Joshua Algadipe') }}{% endblock %}
 {% block head %}
 {% if HCAPTCHA_ENABLED %}
 <script src="https://hcaptcha.com/1/api.js" async defer></script>
 {% endif %}
 {% endblock %}
-
-{% block meta_description %}Build a session or appointment with Joshua Algadipe. Schedule your consultation, build, or reservation today.{% endblock %}
-{% block meta_keywords %}Joshua Algadipe, build, appointment, schedule, reservation, consultation{% endblock %}
-{% block meta_author %}Joshua Algadipe{% endblock %}
 
 {% from 'components/macros.html' import datetime_picker with context %}
 

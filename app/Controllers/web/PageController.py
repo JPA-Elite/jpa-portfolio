@@ -65,6 +65,7 @@ from app.utils_i18n import localized_list_from_map as _localized_list_from_map
 from app.Services.PortfolioDisplayService import localized_roadmap_employment_type as _employment_type_source
 from app.Services.PortfolioDisplayService import resolve_project_stack_display as _resolve_project_stack_display
 from app.Services.PortfolioDisplayService import resolve_built_app_display as _built_app_display_source
+from app.seo import NOINDEX_ROBOTS, page_seo_context
 
 
 def _localized_roadmap_employment_type(value):
@@ -301,7 +302,18 @@ def built_app_details_route(slug):
 
     app = built_app_service.get_active_built_app_by_slug(slug)
     if app is None:
-        return render_template(ERROR_404_PAGE, title="Not Found"), 404
+        return render_template(
+            ERROR_404_PAGE,
+            title="Not Found",
+            page_seo=page_seo_context(
+                overrides={
+                    "title": "Page Not Found — Joshua Algadipe",
+                    "description": "The page you are looking for could not be found.",
+                    "robots": NOINDEX_ROBOTS,
+                    "canonical": "",
+                }
+            ),
+        ), 404
 
     app_data = _resolve_built_app_display(app.to_dict())
     other_apps = [
@@ -315,6 +327,20 @@ def built_app_details_route(slug):
         title=f"{app_data['name']} — Built Apps",
         built_app=app_data,
         other_apps=other_apps,
+        page_seo=page_seo_context(
+            overrides={
+                "title": f"{app_data['name']} — Built Apps | Joshua Algadipe",
+                "description": (
+                    f"{app_data.get('short_description') or app_data['name']} "
+                    f"Learn more and download {app_data['name']}."
+                ),
+                "keywords": (
+                    f"{app_data['name']}, {app_data.get('platform', '')} app, download, "
+                    "Joshua Algadipe, built apps"
+                ),
+                "image": app_data.get("icon_image_url") or "",
+            }
+        ),
     )
 
 def gallery_route():

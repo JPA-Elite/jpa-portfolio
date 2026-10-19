@@ -23,6 +23,7 @@ from werkzeug.middleware.proxy_fix import ProxyFix
 from app.extensions import cache
 from app.domains import current_site, get_domain_config, resolve_domain_redirect
 from app.security import init_ddos_guard
+from app.seo import NOINDEX_ROBOTS, inject_page_seo, page_seo_context
 from app.Services.PortfolioService import PortfolioService
 from app.Repositories.PortfolioRepository import PortfolioRepository
 from dotenv import load_dotenv
@@ -334,6 +335,11 @@ def remove_csp(response):
 def inject_locale():
     return dict(get_locale=get_locale)
 
+
+@app.context_processor
+def inject_seo_metadata():
+    return inject_page_seo()
+
 @app.context_processor
 def inject_static_asset():
     return dict(static_asset=static_asset)
@@ -408,7 +414,19 @@ def inject_profile_image():
 
 @app.errorhandler(404)
 def not_found(error):
-    return render_template(ERROR_404_PAGE, title="Not Found", error=error), 404
+    return render_template(
+        ERROR_404_PAGE,
+        title="Not Found",
+        error=error,
+        page_seo=page_seo_context(
+            overrides={
+                "title": "Page Not Found — Joshua Algadipe",
+                "description": "The page you are looking for could not be found.",
+                "robots": NOINDEX_ROBOTS,
+                "canonical": "",
+            }
+        ),
+    ), 404
 
 @app.route('/robots.txt')
 def robots():

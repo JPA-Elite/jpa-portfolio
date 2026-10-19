@@ -5,13 +5,7 @@
     <meta charset="UTF-8" />
     <meta name="google-site-verification" content="Oh3O1doyGDCEg_BxM-IBiktbmgU1qhk1KT8S6tsWNi8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>My Favorite Music Playlist | Joshua Algadipe</title>
-
-    <!-- SEO Meta Tags -->
-    <meta name="description"
-        content="Explore my favorite music playlist, featuring a curated selection of tracks that inspire and motivate me. Discover the sounds that shape my world." />
-    <meta name="keywords" content="music, playlist, favorite songs, Joshua Algadipe" />
-    <meta name="author" content="Joshua Algadipe" />
+    {% include 'components/seo_meta.html' %}
 
     <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='images/favicon.ico') }}">
     <link rel="stylesheet" href="{{ static_asset('css/pages/music.css') }}" />

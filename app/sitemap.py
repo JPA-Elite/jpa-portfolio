@@ -2,6 +2,8 @@ from flask import Blueprint, Response, has_request_context, request
 from datetime import datetime
 import os
 
+from app.seo import PROFESSIONAL_EXCLUDED_PAGES
+
 sitemap_bp = Blueprint("sitemap", __name__)
 
 PRODUCTION_HOST = "jpastack.com"
@@ -15,6 +17,22 @@ PUBLIC_PATHS = [
     "/concern",
     "/donation",
     "/build",
+]
+
+PATH_PAGE_KEYS = {
+    "/portfolio": "portfolio",
+    "/gallery": "gallery",
+    "/vlog": "vlog",
+    "/music": "music",
+    "/concern": "concern",
+    "/donation": "donation",
+    "/build": "build",
+}
+
+PROFESSIONAL_PATHS = [
+    path
+    for path, page_key in PATH_PAGE_KEYS.items()
+    if page_key not in PROFESSIONAL_EXCLUDED_PAGES
 ]
 
 
@@ -60,7 +78,7 @@ def generate_sitemap():
     landing_base, professional_base = _resolve_bases()
     urls = [f"{landing_base}{path}" for path in PUBLIC_PATHS]
     if professional_base:
-        urls.append(f"{professional_base}/")
+        urls.extend(f"{professional_base}{path}" for path in PROFESSIONAL_PATHS)
     entries = "\n".join(
         f"""        <url>
             <loc>{url}</loc>

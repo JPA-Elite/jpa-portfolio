@@ -42,6 +42,8 @@ All page titles, descriptions, keywords, canonical URLs, and social (Open Graph 
 
 The `inject_page_seo()` context processor exposes `page_seo` to every template, and `app/templates/components/seo_meta.html` renders the tags. To change what Google shows for a page, edit `app/seo.py` only — no template edits needed. Per-request overrides (built app details, 404) pass a `page_seo=page_seo_context(overrides={...})` argument to `render_template`.
 
+On the professional domain, direct visits to `/vlog`, `/music`, `/concern`, `/donation`, `/visitors`, and any `/admin...` URL redirect to the professional home. The social domain and the admin domain keep their normal pages.
+
 ## DOCKER
 
 Prerequisites: Docker Desktop installed and running.

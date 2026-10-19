@@ -1,6 +1,12 @@
 from flask import request, url_for
 
-from app.domains import SITE_PROFESSIONAL, SITE_SOCIAL, current_site, get_domain_config
+from app.domains import (
+    PROFESSIONAL_PERSONAL_PATHS,
+    SITE_PROFESSIONAL,
+    SITE_SOCIAL,
+    current_site,
+    get_domain_config,
+)
 
 
 PROFESSIONAL = SITE_PROFESSIONAL
@@ -13,7 +19,7 @@ DEFAULT_ROBOTS = "index,follow"
 NOINDEX_ROBOTS = "noindex,nofollow"
 
 PROFESSIONAL_EXCLUDED_PAGES = frozenset(
-    {"vlog", "music", "concern", "donation", "visitors"}
+    path.lstrip("/") for path in PROFESSIONAL_PERSONAL_PATHS
 )
 
 SITE_DEFAULTS = {

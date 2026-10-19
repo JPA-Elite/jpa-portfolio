@@ -21,7 +21,7 @@ import threading
 import time
 from werkzeug.middleware.proxy_fix import ProxyFix
 from app.extensions import cache
-from app.domains import current_site, get_domain_config, resolve_domain_redirect
+from app.domains import current_site, get_domain_config, resolve_domain_redirect, resolve_professional_redirect
 from app.security import init_ddos_guard
 from app.seo import NOINDEX_ROBOTS, inject_page_seo, page_seo_context
 from app.Services.PortfolioService import PortfolioService
@@ -104,6 +104,17 @@ def enforce_domain_routing():
         raw_query = request.query_string.decode()
     except Exception:
         raw_query = ""
+    try:
+        professional_target = resolve_professional_redirect(
+            request.host,
+            request.path,
+            request.scheme,
+            request.method,
+        )
+    except Exception:
+        professional_target = None
+    if professional_target:
+        return redirect(professional_target, code=301)
     try:
         target = resolve_domain_redirect(
             request.host,

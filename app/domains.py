@@ -16,6 +16,14 @@ PUBLIC_PAGE_PATHS = frozenset({
     "/add_portfolio_form",
 })
 
+PROFESSIONAL_PERSONAL_PATHS = frozenset({
+    "/vlog",
+    "/music",
+    "/concern",
+    "/donation",
+    "/visitors",
+})
+
 SHARED_EXACT_PATHS = frozenset({
     "/robots.txt",
     "/sitemap.xml",
@@ -215,6 +223,26 @@ def skip_cache_on_professional_host():
         except Exception:
             return False
     return False
+
+
+def resolve_professional_redirect(host, path, scheme="http", method="GET"):
+    if method not in ("GET", "HEAD"):
+        return None
+    cfg = get_domain_config()
+    if not cfg.get("routing_enabled"):
+        return None
+    normalized, port = split_host_port(host)
+    professional = cfg.get("professional_domain") or ""
+    if not professional or normalized != professional:
+        return None
+    clean_path = "/" + str(path or "").strip("/")
+    if clean_path in PROFESSIONAL_PERSONAL_PATHS:
+        return build_cross_host_url(professional, "/", "", scheme, port)
+    if is_admin_path(clean_path):
+        admin = cfg.get("admin_domain") or ""
+        if admin and admin != professional:
+            return build_cross_host_url(professional, "/", "", scheme, port)
+    return None
 
 
 def resolve_domain_redirect(host, path, query_string="", scheme="http", method="GET"):

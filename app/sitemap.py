@@ -2,7 +2,7 @@ from flask import Blueprint, Response, has_request_context, request
 from datetime import datetime
 import os
 
-from app.seo import PROFESSIONAL_EXCLUDED_PAGES
+from app.domains import SITE_PROFESSIONAL, current_site
 
 sitemap_bp = Blueprint("sitemap", __name__)
 
@@ -29,10 +29,12 @@ PATH_PAGE_KEYS = {
     "/build": "build",
 }
 
+PROFESSIONAL_SITEMAP_PAGES = frozenset({"portfolio", "build"})
+
 PROFESSIONAL_PATHS = [
     path
     for path, page_key in PATH_PAGE_KEYS.items()
-    if page_key not in PROFESSIONAL_EXCLUDED_PAGES
+    if page_key in PROFESSIONAL_SITEMAP_PAGES
 ]
 
 
@@ -76,9 +78,16 @@ def _resolve_bases():
 def generate_sitemap():
     lastmod = datetime.today().strftime('%Y-%m-%d')
     landing_base, professional_base = _resolve_bases()
-    urls = [f"{landing_base}{path}" for path in PUBLIC_PATHS]
-    if professional_base:
-        urls.extend(f"{professional_base}{path}" for path in PROFESSIONAL_PATHS)
+    site = ""
+    if has_request_context():
+        try:
+            site = current_site(request.host)
+        except Exception:
+            site = ""
+    if site == SITE_PROFESSIONAL and professional_base:
+        urls = [f"{professional_base}{path}" for path in PROFESSIONAL_PATHS]
+    else:
+        urls = [f"{landing_base}{path}" for path in PUBLIC_PATHS]
     entries = "\n".join(
         f"""        <url>
             <loc>{url}</loc>

@@ -1,5 +1,4 @@
 {% set show_face_modal_value = show_face_modal if show_face_modal is defined else false %}
-<link rel="stylesheet" href="{{ static_asset('css/components/otp_verification_modal.css') }}" />
 <!-- OTP Verification Modal -->
 <div class="modal fade otp-verify-modal" id="otpVerifyModal" tabindex="-1" role="dialog"
     aria-labelledby="otpVerifyModalLabel" aria-hidden="true" data-show-face-modal="{{ '1' if show_face_modal_value else '0' }}">

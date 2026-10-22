@@ -18,12 +18,8 @@
         })();
     </script>
 
-    <link rel="stylesheet" href="{{ static_asset('css/pages/styles.css') }}" />
-    <link rel="stylesheet" href="{{ static_asset('css/pages/profile.css') }}" />
-    <link rel="stylesheet" href="{{ static_asset('css/themes.css') }}" />
-    <link rel="stylesheet" href="{{ static_asset('css/components/toast.css') }}" />
+    {{ page_bundle_styles() }}
     <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='images/favicon.ico') }}">
-    <script defer src="{{ static_asset('js/utils.js') }}"></script>
     {{ vite_hmr() }}
     {{ template_livereload() }}
 
@@ -399,12 +395,8 @@
         window.isProfessionalMode = "{{ current_site == 'professional' }}";
         window.pageLocale = {{ get_locale() | tojson }};
     </script>
-    <script src="{{ static_asset('js/components/toast.js') }}"></script>
-    <script src="{{ static_asset('js/pages/base.js') }}"></script>
-    <script src="{{ static_asset('js/pages/admin/image-preview-modal.js') }}"></script>
-    {% block modal_script %}
-        <script src="{{ static_asset('js/components/modal.js') }}"></script>
-    {% endblock %}
+    {% block modal_script %}{% endblock %}
+    {{ page_bundle_scripts() }}
 </body>
 
 </html>

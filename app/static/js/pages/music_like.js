@@ -1,3 +1,7 @@
+import { MusicLikeService } from "../services/MusicLikeService.js";
+
+const musicLikeService = new MusicLikeService();
+
 (function() {
     var list = document.getElementById("musicList") || document.querySelector(".music-list-items");
 
@@ -56,8 +60,7 @@
             return;
         }
 
-        fetch("/api/music-like/counts/batch?music_ids=" + encodeURIComponent(ids.join(",")))
-            .then(function(r) { return r.json(); })
+        musicLikeService.fetchCountsBatch(ids)
             .then(function(d) {
                 var items = d.items || {};
 
@@ -142,16 +145,9 @@
         setLoading(btn, true);
 
         // Keep immediate UI update path, then refresh counts for this item set.
-        fetch("/api/music-like/vote", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ music_id: musicId, is_like: isLike })
-        })
-        .then(function(r) { return r.json(); })
+        musicLikeService.toggleVote(musicId, isLike)
         .then(function() {
-            var params = new URLSearchParams();
-            params.set("music_id", musicId);
-            return fetch("/api/music-like/counts?" + params).then(function(r) { return r.json(); });
+            return musicLikeService.fetchCounts(musicId);
         })
         .then(function(data) {
             var lc = likeBtn && likeBtn.querySelector(".vote-count");

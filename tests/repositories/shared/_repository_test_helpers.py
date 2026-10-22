@@ -87,6 +87,11 @@ def _assert_repository_method_contract(testcase, class_name: str, method_name: s
     if class_name == "VisitRepository" and method_name == "delete_system_info_by_id":
         testcase.assertIsNone(result)
         return
+    if class_name == "VisitRepository" and method_name == "delete_all_visitors":
+        testcase.assertIsInstance(result, dict)
+        testcase.assertEqual(result.get("status"), "success")
+        testcase.assertIn("deleted_count", result)
+        return
     if class_name == "LoginAttemptRepository" and method_name in {"get_attempt_info", "update_attempt"}:
         testcase.assertIsInstance(result, dict)
         testcase.assertIn("attempts", result)

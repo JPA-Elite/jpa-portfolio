@@ -2,6 +2,7 @@ import { AdminBookingRequestsRepository } from "../repositories/AdminBookingRequ
 
 export class AdminBookingRequestsService {
     constructor() {
+        /** @type {import("../interfaces/IAdminBookingRequestsRepository.js").IAdminBookingRequestsRepository} */
         this.repository = new AdminBookingRequestsRepository();
     }
 

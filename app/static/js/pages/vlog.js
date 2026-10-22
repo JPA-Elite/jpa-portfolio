@@ -332,10 +332,44 @@ function scheduleCountsBootstrap() {
     }, 0);
 }
 
+let commentsFromUrlOpened = false;
+
+function closeAdminImagePreview() {
+    const preview = document.getElementById("adminImagePreviewModal");
+    if (!preview) return;
+    preview.classList.remove("show");
+    preview.setAttribute("aria-hidden", "true");
+}
+
+function openCommentsFromUrl() {
+    if (commentsFromUrlOpened) return;
+    if (window.location.hash !== "#comments") return;
+
+    const vlogId = new URLSearchParams(window.location.search).get("vlog_id");
+    if (!vlogId) return;
+
+    const card = document.querySelector(`.video-item[data-vlog-id="${vlogId}"]`);
+    const button = card?.querySelector(".comment-btn");
+    if (!button) return;
+
+    commentsFromUrlOpened = true;
+    closeAdminImagePreview();
+    button.click();
+}
+
 document.addEventListener("DOMContentLoaded", () => {
     setupMediaSkeletons();
     setupPlyrPlayers();
     scheduleCountsBootstrap();
+    openCommentsFromUrl();
+});
+
+window.addEventListener("pageshow", (event) => {
+    if (event.persisted) {
+        commentsFromUrlOpened = false;
+    }
+    closeAdminImagePreview();
+    openCommentsFromUrl();
 });
 
 window.toggleLike = toggleLike;

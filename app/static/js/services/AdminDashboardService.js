@@ -33,4 +33,40 @@ export class AdminDashboardService {
             throw error;
         }
     }
+
+    async deleteActivity(recordIds) {
+        try {
+            return await this.repository.deleteActivity(recordIds);
+        } catch (error) {
+            console.error("AdminDashboardService Error:", error);
+            throw error;
+        }
+    }
+
+    async clearAllActivity() {
+        try {
+            return await this.repository.clearAllActivity();
+        } catch (error) {
+            console.error("AdminDashboardService Error:", error);
+            throw error;
+        }
+    }
+
+    async deleteVisit(recordId) {
+        try {
+            return await this.repository.deleteVisit(recordId);
+        } catch (error) {
+            console.error("AdminDashboardService Error:", error);
+            throw error;
+        }
+    }
+
+    async clearAllVisitors() {
+        try {
+            return await this.repository.clearAllVisitors();
+        } catch (error) {
+            console.error("AdminDashboardService Error:", error);
+            throw error;
+        }
+    }
 }

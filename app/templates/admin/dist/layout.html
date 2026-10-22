@@ -4,7 +4,6 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>{% block title %}Admin{% endblock %}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-    <link rel="preload" href="{{ static_asset('css/pages/admin/adminlte.css') }}" as="style" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/source-sans-3@5.0.12/index.css"
         integrity="sha256-tXJfXfp6Ewt1ilPzLDtQnJV4hclT9XuaZUKyUvmyr+Q=" crossorigin="anonymous" media="print"
         onload="this.media='all'" />
@@ -13,13 +12,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css"
         crossorigin="anonymous" />
     <link rel="icon" type="image/png" href="{{ url_for('static', filename='admin/assets/img/AdminLTELogo.png') }}" />
-    <link rel="stylesheet" href="{{ static_asset('css/pages/admin/adminlte.css') }}" />
-    <link rel="stylesheet" href="{{ static_asset('css/pages/admin/layout.css') }}" />
-    <link rel="stylesheet" href="{{ static_asset('css/components/toast.css') }}" />
-    <script src="{{ static_asset('js/components/toast.js') }}"></script>
-    <script src="{{ static_asset('js/pages/admin/image-preview-modal.js') }}"></script>
-    <script src="{{ static_asset('js/pages/admin/video-preview-modal.js') }}"></script>
-    <script src="{{ static_asset('js/pages/admin/confirm-delete-modal.js') }}"></script>
+    {{ page_bundle_styles() }}
     {{ vite_hmr() }}
     {{ template_livereload() }}
     <script>
@@ -263,8 +256,7 @@
         crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.min.js"
         crossorigin="anonymous"></script>
-    <script src="{{ static_asset('js/pages/admin/adminlte.js') }}"></script>
-    <script src="{{ static_asset('js/pages/admin/layout.js') }}"></script>
+    {{ page_bundle_scripts() }}
     {% endblock %}
 </body>
 

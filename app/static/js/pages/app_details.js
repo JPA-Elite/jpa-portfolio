@@ -1,3 +1,7 @@
+import { BuiltAppLikeService } from "../services/BuiltAppLikeService.js";
+
+const builtAppLikeService = new BuiltAppLikeService();
+
 (function () {
     function prefersReducedMotion() {
         return window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -207,8 +211,7 @@
         }
 
         function loadVotes() {
-            fetch("/api/built-app-like/counts?app_id=" + encodeURIComponent(appId))
-                .then(function (response) { return response.json(); })
+            builtAppLikeService.fetchCounts(appId)
                 .then(renderVotes)
                 .catch(function () {});
         }
@@ -217,16 +220,10 @@
             if (busy) return;
             busy = true;
             button.disabled = true;
-            fetch("/api/built-app-like/vote", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ app_id: appId, is_like: isLike })
-            })
-                .then(function (response) { return response.json(); })
+            builtAppLikeService.vote(appId, isLike)
                 .then(function () {
-                    return fetch("/api/built-app-like/counts?app_id=" + encodeURIComponent(appId));
+                    return builtAppLikeService.fetchCounts(appId);
                 })
-                .then(function (response) { return response.json(); })
                 .then(renderVotes)
                 .catch(function () {})
                 .finally(function () {

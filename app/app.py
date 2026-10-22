@@ -223,6 +223,114 @@ def static_asset(path: str):
     return base_url
 
 
+_page_bundle_cache = {"mtime": None, "data": {}}
+
+
+def _page_bundle_config_path() -> str:
+    candidates = [
+        os.path.join(os.path.dirname(app_root), "scripts", "page-bundles.json"),
+        os.path.join(dist_root, "page-bundles.json"),
+        os.path.join(app_root, "page-bundles.json"),
+    ]
+    for candidate in candidates:
+        if os.path.isfile(candidate):
+            return candidate
+    return candidates[0]
+
+
+def _load_page_bundles():
+    config_path = _page_bundle_config_path()
+    if not os.path.isfile(config_path):
+        _page_bundle_cache["mtime"] = None
+        _page_bundle_cache["data"] = {}
+        return {}
+    mtime = os.path.getmtime(config_path)
+    if _page_bundle_cache["mtime"] == mtime:
+        return _page_bundle_cache["data"]
+    try:
+        with open(config_path, "r", encoding="utf-8") as handle:
+            config = json.load(handle)
+    except (OSError, json.JSONDecodeError):
+        config = {}
+    _page_bundle_cache["mtime"] = mtime
+    _page_bundle_cache["data"] = config
+    return config
+
+
+def _current_page_bundle():
+    config = _load_page_bundles()
+    if not config:
+        return None
+    endpoint = request.endpoint or ""
+    key = config.get("routes", {}).get(endpoint) or config.get("default")
+    if not key:
+        return None
+    page = config.get("pages", {}).get(key)
+    if not isinstance(page, dict):
+        return None
+    return key, page
+
+
+def _page_bundle_sources(kind: str):
+    found = _current_page_bundle()
+    if not found:
+        return None
+    key, page = found
+    config = _load_page_bundles()
+    common = config.get("admin_common" if page.get("admin") else "common", {})
+    if kind == "css":
+        if page.get("standalone"):
+            return key, page, list(page.get("css") or [])
+        return key, page, (
+            list(common.get("head_css") or [])
+            + list(page.get("css") or [])
+            + list(common.get("tail_css") or [])
+        )
+    if page.get("standalone"):
+        return key, page, list(page.get("js") or [])
+    return key, page, list(common.get("js") or []) + list(page.get("js") or [])
+
+
+def _js_entry_parts(entry):
+    if isinstance(entry, dict):
+        return entry.get("src", ""), bool(entry.get("module"))
+    return entry, False
+
+
+def page_bundle_styles():
+    sources = _page_bundle_sources("css")
+    if not sources:
+        return Markup("")
+    key, _page, css_sources = sources
+    if not _vite_dev_server and f"pages/{key}.css" in _load_asset_manifest():
+        return Markup(f'<link rel="stylesheet" href="{static_asset(f"pages/{key}.css")}" />')
+    tags = [
+        f'<link rel="stylesheet" href="{static_asset(src)}" />'
+        for src in css_sources
+        if src
+    ]
+    return Markup("\n".join(tags))
+
+
+def page_bundle_scripts():
+    sources = _page_bundle_sources("js")
+    if not sources:
+        return Markup("")
+    key, _page, js_sources = sources
+    if not _vite_dev_server and f"pages/{key}.js" in _load_asset_manifest():
+        return Markup(f'<script src="{static_asset(f"pages/{key}.js")}"></script>')
+    tags = []
+    for entry in js_sources:
+        src, is_module = _js_entry_parts(entry)
+        if not src:
+            continue
+        if is_module:
+            tags.append(f'<script type="module" src="{static_asset(src)}"></script>')
+        else:
+            tags.append(f'<script src="{static_asset(src)}"></script>')
+    return Markup("\n".join(tags))
+
+
 def vite_hmr():
     if not _vite_dev_server:
         return ""
@@ -354,6 +462,13 @@ def inject_seo_metadata():
 @app.context_processor
 def inject_static_asset():
     return dict(static_asset=static_asset)
+
+@app.context_processor
+def inject_page_bundles():
+    return dict(
+        page_bundle_styles=page_bundle_styles,
+        page_bundle_scripts=page_bundle_scripts,
+    )
 
 @app.context_processor
 def inject_vite_hmr():

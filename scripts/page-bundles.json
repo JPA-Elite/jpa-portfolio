@@ -1,0 +1,309 @@
+{
+  "routes": {
+    "pages.portfolio": "portfolio",
+    "pages.gallery": "gallery",
+    "pages.vlog": "vlog",
+    "pages.music": "music",
+    "pages.concern": "concern",
+    "pages.donation": "donation",
+    "pages.booking": "build",
+    "pages.add_portfolio_form": "add_portfolio",
+    "pages.built_app_details": "app_details",
+    "pages.admin_login": "admin_login",
+    "pages.admin_dashboard": "admin_dashboard",
+    "pages.admin_gallery": "admin_gallery",
+    "pages.admin_video": "admin_video",
+    "pages.admin_music": "admin_music",
+    "pages.admin_key_projects": "admin_key_projects",
+    "pages.admin_company_roadmaps": "admin_company_roadmaps",
+    "pages.admin_built_apps": "admin_built_apps",
+    "pages.admin_settings": "admin_settings",
+    "pages.admin_login_attempts": "admin_login_attempts",
+    "pages.admin_booking_requests": "admin_booking_requests",
+    "pages.admin_face_recognition": "admin_face_recognition"
+  },
+  "default": "basic",
+  "common": {
+    "head_css": [
+      "css/pages/styles.css",
+      "css/pages/profile.css",
+      "css/themes.css",
+      "css/components/toast.css"
+    ],
+    "tail_css": [
+      "css/components/socialfooter.css",
+      "css/components/modal.css",
+      "css/components/name_edit_modal.css",
+      "css/components/confirm_modal.css",
+      "css/components/chatbox.css",
+      "css/spinners/loading_spinner.css",
+      "css/spinners/triple_loading.css"
+    ],
+    "js": [
+      "js/spinners/loading_spinner.js",
+      "js/spinners/triple_loading.js",
+      "js/utils.js",
+      "js/components/toast.js",
+      "js/pages/base.js",
+      "js/pages/admin/image-preview-modal.js",
+      {
+        "src": "js/components/modal.js",
+        "module": true
+      },
+      "js/components/confirm_modal.js",
+      {
+        "src": "js/components/chatbox.js",
+        "module": true
+      }
+    ]
+  },
+  "admin_common": {
+    "head_css": [
+      "css/pages/admin/adminlte.css",
+      "css/pages/admin/layout.css",
+      "css/components/toast.css"
+    ],
+    "tail_css": [],
+    "js": [
+      "js/components/toast.js",
+      "js/pages/admin/image-preview-modal.js",
+      "js/pages/admin/video-preview-modal.js",
+      "js/pages/admin/confirm-delete-modal.js",
+      "js/pages/admin/adminlte.js",
+      "js/pages/admin/layout.js"
+    ]
+  },
+  "pages": {
+    "basic": {
+      "css": [],
+      "js": []
+    },
+    "portfolio": {
+      "css": [],
+      "js": [
+        "js/pages/profile.js"
+      ]
+    },
+    "add_portfolio": {
+      "css": [],
+      "js": []
+    },
+    "gallery": {
+      "css": [
+        "css/pages/gallery.css",
+        "css/components/media_skeleton.css",
+        "css/components/searchbar.css",
+        "css/components/pagination.css"
+      ],
+      "js": [
+        "js/components/searchbar.js",
+        {
+          "src": "js/pages/gallery.js",
+          "module": true
+        }
+      ]
+    },
+    "vlog": {
+      "css": [
+        "css/pages/vlog.css",
+        "css/components/media_skeleton.css",
+        "css/plyr/plyr.css",
+        "css/components/searchbar.css",
+        "css/components/pagination.css"
+      ],
+      "js": [
+        "js/plyr/plyr.js",
+        "js/components/searchbar.js",
+        {
+          "src": "js/pages/vlog.js",
+          "module": true
+        }
+      ]
+    },
+    "app_details": {
+      "css": [
+        "css/pages/app_details.css"
+      ],
+      "js": [
+        {
+          "src": "js/pages/app_details.js",
+          "module": true
+        }
+      ]
+    },
+    "concern": {
+      "css": [
+        "css/pages/concern.css"
+      ],
+      "js": []
+    },
+    "donation": {
+      "css": [
+        "css/pages/donation.css"
+      ],
+      "js": []
+    },
+    "build": {
+      "css": [
+        "css/pages/booking.css",
+        "css/components/datetime_picker.css"
+      ],
+      "js": [
+        "js/components/datetime_picker.js",
+        {
+          "src": "js/pages/build.js",
+          "module": true
+        }
+      ]
+    },
+    "music": {
+      "standalone": true,
+      "css": [
+        "css/pages/music.css",
+        "css/pages/music_like.css",
+        "css/themes.css",
+        "css/spinners/triple_loading.css",
+        "css/components/confirm_modal.css"
+      ],
+      "js": [
+        "js/spinners/triple_loading.js",
+        "js/components/confirm_modal.js",
+        {
+          "src": "js/pages/music_like.js",
+          "module": true
+        },
+        {
+          "src": "js/pages/music.js",
+          "module": true
+        }
+      ]
+    },
+    "admin_login": {
+      "standalone": true,
+      "css": [
+        "css/pages/admin/login.css",
+        "css/components/otp_verification_modal.css"
+      ],
+      "js": [
+        {
+          "src": "js/pages/login.js",
+          "module": true
+        }
+      ]
+    },
+    "admin_dashboard": {
+      "admin": true,
+      "css": [
+        "css/pages/admin/dashboard.css"
+      ],
+      "js": [
+        {
+          "src": "js/pages/admin/dashboard.js",
+          "module": true
+        }
+      ]
+    },
+    "admin_gallery": {
+      "admin": true,
+      "css": [],
+      "js": [
+        {
+          "src": "js/pages/admin/gallery.js",
+          "module": true
+        }
+      ]
+    },
+    "admin_video": {
+      "admin": true,
+      "css": [],
+      "js": [
+        {
+          "src": "js/pages/admin/video.js",
+          "module": true
+        }
+      ]
+    },
+    "admin_music": {
+      "admin": true,
+      "css": [],
+      "js": [
+        {
+          "src": "js/pages/admin/music.js",
+          "module": true
+        }
+      ]
+    },
+    "admin_key_projects": {
+      "admin": true,
+      "css": [],
+      "js": [
+        {
+          "src": "js/pages/admin/key-projects.js",
+          "module": true
+        }
+      ]
+    },
+    "admin_company_roadmaps": {
+      "admin": true,
+      "css": [],
+      "js": [
+        {
+          "src": "js/pages/admin/company-roadmaps.js",
+          "module": true
+        }
+      ]
+    },
+    "admin_built_apps": {
+      "admin": true,
+      "css": [],
+      "js": [
+        {
+          "src": "js/pages/admin/built-apps.js",
+          "module": true
+        }
+      ]
+    },
+    "admin_settings": {
+      "admin": true,
+      "css": [],
+      "js": [
+        {
+          "src": "js/pages/admin/settings.js",
+          "module": true
+        }
+      ]
+    },
+    "admin_login_attempts": {
+      "admin": true,
+      "css": [],
+      "js": [
+        {
+          "src": "js/pages/admin/login-attempts.js",
+          "module": true
+        }
+      ]
+    },
+    "admin_booking_requests": {
+      "admin": true,
+      "css": [],
+      "js": [
+        {
+          "src": "js/pages/admin/booking-requests.js",
+          "module": true
+        }
+      ]
+    },
+    "admin_face_recognition": {
+      "admin": true,
+      "css": [
+        "css/pages/admin/dashboard.css"
+      ],
+      "js": [
+        {
+          "src": "js/pages/admin/face-recognition.js",
+          "module": true
+        }
+      ]
+    }
+  }
+}

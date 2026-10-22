@@ -979,9 +979,6 @@ msgstr "This build can't be downloaded just yet — it's still warming up in the
 msgid "App_Details_Technologies"
 msgstr "Technologies"
 
-msgid "App_Details_Tech_Eyebrow"
-msgstr "Tech Stack"
-
 msgid "App_Details_Tech_Engine"
 msgstr "Game Engine"
 

@@ -979,9 +979,6 @@ msgstr "Hindi pa mada-download ang build na ito — pinapainit pa ito sa worksho
 msgid "App_Details_Technologies"
 msgstr "Mga Teknolohiya"
 
-msgid "App_Details_Tech_Eyebrow"
-msgstr "Tech Stack"
-
 msgid "App_Details_Tech_Engine"
 msgstr "Game Engine"
 

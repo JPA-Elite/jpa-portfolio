@@ -162,13 +162,7 @@
     {% set tech_count = built_app.technologies|length %}
     <section class="app-details__section app-details__section--tech" aria-labelledby="appTechTitle">
         <div class="app-details__tech-head">
-            <div class="app-details__tech-heading">
-                <span class="app-details__tech-eyebrow">
-                    <ion-icon name="sparkles-outline" aria-hidden="true"></ion-icon>
-                    {{ _('App_Details_Tech_Eyebrow') }}
-                </span>
-                <h2 id="appTechTitle">{{ _('App_Details_Technologies') }}</h2>
-            </div>
+            <h2 id="appTechTitle">{{ _('App_Details_Technologies') }}</h2>
             <span class="app-details__tech-count">
                 {{ ngettext('App_Details_Tech_Count_One', 'App_Details_Tech_Count_Many', tech_count, count=tech_count) }}
             </span>

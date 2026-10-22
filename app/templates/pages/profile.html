@@ -381,12 +381,12 @@
                                 <p title="{{ project.display_description }}">{{ project.display_description }}</p>
                                 <div class="kanban-project-card__actions">
                                     {% if project.demo_url %}
-                                    <a href="{{ project.demo_url }}" target="_blank" rel="noopener noreferrer" class="kanban-action-link">
+                                    <a href="{{ project.demo_url }}" target="_blank" rel="noopener noreferrer" class="kanban-action-link kanban-action-link--view">
                                         <ion-icon name="open-outline"></ion-icon> {{ _('KP_Action_Demo') }}
                                     </a>
                                     {% endif %}
                                     {% if project.repo_url %}
-                                    <a href="{{ project.repo_url }}" target="_blank" rel="noopener noreferrer" class="kanban-action-link kanban-action-link--secondary">
+                                    <a href="{{ project.repo_url }}" target="_blank" rel="noopener noreferrer" class="kanban-action-link kanban-action-link--view">
                                         <ion-icon name="logo-github"></ion-icon> {{ _('KP_Action_Repo') }}
                                     </a>
                                     {% endif %}

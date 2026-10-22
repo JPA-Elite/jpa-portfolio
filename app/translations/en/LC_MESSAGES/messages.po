@@ -46,7 +46,7 @@ msgid "Summary"
 msgstr "Summary"
 
 msgid "Software_Expertise_Description"
-msgstr "I am a Software Engineer with more than 2 years of experience in software development. I'm highly adaptable to modern technologies, frameworks, and tools, and I bring strong analytical and problem-solving skills to every project. By leveraging AI-assisted tools, I boost productivity while maintaining proper software architecture, coding standards, and best practices. My ultimate goal is to consistently deliver high-quality results that create value for businesses."
+msgstr "I am a Software Engineer with 3 years of experience in software development. I'm highly adaptable to modern technologies, frameworks, and tools, and I bring strong analytical and problem-solving skills to every project. By leveraging AI-assisted tools, I boost productivity while maintaining proper software architecture, coding standards, and best practices. My ultimate goal is to consistently deliver high-quality results that create value for businesses."
 
 msgid "Technology_Adaptability_Description"
 msgstr "I work across the full stack, from responsive interfaces and APIs to databases and deployment. I take features from idea to production, keeping code clean, tested, and easy to maintain as projects grow."
@@ -496,7 +496,7 @@ msgid "profile_age"
 msgstr "I am {age} years old from Vallehermoso, Negros Oriental."
 
 msgid "profile_introvert"
-msgstr "I am a Software Engineer with more than 2 years of experience in software development. I’m highly adaptable to modern technologies, frameworks, and tools, and I bring strong analytical and problem‑solving skills to every project. By leveraging AI‑assisted tools, I boost productivity while maintaining proper software architecture, coding standards, and best practices. My ultimate goal is to consistently deliver high‑quality results that create value for businesses."
+msgstr "I am a Software Engineer with 3 years of experience in software development. I’m highly adaptable to modern technologies, frameworks, and tools, and I bring strong analytical and problem‑solving skills to every project. By leveraging AI‑assisted tools, I boost productivity while maintaining proper software architecture, coding standards, and best practices. My ultimate goal is to consistently deliver high‑quality results that create value for businesses."
 
 msgid "profile_job"
 msgstr ""

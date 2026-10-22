@@ -46,7 +46,7 @@ msgid "Summary"
 msgstr "Sulyap"
 
 msgid "Software_Expertise_Description"
-msgstr "Sa kadugayan sa katuigan, nakaugmad ko og lawom ug managlahi nga kahanas sa software development pinaagi sa pagtrabaho sa nagkalain-laing mga papel, industriya, ug teknikal nga palibot. Kining panaw wala lang nakapalambo sa akong coding ug problem-solving skills apan nakahatag usab kanako og kinatibuk-ang pagsabot kung giunsa ang teknolohiya nagpalihok sa negosyo."
+msgstr "Usa ako ka Software Engineer nga adunay 3 ka tuig nga kasinatian sa software development. Dali ra ko maka-adjust sa modernong teknolohiya, frameworks, ug mga himan, ug nagdala ako og lig-on nga analytical ug problem-solving skills sa matag proyekto. Pinaagi sa paggamit sa AI-assisted nga mga himan, gipataas nako ang produktibidad samtang gipadayon ang husto nga software architecture, coding standards, ug best practices. Ang akong tumong mao ang kanunay nga paghatag og dekalidad nga mga resulta nga makahatag og bili sa mga negosyo."
 
 msgid "Technology_Adaptability_Description"
 msgstr "Dali ra ko makat-on ug mogamit sa bag-ong mga teknolohiya. Bisan sa paggamit sa karaang sistema o modernong framework, dali ra nako masabtan ang mga sukaranan nga prinsipyo ug isagol kini sa mga solusyon nga motukma sa mga tumong sa negosyo ug makapalambo sa kasinatian sa tiggamit. Ang akong kamasulundon nakatabang nako sa paghatag og mahinungdanon nga kontribusyon sa mga proyekto nga naglakip sa frontend development, app architecture, cloud infrastructure ug automation."

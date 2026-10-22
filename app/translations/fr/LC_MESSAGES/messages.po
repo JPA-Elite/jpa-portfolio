@@ -46,7 +46,7 @@ msgid "Summary"
 msgstr "Résumé"
 
 msgid "Software_Expertise_Description"
-msgstr "Au fil des années, j'ai développé une expertise profonde et polyvalente en développement logiciel en travaillant dans un large éventail de rôles, d'industries et d'environnements techniques. Ce parcours n'a pas seulement affiné mes compétences en codage et en résolution de problèmes, mais m'a également donné une compréhension holistique de la façon dont la technologie génère de la valeur commerciale."
+msgstr "Je suis un ingénieur logiciel avec 3 ans d'expérience en développement logiciel. Je m'adapte facilement aux technologies, frameworks et outils modernes, et j'apporte de solides compétences analytiques et de résolution de problèmes à chaque projet. Grâce à l'utilisation d'outils assistés par IA, j'améliore la productivité tout en maintenant une architecture logicielle, des normes de codage et des bonnes pratiques appropriées. Mon objectif ultime est de livrer systématiquement des résultats de haute qualité qui créent de la valeur pour les entreprises."
 
 msgid "Technology_Adaptability_Description"
 msgstr "Je m'adapte très facilement à l'apprentissage et à l'application de nouvelles technologies. Que ce soit en travaillant avec des systèmes hérités ou des frameworks modernes, je saisis rapidement les principes sous-jacents et les intègre dans des solutions qui s'alignent sur les objectifs commerciaux et améliorent l'expérience utilisateur. Ma flexibilité m'a permis de contribuer de manière significative à des projets impliquant tout, du développement frontend à l'architecture app, en passant par l'infrastructure cloud et l'automatisation."

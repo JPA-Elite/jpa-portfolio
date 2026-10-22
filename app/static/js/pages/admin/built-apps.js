@@ -223,6 +223,93 @@ function serializeSnapshotRows(container, formData) {
     return snapshotsMeta;
 }
 
+const TECH_KEY_OPTIONS = [
+    ["engine", "Game Engine"],
+    ["language", "Language"],
+    ["framework", "Framework"],
+    ["backend", "Backend"],
+    ["database", "Database"],
+    ["storage", "Storage"],
+    ["platform", "Platform"],
+    ["tooling", "Tooling"],
+    ["custom", "Custom label"],
+];
+
+const TECH_DEFAULT_ICONS = {
+    engine: "game-controller-outline",
+    language: "code-slash-outline",
+    framework: "layers-outline",
+    backend: "server-outline",
+    database: "albums-outline",
+    storage: "archive-outline",
+    platform: "phone-portrait-outline",
+    tooling: "construct-outline",
+    custom: "pricetag-outline",
+};
+
+function techKeyOptions(selected) {
+    const normalized = String(selected || "custom").toLowerCase();
+    return TECH_KEY_OPTIONS.map(([value, label]) => {
+        const isSelected = normalized === value ? " selected" : "";
+        return `<option value="${value}"${isSelected}>${label}</option>`;
+    }).join("");
+}
+
+function buildTechRowMarkup(tech = {}) {
+    const key = String(tech.key || "custom").toLowerCase();
+    const isCustom = key === "custom";
+    const defaultValueIcon = TECH_DEFAULT_ICONS[key] || TECH_DEFAULT_ICONS.custom;
+    const iconValue = isCustom ? (tech.icon || "") : defaultValueIcon;
+
+    return `
+    <div class="app-tech-row border rounded p-2" data-tech-row>
+      <div class="row g-2 align-items-center">
+        <div class="col-12 col-md-3">
+          <select class="form-select form-select-sm" data-tech-key aria-label="Technology category">
+            ${techKeyOptions(key)}
+          </select>
+        </div>
+        <div class="col-6 col-md-2">
+          <input type="text" class="form-control form-control-sm" data-tech-label maxlength="40"
+            placeholder="${isCustom ? "Row label" : "Auto label"}"
+            value="${escapeHtml(isCustom ? (tech.label || "") : "")}" ${isCustom ? "" : "disabled"}>
+        </div>
+        <div class="col-6 col-md-2">
+          <input type="text" class="form-control form-control-sm" data-tech-icon maxlength="60"
+            placeholder="${isCustom ? "pricetag-outline" : ""}"
+            value="${escapeHtml(iconValue)}" ${isCustom ? "" : "disabled"}>
+        </div>
+        <div class="col-12 col-md-4">
+          <input type="text" class="form-control form-control-sm" data-tech-value maxlength="80"
+            placeholder="Unity 2022.3" value="${escapeHtml(tech.value || "")}">
+        </div>
+        <div class="col-12 col-md-1 text-md-end">
+          <button type="button" class="btn btn-outline-danger btn-sm" data-remove-tech-row title="Remove technology">
+            <i class="bi bi-trash"></i>
+          </button>
+        </div>
+      </div>
+    </div>`;
+}
+
+function serializeTechRows(container) {
+    if (!container) return [];
+
+    return Array.from(container.querySelectorAll("[data-tech-row]"))
+        .map((row) => {
+            const key = row.querySelector("[data-tech-key]")?.value || "custom";
+            const label = key === "custom"
+                ? (row.querySelector("[data-tech-label]")?.value || "").trim()
+                : "";
+            const icon = key === "custom"
+                ? (row.querySelector("[data-tech-icon]")?.value || "").trim()
+                : "";
+            const value = (row.querySelector("[data-tech-value]")?.value || "").trim();
+            return { key, label, icon, value };
+        })
+        .filter((item) => item.value);
+}
+
 async function loadBuiltApps(page = 1) {
     const tbody = document.getElementById("builtAppsTableBody");
     const modalContainer = document.getElementById("builtAppModals");
@@ -354,6 +441,8 @@ function buildEditModal(app, modalId, page, index) {
     const fullFil = toText(fullDescription.fil_PH);
     const snapshots = Array.isArray(app.snapshots) ? app.snapshots : [];
     const snapshotsMarkup = snapshots.map((s) => buildSnapshotRowMarkup(s)).join("");
+    const technologies = Array.isArray(app.technologies) ? app.technologies : [];
+    const technologiesMarkup = technologies.map((t) => buildTechRowMarkup(t)).join("");
 
     return `
     <div class="modal fade" id="${modalId}" tabindex="-1" aria-hidden="true">
@@ -409,6 +498,21 @@ function buildEditModal(app, modalId, page, index) {
                 <div class="col-md-4"><label class="form-label">Full Description (Ceb)</label><textarea id="editFullCeb${suffix}" class="form-control" rows="4">${escapeHtml(fullCeb)}</textarea></div>
                 <div class="col-md-4"><label class="form-label">Full Description (Fr)</label><textarea id="editFullFr${suffix}" class="form-control" rows="4">${escapeHtml(fullFr)}</textarea></div>
                 <div class="col-md-4"><label class="form-label">Full Description (Fil)</label><textarea id="editFullFil${suffix}" class="form-control" rows="4">${escapeHtml(fullFil)}</textarea></div>
+
+                <div class="col-12">
+                  <div class="card border">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                      <strong>Technologies</strong>
+                      <button type="button" class="btn btn-sm btn-outline-primary" data-add-tech-row data-target="#editTechnologiesContainer${suffix}">
+                        <i class="bi bi-plus"></i> Add Technology
+                      </button>
+                    </div>
+                    <div class="card-body">
+                      <p class="text-muted small mb-2">Shown as a spec sheet on the app details page. Choose "Custom label" to write your own row name and Ionicons icon (e.g. code-slash-outline).</p>
+                      <div id="editTechnologiesContainer${suffix}" class="d-grid gap-2">${technologiesMarkup}</div>
+                    </div>
+                  </div>
+                </div>
 
                 <div class="col-12">
                   <div class="card border">
@@ -469,6 +573,7 @@ async function addBuiltApp() {
         formData.append("download_url", document.getElementById("addDownloadUrl").value.trim());
         formData.append("sort_order", document.getElementById("addSortOrder").value || "0");
         formData.append("is_active", document.getElementById("addIsActive").checked ? "true" : "false");
+        formData.append("technologies", JSON.stringify(serializeTechRows(document.getElementById("addTechnologiesContainer"))));
 
         const iconImageInput = document.getElementById("addIconImage");
         if (iconImageInput?.files?.[0]) formData.append("icon_image_file", iconImageInput.files[0]);
@@ -484,6 +589,11 @@ async function addBuiltApp() {
         bootstrap.Modal.getInstance(modalEl)?.hide();
         document.getElementById("addBuiltAppForm").reset();
         document.getElementById("addIsActive").checked = true;
+        const addTechContainer = document.getElementById("addTechnologiesContainer");
+        if (addTechContainer) {
+            addTechContainer.innerHTML = "";
+            addTechContainer.insertAdjacentHTML("beforeend", buildTechRowMarkup({}));
+        }
         loadBuiltApps(currentPage);
     } catch (err) {
         console.error(err);
@@ -513,6 +623,7 @@ async function updateBuiltApp(appId, suffix) {
         formData.append("download_url", document.getElementById(`editDownloadUrl${suffix}`).value.trim());
         formData.append("sort_order", document.getElementById(`editSortOrder${suffix}`).value || "0");
         formData.append("is_active", document.getElementById(`editIsActive${suffix}`).checked ? "true" : "false");
+        formData.append("technologies", JSON.stringify(serializeTechRows(document.getElementById(`editTechnologiesContainer${suffix}`))));
 
         const editIconImageInput = document.getElementById(`editIconImage${suffix}`);
         if (editIconImageInput?.files?.[0]) formData.append("icon_image_file", editIconImageInput.files[0]);
@@ -537,6 +648,10 @@ async function updateBuiltApp(appId, suffix) {
 
 document.addEventListener("DOMContentLoaded", () => {
     initFileDropzones(document);
+    const addTechContainer = document.getElementById("addTechnologiesContainer");
+    if (addTechContainer && !addTechContainer.children.length) {
+        addTechContainer.insertAdjacentHTML("beforeend", buildTechRowMarkup({}));
+    }
     const addMaxBtn = document.getElementById("addBuiltAppMaximizeBtn");
     if (addMaxBtn) {
         addMaxBtn.dataset.targetModal = "addAppModal";
@@ -566,6 +681,42 @@ document.addEventListener("DOMContentLoaded", () => {
         const removeRowBtn = e.target.closest("[data-remove-snapshot-row]");
         if (removeRowBtn) {
             removeRowBtn.closest("[data-snapshot-row]")?.remove();
+            return;
+        }
+
+        const addTechBtn = e.target.closest("[data-add-tech-row]");
+        if (addTechBtn) {
+            const targetSelector = addTechBtn.getAttribute("data-target");
+            const container = targetSelector ? document.querySelector(targetSelector) : null;
+            container?.insertAdjacentHTML("beforeend", buildTechRowMarkup({}));
+            return;
+        }
+
+        const removeTechBtn = e.target.closest("[data-remove-tech-row]");
+        if (removeTechBtn) {
+            removeTechBtn.closest("[data-tech-row]")?.remove();
+        }
+    });
+
+    document.addEventListener("change", function (e) {
+        const techKey = e.target.closest("[data-tech-key]");
+        if (!techKey) return;
+
+        const row = techKey.closest("[data-tech-row]");
+        const labelInput = row?.querySelector("[data-tech-label]");
+        const iconInput = row?.querySelector("[data-tech-icon]");
+        const isCustom = techKey.value === "custom";
+
+        if (labelInput) {
+            labelInput.disabled = !isCustom;
+            labelInput.placeholder = isCustom ? "Row label" : "Auto label";
+            if (!isCustom) labelInput.value = "";
+        }
+
+        if (iconInput) {
+            iconInput.disabled = !isCustom;
+            iconInput.placeholder = isCustom ? "pricetag-outline" : "";
+            iconInput.value = isCustom ? "" : (TECH_DEFAULT_ICONS[techKey.value] || TECH_DEFAULT_ICONS.custom);
         }
     });
 

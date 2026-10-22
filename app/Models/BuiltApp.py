@@ -1,3 +1,62 @@
+TECHNOLOGY_KEYS = (
+    "engine",
+    "language",
+    "framework",
+    "backend",
+    "database",
+    "storage",
+    "platform",
+    "tooling",
+    "custom",
+)
+
+TECHNOLOGY_MAX_ROWS = 20
+TECHNOLOGY_LABEL_MAX_LENGTH = 40
+TECHNOLOGY_VALUE_MAX_LENGTH = 80
+TECHNOLOGY_ICON_MAX_LENGTH = 60
+
+
+def normalize_technologies(value):
+    if not isinstance(value, list):
+        return []
+
+    items = []
+    for entry in value:
+        if isinstance(entry, str):
+            key = "custom"
+            label = ""
+            icon = ""
+            text = entry.strip()
+        elif isinstance(entry, dict):
+            key = str(entry.get("key") or "custom").strip().lower()
+            if key not in TECHNOLOGY_KEYS:
+                key = "custom"
+            label = str(entry.get("label") or "").strip()[:TECHNOLOGY_LABEL_MAX_LENGTH]
+            icon = str(entry.get("icon") or "").strip()[:TECHNOLOGY_ICON_MAX_LENGTH]
+            if key != "custom":
+                label = ""
+                icon = ""
+            text = str(entry.get("value") or "").strip()
+        else:
+            continue
+
+        text = text[:TECHNOLOGY_VALUE_MAX_LENGTH]
+        if not text:
+            continue
+
+        items.append({
+            "key": key,
+            "label": label,
+            "icon": icon,
+            "value": text,
+        })
+
+        if len(items) >= TECHNOLOGY_MAX_ROWS:
+            break
+
+    return items
+
+
 class BuiltApp:
     def __init__(
         self,
@@ -11,6 +70,7 @@ class BuiltApp:
         short_description=None,
         full_description=None,
         snapshots=None,
+        technologies=None,
         download_url="",
         sort_order=0,
         is_active=True,
@@ -34,6 +94,7 @@ class BuiltApp:
         self.short_description = short_description or {}
         self.full_description = full_description or {}
         self.snapshots = snapshots or []
+        self.technologies = normalize_technologies(technologies)
         self.download_url = download_url or ""
         self.sort_order = int(sort_order or 0)
         self.is_active = bool(is_active)
@@ -50,6 +111,7 @@ class BuiltApp:
             "short_description": self.short_description,
             "full_description": self.full_description,
             "snapshots": self.snapshots,
+            "technologies": self.technologies,
             "download_url": self.download_url,
             "sort_order": self.sort_order,
             "is_active": self.is_active,
@@ -82,6 +144,7 @@ class BuiltApp:
             short_description=data.get("short_description", {}),
             full_description=data.get("full_description", {}),
             snapshots=data.get("snapshots", []),
+            technologies=data.get("technologies", []),
             download_url=data.get("download_url", ""),
             sort_order=data.get("sort_order", 0),
             is_active=data.get("is_active", True),

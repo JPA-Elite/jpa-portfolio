@@ -976,6 +976,44 @@ msgstr "Coming soon"
 msgid "App_Details_Download_Soon_Hint"
 msgstr "This build can't be downloaded just yet — it's still warming up in the workshop. Check back soon for the fresh release!"
 
+msgid "App_Details_Technologies"
+msgstr "Technologies"
+
+msgid "App_Details_Tech_Eyebrow"
+msgstr "Tech Stack"
+
+msgid "App_Details_Tech_Engine"
+msgstr "Game Engine"
+
+msgid "App_Details_Tech_Language"
+msgstr "Language"
+
+msgid "App_Details_Tech_Framework"
+msgstr "Framework"
+
+msgid "App_Details_Tech_Backend"
+msgstr "Backend"
+
+msgid "App_Details_Tech_Database"
+msgstr "Database"
+
+msgid "App_Details_Tech_Storage"
+msgstr "Storage"
+
+msgid "App_Details_Tech_Platform"
+msgstr "Platform"
+
+msgid "App_Details_Tech_Tooling"
+msgstr "Tooling"
+
+msgid "App_Details_Tech_Custom"
+msgstr "Custom"
+
+msgid "App_Details_Tech_Count_One"
+msgid_plural "App_Details_Tech_Count_Many"
+msgstr[0] "1 technology"
+msgstr[1] "%(count)s technologies"
+
 msgid "App_Share_Default_Title"
 msgstr "Built Apps"
 

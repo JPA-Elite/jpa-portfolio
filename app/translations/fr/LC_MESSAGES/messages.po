@@ -879,6 +879,44 @@ msgstr "Bientôt disponible"
 msgid "App_Details_Download_Soon_Hint"
 msgstr "Cette version ne peut pas encore être téléchargée — elle chauffe encore à l'atelier. Revenez bientôt pour la nouveauté !"
 
+msgid "App_Details_Technologies"
+msgstr "Technologies"
+
+msgid "App_Details_Tech_Eyebrow"
+msgstr "Stack technique"
+
+msgid "App_Details_Tech_Engine"
+msgstr "Moteur de jeu"
+
+msgid "App_Details_Tech_Language"
+msgstr "Langage"
+
+msgid "App_Details_Tech_Framework"
+msgstr "Framework"
+
+msgid "App_Details_Tech_Backend"
+msgstr "Backend"
+
+msgid "App_Details_Tech_Database"
+msgstr "Base de données"
+
+msgid "App_Details_Tech_Storage"
+msgstr "Stockage"
+
+msgid "App_Details_Tech_Platform"
+msgstr "Plateforme"
+
+msgid "App_Details_Tech_Tooling"
+msgstr "Outils"
+
+msgid "App_Details_Tech_Custom"
+msgstr "Personnalisé"
+
+msgid "App_Details_Tech_Count_One"
+msgid_plural "App_Details_Tech_Count_Many"
+msgstr[0] "1 technologie"
+msgstr[1] "%(count)s technologies"
+
 msgid "App_Share_Default_Title"
 msgstr "Applications"
 

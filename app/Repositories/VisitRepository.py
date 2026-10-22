@@ -122,22 +122,17 @@ class VisitRepository(IVisitRepository, BaseRepository):
             "bot_total_count": bot_total_count
         }
 
-    def delete_all_visitors(self) -> bool:
-
+    def delete_all_visitors(self) -> dict:
         try:
-            delete_many = getattr(self, "delete_many", None)
-            if callable(delete_many):
-                result = delete_many({})
-                _ = getattr(result, "deleted_count", None)
-                return True
-
-            if hasattr(self, "delete_all"):
-                self.delete_all({})
-                return True
-
-            return False
-        except Exception:
-            return False
+            result = self.delete_many({})
+            deleted_count = int(getattr(result, "deleted_count", 0))
+            return {
+                "status": "success",
+                "message": f"Deleted {deleted_count} visitor record(s).",
+                "deleted_count": deleted_count,
+            }
+        except Exception as e:
+            return {"status": "error", "message": str(e)}
 
     def get_visit_type_counts(self):
         try:

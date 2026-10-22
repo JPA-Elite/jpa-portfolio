@@ -1,6 +1,8 @@
 import crypto from "crypto";
 import fs from "fs";
+import os from "os";
 import path from "path";
+import { execFileSync } from "child_process";
 import { build as viteBuild } from "vite";
 import { minify as terserMinify } from "terser";
 import { minify as cssoMinify } from "csso";
@@ -9,6 +11,7 @@ const repoRoot = process.cwd();
 const staticRoot = path.resolve(repoRoot, "app", "static");
 const distRoot = path.resolve(repoRoot, "app", "dist", "frontend");
 const outDir = path.resolve(distRoot, "static");
+const pageBundleConfigPath = path.resolve(repoRoot, "scripts", "page-bundles.json");
 
 const HASH_EXTENSIONS = new Set([".css", ".js"]);
 const TEXT_EXTENSIONS = new Set([".css", ".js", ".html", ".json", ".svg", ".xml"]);
@@ -147,6 +150,170 @@ const minifyFile = async (filePath) => {
   }
 };
 
+const readSource = (relPath) => {
+  const fullPath = path.join(staticRoot, relPath);
+  if (!fs.existsSync(fullPath)) {
+    throw new Error(`Page bundle references a missing file: ${relPath}`);
+  }
+  return fs.readFileSync(fullPath, "utf-8");
+};
+
+const collectImportPaths = (source) => {
+  const paths = [];
+  const pattern = /^\s*import\s+(?:[^'"]*?\sfrom\s+)?["']([^"']+)["']\s*;?\s*$/gm;
+  let match;
+  while ((match = pattern.exec(source)) !== null) {
+    paths.push(match[1]);
+  }
+  return paths;
+};
+
+const resolveImportPath = (fromRelPath, specifier) => {
+  if (!specifier.startsWith(".")) {
+    return null;
+  }
+  return toPosix(path.normalize(path.join(path.dirname(fromRelPath), specifier)));
+};
+
+const collectModuleDependencies = (relPath, collected, visiting = new Set()) => {
+  if (collected.includes(relPath) || visiting.has(relPath)) {
+    return;
+  }
+  const source = readSource(relPath);
+  visiting.add(relPath);
+  for (const specifier of collectImportPaths(source)) {
+    const dependency = resolveImportPath(relPath, specifier);
+    if (dependency) {
+      collectModuleDependencies(dependency, collected, visiting);
+    }
+  }
+  visiting.delete(relPath);
+  collected.push(relPath);
+};
+
+const stripModuleSyntax = (source) => {
+  return source
+    .replace(/^\s*import\s+(?:[^'"]*?\sfrom\s+)?["'][^"']+["']\s*;?\s*$/gm, "")
+    .replace(/^\s*export\s+(?=(?:class|function|const|let|var)\b)/gm, "")
+    .replace(/^\s*export\s*\{[^}]*\}\s*;?\s*$/gm, "")
+    .replace(/^\s*export\s+default\s+/gm, "");
+};
+
+const normalizeJsEntry = (entry) => {
+  if (typeof entry === "string") {
+    return { src: entry, module: false };
+  }
+  return { src: entry.src, module: Boolean(entry.module) };
+};
+
+const assemblePageJs = (sources) => {
+  const chunks = [];
+  const files = [];
+  for (const entry of sources) {
+    const { src, module } = normalizeJsEntry(entry);
+    if (module) {
+      const dependencies = [];
+      collectModuleDependencies(src, dependencies);
+      for (const dependency of dependencies) {
+        if (files.includes(dependency)) {
+          continue;
+        }
+        files.push(dependency);
+        chunks.push(`/* ${dependency} */\n${stripModuleSyntax(readSource(dependency))}`);
+      }
+      continue;
+    }
+    if (files.includes(src)) {
+      continue;
+    }
+    files.push(src);
+    chunks.push(`/* ${src} */\n${readSource(src)}`);
+  }
+  return { code: chunks.join("\n;\n"), files };
+};
+
+const validateClassicJs = (label, code) => {
+  const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "page-bundle-"));
+  const tempFile = path.join(tempDir, `${label}.js`);
+  try {
+    fs.writeFileSync(tempFile, code, "utf-8");
+    execFileSync(process.execPath, ["--check", tempFile], { stdio: "pipe" });
+  } catch (err) {
+    const details = err.stderr ? err.stderr.toString() : err.message;
+    throw new Error(`Page bundle JS failed syntax validation for "${label}":\n${details}`);
+  } finally {
+    fs.rmSync(tempDir, { recursive: true, force: true });
+  }
+};
+
+const assemblePageCss = (sources) => {
+  const chunks = [];
+  for (const src of sources) {
+    chunks.push(`/* ${src} */\n${readSource(src)}`);
+  }
+  return { code: chunks.join("\n") };
+};
+
+const loadPageBundleConfig = () => {
+  if (!fs.existsSync(pageBundleConfigPath)) {
+    return { routes: {}, common: {}, pages: {} };
+  }
+  return JSON.parse(fs.readFileSync(pageBundleConfigPath, "utf-8"));
+};
+
+const pageCssSources = (config, page) => {
+  if (page.standalone) {
+    return [...(page.css || [])];
+  }
+  const common = (page.admin ? config.admin_common : config.common) || {};
+  return [
+    ...(common.head_css || []),
+    ...(page.css || []),
+    ...(common.tail_css || []),
+  ];
+};
+
+const pageJsSources = (config, page) => {
+  if (page.standalone) {
+    return [...(page.js || [])];
+  }
+  const common = (page.admin ? config.admin_common : config.common) || {};
+  return [...(common.js || []), ...(page.js || [])];
+};
+
+const writePageBundles = async (manifest, config) => {
+  const pages = config.pages || {};
+  const written = [];
+  for (const [key, page] of Object.entries(pages)) {
+    const css = assemblePageCss(pageCssSources(config, page));
+    const cssMinified = cssoMinify(css.code, { restructure: true }).css;
+    const cssBuffer = Buffer.from(cssMinified, "utf-8");
+    const cssRel = toPosix(path.join("assets", "pages", `${key}.${hashFile(cssBuffer)}.css`));
+    ensureDir(path.join(outDir, cssRel));
+    fs.writeFileSync(path.join(outDir, cssRel), cssBuffer);
+    manifest[`pages/${key}.css`] = cssRel;
+
+    const js = assemblePageJs(pageJsSources(config, page));
+    validateClassicJs(key, js.code);
+    const jsMinified = await terserMinify(js.code, {
+      compress: { drop_console: false },
+      mangle: true,
+      format: { comments: false },
+    });
+    if (!jsMinified.code) {
+      throw new Error(`Page bundle JS minification produced no output for "${key}"`);
+    }
+    const jsBuffer = Buffer.from(jsMinified.code, "utf-8");
+    const jsRel = toPosix(path.join("assets", "pages", `${key}.${hashFile(jsBuffer)}.js`));
+    ensureDir(path.join(outDir, jsRel));
+    fs.writeFileSync(path.join(outDir, jsRel), jsBuffer);
+    manifest[`pages/${key}.js`] = jsRel;
+
+    written.push(`${key}(css=${cssBuffer.length}B, js=${jsBuffer.length}B)`);
+  }
+  return written;
+};
+
 cleanDir(outDir);
 fs.mkdirSync(outDir, { recursive: true });
 
@@ -215,9 +382,17 @@ walkFiles(outDir, (filePath) => {
   hashed += 1;
 });
 
+const pageBundleConfig = loadPageBundleConfig();
+const pageBundles = await writePageBundles(manifest, pageBundleConfig);
+
 const manifestPath = path.join(outDir, "manifest.json");
 fs.writeFileSync(manifestPath, JSON.stringify(manifest), "utf-8");
+fs.writeFileSync(
+  path.join(distRoot, "page-bundles.json"),
+  JSON.stringify(pageBundleConfig, null, 2),
+  "utf-8"
+);
 
 console.log(
-  `Built frontend assets to ${outDir} (copied=${copied}, minified=${minified}, hashed=${hashed}, bundled=${bundleEntries.length}).`
+  `Built frontend assets to ${outDir} (copied=${copied}, minified=${minified}, hashed=${hashed}, bundled=${bundleEntries.length}, pages=${pageBundles.length}).`
 );

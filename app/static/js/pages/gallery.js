@@ -294,10 +294,44 @@ function optimizeGalleryRendering() {
     cards.forEach(card => card.classList.add("is-visible"));
 }
 
+let commentsFromUrlOpened = false;
+
+function closeAdminImagePreview() {
+    const preview = document.getElementById("adminImagePreviewModal");
+    if (!preview) return;
+    preview.classList.remove("show");
+    preview.setAttribute("aria-hidden", "true");
+}
+
+function openCommentsFromUrl() {
+    if (commentsFromUrlOpened) return;
+    if (window.location.hash !== "#comments") return;
+
+    const galleryId = new URLSearchParams(window.location.search).get("gallery_id");
+    if (!galleryId) return;
+
+    const card = document.querySelector(`.gallery-item[data-gallery-id="${galleryId}"]`);
+    const button = card?.querySelector(".comment-btn");
+    if (!button) return;
+
+    commentsFromUrlOpened = true;
+    closeAdminImagePreview();
+    button.click();
+}
+
 document.addEventListener("DOMContentLoaded", () => {
     setupMediaSkeletons();
     optimizeGalleryRendering();
     bootstrapGalleryCounts();
+    openCommentsFromUrl();
+});
+
+window.addEventListener("pageshow", (event) => {
+    if (event.persisted) {
+        commentsFromUrlOpened = false;
+    }
+    closeAdminImagePreview();
+    openCommentsFromUrl();
 });
 
 window.toggleLike = toggleLike;

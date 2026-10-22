@@ -1,11 +1,11 @@
 services:
   flask:
-    command: ["python", "-m", "app.app"]
+    command: ["sh", "-c", "npm run build:frontend && python -m app.app"]
     volumes:
       - ./app:/app/app
     environment:
       FLASK_DEBUG: "1"
       CACHE_TYPE: "null"
       TEMPLATE_LIVERELOAD: "1"
-      FRONTEND_DIST: "0"
-      FRONTEND_DIST_TEMPLATES: "0"
+      FRONTEND_DIST: "1"
+      FRONTEND_DIST_TEMPLATES: "1"

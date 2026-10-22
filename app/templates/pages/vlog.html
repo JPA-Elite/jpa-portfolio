@@ -3,11 +3,6 @@
 {% block head %}{% endblock %}
 
 {% block content %}
-<!-- Link to the external CSS file for the vlog -->
-<link rel="stylesheet" href="{{ static_asset('css/pages/vlog.css') }}" />
-<link rel="stylesheet" href="{{ static_asset('css/components/media_skeleton.css') }}" />
-<link rel="stylesheet" href="{{ static_asset('css/plyr/plyr.css') }}" />
-<script src="{{ static_asset('js/plyr/plyr.js') }}"></script>
 <div class="vlog-search-shell">
     {% include 'components/searchbar.html' %}
 </div>
@@ -108,6 +103,7 @@
     <!-- Include the pagination component and pass the base URL -->
     {% include 'components/pagination.html' %}
 </section>
+{% endblock %}
 
 {% block modal_script %}
     <script>
@@ -123,19 +119,4 @@
             sharePromptCopyLink: {{ _('Share_Copy_Link_Prompt') | tojson }},
         };
     </script>
-    {{ super() }}
-    <script>
-        (function () {
-            if (location.hash !== "#comments") return;
-            var vlogId = new URLSearchParams(location.search).get("vlog_id");
-            if (!vlogId) return;
-            var card = document.querySelector('.video-item[data-vlog-id="' + vlogId + '"]');
-            if (!card) return;
-            var btn = card.querySelector(".comment-btn");
-            if (btn) btn.click();
-        })();
-    </script>
-{% endblock %}
-
-<script type="module" src="{{ static_asset('js/pages/vlog.js') }}"></script>
 {% endblock %}

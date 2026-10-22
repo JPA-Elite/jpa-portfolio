@@ -1,3 +1,7 @@
+import { CommentService } from "../services/CommentService.js";
+
+const commentService = new CommentService();
+
 if (!window.__modal_js_loaded__) {
     window.__modal_js_loaded__ = true;
     const ModalType = {
@@ -21,6 +25,7 @@ if (!window.__modal_js_loaded__) {
     let slideData = [];
     let currentSelectedId = null;
     let currentCommentPage = 1;
+    let commentsRequestId = 0;
     const COMMENTS_PER_PAGE = 100;
     const MAX_COMMENT_LENGTH = 1000;
     const MAX_AVATAR_BYTES = 2 * 1024 * 1024;
@@ -146,8 +151,6 @@ if (!window.__modal_js_loaded__) {
 
             if (descriptionTitle) descriptionTitle.textContent = titleText;
             if (descriptionTextEl) descriptionTextEl.textContent = descriptionText;
-
-            boxContainer.style.display = "block";
         }
 
         setActiveSlide();
@@ -839,6 +842,7 @@ if (!window.__modal_js_loaded__) {
     }
 
     async function loadComments(selectedId, page = 1, prependOlder = false, initial = false) {
+        const requestId = ++commentsRequestId;
         const commentList = document.querySelector(".comment-list");
         const commentSection = document.querySelector(".comment-section");
 
@@ -869,8 +873,19 @@ if (!window.__modal_js_loaded__) {
             prevBtn.disabled = true;
             prevBtn.textContent = tm("loading", "Loading...");
 
-            const res = await fetch(`/api/${baseUrl}?${idType}=${selectedId}&page=${page}&limit=${COMMENTS_PER_PAGE}`);
-            const data = await res.json();
+            const { ok, data } = await commentService.fetchComments({
+                basePath: baseUrl,
+                idType,
+                id: selectedId,
+                page,
+                limit: COMMENTS_PER_PAGE,
+            });
+
+            if (requestId !== commentsRequestId) return;
+
+            if (!ok) {
+                throw new Error("Failed to load comments");
+            }
 
             if (typeof data.display_name === "string" && data.display_name.trim() !== "") {
                 currentDisplayName = data.display_name;
@@ -927,6 +942,7 @@ if (!window.__modal_js_loaded__) {
                 commentList.scrollTop = commentList.scrollHeight;
             }
         } catch (err) {
+            if (requestId !== commentsRequestId) return;
             console.error(err);
             removeCommentSkeletons(commentList);
             const emptyDiv = document.createElement("div");
@@ -938,8 +954,10 @@ if (!window.__modal_js_loaded__) {
             commentList.appendChild(emptyDiv);
         } finally {
             // spinner.style.display = "none";
-            prevBtn.disabled = false;
-            prevBtn.textContent = tm("loadPrevious", "Previous");
+            if (requestId === commentsRequestId) {
+                prevBtn.disabled = false;
+                prevBtn.textContent = tm("loadPrevious", "Previous");
+            }
         }
     }
 
@@ -1019,19 +1037,17 @@ if (!window.__modal_js_loaded__) {
         commentBox.disabled = true;
 
         try {
-            const bodyPayload = {
-                author_name: tm("commentAuthorYou", "You"),
-                text
-            };
-            bodyPayload[window.idType] = currentSelectedId;
-
-            const res = await fetch(`/api/${baseUrl}`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(bodyPayload),
+            const { ok, data } = await commentService.createComment({
+                basePath: baseUrl,
+                idType,
+                id: currentSelectedId,
+                authorName: tm("commentAuthorYou", "You"),
+                text,
             });
 
-            const data = await res.json();
+            if (!ok) {
+                throw new Error("Failed to submit comment");
+            }
             const noCommentsDiv = document.querySelector(".no-comments");
             if (noCommentsDiv) noCommentsDiv.remove();
 
@@ -1094,9 +1110,8 @@ if (!window.__modal_js_loaded__) {
 
     async function refreshAvatarStatus() {
         try {
-            const res = await fetch("/api/comment-avatar", { method: "GET" });
-            const data = await res.json();
-            if (!res.ok) return;
+            const { ok, data } = await commentService.fetchAvatar();
+            if (!ok) return;
             if (typeof data.avatar_url === "string" && data.avatar_url.trim() !== "") {
                 currentAvatarUrl = data.avatar_url;
             }
@@ -1111,9 +1126,8 @@ if (!window.__modal_js_loaded__) {
 
     async function refreshNameStatus() {
         try {
-            const res = await fetch("/api/comment-username", { method: "GET" });
-            const data = await res.json();
-            if (!res.ok) return;
+            const { ok, data } = await commentService.fetchUsername();
+            if (!ok) return;
             if (typeof data.display_name === "string" && data.display_name.trim() !== "") {
                 currentDisplayName = data.display_name;
             }
@@ -1243,18 +1257,13 @@ if (!window.__modal_js_loaded__) {
         setButtonLoading(saveBtn, true);
 
         try {
-            const res = await fetch("/api/comment-username", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ display_name: name }),
-            });
-            const data = await res.json();
+            const { ok, data } = await commentService.saveUsername(name);
 
             if (typeof data.remaining_changes === "number") {
                 remainingNameChanges = data.remaining_changes;
             }
 
-            if (!res.ok) {
+            if (!ok) {
                 error.textContent =
                     (data.errors && data.errors._global) ||
                     tm("editNameError", "Failed to save your name. Please try again.");
@@ -1310,12 +1319,11 @@ if (!window.__modal_js_loaded__) {
             const formData = new FormData();
             formData.append("avatar", file);
 
-            const res = await fetch("/api/comment-avatar/upload", { method: "POST", body: formData });
-            const data = await res.json();
+            const { ok, data } = await commentService.uploadAvatar(formData);
             if (typeof data.remaining_avatar_changes === "number") {
                 remainingAvatarChanges = data.remaining_avatar_changes;
             }
-            if (!res.ok) {
+            if (!ok) {
                 if (avatarError) {
                     avatarError.textContent =
                         data.code === "avatar_too_large"
@@ -1349,16 +1357,11 @@ if (!window.__modal_js_loaded__) {
         const { presets } = getAvatarEditorButtons();
         presets.forEach((btn) => (btn.disabled = true));
         try {
-            const res = await fetch("/api/comment-avatar", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ avatar_url: avatarUrl }),
-            });
-            const data = await res.json();
+            const { ok, data } = await commentService.saveAvatar(avatarUrl);
             if (typeof data.remaining_avatar_changes === "number") {
                 remainingAvatarChanges = data.remaining_avatar_changes;
             }
-            if (!res.ok) {
+            if (!ok) {
                 if (avatarError) {
                     avatarError.textContent =
                         data.code === "avatar_limit_reached"
@@ -1386,12 +1389,11 @@ if (!window.__modal_js_loaded__) {
         setButtonLoading(removeBtn, true);
         presets.forEach((btn) => (btn.disabled = true));
         try {
-            const res = await fetch("/api/comment-avatar", { method: "DELETE" });
-            const data = await res.json();
+            const { ok, data } = await commentService.removeAvatar();
             if (typeof data.remaining_avatar_changes === "number") {
                 remainingAvatarChanges = data.remaining_avatar_changes;
             }
-            if (!res.ok) {
+            if (!ok) {
                 if (avatarError) {
                     avatarError.textContent =
                         data.code === "avatar_limit_reached"
@@ -1424,9 +1426,8 @@ if (!window.__modal_js_loaded__) {
             confirmText: tm("confirmAction", "Delete"),
             onConfirm: async () => {
                 try {
-                    const res = await fetch(`/api/${baseUrl}/${commentId}`, { method: "DELETE" });
-                    const data = await res.json();
-                    if (!res.ok) {
+                    const { ok, data } = await commentService.deleteComment(baseUrl, commentId);
+                    if (!ok) {
                         if (window.notify) window.notify(data.message || tm("deleteError", "Failed to delete. Please try again."), "error");
                         return;
                     }
@@ -1457,15 +1458,12 @@ if (!window.__modal_js_loaded__) {
                     deleteAllBtn.setAttribute("aria-busy", "true");
                 }
                 try {
-                    const body = {};
-                    body[window.idType] = currentSelectedId;
-                    const res = await fetch(`/api/${baseUrl}/delete-all`, {
-                        method: "DELETE",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify(body),
+                    const { ok, data } = await commentService.deleteAllComments({
+                        basePath: baseUrl,
+                        idType,
+                        id: currentSelectedId,
                     });
-                    const data = await res.json();
-                    if (!res.ok) {
+                    if (!ok) {
                         if (window.notify) window.notify(data.message || tm("deleteError", "Failed to delete. Please try again."), "error");
                         return;
                     }
@@ -1537,12 +1535,8 @@ if (!window.__modal_js_loaded__) {
     async function toggleCommentLike(button, commentId) {
         const countSpan = button.nextElementSibling;
         try {
-            const res = await fetch(`/api/${baseUrl}/like`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ comment_id: commentId })
-            });
-            const data = await res.json();
+            const { ok, data } = await commentService.toggleCommentLike(baseUrl, commentId);
+            if (!ok) return;
             if (data.liked !== undefined && data.like_count !== undefined) {
                 button.classList.toggle("liked", data.liked);
                 countSpan.textContent = data.like_count;

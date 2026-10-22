@@ -1,6 +1,8 @@
 import { AdminSettingsService } from "../../services/AdminSettingsService.js";
+import { AdminOtpService } from "../../services/AdminOtpService.js";
 
 const adminSettingsService = new AdminSettingsService();
+const adminOtpService = new AdminOtpService();
 
 function setButtonLoading(button, isLoading) {
     if (!button) return;
@@ -132,3 +134,128 @@ document.getElementById("profileImage")?.addEventListener("change", (event) => {
     };
     reader.readAsDataURL(file);
 });
+
+function initOtpEmailSettings() {
+    const statusEl = document.getElementById("otpEmailStatus");
+    const emailInput = document.getElementById("otpEmailInput");
+    const saveBtn = document.getElementById("saveOtpEmailBtn");
+    const errorEl = document.getElementById("otpEmailError");
+    const skeletonEl = document.getElementById("otpEmailSkeleton");
+    const contentEl = document.getElementById("otpEmailContent");
+
+    if (!statusEl || !emailInput || !saveBtn || !errorEl || !skeletonEl || !contentEl) return;
+
+    function setStatus(message, type) {
+        if (!message) {
+            statusEl.className = "alert alert-info mb-0 d-none";
+            statusEl.textContent = "";
+            return;
+        }
+        statusEl.className = "alert alert-" + (type || "info");
+        statusEl.textContent = message;
+    }
+
+    function setError(message) {
+        if (!message) {
+            errorEl.textContent = "";
+            errorEl.classList.add("d-none");
+            return;
+        }
+        errorEl.textContent = message;
+        errorEl.classList.remove("d-none");
+    }
+
+    function isValidEmail(value) {
+        if (!value) return false;
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(value).trim());
+    }
+
+    function setOtpEmailLoading(isLoading) {
+        if (isLoading) {
+            skeletonEl.classList.remove("d-none");
+            contentEl.classList.add("d-none");
+            skeletonEl.style.display = "block";
+            contentEl.style.display = "none";
+            saveBtn.disabled = true;
+            return;
+        }
+        skeletonEl.classList.add("d-none");
+        contentEl.classList.remove("d-none");
+        skeletonEl.style.display = "none";
+        contentEl.style.display = "block";
+        saveBtn.disabled = false;
+    }
+
+    async function getOtpEmail() {
+        const startedAt = Date.now();
+        setOtpEmailLoading(true);
+
+        try {
+            const result = await adminOtpService.fetchEmail();
+            const payload = result.data;
+
+            if (!result.ok || !payload || payload.ok !== true) {
+                const message = (payload && payload.message) ? payload.message : "Failed to load OTP email.";
+                setError(message);
+                return;
+            }
+
+            emailInput.value = payload.email || "";
+            setError("");
+        } catch (error) {
+            setError("Failed to load OTP email.");
+        } finally {
+            const minMs = 1500;
+            const elapsed = Date.now() - startedAt;
+            const remaining = Math.max(0, minMs - elapsed);
+            if (remaining > 0) {
+                await new Promise((resolve) => setTimeout(resolve, remaining));
+            }
+            setOtpEmailLoading(false);
+        }
+    }
+
+    async function saveOtpEmail() {
+        const email = (emailInput.value || "").trim();
+
+        setError("");
+        setStatus("");
+        if (!isValidEmail(email)) {
+            setError("Please enter a valid email address.");
+            setStatus("Invalid email.", "danger");
+            return;
+        }
+
+        saveBtn.disabled = true;
+        const original = saveBtn.innerHTML;
+        saveBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Saving...';
+
+        try {
+            const result = await adminOtpService.saveEmail(email);
+            const payload = result.data;
+
+            if (!result.ok || !payload || payload.ok !== true) {
+                const message = (payload && payload.message) ? payload.message : "Failed to save OTP email.";
+                setError(message);
+                if (window.notify) window.notify(message, "error");
+                return;
+            }
+
+            setError("");
+            setStatus("");
+            if (window.notify) window.notify("OTP email updated successfully.", "success");
+        } catch (error) {
+            const message = "Something went wrong while saving OTP email.";
+            setError(message);
+            if (window.notify) window.notify(message, "error");
+        } finally {
+            saveBtn.disabled = false;
+            saveBtn.innerHTML = original;
+        }
+    }
+
+    saveBtn.addEventListener("click", saveOtpEmail);
+    getOtpEmail();
+}
+
+initOtpEmailSettings();

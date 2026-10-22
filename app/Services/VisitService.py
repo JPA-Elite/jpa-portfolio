@@ -36,9 +36,19 @@ class VisitService:
         try:
             image_urls = self.repository.find_all_image_captures()
             result = self.repository.delete_all_visitors()
-            for url in image_urls:
-                if url:
-                    delete_image_from_cloudinary(url)
+
+            if not isinstance(result, dict):
+                cleared = bool(result)
+                result = {
+                    "status": "success" if cleared else "error",
+                    "message": "All visitor records cleared." if cleared else "Failed to clear visitor records.",
+                }
+
+            if result.get("status") == "success":
+                for url in image_urls:
+                    if url:
+                        delete_image_from_cloudinary(url)
+
             return result
         except Exception as e:
             return {"status": "error", "message": str(e)}

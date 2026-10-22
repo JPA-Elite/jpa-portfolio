@@ -8,9 +8,7 @@
     {% include 'components/seo_meta.html' %}
 
     <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='images/favicon.ico') }}">
-    <link rel="stylesheet" href="{{ static_asset('css/pages/music.css') }}" />
-    <link rel="stylesheet" href="{{ static_asset('css/pages/music_like.css') }}" />
-    <link rel="stylesheet" href="{{ static_asset('css/themes.css') }}" />
+    {{ page_bundle_styles() }}
     {{ vite_hmr() }}
     {{ template_livereload() }}
     <!-- Add Ionicons CDN -->
@@ -318,8 +316,7 @@
         </aside>
     </div>
     {% include 'components/confirm_modal.html' %}
-    <script type="module" src="{{ static_asset('js/pages/music.js') }}"></script>
-    <script src="{{ static_asset('js/pages/music_like.js') }}"></script>
+    {{ page_bundle_scripts() }}
 </body>
 
 </html>

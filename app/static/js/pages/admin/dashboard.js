@@ -166,27 +166,20 @@ document.addEventListener("DOMContentLoaded", async () => {
                         return;
                     }
                     window.confirmDelete("Are you sure you want to delete this activity record?", async () => {
-                        const BASE = "/admin/api";
-                        let json = null;
+                        let result = null;
                         try {
-                            const res = await fetch(BASE + "/delete-activity", {
-                                method: "DELETE",
-                                headers: { "Content-Type": "application/json" },
-                                body: JSON.stringify({ record_ids: [recordId] }),
-                            });
-                            try {
-                                json = await res.json();
-                            } catch (_) {
-                                json = null;
-                            }
-                            if (!res.ok) {
-                                window.notify((json && json.message) || "Delete failed.", "error");
-                                return;
-                            }
+                            result = await dashboardService.deleteActivity([recordId]);
                         } catch (_) {
                             window.notify("Delete failed.", "error");
                             return;
                         }
+
+                        const json = result.data;
+                        if (!result.ok) {
+                            window.notify((json && json.message) || "Delete failed.", "error");
+                            return;
+                        }
+
                         if (json && json.ok) {
                             const modalEl = document.getElementById("deleteConfirmModal");
                             if (modalEl && window.bootstrap && window.bootstrap.Modal) {
@@ -243,15 +236,15 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
         document.getElementById("clearActivityBtn")?.addEventListener("click", () => {
             window.confirmDelete("Clear all recent activity records?", async () => {
-                const res = await fetch("/admin/api/clear-all-activity", { method: "DELETE" });
-                const json = await res.json();
-                if (json.ok) {
+                const result = await dashboardService.clearAllActivity();
+                const json = result.data;
+                if (json && json.ok) {
                     bootstrap.Modal.getInstance(document.getElementById("deleteConfirmModal")).hide();
                     window.notify(json.message || "All activity cleared.", "success");
                     currentPage = 1;
                     loadActivity();
                 } else {
-                    window.notify(json.message || "Failed to clear activity.", "error");
+                    window.notify((json && json.message) || "Failed to clear activity.", "error");
                 }
             });
         });
@@ -351,15 +344,14 @@ document.addEventListener("DOMContentLoaded", async () => {
                     const row = this.closest("tr");
                     const recordId = row.dataset.recordId;
                     window.confirmDelete("Are you sure you want to delete this visit record?", async () => {
-                        const BASE = "/admin/api";
-                        const res = await fetch(`${BASE}/delete-visits/${recordId}`, { method: "DELETE" });
-                        const json = await res.json();
-                        if (json.ok) {
+                        const result = await dashboardService.deleteVisit(recordId);
+                        const json = result.data;
+                        if (json && json.ok) {
                             bootstrap.Modal.getInstance(document.getElementById("deleteConfirmModal")).hide();
                             window.notify("Record deleted.", "success");
                             loadVisits();
                         } else {
-                            window.notify(json.message || "Delete failed.", "error");
+                            window.notify((json && json.message) || "Delete failed.", "error");
                         }
                     });
                 });
@@ -406,15 +398,15 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
         document.getElementById("clearVisitsBtn")?.addEventListener("click", () => {
             window.confirmDelete("Clear all visitor records?", async () => {
-                const res = await fetch("/admin/api/clear-all-visitors", { method: "DELETE" });
-                const json = await res.json();
-                if (json.ok) {
+                const result = await dashboardService.clearAllVisitors();
+                const json = result.data;
+                if (json && json.ok) {
                     bootstrap.Modal.getInstance(document.getElementById("deleteConfirmModal")).hide();
                     window.notify(json.message || "All visitors cleared.", "success");
                     currentPage = 1;
                     loadVisits();
                 } else {
-                    window.notify(json.message || "Failed to clear visitors.", "error");
+                    window.notify((json && json.message) || "Failed to clear visitors.", "error");
                 }
             });
         });

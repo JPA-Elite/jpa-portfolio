@@ -9,8 +9,6 @@
 {% from 'components/macros.html' import datetime_picker with context %}
 
 {% block content %}
-<link rel="stylesheet" href="{{ static_asset('css/pages/booking.css') }}" />
-<link rel="stylesheet" href="{{ static_asset('css/components/datetime_picker.css') }}" />
 <section id="booking">
     <div class="booking-header">
         <div class="booking-icon">
@@ -73,7 +71,13 @@
     </div>
 
     <div class="booking-form-wrapper">
-        <form id="bookingForm" class="booking-form">
+        <form id="bookingForm" class="booking-form"
+            data-sending-label="{{ _('Sending...') }}"
+            data-submit-label="{{ _('Submit Build') }}"
+            data-invalid-email="{{ _('Invalid email format') }}"
+            data-retry-in="{{ _('Retry in') }}"
+            data-generic-error="{{ _('An error occurred. Please try again.') }}"
+            data-network-error="{{ _('Network error. Please check your connection and try again.') }}">
             <div class="form-group">
                 <label for="name">{{ _('Full Name') }} <span class="required-star">*</span></label>
                 <input type="text" id="name" name="name" maxlength="50" required placeholder="{{ _('Your full name') }}">
@@ -111,185 +115,5 @@
     </div>
 </section>
 
-<script src="{{ static_asset('js/components/datetime_picker.js') }}"></script>
-<script>
-(function () {
-    var form = document.getElementById('bookingForm');
-    var submitBtn = document.getElementById('submitBtn');
-    var submitIcon = document.getElementById('submitIcon');
-    var submitText = document.getElementById('submitText');
-    var serviceInput = document.getElementById('serviceInput');
-    var serviceCards = document.querySelectorAll('.service-card');
-    var nameInput = document.getElementById('name');
-    var emailInput = document.getElementById('email');
-    var messageInput = document.getElementById('message');
-    var dateHidden = document.querySelector('.dtp-field[data-type="date"] .dtp-hidden');
-    var timeHidden = document.querySelector('.dtp-field[data-type="time"] .dtp-hidden');
-    var nameCount = document.getElementById('nameCount');
-    var messageCount = document.getElementById('messageCount');
-    var emailMsg = document.getElementById('emailMsg');
-    var statusEl = document.getElementById('bookingStatus');
 
-    serviceCards.forEach(function (card) {
-        card.addEventListener('click', function () {
-            serviceCards.forEach(function (c) { c.classList.remove('selected'); });
-            this.classList.add('selected');
-            serviceInput.value = this.dataset.service;
-            clearStatus();
-        });
-    });
-
-    function validateEmail(val) {
-        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val);
-    }
-
-    function validateForm() {
-        var nameVal = nameInput.value.trim();
-        var emailVal = emailInput.value.trim();
-        var dateVal = dateHidden ? dateHidden.value : '';
-        var timeVal = timeHidden ? timeHidden.value : '';
-        var msgVal = messageInput.value.trim();
-
-        var valid = true;
-
-        if (!nameVal || nameVal.length > 50) valid = false;
-        if (!emailVal || !validateEmail(emailVal)) valid = false;
-        if (!dateVal) valid = false;
-        if (!timeVal) valid = false;
-        if (!msgVal || msgVal.length > 500) valid = false;
-
-        submitBtn.disabled = !valid;
-    }
-
-    function setStatus(message, type) {
-        statusEl.textContent = message;
-        statusEl.className = 'booking-status booking-status--' + type;
-    }
-
-    function clearStatus() {
-        statusEl.textContent = '';
-        statusEl.className = 'booking-status';
-    }
-
-    function setLoading(loading) {
-        if (loading) {
-            submitBtn.disabled = true;
-            submitIcon.setAttribute('name', 'hourglass-outline');
-            submitText.textContent = '{{ _("Sending...") }}';
-        } else {
-            submitIcon.setAttribute('name', 'paper-plane-outline');
-            submitText.textContent = '{{ _("Submit Build") }}';
-            validateForm();
-        }
-    }
-
-    nameInput.addEventListener('input', function () {
-        var len = this.value.length;
-        nameCount.textContent = len;
-        if (len > 50) nameCount.style.color = '#e74c3c';
-        else nameCount.style.color = '';
-        clearStatus();
-        validateForm();
-    });
-
-    emailInput.addEventListener('input', function () {
-        var val = this.value.trim();
-        if (val && !validateEmail(val)) {
-            emailMsg.textContent = '{{ _("Invalid email format") }}';
-            emailMsg.style.color = '#e74c3c';
-        } else {
-            emailMsg.textContent = '';
-        }
-        clearStatus();
-        validateForm();
-    });
-
-    messageInput.addEventListener('input', function () {
-        var len = this.value.length;
-        messageCount.textContent = len;
-        if (len > 500) messageCount.style.color = '#e74c3c';
-        else messageCount.style.color = '';
-        clearStatus();
-        validateForm();
-    });
-
-    if (dateHidden) dateHidden.addEventListener('change', function () { clearStatus(); validateForm(); });
-    if (timeHidden) timeHidden.addEventListener('change', function () { clearStatus(); validateForm(); });
-
-    form.addEventListener('submit', function (e) {
-        e.preventDefault();
-        if (submitBtn.disabled) return;
-        clearStatus();
-        setLoading(true);
-
-        var captchaInput = document.querySelector('[name="h-captcha-response"]');
-        var captchaToken = captchaInput ? captchaInput.value : '';
-
-        var payload = JSON.stringify({
-            name: nameInput.value.trim(),
-            email: emailInput.value.trim(),
-            preferred_date: dateHidden ? dateHidden.value : '',
-            preferred_time: timeHidden ? timeHidden.value : '',
-            message: messageInput.value.trim(),
-            service: serviceInput.value,
-            hcaptcha_token: captchaToken,
-        });
-
-        fetch('/api/booking/send', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: payload,
-        })
-        .then(function (res) {
-            return res.json().then(function (data) {
-                return { status: res.status, data: data };
-            });
-        })
-        .then(function (result) {
-            if (result.data.ok) {
-                setStatus(result.data.message, 'success');
-                form.reset();
-                serviceInput.value = '';
-                serviceCards.forEach(function (c) { c.classList.remove('selected'); });
-                if (typeof hcaptcha !== 'undefined') hcaptcha.reset();
-                if (dateHidden) dateHidden.value = '';
-                if (timeHidden) timeHidden.value = '';
-                nameCount.textContent = '0';
-                messageCount.textContent = '0';
-                emailMsg.textContent = '';
-                validateForm();
-            } else if (result.status === 429) {
-                var retryAfter = result.data.retry_after_seconds || 3600;
-                setStatus(result.data.message, 'error');
-                submitBtn.disabled = true;
-                var countdownEl = document.createElement('div');
-                countdownEl.className = 'booking-retry-countdown';
-                statusEl.appendChild(countdownEl);
-                var interval = setInterval(function () {
-                    if (retryAfter <= 0) {
-                        clearInterval(interval);
-                        countdownEl.remove();
-                        validateForm();
-                        return;
-                    }
-                    var mins = Math.floor(retryAfter / 60);
-                    var secs = retryAfter % 60;
-                    countdownEl.textContent = '{{ _("Retry in") }} ' + mins + 'm ' + secs + 's';
-                    retryAfter--;
-                }, 1000);
-            } else {
-                setStatus(result.data.message || '{{ _("An error occurred. Please try again.") }}', 'error');
-            }
-        })
-        .catch(function () {
-            setStatus('{{ _("Network error. Please check your connection and try again.") }}', 'error');
-        })
-        .finally(function () {
-            setLoading(false);
-        });
-    });
-
-    validateForm();
-})();
-</script>
 {% endblock %}

@@ -1,7 +1,10 @@
+import { ChatService } from "../services/ChatService.js";
+
+const chatService = new ChatService();
+
 async function initChat() {
     try {
-        const response = await fetch("/api/profile-config", { cache: "no-store" });
-        const apiData = await response.json();
+        const apiData = await chatService.fetchProfileConfig();
         const qaArray = apiData?.qaData ?? [];
         return qaArray;
     } catch (error) {
@@ -438,13 +441,7 @@ function toggleChatbox() {
 
 async function fetchChatAnswer(message) {
     try {
-        const response = await fetch("/api/chat", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ message, session_id: getChatSessionId() }),
-        });
-        if (!response.ok) return null;
-        const data = await response.json();
+        const data = await chatService.sendMessage(message, getChatSessionId());
         return data?.answer || null;
     } catch (error) {
         console.error("Failed to fetch chat answer:", error);
@@ -924,3 +921,13 @@ window.onload = async () => {
         if (event.key === "Escape") closeChatEmojiPicker();
     });
 };
+
+window.toggleChatbox = toggleChatbox;
+window.toggleChatMute = toggleChatMute;
+window.toggleChatMaximize = toggleChatMaximize;
+window.toggleChatOptions = toggleChatOptions;
+window.insertChatEmoji = insertChatEmoji;
+window.sendMessage = sendMessage;
+window.stopChatResponse = stopChatResponse;
+window.clearChat = clearChat;
+window.handleChatInputKeydown = handleChatInputKeydown;

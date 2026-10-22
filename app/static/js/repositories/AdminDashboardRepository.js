@@ -33,4 +33,35 @@ export class AdminDashboardRepository extends IAdminDashboardRepository {
         }
         return response.json();
     }
+
+    async request(path, options) {
+        const response = await fetch(`${this.baseUrl}${path}`, options);
+        let data = null;
+        try {
+            data = await response.json();
+        } catch (error) {
+            data = null;
+        }
+        return { ok: response.ok, status: response.status, data };
+    }
+
+    async deleteActivity(recordIds) {
+        return this.request("/delete-activity", {
+            method: "DELETE",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ record_ids: recordIds }),
+        });
+    }
+
+    async clearAllActivity() {
+        return this.request("/clear-all-activity", { method: "DELETE" });
+    }
+
+    async deleteVisit(recordId) {
+        return this.request(`/delete-visits/${recordId}`, { method: "DELETE" });
+    }
+
+    async clearAllVisitors() {
+        return this.request("/clear-all-visitors", { method: "DELETE" });
+    }
 }

@@ -310,6 +310,8 @@ def _build_service_mock(name="service"):
     svc.delete_built_app.return_value = True
 
     svc.get_all_tags.return_value = ["tag1", "tag2"]
+    svc.get_category_counts.return_value = {"Pop": 1, "Rock": 2}
+    svc.get_total_music_count.return_value = 3
     svc.resolve.return_value = {"answer": "ok", "action": None, "matched_question": None}
     svc.get_qa_data.return_value = [{"question": "What is your name?", "answer": "My name is Joshua."}]
     return svc

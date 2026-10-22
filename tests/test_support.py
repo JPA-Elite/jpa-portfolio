@@ -137,7 +137,7 @@ class FakeCollection:
         return FakeCursor([dict(self._docs[0])])
 
     def aggregate(self, *args, **kwargs):
-        return [dict(self._docs[0])]
+        return [{"_id": "Pop", "count": 1}]
 
     def count_documents(self, *args, **kwargs):
         return 1

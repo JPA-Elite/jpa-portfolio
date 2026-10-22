@@ -882,9 +882,6 @@ msgstr "Cette version ne peut pas encore être téléchargée — elle chauffe e
 msgid "App_Details_Technologies"
 msgstr "Technologies"
 
-msgid "App_Details_Tech_Eyebrow"
-msgstr "Stack technique"
-
 msgid "App_Details_Tech_Engine"
 msgstr "Moteur de jeu"
 

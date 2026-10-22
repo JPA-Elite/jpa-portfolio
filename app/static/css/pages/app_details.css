@@ -366,30 +366,9 @@
     background: linear-gradient(90deg, rgba(56, 189, 248, .5), rgba(255, 86, 154, .28), transparent)
 }
 
-.app-details__tech-heading {
-    display: grid;
-    gap: 4px;
-    min-width: 0
-}
-
 .app-details__tech-head h2 {
     margin: 0;
     flex-shrink: 0
-}
-
-.app-details__tech-eyebrow {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    font-size: .68rem;
-    font-weight: 700;
-    letter-spacing: .14em;
-    text-transform: uppercase;
-    color: rgba(56, 189, 248, .85)
-}
-
-.app-details__tech-eyebrow ion-icon {
-    font-size: 12px
 }
 
 .app-details__tech-count {
@@ -884,10 +863,6 @@
 
 [data-theme=light] .app-details__tech-leader {
     border-bottom-color: rgba(15, 23, 42, .18)
-}
-
-[data-theme=light] .app-details__tech-eyebrow {
-    color: rgba(2, 132, 199, .9)
 }
 
 [data-theme=light] .app-details__tech-count {

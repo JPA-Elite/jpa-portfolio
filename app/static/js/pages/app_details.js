@@ -323,9 +323,36 @@
         loadVotes();
     }
 
+    function setupTechReveal(list) {
+        var rows = Array.prototype.slice.call(list.querySelectorAll("[data-tech-row]"));
+        if (!rows.length) return;
+
+        if (prefersReducedMotion() || !("IntersectionObserver" in window)) {
+            list.classList.add("is-visible");
+            return;
+        }
+
+        rows.forEach(function (row, index) {
+            row.style.transitionDelay = Math.min(index * 40, 320) + "ms";
+        });
+        list.classList.add("is-reveal-pending");
+
+        var observer = new IntersectionObserver(function (entries) {
+            entries.forEach(function (entry) {
+                if (!entry.isIntersecting) return;
+                list.classList.add("is-visible");
+                list.classList.remove("is-reveal-pending");
+                observer.disconnect();
+            });
+        }, { threshold: 0.15 });
+
+        observer.observe(list);
+    }
+
     function init() {
         document.querySelectorAll("[data-app-slideshow]").forEach(setupSlideshow);
         document.querySelectorAll("[data-app-actions]").forEach(setupAppActions);
+        document.querySelectorAll("[data-tech-reveal]").forEach(setupTechReveal);
     }
 
     if (document.readyState === "loading") {

@@ -98,6 +98,11 @@ class BuiltAppService:
             "name": name,
             "short_description": short_description,
             "full_description": full_description,
+            "technologies": (
+                data.get("technologies")
+                if data.get("technologies") is not None
+                else existing.get("technologies", [])
+            ),
             "platform": data.get("platform") or existing.get("platform", "Mobile"),
             "version": data.get("version") if data.get("version") is not None else existing.get("version", ""),
             "icon": data.get("icon") if data.get("icon") is not None else existing.get("icon", "apps-outline"),

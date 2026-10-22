@@ -1,5 +1,6 @@
 import json
 from flask import jsonify, request
+from app.Models.BuiltApp import normalize_technologies
 from app.Requests.api.BaseRequest import BaseRequest
 from app.configurations import SortOrder, SortOrderStr
 
@@ -53,6 +54,7 @@ class BuiltAppRequest(BaseRequest):
         name = self._parse_json_field(self._get_form("name"))
         short_description = self._parse_json_field(self._get_form("short_description"))
         full_description = self._parse_json_field(self._get_form("full_description"))
+        technologies = normalize_technologies(self._parse_json_field(self._get_form("technologies")))
         snapshots_meta = self._get_form("snapshots_meta")
         sort_order = self._get_form("sort_order", 0)
 
@@ -60,6 +62,7 @@ class BuiltAppRequest(BaseRequest):
             "name": name,
             "short_description": short_description,
             "full_description": full_description,
+            "technologies": technologies,
             "slug": str(self._get_form("slug", "")).strip(),
             "platform": str(self._get_form("platform", "Mobile")).strip(),
             "version": str(self._get_form("version", "")).strip(),
@@ -81,6 +84,12 @@ class BuiltAppRequest(BaseRequest):
         name = self._parse_json_field(self._get_form("name"))
         short_description = self._parse_json_field(self._get_form("short_description"))
         full_description = self._parse_json_field(self._get_form("full_description"))
+        technologies_raw = self._get_form("technologies", None)
+        technologies = (
+            normalize_technologies(self._parse_json_field(technologies_raw))
+            if technologies_raw not in (None, "")
+            else None
+        )
         snapshots_meta = self._get_form("snapshots_meta")
         sort_order = self._get_form("sort_order")
         is_active_raw = self._get_form("is_active")
@@ -89,6 +98,7 @@ class BuiltAppRequest(BaseRequest):
             "name": name if isinstance(name, dict) and any(str(v or "").strip() for v in name.values()) else None,
             "short_description": short_description if isinstance(short_description, dict) else None,
             "full_description": full_description if isinstance(full_description, dict) else None,
+            "technologies": technologies,
             "slug": self._get_form("slug"),
             "platform": self._get_form("platform"),
             "version": self._get_form("version"),

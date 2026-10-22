@@ -300,6 +300,68 @@ class BuiltAppServiceTests(unittest.TestCase):
         mock_cleanup.assert_any_call("https://res.cloudinary.com/demo/image/upload/icon.webp")
         self.repo.delete_built_app.assert_called_once_with("app1")
 
+    def test_add_built_app_normalizes_technologies(self):
+        self.repo.add_built_app.return_value = "app-new"
+
+        self.service.add_built_app(
+            {
+                "name": {"en": "Stickman Run"},
+                "technologies": [
+                    {"key": "engine", "value": "Unity 2022.3"},
+                    {"key": "language", "label": "Ignored", "icon": "ignored-icon", "value": "C#"},
+                    {"key": "unknown", "label": "Custom Thing", "icon": "pricetag-outline", "value": "Git"},
+                    {"key": "backend", "value": "   "},
+                    "Bare string entry",
+                ],
+                "snapshot_files": None,
+                "snapshots_meta": None,
+            }
+        )
+
+        saved = self.repo.add_built_app.call_args[0][0].to_dict()
+        self.assertEqual(
+            saved["technologies"],
+            [
+                {"key": "engine", "label": "", "icon": "", "value": "Unity 2022.3"},
+                {"key": "language", "label": "", "icon": "", "value": "C#"},
+                {"key": "custom", "label": "Custom Thing", "icon": "pricetag-outline", "value": "Git"},
+                {"key": "custom", "label": "", "icon": "", "value": "Bare string entry"},
+            ],
+        )
+
+    def test_update_built_app_keeps_existing_technologies_without_payload(self):
+        existing = built_app_doc()
+        existing["technologies"] = [{"key": "engine", "label": "", "icon": "", "value": "Unity"}]
+        self.repo.get_built_app_by_id.return_value = existing
+        self.repo.update_built_app.return_value = True
+
+        result = self.service.update_built_app("app1", {"name": {"en": "Updated"}})
+
+        self.assertTrue(result)
+        updated = self.repo.update_built_app.call_args[0][1].to_dict()
+        self.assertEqual(updated["technologies"], existing["technologies"])
+
+    def test_update_built_app_replaces_technologies(self):
+        existing = built_app_doc()
+        existing["technologies"] = [{"key": "engine", "label": "", "icon": "", "value": "Unity"}]
+        self.repo.get_built_app_by_id.return_value = existing
+        self.repo.update_built_app.return_value = True
+
+        result = self.service.update_built_app(
+            "app1",
+            {
+                "name": {"en": "Updated"},
+                "technologies": [{"key": "database", "value": "MongoDB Atlas"}],
+            },
+        )
+
+        self.assertTrue(result)
+        updated = self.repo.update_built_app.call_args[0][1].to_dict()
+        self.assertEqual(
+            updated["technologies"],
+            [{"key": "database", "label": "", "icon": "", "value": "MongoDB Atlas"}],
+        )
+
     def test_seed_returns_zero_when_collection_not_empty(self):
         self.repo.count_built_apps.return_value = 3
 

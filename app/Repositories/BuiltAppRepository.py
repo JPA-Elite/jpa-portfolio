@@ -37,6 +37,8 @@ class BuiltAppRepository(IBuiltAppRepository, BaseRepository):
                     {"slug": {"$regex": escaped, "$options": "i"}},
                     {"platform": {"$regex": escaped, "$options": "i"}},
                     {"version": {"$regex": escaped, "$options": "i"}},
+                    {"technologies.value": {"$regex": escaped, "$options": "i"}},
+                    {"technologies.label": {"$regex": escaped, "$options": "i"}},
                 ]
             })
 

@@ -137,6 +137,64 @@
         {% endfor %}
     </section>
 
+    {% if built_app.technologies %}
+    {% set tech_labels = {
+        'engine': _('App_Details_Tech_Engine'),
+        'language': _('App_Details_Tech_Language'),
+        'framework': _('App_Details_Tech_Framework'),
+        'backend': _('App_Details_Tech_Backend'),
+        'database': _('App_Details_Tech_Database'),
+        'storage': _('App_Details_Tech_Storage'),
+        'platform': _('App_Details_Tech_Platform'),
+        'tooling': _('App_Details_Tech_Tooling'),
+        'custom': _('App_Details_Tech_Custom')
+    } %}
+    {% set tech_icons = {
+        'engine': 'game-controller-outline',
+        'language': 'code-slash-outline',
+        'framework': 'layers-outline',
+        'backend': 'server-outline',
+        'database': 'albums-outline',
+        'storage': 'archive-outline',
+        'platform': 'phone-portrait-outline',
+        'tooling': 'construct-outline'
+    } %}
+    {% set tech_count = built_app.technologies|length %}
+    <section class="app-details__section app-details__section--tech" aria-labelledby="appTechTitle">
+        <div class="app-details__tech-head">
+            <div class="app-details__tech-heading">
+                <span class="app-details__tech-eyebrow">
+                    <ion-icon name="sparkles-outline" aria-hidden="true"></ion-icon>
+                    {{ _('App_Details_Tech_Eyebrow') }}
+                </span>
+                <h2 id="appTechTitle">{{ _('App_Details_Technologies') }}</h2>
+            </div>
+            <span class="app-details__tech-count">
+                {{ ngettext('App_Details_Tech_Count_One', 'App_Details_Tech_Count_Many', tech_count, count=tech_count) }}
+            </span>
+        </div>
+        <div class="app-details__tech-list" data-tech-reveal>
+            {% for tech in built_app.technologies %}
+            {% if tech.key == 'custom' %}
+            {% set tech_label = tech.label or tech_labels.get('custom') %}
+            {% set tech_icon = tech.icon or 'pricetag-outline' %}
+            {% else %}
+            {% set tech_label = tech_labels.get(tech.key) or tech.label or tech_labels.get('custom') %}
+            {% set tech_icon = tech_icons.get(tech.key) or 'pricetag-outline' %}
+            {% endif %}
+            <div class="app-details__tech-row app-details__tech-row--{{ tech.key }}" data-tech-row>
+                <span class="app-details__tech-icon">
+                    <ion-icon name="{{ tech_icon }}" aria-hidden="true"></ion-icon>
+                </span>
+                <span class="app-details__tech-label">{{ tech_label }}</span>
+                <span class="app-details__tech-leader" aria-hidden="true"></span>
+                <span class="app-details__tech-value">{{ tech.value }}</span>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+    {% endif %}
+
     <section class="app-details__section" aria-labelledby="appMoreTitle">
         <h2 id="appMoreTitle">{{ _('App_Details_More_Apps') }}</h2>
         {% if other_apps %}

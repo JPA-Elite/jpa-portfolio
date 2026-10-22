@@ -976,6 +976,44 @@ msgstr "Malapit na"
 msgid "App_Details_Download_Soon_Hint"
 msgstr "Hindi pa mada-download ang build na ito — pinapainit pa ito sa workshop. Balik ka ulit para sa bagong release!"
 
+msgid "App_Details_Technologies"
+msgstr "Mga Teknolohiya"
+
+msgid "App_Details_Tech_Eyebrow"
+msgstr "Tech Stack"
+
+msgid "App_Details_Tech_Engine"
+msgstr "Game Engine"
+
+msgid "App_Details_Tech_Language"
+msgstr "Wika"
+
+msgid "App_Details_Tech_Framework"
+msgstr "Framework"
+
+msgid "App_Details_Tech_Backend"
+msgstr "Backend"
+
+msgid "App_Details_Tech_Database"
+msgstr "Database"
+
+msgid "App_Details_Tech_Storage"
+msgstr "Storage"
+
+msgid "App_Details_Tech_Platform"
+msgstr "Platform"
+
+msgid "App_Details_Tech_Tooling"
+msgstr "Mga Tool"
+
+msgid "App_Details_Tech_Custom"
+msgstr "Custom"
+
+msgid "App_Details_Tech_Count_One"
+msgid_plural "App_Details_Tech_Count_Many"
+msgstr[0] "1 teknolohiya"
+msgstr[1] "%(count)s teknolohiya"
+
 msgid "App_Share_Default_Title"
 msgstr "Mga Apps"
 

@@ -268,6 +268,21 @@
             <div class="col-md-4"><label class="form-label">Full Description (Fil)</label><textarea id="addFullFil" class="form-control" rows="4"></textarea></div>
 
             <div class="col-12">
+              <div class="card border">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                  <strong>Technologies</strong>
+                  <button type="button" class="btn btn-sm btn-outline-primary" data-add-tech-row data-target="#addTechnologiesContainer">
+                    <i class="bi bi-plus"></i> Add Technology
+                  </button>
+                </div>
+                <div class="card-body">
+                  <p class="text-muted small mb-2">Shown as a spec sheet on the app details page. Choose "Custom label" to write your own row name and Ionicons icon (e.g. code-slash-outline).</p>
+                  <div id="addTechnologiesContainer" class="d-grid gap-2"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-12">
               <label class="form-label">Snapshots (optional images)</label>
               <input type="file" id="addSnapshotFiles" class="form-control" accept="image/*" multiple data-dropzone="multiple" data-drop-preview="addSnapshotFilesPreview">
               <div class="ba-drop-preview" id="addSnapshotFilesPreview"></div>

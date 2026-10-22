@@ -556,13 +556,24 @@
     cursor: pointer
 }
 
-.kanban-action-link--secondary {
-    background: linear-gradient(135deg, rgba(236, 72, 153, .9), rgba(139, 92, 246, .85))
-}
-
 .kanban-action-link--ghost {
     color: var(--text-primary);
     background: rgba(255, 255, 255, .03)
+}
+
+.kanban-action-link--view {
+    color: #93c5fd;
+    background: rgba(41, 98, 255, .12);
+    border-color: rgba(96, 165, 250, .35);
+    transition: background .2s ease
+}
+
+.kanban-action-link--view:hover {
+    background: rgba(41, 98, 255, .2)
+}
+
+[data-theme=light] .kanban-action-link--view {
+    color: #1d4ed8
 }
 
 .kanban-project-card--empty {

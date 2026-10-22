@@ -19,6 +19,12 @@ class ChatServiceRecoveryTests(unittest.TestCase):
         )
         self._locale_patcher.start()
         self.addCleanup(self._locale_patcher.stop)
+        self._gemini_patcher = patch(
+            "app.Services.ChatService.ChatService._get_gemini_service",
+            new=lambda self: None,
+        )
+        self._gemini_patcher.start()
+        self.addCleanup(self._gemini_patcher.stop)
 
     def _resolve(self, message, session_id="recovery"):
         service = ChatService()

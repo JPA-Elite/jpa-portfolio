@@ -49,7 +49,7 @@ class MusicServiceTests(unittest.TestCase):
         self.assertEqual(total, 1)
         self.assertEqual(items[0].title, "Song")
         self.assertEqual(items[0].lyrics, "Lyrics")
-        self.repo.get_paginated_music_list.assert_called_once_with(1, 10, SortOrder.DESC, "")
+        self.repo.get_paginated_music_list.assert_called_once_with(1, 10, SortOrder.DESC, "", "")
 
     def test_add_music_without_files_saves_model_and_normalizes_lyrics(self):
         self.repo.add_music.return_value = "m-new"

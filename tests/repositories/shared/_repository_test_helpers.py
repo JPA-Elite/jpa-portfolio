@@ -92,6 +92,9 @@ def _assert_repository_method_contract(testcase, class_name: str, method_name: s
         testcase.assertEqual(result.get("status"), "success")
         testcase.assertIn("deleted_count", result)
         return
+    if class_name == "MusicRepository" and method_name == "get_category_counts":
+        testcase.assertIsInstance(result, dict)
+        return
     if class_name == "LoginAttemptRepository" and method_name in {"get_attempt_info", "update_attempt"}:
         testcase.assertIsInstance(result, dict)
         testcase.assertIn("attempts", result)

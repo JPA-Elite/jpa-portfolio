@@ -104,12 +104,12 @@ def split_host_port(value):
 def _resolve_setting(name, default=""):
     if has_app_context():
         try:
-            value = current_app.config.get(name, None)
+            if name in current_app.config:
+                value = current_app.config.get(name)
+                return default if value is None else value
         except Exception:
-            value = None
-        if value is None or (isinstance(value, str) and not value.strip()):
-            value = os.getenv(name, default)
-        return value if value is not None else default
+            pass
+        return os.getenv(name, default)
     return os.getenv(name, default)
 
 

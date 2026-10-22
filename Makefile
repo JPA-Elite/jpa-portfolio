@@ -98,4 +98,4 @@ compile-translations:
 
 # Run unit tests (controllers/services/repositories)
 test:
-	set FLASK_ENV= && python -W ignore::DeprecationWarning -m unittest discover -s tests -p "test_*.py"
+	set FLASK_ENV= && python -W ignore::DeprecationWarning scripts/run_tests.py

@@ -1163,79 +1163,202 @@ body.loading-done .admin-float-wrap {
 }
 
 /* =============================================
-    PAGE LOADING OVERLAY — 3-dot wave animation
+    PAGE LOADING OVERLAY — atomic orbit loader
    ============================================= */
 
 #pageLoadingOverlay {
+    --atom-ring: rgba(15, 23, 42, .14);
+    --atom-ring-strong: rgba(37, 99, 235, .28);
     position: fixed;
     inset: 0;
     z-index: 9999;
     display: flex;
     align-items: center;
     justify-content: center;
+    background-color: #ffffff;
     transition: opacity 0.4s ease;
 }
 
-/* Light theme — white bg, black dots */
-[data-theme="light"] #pageLoadingOverlay {
-    background-color: #ffffff;
-}
-
-/* Dark theme — black bg, white dots */
 [data-theme="dark"] #pageLoadingOverlay {
+    --atom-ring: rgba(255, 255, 255, .16);
+    --atom-ring-strong: rgba(96, 165, 250, .32);
     background-color: #111111;
 }
 
-/* Fallback when no theme attr (defaults to light) */
-#pageLoadingOverlay {
-    background-color: #ffffff;
+.atom-loader {
+    position: relative;
+    width: clamp(150px, 42vw, 186px);
+    aspect-ratio: 1;
+    animation: atom-enter .5s cubic-bezier(.22, .61, .36, 1) both
 }
 
-/* Three dots wrapper — horizontal */
-.loading-dots-wrap {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-}
-
-/* Each dot */
-.loading-dot {
-    display: block;
-    width: 14px;
-    height: 14px;
+.atom-loader__orbit {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 100%;
+    height: 42%;
+    translate: -50% -50%;
+    border: 1px solid var(--atom-ring);
     border-radius: 50%;
-    animation: wave-dot 1.2s ease-in-out infinite;
+    transform: rotate(var(--atom-angle, 0deg))
 }
 
-/* Light theme dots */
-[data-theme="light"] .loading-dot {
-    background-color: #222222;
+.atom-loader__orbit--1 {
+    --atom-angle: 0deg;
+    --atom-duration: 2.6s;
+    --atom-delay: 0s;
+    --atom-electron: #38bdf8
 }
 
-/* Dark theme dots */
-[data-theme="dark"] .loading-dot {
-    background-color: #eeeeee;
+.atom-loader__orbit--2 {
+    --atom-angle: 60deg;
+    --atom-duration: 3.2s;
+    --atom-delay: -.7s;
+    --atom-electron: #ff569a
 }
 
-/* Fallback */
-.loading-dot {
-    background-color: #222222;
+.atom-loader__orbit--3 {
+    --atom-angle: -60deg;
+    --atom-duration: 3.8s;
+    --atom-delay: -1.5s;
+    --atom-electron: #a78bfa
 }
 
-/* Dot 2 and 3 delayed by 0.2s each */
-.loading-dot-2 { animation-delay: 0.2s; }
-.loading-dot-3 { animation-delay: 0.4s; }
+.atom-loader__electron {
+    position: absolute;
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: var(--atom-electron);
+    offset-path: ellipse(50% 50%);
+    offset-rotate: auto;
+    animation: atom-orbit var(--atom-duration, 2.8s) linear infinite;
+    animation-delay: var(--atom-delay, 0s)
+}
 
-/* Wave keyframe: bouncy up-and-down */
-@keyframes wave-dot {
-    0%, 80%, 100% {
-        transform: translateY(0);
-        opacity: 0.5;
+.atom-loader__electron::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    right: 100%;
+    width: 22px;
+    height: 2px;
+    translate: 0 -50%;
+    border-radius: 2px;
+    background: linear-gradient(90deg, transparent, var(--atom-electron));
+    opacity: .5
+}
+
+.atom-loader__core {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    translate: -50% -50%;
+    display: grid;
+    place-items: center;
+    width: clamp(46px, 13vw, 54px);
+    aspect-ratio: 1;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, .18);
+    color: #fff;
+    background: radial-gradient(circle at 32% 26%, #93c5fd 0%, #3b82f6 38%, #1d4ed8 68%, #172554 100%)
+}
+
+.atom-loader__core::before {
+    content: "";
+    position: absolute;
+    inset: -7px;
+    border-radius: 50%;
+    border: 1px solid var(--atom-ring-strong);
+    animation: atom-halo 2.8s ease-out infinite
+}
+
+.atom-loader__core::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    border-radius: inherit;
+    background: radial-gradient(circle at 68% 74%, rgba(255, 86, 154, .45), transparent 55%);
+    mix-blend-mode: screen;
+    opacity: .85
+}
+
+.atom-loader__code {
+    position: relative;
+    z-index: 1;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: clamp(15px, 4.6vw, 18px);
+    font-weight: 700;
+    letter-spacing: -.04em;
+    animation: atom-code-pulse 2.8s ease-in-out infinite
+}
+
+@keyframes atom-orbit {
+    to {
+        offset-distance: 100%
     }
-    40% {
-        transform: translateY(-18px);
+}
+
+@keyframes atom-enter {
+    from {
+        opacity: 0;
+        transform: scale(.88)
+    }
+
+    to {
         opacity: 1;
+        transform: scale(1)
+    }
+}
+
+@keyframes atom-halo {
+    0% {
+        transform: scale(.92);
+        opacity: .7
+    }
+
+    70%,
+    100% {
+        transform: scale(1.35);
+        opacity: 0
+    }
+}
+
+@keyframes atom-code-pulse {
+    0%,
+    100% {
+        opacity: .82
+    }
+
+    50% {
+        opacity: 1
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+    .atom-loader,
+    .atom-loader__core::before,
+    .atom-loader__code {
+        animation: none
+    }
+
+    .atom-loader__electron {
+        animation: none
+    }
+
+    .atom-loader__orbit--1 .atom-loader__electron {
+        offset-distance: 8%
+    }
+
+    .atom-loader__orbit--2 .atom-loader__electron {
+        offset-distance: 38%
+    }
+
+    .atom-loader__orbit--3 .atom-loader__electron {
+        offset-distance: 68%
     }
 }
 

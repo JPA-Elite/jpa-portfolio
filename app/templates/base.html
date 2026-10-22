@@ -87,12 +87,13 @@
 </head>
 
 <body class="{% if current_site == 'professional' %}site-professional{% endif %}">
-    <!-- Page Loading Overlay — 3-dot wave, full screen -->
+    <!-- Page Loading Overlay — atomic orbit loader -->
     <div id="pageLoadingOverlay" aria-label="Loading..." role="status">
-        <div class="loading-dots-wrap">
-            <span class="loading-dot loading-dot-1"></span>
-            <span class="loading-dot loading-dot-2"></span>
-            <span class="loading-dot loading-dot-3"></span>
+        <div class="atom-loader" aria-hidden="true">
+            <span class="atom-loader__orbit atom-loader__orbit--1"><span class="atom-loader__electron"></span></span>
+            <span class="atom-loader__orbit atom-loader__orbit--2"><span class="atom-loader__electron"></span></span>
+            <span class="atom-loader__orbit atom-loader__orbit--3"><span class="atom-loader__electron"></span></span>
+            <span class="atom-loader__core"><span class="atom-loader__code">&lt;/&gt;</span></span>
         </div>
     </div>
     <canvas id="brainCanvas"></canvas>

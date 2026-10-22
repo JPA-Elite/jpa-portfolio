@@ -45,6 +45,10 @@ app/.env
 node_modules/
 app/dist/frontend/
 
+# Playwright
+test-results/
+playwright-report/
+
 # Continue package-specific ignores
 .continue/
 

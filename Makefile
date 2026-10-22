@@ -97,5 +97,10 @@ compile-translations:
 	cd app && pybabel compile -d translations
 
 # Run unit tests (controllers/services/repositories)
-test:
+python-test:
 	set FLASK_ENV= && python -W ignore::DeprecationWarning scripts/run_tests.py
+
+playwright-test:
+	npm run test:playwright
+
+test: python-test playwright-test

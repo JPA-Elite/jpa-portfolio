@@ -20,6 +20,50 @@ const DEFAULT_UPLOADED_AVATAR = "/static/images/avatars/avatar_orange.svg";
 const DEFAULT_PROFILE_AVATAR = "/static/images/avatars/avatar_pink.svg";
 const MOCK_IP = "mock-playwright-ip";
 
+const MUSIC_CATEGORIES = [
+  "All",
+  "Rap",
+  "Love Song",
+  "Pop",
+  "R&B",
+  "Rock",
+  "Chill",
+  "Party",
+  "Workout",
+  "Mood",
+  "Focus",
+];
+
+const MUSIC_TRACKS = Array.from({ length: 25 }, (_, index) => {
+  const number = index + 1;
+  const padded = String(number).padStart(2, "0");
+  const category =
+    index < 7
+      ? "Rap"
+      : index < 13
+        ? "Pop"
+        : index < 19
+          ? "Chill"
+          : "Love Song";
+  const lyrics =
+    index === 0
+      ? "[00:00.00]Mock opening line\n[00:05.00]Mock second line\n[00:10.00]Mock third line"
+      : index === 1
+        ? "Plain mock lyric line one\nPlain mock lyric line two"
+        : "";
+
+  return {
+    id: `pw-music-${padded}`,
+    title: index === 6 ? "Mock Aurora Nights" : `Mock Track ${padded}`,
+    artist: `Mock Artist ${padded}`,
+    url: `https://example.com/mock-music-${padded}.mp3`,
+    image: `/static/images/cert${(index % 5) + 1}.webp`,
+    duration: `3:${String(10 + index).padStart(2, "0")}`,
+    lyrics,
+    category,
+  };
+});
+
 const LOCAL_HOSTS = new Set([
   "professional.jpastack.local",
   "jpastack.local",
@@ -448,6 +492,128 @@ function handleProfile(state, route, url) {
   return null;
 }
 
+function handleMusic(state, route, url) {
+  const request = route.request();
+
+  if (url.pathname === "/api/music-list") {
+    const page = Math.max(1, Number(url.searchParams.get("page")) || 1);
+    const perPage = Math.max(1, Number(url.searchParams.get("per_page")) || 10);
+    const search = (url.searchParams.get("search") || "").trim().toLowerCase();
+    const category = (url.searchParams.get("category") || "").trim();
+    const tracks = state.music.tracks.filter((track) => {
+      const matchesSearch =
+        !search ||
+        track.title.toLowerCase().includes(search) ||
+        track.artist.toLowerCase().includes(search);
+      const matchesCategory =
+        !category || category === "All" || track.category === category;
+      return matchesSearch && matchesCategory;
+    });
+    const start = (page - 1) * perPage;
+
+    return jsonResponse(route, {
+      music: tracks.slice(start, start + perPage),
+      total_music: tracks.length,
+      total_pages: Math.ceil(tracks.length / perPage),
+      page,
+      per_page: perPage,
+      search,
+      category,
+    });
+  }
+
+  if (url.pathname === "/api/music-categories") {
+    const counts = {};
+
+    for (const category of MUSIC_CATEGORIES) {
+      counts[category] =
+        category === "All"
+          ? state.music.tracks.length
+          : state.music.tracks.filter((track) => track.category === category)
+              .length;
+    }
+
+    return jsonResponse(route, {
+      categories: MUSIC_CATEGORIES,
+      counts,
+    });
+  }
+
+  if (url.pathname === "/api/music-like/counts/batch") {
+    const ids = (url.searchParams.get("music_ids") || "")
+      .split(",")
+      .map((id) => id.trim())
+      .filter(Boolean)
+      .slice(0, 50);
+    const items = {};
+
+    for (const id of ids) {
+      items[id] = musicVotePayload(state, id);
+    }
+
+    return jsonResponse(route, { items });
+  }
+
+  if (url.pathname === "/api/music-like/counts") {
+    const id = url.searchParams.get("music_id");
+    if (!id) {
+      return jsonResponse(route, { error: "Missing music id" }, 400);
+    }
+
+    return jsonResponse(route, musicVotePayload(state, id));
+  }
+
+  if (
+    url.pathname === "/api/music-like/vote" &&
+    request.method() === "POST"
+  ) {
+    const body = parseJsonBody(request);
+    const vote = ensureMusicVote(state, body.music_id);
+    applyVote(vote, Boolean(body.is_like));
+
+    return jsonResponse(route, {
+      message: "Vote updated",
+      data: {
+        action: "updated",
+        user_vote: vote.vote,
+        like_counts: vote.likes,
+        dislike_counts: vote.dislikes,
+      },
+    });
+  }
+
+  if (
+    url.pathname === "/api/proxy-audio" ||
+    url.pathname === "/api/download_song"
+  ) {
+    return route.fulfill({ status: 204 });
+  }
+
+  return null;
+}
+
+function ensureMusicVote(state, id) {
+  if (!state.music.votes[id]) {
+    state.music.votes[id] = {
+      likes: 0,
+      dislikes: 0,
+      vote: null,
+    };
+  }
+
+  return state.music.votes[id];
+}
+
+function musicVotePayload(state, id) {
+  const vote = ensureMusicVote(state, id);
+
+  return {
+    like_counts: vote.likes,
+    dislike_counts: vote.dislikes,
+    user_vote: vote.vote,
+  };
+}
+
 async function handleRoute(route, state, localHosts) {
   const request = route.request();
   const url = new URL(request.url());
@@ -469,6 +635,11 @@ async function handleRoute(route, state, localHosts) {
       message: "Vote updated",
       data: { action: "updated", is_like: state.builtApp.vote },
     });
+  }
+
+  const music = handleMusic(state, route, url);
+  if (music) {
+    return music;
   }
 
   const galleryLike = handleContentLike(state, route, "gallery", url);
@@ -549,6 +720,19 @@ export async function installMockSite(context, options = {}) {
     content: {
       gallery: {},
       vlog: {},
+    },
+    music: {
+      tracks: MUSIC_TRACKS,
+      votes: Object.fromEntries(
+        MUSIC_TRACKS.map((track, index) => [
+          track.id,
+          {
+            likes: 7 + index,
+            dislikes: 2 + (index % 3),
+            vote: null,
+          },
+        ])
+      ),
     },
     profile: {
       displayName: options.displayName ?? "Mock Visitor",

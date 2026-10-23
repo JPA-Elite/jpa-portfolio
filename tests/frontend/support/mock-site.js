@@ -410,6 +410,71 @@ function handleComments(state, route, kind, url) {
   return null;
 }
 
+function handleBooking(state, route, url) {
+  if (url.pathname !== "/api/booking/send") {
+    return null;
+  }
+
+  const request = route.request();
+  if (request.method() !== "POST") {
+    return jsonResponse(route, { ok: false, message: "Method not allowed" }, 405);
+  }
+
+  state.booking.requests.push(parseJsonBody(request));
+
+  if (state.booking.mode === "network") {
+    return route.abort("failed");
+  }
+
+  return new Promise((resolve) => {
+    const respond = () => {
+      if (state.booking.mode === "rate-limit") {
+        resolve(
+          jsonResponse(
+            route,
+            {
+              ok: false,
+              message: state.booking.rateLimitMessage,
+              retry_after_seconds: state.booking.retryAfterSeconds,
+            },
+            429
+          )
+        );
+        return;
+      }
+
+      if (state.booking.mode === "error") {
+        resolve(
+          jsonResponse(
+            route,
+            { ok: false, message: state.booking.errorMessage },
+            400
+          )
+        );
+        return;
+      }
+
+      if (state.booking.mode === "empty-error") {
+        resolve(jsonResponse(route, { ok: false }, 400));
+        return;
+      }
+
+      resolve(
+        jsonResponse(route, {
+          ok: true,
+          message: state.booking.successMessage,
+        })
+      );
+    };
+
+    if (state.booking.delayMs > 0) {
+      setTimeout(respond, state.booking.delayMs);
+    } else {
+      respond();
+    }
+  });
+}
+
 function handleProfile(state, route, url) {
   const request = route.request();
 
@@ -637,6 +702,11 @@ async function handleRoute(route, state, localHosts) {
     });
   }
 
+  const booking = handleBooking(state, route, url);
+  if (booking) {
+    return booking;
+  }
+
   const music = handleMusic(state, route, url);
   if (music) {
     return music;
@@ -733,6 +803,19 @@ export async function installMockSite(context, options = {}) {
           },
         ])
       ),
+    },
+    booking: {
+      mode: options.bookingMode ?? "success",
+      delayMs: options.bookingDelayMs ?? 0,
+      retryAfterSeconds: options.bookingRetryAfterSeconds ?? 2,
+      successMessage:
+        options.bookingSuccessMessage ??
+        "Your booking request has been sent successfully! We will contact you shortly.",
+      errorMessage: options.bookingErrorMessage ?? "Mock booking failure.",
+      rateLimitMessage:
+        options.bookingRateLimitMessage ??
+        "You have exceeded the maximum of 10 booking requests per hour. Please wait 1 minute(s) before trying again.",
+      requests: [],
     },
     profile: {
       displayName: options.displayName ?? "Mock Visitor",

@@ -20,6 +20,7 @@ const bookingService = new BookingService();
     const messageCount = document.getElementById('messageCount');
     const emailMsg = document.getElementById('emailMsg');
     const statusEl = document.getElementById('bookingStatus');
+    let retryBlocked = false;
 
     const labels = {
         sending: form.dataset.sendingLabel || 'Sending...',
@@ -44,6 +45,11 @@ const bookingService = new BookingService();
     }
 
     function validateForm() {
+        if (retryBlocked) {
+            submitBtn.disabled = true;
+            return;
+        }
+
         const nameVal = nameInput.value.trim();
         const emailVal = emailInput.value.trim();
         const dateVal = dateHidden ? dateHidden.value : '';
@@ -151,6 +157,7 @@ const bookingService = new BookingService();
             } else if (result.status === 429) {
                 let retryAfter = data.retry_after_seconds || 3600;
                 setStatus(data.message, 'error');
+                retryBlocked = true;
                 submitBtn.disabled = true;
                 const countdownEl = document.createElement('div');
                 countdownEl.className = 'booking-retry-countdown';
@@ -159,6 +166,7 @@ const bookingService = new BookingService();
                     if (retryAfter <= 0) {
                         clearInterval(interval);
                         countdownEl.remove();
+                        retryBlocked = false;
                         validateForm();
                         return;
                     }

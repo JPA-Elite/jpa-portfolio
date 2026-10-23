@@ -49,6 +49,9 @@ app/dist/frontend/
 test-results/
 playwright-report/
 
+# Runtime activity logs
+app/logs/recent_activity.jsonl
+
 # Continue package-specific ignores
 .continue/
 

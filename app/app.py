@@ -21,7 +21,7 @@ import threading
 import time
 from werkzeug.middleware.proxy_fix import ProxyFix
 from app.extensions import cache
-from app.domains import current_site, get_domain_config, resolve_domain_redirect, resolve_professional_redirect
+from app.domains import current_site, get_domain_config, resolve_domain_redirect, resolve_professional_redirect, should_track_visit
 from app.security import init_ddos_guard
 from app.seo import NOINDEX_ROBOTS, inject_page_seo, page_seo_context
 from app.Services.PortfolioService import PortfolioService
@@ -420,6 +420,8 @@ def record_page_visit():
     if request.method != "GET":
         return None
     if request.endpoint not in TRACKED_VISIT_ENDPOINTS:
+        return None
+    if not should_track_visit(request.host):
         return None
     try:
         forwarded = request.headers.get("X-Forwarded-For", request.remote_addr or "")

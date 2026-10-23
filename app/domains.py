@@ -1,6 +1,22 @@
 import os
+from ipaddress import ip_address
 from flask import current_app, has_app_context, has_request_context, request
 
+
+LOCAL_HOST_SUFFIXES = (
+    ".local",
+    ".localhost",
+    ".localdomain",
+    ".test",
+    ".invalid",
+    ".example",
+    ".internal",
+    ".intranet",
+    ".lan",
+    ".home",
+    ".home.arpa",
+    ".corp",
+)
 
 PUBLIC_PAGE_PATHS = frozenset({
     "/",
@@ -75,6 +91,26 @@ def normalize_host(value):
             text = host_part
     text = text.strip().rstrip(".")
     return text
+
+
+def is_local_host(host):
+    normalized = normalize_host(host)
+    if not normalized:
+        return True
+    if normalized in {"localhost", "127.0.0.1", "0.0.0.0", "::1"}:
+        return True
+    if normalized.endswith(LOCAL_HOST_SUFFIXES):
+        return True
+    address_text = normalized.strip("[]")
+    try:
+        address = ip_address(address_text)
+    except ValueError:
+        return "." not in normalized
+    return not address.is_global
+
+
+def should_track_visit(host):
+    return not is_local_host(host)
 
 
 def split_host_port(value):

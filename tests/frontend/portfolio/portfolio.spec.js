@@ -197,4 +197,39 @@ test.describe("Portfolio", () => {
 
     await expect(page).toHaveURL(/^http:\/\/jpastack\.local(?::\d+)?\/portfolio$/);
   });
+
+  test("does not render the admin panel in professional mode", async ({ page }) => {
+    await openPortfolio(page);
+    await expect(page.locator("#adminFloat")).toHaveCount(0);
+  });
+
+  test("expands and minimizes the admin panel in social mode", async ({
+    page,
+    baseURL,
+  }) => {
+    const socialUrl = new URL(baseURL);
+    socialUrl.hostname = "jpastack.local";
+    socialUrl.pathname = "/portfolio";
+    socialUrl.search = "";
+    socialUrl.hash = "";
+
+    await page.goto(socialUrl.toString(), { waitUntil: "domcontentloaded" });
+
+    const adminFloat = page.locator("#adminFloat");
+    const toggle = adminFloat.locator(".admin-float-toggle");
+
+    await expect(adminFloat).toBeVisible();
+    await expect(toggle).toHaveAttribute("aria-expanded", "false");
+    await expect(toggle).toHaveAttribute("aria-label", "Maximize Admin Panel");
+
+    await toggle.click();
+    await expect(adminFloat).toHaveClass(/is-maximized/);
+    await expect(toggle).toHaveAttribute("aria-expanded", "true");
+    await expect(toggle).toHaveAttribute("aria-label", "Minimize Admin Panel");
+
+    await toggle.click();
+    await expect(adminFloat).not.toHaveClass(/is-maximized/);
+    await expect(toggle).toHaveAttribute("aria-expanded", "false");
+    await expect(toggle).toHaveAttribute("aria-label", "Maximize Admin Panel");
+  });
 });

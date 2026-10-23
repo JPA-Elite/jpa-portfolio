@@ -13,14 +13,18 @@ os.environ["PROFESSIONAL_DOMAIN"] = "professional.jpastack.local"
 os.environ["SOCIAL_DOMAIN"] = "jpastack.local"
 os.environ["ADMIN_DOMAIN"] = "admin.jpastack.local"
 os.environ["HCAPTCHA_ENABLED"] = "false"
+os.environ["ADMIN_LOGIN_GUARD_ENABLED"] = "false"
 os.environ["FLASK_DEBUG"] = "0"
 os.environ["MONGO_URI"] = "mongodb://127.0.0.1:1/playwright_mock"
 os.environ["MONGO_DB"] = "playwright_mock"
 os.environ["SECRET_KEY"] = os.environ.get("SECRET_KEY") or "playwright-mock-secret"
 
+from flask import jsonify, request, session
 from app.app import app
 import app.app as app_module
-from app.Controllers.web import PageController
+from app.constants.login_roles import ROLE_ADMIN
+from app.Controllers.web import AdminPageController, PageController
+from app.Controllers.api import AdminOtpController
 from app.Models.BuiltApp import BuiltApp
 from app.Models.CompanyRoadmap import CompanyRoadmap
 from app.Models.Gallery import Gallery
@@ -434,6 +438,79 @@ class BuiltAppMockService:
             if built_app.slug == slug:
                 return built_app
         return None
+
+
+class AdminAuthMockService:
+    def authenticate_admin(self, username, password):
+        if username == "admin" and password == "admin-pass":
+            return (
+                {
+                    "_id": "pw-admin",
+                    "username": "Mock Admin",
+                    "role": ROLE_ADMIN,
+                    "profile_image": "/static/images/user.webp",
+                },
+                "Login successful!",
+                False,
+            )
+        return None, "Invalid username or password.", False
+
+
+class AdminOtpMockService:
+    email = "admin@example.com"
+    valid_otp = "123456"
+    sent_count = 0
+
+    def get_user_email(self, user_id):
+        return self.email
+
+    def update_user_email(self, user_id, email):
+        type(self).email = email
+        return True
+
+    def get_cooldown_remaining_seconds(self, user_id):
+        return 0
+
+    def send_otp(self, user_id, email):
+        type(self).email = email or self.email
+        type(self).sent_count += 1
+        return "OTP sent to your email."
+
+    def verify_otp(self, user_id, otp):
+        if otp == self.valid_otp:
+            return {"ok": True, "message": "OTP verified"}
+        return {
+            "ok": False,
+            "reason": "invalid",
+            "message": "Invalid OTP.",
+            "attempts_remaining": 4,
+            "retry_after_seconds": None,
+        }
+
+
+AdminPageController.auth_service = AdminAuthMockService()
+AdminOtpController.OtpService = AdminOtpMockService
+
+
+@app.route("/__playwright/admin-session", methods=["GET"])
+def playwright_admin_session():
+    face_verified = request.args.get("face_verified", "1") != "0"
+    session.clear()
+    session["user_id"] = "pw-admin"
+    session["role"] = ROLE_ADMIN
+    session["username"] = "Mock Admin"
+    session["profile_image"] = "/static/images/user.webp"
+    if face_verified:
+        session["face_verified"] = True
+    return "", 204
+
+
+@app.route("/__playwright/face-verify", methods=["POST"])
+def playwright_face_verify():
+    if not session.get("user_id"):
+        return jsonify({"ok": False, "message": "Not authenticated"}), 401
+    session["face_verified"] = True
+    return jsonify({"ok": True, "message": "Face verified successfully."})
 
 
 PageController.gallery_service = GalleryMockService()

@@ -23,7 +23,9 @@ import app.app as app_module
 from app.Controllers.web import PageController
 from app.Models.BuiltApp import BuiltApp
 from app.Models.CompanyRoadmap import CompanyRoadmap
+from app.Models.Gallery import Gallery
 from app.Models.KeyProject import KeyProject
+from app.Models.Video import Video
 
 
 def mock_image(name):
@@ -181,6 +183,229 @@ BUILT_APPS = [
 ]
 
 
+GALLERY_ITEMS = [
+    Gallery(
+        id="pw-gallery-sunrise",
+        title={"en": "Mock Gallery Sunrise"},
+        description={
+            "en": "A calm sunrise over the deterministic test horizon."
+        },
+        image_url=mock_image("jaom.webp"),
+        tags=["alpha", "sunrise"],
+        _id="pw-gallery-sunrise",
+    ),
+    Gallery(
+        id="pw-gallery-forest",
+        title={"en": "Mock Gallery Forest"},
+        description={
+            "en": "A quiet forest with a phosphorescent canopy."
+        },
+        image_url=mock_image("jaom_home.webp"),
+        tags=["beta", "nature"],
+        _id="pw-gallery-forest",
+    ),
+    Gallery(
+        id="pw-gallery-city",
+        title={"en": "Mock Gallery City"},
+        description={
+            "en": "A busy city rendered for the gallery pagination check."
+        },
+        image_url=mock_image("jaom_about_us.webp"),
+        tags=["gamma", "urban"],
+        _id="pw-gallery-city",
+    ),
+    Gallery(
+        id="pw-gallery-ocean",
+        title={"en": "Mock Gallery Ocean"},
+        description={
+            "en": "An ocean wave used for the tag filter check."
+        },
+        image_url=mock_image("Capture.webp"),
+        tags=["alpha", "water"],
+        _id="pw-gallery-ocean",
+    ),
+    Gallery(
+        id="pw-gallery-mountain",
+        title={"en": "Mock Gallery Mountain"},
+        description={
+            "en": "A mountain ridge for deterministic snapshots."
+        },
+        image_url=mock_image("cert1.webp"),
+        tags=["beta", "nature"],
+        _id="pw-gallery-mountain",
+    ),
+    Gallery(
+        id="pw-gallery-night",
+        title={"en": "Mock Gallery Night"},
+        description={
+            "en": "A night skyline for the gallery modal coverage."
+        },
+        image_url=mock_image("cert2.webp"),
+        tags=["gamma", "urban"],
+        _id="pw-gallery-night",
+    ),
+    Gallery(
+        id="pw-gallery-desert",
+        title={"en": "Mock Gallery Desert"},
+        description={
+            "en": "A desert dune from the mock gallery fixture."
+        },
+        image_url=mock_image("cert3.webp"),
+        tags=["delta", "sand"],
+        _id="pw-gallery-desert",
+    ),
+    Gallery(
+        id="pw-gallery-aurora",
+        title={"en": "Mock Gallery Aurora"},
+        description={
+            "en": "An aurora used to verify search matching."
+        },
+        image_url=mock_image("cert4.webp"),
+        tags=["epsilon", "sky"],
+        _id="pw-gallery-aurora",
+    ),
+]
+
+VLOG_ITEMS = [
+    Video(
+        id="pw-vlog-first",
+        title={"en": "Mock Vlog First"},
+        description={
+            "en": "First deterministic vlog description."
+        },
+        file=None,
+        video_url="https://example.com/mock-vlog-first.mp4",
+        tags=["alpha", "studio"],
+        _id="pw-vlog-first",
+    ),
+    Video(
+        id="pw-vlog-second",
+        title={"en": "Mock Vlog Second"},
+        description={
+            "en": "Second deterministic vlog description with phosphorescent lighting."
+        },
+        file=None,
+        video_url="https://example.com/mock-vlog-second.mp4",
+        tags=["beta", "outside"],
+        _id="pw-vlog-second",
+    ),
+    Video(
+        id="pw-vlog-third",
+        title={"en": "Mock Vlog Third"},
+        description={
+            "en": "Third deterministic vlog for pagination coverage."
+        },
+        file=None,
+        video_url="https://example.com/mock-vlog-third.mp4",
+        tags=["alpha", "tutorial"],
+        _id="pw-vlog-third",
+    ),
+    Video(
+        id="pw-vlog-fourth",
+        title={"en": "Mock Vlog Fourth"},
+        description={
+            "en": "Fourth deterministic vlog for card modals."
+        },
+        file=None,
+        video_url="https://example.com/mock-vlog-fourth.mp4",
+        tags=["gamma", "urban"],
+        _id="pw-vlog-fourth",
+    ),
+    Video(
+        id="pw-vlog-aurora",
+        title={"en": "Mock Vlog Aurora"},
+        description={
+            "en": "An aurora search target for vlogs."
+        },
+        file=None,
+        video_url="https://example.com/mock-vlog-aurora.mp4",
+        tags=["epsilon", "night"],
+        _id="pw-vlog-aurora",
+    ),
+]
+
+
+def _localized_text(value, locale):
+    if isinstance(value, dict):
+        return str(value.get(locale) or value.get("en") or "")
+    return str(value or "")
+
+
+def _matches_search(item, search_query, locale):
+    if not search_query:
+        return True
+
+    needle = search_query.casefold()
+    haystack = " ".join(
+        [
+            _localized_text(item.title, locale),
+            _localized_text(item.description, locale),
+        ]
+    ).casefold()
+    return needle in haystack
+
+
+def _matches_tags(item, tags_query):
+    if not tags_query:
+        return True
+
+    if isinstance(tags_query, str):
+        requested = [tag for tag in tags_query.split(".") if tag]
+    else:
+        requested = [str(tag) for tag in tags_query if tag]
+
+    if not requested:
+        return True
+
+    return any(tag in item.tags for tag in requested)
+
+
+def _paginate(items, page, per_page):
+    start = max(0, (page - 1) * per_page)
+    return items[start:start + per_page], len(items)
+
+
+def _all_tags(items):
+    tags = []
+    for item in items:
+        for tag in item.tags:
+            if tag not in tags:
+                tags.append(tag)
+    return tags
+
+
+class GalleryMockService:
+    def search_gallery_paginated(
+        self, search_query, tags, locale, page, per_page, order=None
+    ):
+        filtered = [
+            item
+            for item in GALLERY_ITEMS
+            if _matches_search(item, search_query, locale)
+            and _matches_tags(item, tags)
+        ]
+        return _paginate(filtered, page, per_page)
+
+    def get_all_tags(self, limit=50):
+        return _all_tags(GALLERY_ITEMS)[:limit]
+
+
+class VideoMockService:
+    def search_video_paginated(
+        self, search_query, tags, locale, page, per_page, order=None
+    ):
+        filtered = [
+            item
+            for item in VLOG_ITEMS
+            if _matches_search(item, search_query, locale)
+            and _matches_tags(item, tags)
+        ]
+        return _paginate(filtered, page, per_page)
+
+    def get_all_tags(self, limit=50):
+        return _all_tags(VLOG_ITEMS)[:limit]
+
+
 class KeyProjectMockService:
     def seed_default_projects_if_empty(self):
         return None
@@ -211,6 +436,8 @@ class BuiltAppMockService:
         return None
 
 
+PageController.gallery_service = GalleryMockService()
+PageController.video_service = VideoMockService()
 PageController.key_project_service = KeyProjectMockService()
 PageController.company_roadmap_service = CompanyRoadmapMockService()
 PageController.built_app_service = BuiltAppMockService()

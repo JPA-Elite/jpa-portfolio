@@ -21,6 +21,7 @@ export default defineConfig({
     timeout: 7000,
   },
   reporter: [["list"]],
+  globalTeardown: "./tests/frontend/global-teardown.js",
   use: {
     baseURL,
     headless: true,

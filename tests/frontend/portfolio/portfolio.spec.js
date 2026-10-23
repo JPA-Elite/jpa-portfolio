@@ -1,4 +1,4 @@
-import { expect, test } from "@playwright/test";
+import { expect, test } from "../support/test.js";
 
 async function openPortfolio(page) {
   await page.goto("/portfolio", { waitUntil: "domcontentloaded" });
@@ -195,6 +195,6 @@ test.describe("Portfolio", () => {
       modeButton.click(),
     ]);
 
-    await expect(page).toHaveURL(/^http:\/\/jpastack\.local\/portfolio$/);
+    await expect(page).toHaveURL(/^http:\/\/jpastack\.local(?::\d+)?\/portfolio$/);
   });
 });

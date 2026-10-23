@@ -33,7 +33,7 @@ class MusicLikeRequest(BaseRequest):
         client_ip = request.headers.get("X-Forwarded-For", request.remote_addr)
 
         if not self._require("music_id", music_id):
-            return None, self._error_response(400)
+            return None, *self._error_response(400)
 
         return self._success_response({
             "music_id": music_id,

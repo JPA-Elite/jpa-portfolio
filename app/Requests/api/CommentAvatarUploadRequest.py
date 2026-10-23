@@ -17,16 +17,16 @@ class CommentAvatarUploadRequest(BaseRequest):
 
         if not avatar_file or not avatar_file.filename:
             self._errors["avatar"] = "Avatar file is required."
-            return None, self._error_response(400)
+            return None, *self._error_response(400)
 
         extension = avatar_file.filename.rsplit(".", 1)[-1].lower() if "." in avatar_file.filename else ""
         if extension not in ALLOWED_AVATAR_EXTENSIONS:
             self._errors["avatar"] = "Unsupported image type. Use PNG, JPG, WEBP, or GIF."
-            return None, self._error_response(400)
+            return None, *self._error_response(400)
 
         if len(avatar_file.read()) > MAX_RAW_AVATAR_BYTES:
             self._errors["avatar"] = "Image file is too large to upload. Maximum size is 20MB."
-            return None, self._error_response(400)
+            return None, *self._error_response(400)
 
         avatar_file.stream.seek(0)
 

@@ -12,29 +12,29 @@ class BookingRequest(BaseRequest):
         message = str(payload.get("message", "")).strip()
 
         if not self._require("name", name, "Full name is required."):
-            return None, self._error_response(400)
+            return None, *self._error_response(400)
         if len(name) > 50:
             self._errors["name"] = "Full name must be at most 50 characters."
-            return None, self._error_response(400)
+            return None, *self._error_response(400)
 
         if not self._require("email", email, "Email is required."):
-            return None, self._error_response(400)
+            return None, *self._error_response(400)
         email_pattern = r'^[^\s@]+@[^\s@]+\.[^\s@]+$'
         if not re.match(email_pattern, email):
             self._errors["email"] = "Invalid email format."
-            return None, self._error_response(400)
+            return None, *self._error_response(400)
 
         if not self._require("preferred_date", preferred_date, "Preferred date is required."):
-            return None, self._error_response(400)
+            return None, *self._error_response(400)
 
         if not self._require("preferred_time", preferred_time, "Preferred time is required."):
-            return None, self._error_response(400)
+            return None, *self._error_response(400)
 
         if not self._require("message", message, "Message is required."):
-            return None, self._error_response(400)
+            return None, *self._error_response(400)
         if len(message) > 500:
             self._errors["message"] = "Message must be at most 500 characters."
-            return None, self._error_response(400)
+            return None, *self._error_response(400)
 
         service = str(payload.get("service", "")).strip() or None
 

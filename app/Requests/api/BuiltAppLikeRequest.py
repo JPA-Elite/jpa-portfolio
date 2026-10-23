@@ -25,7 +25,7 @@ class BuiltAppLikeRequest(BaseRequest):
         client_ip = request.headers.get("X-Forwarded-For", request.remote_addr)
 
         if not self._require("app_id", app_id):
-            return None, self._error_response(400)
+            return None, *self._error_response(400)
 
         return self._success_response({
             "app_id": app_id,

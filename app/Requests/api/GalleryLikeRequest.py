@@ -41,7 +41,7 @@ class GalleryLikeRequest(BaseRequest):
         client_ip = request.headers.get("X-Forwarded-For", request.remote_addr)
 
         if not self._require("gallery_id", gallery_id):
-            return None, self._error_response(400)
+            return None, *self._error_response(400)
 
         return self._success_response({
             "gallery_id": json.loads(gallery_id),

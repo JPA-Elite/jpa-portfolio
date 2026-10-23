@@ -67,7 +67,7 @@ class GalleryCommentRequest(BaseRequest):
         gallery_id = data.get("gallery_id")
 
         if not self._require("gallery_id", gallery_id):
-            return None, self._error_response(400)
+            return None, *self._error_response(400)
 
         return self._success_response({
             "gallery_id": gallery_id,
@@ -80,7 +80,7 @@ class GalleryCommentRequest(BaseRequest):
         ip_address = request.headers.get("X-Forwarded-For", request.remote_addr)
 
         if not self._require("comment_id", comment_id):
-            return None, self._error_response(400)
+            return None, *self._error_response(400)
 
         return self._success_response({
             "comment_id": comment_id,

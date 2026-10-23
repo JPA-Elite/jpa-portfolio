@@ -32,7 +32,7 @@ class BaseControllerRequest(BaseRequest):
     def _validate_download_song(self):
         url = self._get_args("url")
         if not self._require("url", url):
-            return None, self._error_response(400)
+            return None, *self._error_response(400)
         return self._success_response({"url": url})
 
     def _validate_client_ip(self):
@@ -41,7 +41,7 @@ class BaseControllerRequest(BaseRequest):
     def _validate_proxy_audio(self):
         url = self._get_args("url")
         if not self._require("url", url):
-            return None, self._error_response(400)
+            return None, *self._error_response(400)
 
         range_header = request.headers.get("Range")
         return self._success_response({"url": url, "range_header": range_header})
@@ -50,7 +50,7 @@ class BaseControllerRequest(BaseRequest):
         data = request.get_json(silent=True) or {}
         message = data.get("message", "")
         if not isinstance(message, str) or not message.strip():
-            return None, self._error_response(400)
+            return None, *self._error_response(400)
         session_id = data.get("session_id", "")
         if not isinstance(session_id, str):
             session_id = ""

@@ -25,12 +25,12 @@ class AdminFaceRequest(BaseRequest):
             b64 = payload.get("image_b64")
             if not b64 or not isinstance(b64, str):
                 self._errors["image_b64"] = "Missing image_b64"
-                return None
+                return None, *self._error_response(400)
             b64_list = [b64]
 
         if not b64_list:
             self._errors["image_b64"] = "Missing image captures"
-            return None
+            return None, *self._error_response(400)
 
         return self._success_response({"image_b64_list": b64_list})
 
@@ -47,11 +47,11 @@ class AdminFaceRequest(BaseRequest):
             b64 = payload.get("image_b64")
             if not b64 or not isinstance(b64, str):
                 self._errors["image_b64"] = "Missing image_b64"
-                return None
+                return None, *self._error_response(400)
             b64_list = [b64]
 
         if not b64_list:
             self._errors["image_b64"] = "Missing image captures"
-            return None
+            return None, *self._error_response(400)
 
         return self._success_response({"image_b64_list": b64_list})

@@ -29,7 +29,7 @@ class AdminOtpRequest(BaseRequest):
         otp = str(payload.get("otp", "")).strip()
 
         if not self._require("otp", otp):
-            return None, self._error_response(400)
+            return None, *self._error_response(400)
 
         return self._success_response({"otp": otp})
 
@@ -44,6 +44,6 @@ class AdminOtpRequest(BaseRequest):
         email = str(payload.get("email", "")).strip()
 
         if not self._require("email", email, message="Missing email."):
-            return None, self._error_response(400)
+            return None, *self._error_response(400)
 
         return self._success_response({"email": email})

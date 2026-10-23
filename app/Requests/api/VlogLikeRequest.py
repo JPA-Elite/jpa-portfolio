@@ -41,7 +41,7 @@ class VlogLikeRequest(BaseRequest):
         client_ip = request.headers.get("X-Forwarded-For", request.remote_addr)
 
         if not self._require("vlog_id", vlog_id):
-            return None, self._error_response(400)
+            return None, *self._error_response(400)
 
         return self._success_response({
             "vlog_id": json.loads(vlog_id),

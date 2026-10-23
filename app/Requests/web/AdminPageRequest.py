@@ -8,8 +8,10 @@ class AdminPageRequest(BaseRequest):
 
         if "admin_login" in route:
             return self._validate_admin_login()
-        if "admin_face" in route and request.method == "POST":
-            return self._validate_admin_face()
+        if "admin_face" in route:
+            if request.method == "POST":
+                return self._validate_admin_face()
+            return self._success_response({})
 
         return None, jsonify({"errors": {"_global": "Unknown route."}}), 400
 

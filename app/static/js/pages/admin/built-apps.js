@@ -127,8 +127,6 @@ function makeFileDropzone(input, previewEl, multiple) {
     });
     input.addEventListener("change", () => {
         addFiles(input.files);
-        input.value = "";
-        input.files = box.files;
     });
 }
 

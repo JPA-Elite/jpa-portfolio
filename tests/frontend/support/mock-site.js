@@ -1,3 +1,9 @@
+import {
+  adminAssetResponse,
+  createAdminState,
+  handleAdminRequest,
+} from "./admin-mock.js";
+
 const PLACEHOLDER_IMAGE = Buffer.from(
   '<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64"><rect width="64" height="64" fill="#d9d9d9"/></svg>'
 );
@@ -737,6 +743,11 @@ async function handleRoute(route, state, localHosts) {
     return profile;
   }
 
+  const admin = handleAdminRequest(route, state.admin, url);
+  if (admin) {
+    return admin;
+  }
+
   if (url.pathname.startsWith("/api/")) {
     return jsonResponse(route, {});
   }
@@ -759,6 +770,11 @@ async function handleRoute(route, state, localHosts) {
       contentType: "text/html",
       body: "<!doctype html><html><body></body></html>",
     });
+  }
+
+  const adminAsset = adminAssetResponse(route, url, resourceType);
+  if (adminAsset) {
+    return adminAsset;
   }
 
   if (resourceType === "script") {
@@ -826,6 +842,7 @@ export async function installMockSite(context, options = {}) {
         options.uploadedAvatarUrl ?? DEFAULT_UPLOADED_AVATAR,
     },
     commentSequence: 1,
+    admin: createAdminState(),
   };
   const localHosts = new Set(LOCAL_HOSTS);
   addBaseUrlHost(localHosts, options.baseURL);

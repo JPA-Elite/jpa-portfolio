@@ -102,7 +102,7 @@
     }
 
     var professionalDomain = "{{ professional_domain }}";
-    var socialDomain = "{{ landing_domain or social_domain }}";
+    var socialDomain = "{{ social_domain or landing_domain }}";
 
     if (!container || !label || !btn) return;
     if (!professionalDomain || !socialDomain) {

@@ -73,6 +73,7 @@ const MUSIC_TRACKS = Array.from({ length: 25 }, (_, index) => {
 const LOCAL_HOSTS = new Set([
   "professional.jpastack.local",
   "jpastack.local",
+  "social.jpastack.local",
   "admin.jpastack.local",
   "localhost",
   "127.0.0.1",

@@ -2,7 +2,11 @@ import unittest
 
 from flask import Flask
 
-from app.domains import PROFESSIONAL_PERSONAL_PATHS, resolve_professional_redirect
+from app.domains import (
+    PROFESSIONAL_PERSONAL_PATHS,
+    resolve_domain_redirect,
+    resolve_professional_redirect,
+)
 
 
 def _make_app(routing_enabled=True, admin_domain="config.jpastack.local"):
@@ -122,6 +126,85 @@ class ProfessionalRedirectTests(unittest.TestCase):
                 ),
                 "http://professional.jpastack.local/",
             )
+
+
+class LandingRedirectTests(unittest.TestCase):
+    def test_landing_root_redirects_to_professional_host(self):
+        app = _make_app()
+        with app.app_context():
+            self.assertEqual(
+                resolve_domain_redirect("jpastack.local", "/"),
+                "http://professional.jpastack.local/",
+            )
+
+    def test_landing_pages_redirect_to_professional_host(self):
+        app = _make_app()
+        with app.app_context():
+            for path in ("/portfolio", "/gallery", "/build"):
+                with self.subTest(path=path):
+                    self.assertEqual(
+                        resolve_domain_redirect("jpastack.local", path),
+                        f"http://professional.jpastack.local{path}",
+                    )
+
+    def test_landing_redirect_preserves_query_string(self):
+        app = _make_app()
+        with app.app_context():
+            self.assertEqual(
+                resolve_domain_redirect("jpastack.local", "/gallery", "page=2"),
+                "http://professional.jpastack.local/gallery?page=2",
+            )
+
+    def test_landing_personal_pages_redirect_to_social_host(self):
+        app = _make_app()
+        with app.app_context():
+            for path in PROFESSIONAL_PERSONAL_PATHS:
+                with self.subTest(path=path):
+                    self.assertEqual(
+                        resolve_domain_redirect("jpastack.local", path),
+                        f"http://social.jpastack.local{path}",
+                    )
+
+    def test_landing_redirect_preserves_non_standard_port(self):
+        app = _make_app()
+        with app.app_context():
+            self.assertEqual(
+                resolve_domain_redirect("jpastack.local:4173", "/portfolio"),
+                "http://professional.jpastack.local:4173/portfolio",
+            )
+
+    def test_landing_admin_pages_redirect_to_admin_host(self):
+        app = _make_app()
+        with app.app_context():
+            self.assertEqual(
+                resolve_domain_redirect("jpastack.local", "/admin/login"),
+                "http://config.jpastack.local/admin/login",
+            )
+
+    def test_landing_shared_paths_are_not_redirected(self):
+        app = _make_app()
+        with app.app_context():
+            for path in ("/sitemap.xml", "/robots.txt", "/api/portfolio"):
+                with self.subTest(path=path):
+                    self.assertIsNone(resolve_domain_redirect("jpastack.local", path))
+
+    def test_professional_and_social_hosts_are_not_redirected(self):
+        app = _make_app()
+        with app.app_context():
+            for host in ("professional.jpastack.local", "social.jpastack.local"):
+                with self.subTest(host=host):
+                    self.assertIsNone(resolve_domain_redirect(host, "/portfolio"))
+
+    def test_landing_equal_to_social_host_is_not_redirected(self):
+        app = _make_app()
+        app.config["SOCIAL_DOMAIN"] = "jpastack.local"
+        with app.app_context():
+            self.assertIsNone(resolve_domain_redirect("jpastack.local", "/portfolio"))
+
+    def test_routing_disabled_returns_none(self):
+        app = _make_app(routing_enabled=False)
+        with app.app_context():
+            self.assertIsNone(resolve_domain_redirect("jpastack.local", "/portfolio"))
 
 
 if __name__ == "__main__":

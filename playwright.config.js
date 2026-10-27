@@ -7,6 +7,7 @@ const baseURL =
 const hostResolverRules = [
   "MAP professional.jpastack.local 127.0.0.1",
   "MAP jpastack.local 127.0.0.1",
+  "MAP social.jpastack.local 127.0.0.1",
   "MAP admin.jpastack.local 127.0.0.1",
 ].join(", ");
 

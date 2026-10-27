@@ -2,7 +2,7 @@ from flask import Blueprint, Response, has_request_context, request
 from datetime import datetime
 import os
 
-from app.domains import SITE_PROFESSIONAL, current_site
+from app.domains import SITE_SOCIAL, current_site
 
 sitemap_bp = Blueprint("sitemap", __name__)
 
@@ -67,27 +67,26 @@ def _resolve_bases():
         return (os.getenv(name, "") or "").strip().lower()
 
     landing_host = _config("LANDING_DOMAIN") or request_host or PRODUCTION_HOST
-    professional_host = _config("PROFESSIONAL_DOMAIN")
-    if professional_host in ("", landing_host):
-        professional_host = ""
-    landing_base = f"{scheme}://{landing_host}".rstrip("/")
-    professional_base = f"{scheme}://{professional_host}".rstrip("/") if professional_host else ""
-    return landing_base, professional_base
+    professional_host = _config("PROFESSIONAL_DOMAIN") or landing_host
+    social_host = _config("SOCIAL_DOMAIN") or landing_host
+    professional_base = f"{scheme}://{professional_host}".rstrip("/")
+    social_base = f"{scheme}://{social_host}".rstrip("/")
+    return social_base, professional_base
 
 
 def generate_sitemap():
     lastmod = datetime.today().strftime('%Y-%m-%d')
-    landing_base, professional_base = _resolve_bases()
+    social_base, professional_base = _resolve_bases()
     site = ""
     if has_request_context():
         try:
             site = current_site(request.host)
         except Exception:
             site = ""
-    if site == SITE_PROFESSIONAL and professional_base:
-        urls = [f"{professional_base}{path}" for path in PROFESSIONAL_PATHS]
+    if site == SITE_SOCIAL:
+        urls = [f"{social_base}{path}" for path in PUBLIC_PATHS]
     else:
-        urls = [f"{landing_base}{path}" for path in PUBLIC_PATHS]
+        urls = [f"{professional_base}{path}" for path in PROFESSIONAL_PATHS]
     entries = "\n".join(
         f"""        <url>
             <loc>{url}</loc>

@@ -1,8 +1,9 @@
 from flask import Blueprint, Response, has_request_context, request
 from datetime import datetime
+from urllib.parse import quote
 import os
 
-from app.domains import SITE_SOCIAL, current_site
+from app.domains import SITE_PROFESSIONAL, SITE_SOCIAL, current_site
 
 sitemap_bp = Blueprint("sitemap", __name__)
 
@@ -36,6 +37,32 @@ PROFESSIONAL_PATHS = [
     for path, page_key in PATH_PAGE_KEYS.items()
     if page_key in PROFESSIONAL_SITEMAP_PAGES
 ]
+
+APP_DETAILS_PREFIX = "/apps/"
+
+
+def _active_built_app_slugs():
+    try:
+        from app.Repositories.BuiltAppRepository import BuiltAppRepository
+        from app.Services.BuiltAppService import BuiltAppService
+
+        service = BuiltAppService(repository=BuiltAppRepository())
+        slugs = []
+        for built_app in service.get_active_built_apps():
+            slug = str(getattr(built_app, "slug", "") or "").strip().lower()
+            if slug:
+                slugs.append(slug)
+        return slugs
+    except Exception:
+        return []
+
+
+def _built_app_paths():
+    return [
+        f"{APP_DETAILS_PREFIX}{quote(slug, safe='-._~')}"
+        for slug in _active_built_app_slugs()
+        if slug
+    ]
 
 
 def _resolve_bases():
@@ -84,7 +111,9 @@ def generate_sitemap():
         except Exception:
             site = ""
     if site == SITE_SOCIAL:
-        urls = [f"{social_base}{path}" for path in PUBLIC_PATHS]
+        urls = [f"{social_base}{path}" for path in PUBLIC_PATHS + _built_app_paths()]
+    elif site == SITE_PROFESSIONAL:
+        urls = [f"{professional_base}{path}" for path in PROFESSIONAL_PATHS + _built_app_paths()]
     else:
         urls = [f"{professional_base}{path}" for path in PROFESSIONAL_PATHS]
     entries = "\n".join(

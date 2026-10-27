@@ -95,7 +95,10 @@ test.describe("Portfolio", () => {
     await revealSection(page, "#key-projects");
 
     const card = page.locator(".store-card").first();
-    const appName = (await card.locator(".store-card__name").innerText()).trim();
+    await card.scrollIntoViewIfNeeded();
+    const name = card.locator(".store-card__name");
+    await expect(name).toHaveText(/\S+/);
+    const appName = (await name.textContent()).trim();
     const viewDetails = card.locator(".store-card__view");
 
     await expect(viewDetails).toContainText(/view details/i);

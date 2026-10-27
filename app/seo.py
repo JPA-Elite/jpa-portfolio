@@ -243,9 +243,9 @@ def _canonical_base(variant):
     except Exception:
         cfg = {}
     if variant == PROFESSIONAL:
-        host = cfg.get("professional_domain") or ""
+        host = cfg.get("professional_domain") or cfg.get("landing_domain") or ""
     else:
-        host = cfg.get("landing_domain") or cfg.get("social_domain") or ""
+        host = cfg.get("social_domain") or cfg.get("landing_domain") or ""
     if host:
         return f"https://{host}"
     try:

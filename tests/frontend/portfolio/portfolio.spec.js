@@ -192,7 +192,7 @@ test.describe("Portfolio", () => {
 
   test("switches from social mode to professional mode", async ({ page, baseURL }) => {
     const socialUrl = new URL(baseURL);
-    socialUrl.hostname = "jpastack.local";
+    socialUrl.hostname = "social.jpastack.local";
     socialUrl.pathname = "/portfolio";
     socialUrl.search = "";
     socialUrl.hash = "";
@@ -221,7 +221,7 @@ test.describe("Portfolio", () => {
     baseURL,
   }) => {
     const socialUrl = new URL(baseURL);
-    socialUrl.hostname = "jpastack.local";
+    socialUrl.hostname = "social.jpastack.local";
     socialUrl.pathname = "/portfolio";
     socialUrl.search = "";
     socialUrl.hash = "";

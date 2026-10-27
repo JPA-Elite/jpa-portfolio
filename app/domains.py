@@ -168,6 +168,14 @@ def get_domain_config():
     }
 
 
+def content_host(config=None, path=""):
+    cfg = config or get_domain_config()
+    clean_path = "/" + str(path or "").strip("/")
+    if clean_path in PROFESSIONAL_PERSONAL_PATHS:
+        return cfg.get("social_domain") or ""
+    return cfg.get("professional_domain") or ""
+
+
 def landing_hosts(config=None):
     cfg = config or get_domain_config()
     hosts = set()
@@ -288,7 +296,11 @@ def resolve_domain_redirect(host, path, query_string="", scheme="http", method="
     normalized, port = split_host_port(host)
     if not normalized:
         return None
+    clean_path = "/" + str(path or "").strip("/")
     landings = landing_hosts(cfg)
+    landing = cfg.get("landing_domain") or ""
+    professional = cfg.get("professional_domain") or ""
+    social = cfg.get("social_domain") or ""
     admin = cfg.get("admin_domain") or ""
     is_known = normalized in landings or (admin and normalized == admin)
     if not is_known:
@@ -299,8 +311,13 @@ def resolve_domain_redirect(host, path, query_string="", scheme="http", method="
         if admin and admin != normalized:
             return build_cross_host_url(admin, path, query_string, scheme, port)
         return None
+    if landing and normalized == landing and landing != social and professional:
+        target = social if clean_path in PROFESSIONAL_PERSONAL_PATHS else professional
+        if target and target != normalized:
+            return build_cross_host_url(target, path, query_string, scheme, port)
+        return None
     if admin and normalized == admin and is_public_page(path):
-        canonical = cfg.get("landing_domain") or cfg.get("social_domain") or cfg.get("professional_domain") or ""
+        canonical = content_host(cfg, path)
         if canonical and canonical != normalized:
             return build_cross_host_url(canonical, path, query_string, scheme, port)
         return None

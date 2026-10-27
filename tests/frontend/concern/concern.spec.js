@@ -61,7 +61,7 @@ test.describe("Concern page", () => {
     page,
     baseURL,
   }) => {
-    await openConcernPage(page, baseURL, "jpastack.local");
+    await openConcernPage(page, baseURL, "social.jpastack.local");
 
     await expect(page.locator(".concern-button a")).toHaveAttribute(
       "href",

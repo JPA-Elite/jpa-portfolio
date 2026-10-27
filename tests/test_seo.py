@@ -118,11 +118,11 @@ class SeoContextTests(unittest.TestCase):
         self.assertEqual(meta["site"], PROFESSIONAL)
         self.assertIn("/static/images/", meta["image"])
 
-    def test_social_canonical_prefers_landing_domain(self):
+    def test_social_canonical_uses_social_domain(self):
         app = _make_app()
         with app.test_request_context("/vlog", headers={"Host": "social.jpastack.com"}):
             meta = page_seo_context()
-        self.assertEqual(meta["canonical"], "https://jpastack.com/vlog")
+        self.assertEqual(meta["canonical"], "https://social.jpastack.com/vlog")
         self.assertEqual(meta["site"], SOCIAL)
 
     def test_context_processor_injects_page_seo(self):
@@ -199,7 +199,7 @@ class SitemapTests(unittest.TestCase):
         self.assertNotIn("professional.jpastack.com/donation", xml)
         self.assertNotIn("<loc>https://jpastack.com/", xml)
 
-    def test_landing_sitemap_lists_only_social_pages(self):
+    def test_landing_sitemap_lists_professional_pages(self):
         from app.sitemap import generate_sitemap
 
         app = _make_app()
@@ -207,14 +207,12 @@ class SitemapTests(unittest.TestCase):
             "/sitemap.xml", base_url="https://jpastack.com"
         ):
             xml = generate_sitemap().get_data(as_text=True)
-        self.assertIn("<loc>https://jpastack.com/</loc>", xml)
-        self.assertIn("<loc>https://jpastack.com/vlog</loc>", xml)
-        self.assertIn("<loc>https://jpastack.com/music</loc>", xml)
-        self.assertIn("<loc>https://jpastack.com/concern</loc>", xml)
-        self.assertIn("<loc>https://jpastack.com/donation</loc>", xml)
-        self.assertNotIn("professional.jpastack.com", xml)
+        self.assertIn("<loc>https://professional.jpastack.com/portfolio</loc>", xml)
+        self.assertIn("<loc>https://professional.jpastack.com/build</loc>", xml)
+        self.assertNotIn("<loc>https://jpastack.com/", xml)
+        self.assertNotIn("professional.jpastack.com/vlog", xml)
 
-    def test_social_sitemap_lists_only_landing_pages(self):
+    def test_social_sitemap_lists_only_social_pages(self):
         from app.sitemap import generate_sitemap
 
         app = _make_app()
@@ -222,9 +220,11 @@ class SitemapTests(unittest.TestCase):
             "/sitemap.xml", base_url="https://social.jpastack.com"
         ):
             xml = generate_sitemap().get_data(as_text=True)
-        self.assertIn("<loc>https://jpastack.com/vlog</loc>", xml)
+        self.assertIn("<loc>https://social.jpastack.com/", xml)
+        self.assertIn("<loc>https://social.jpastack.com/vlog</loc>", xml)
+        self.assertIn("<loc>https://social.jpastack.com/music</loc>", xml)
         self.assertNotIn("professional.jpastack.com", xml)
-        self.assertNotIn("social.jpastack.com", xml)
+        self.assertNotIn("https://jpastack.com", xml)
 
 
 if __name__ == "__main__":

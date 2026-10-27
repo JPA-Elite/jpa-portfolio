@@ -44,7 +44,7 @@ The `inject_page_seo()` context processor exposes `page_seo` to every template, 
 
 On the professional domain, direct visits to `/vlog`, `/music`, `/concern`, `/donation`, `/visitors`, and any `/admin...` URL redirect to the professional home. The social domain and the admin domain keep their normal pages.
 
-`/sitemap.xml` is host-aware: `professional.jpastack.com` lists only `/portfolio` and `/build`, while the landing/social hosts list only their own public paths.
+`/sitemap.xml` is host-aware: `professional.jpastack.com` lists only `/portfolio`, `/build`, and the active built app pages (`/apps/<slug>`); `social.jpastack.com` lists its public paths plus the active built app pages; the landing host lists only the professional public paths.
 
 ## DOCKER
 

@@ -226,6 +226,64 @@ class SitemapTests(unittest.TestCase):
         self.assertNotIn("professional.jpastack.com", xml)
         self.assertNotIn("https://jpastack.com", xml)
 
+    def test_professional_and_social_sitemaps_list_active_built_apps(self):
+        from unittest import mock
+
+        from app.sitemap import generate_sitemap
+
+        app = _make_app()
+        with mock.patch(
+            "app.sitemap._active_built_app_slugs", return_value=["stickman-run-app"]
+        ):
+            with app.test_request_context(
+                "/sitemap.xml", base_url="https://professional.jpastack.com"
+            ):
+                professional_xml = generate_sitemap().get_data(as_text=True)
+            with app.test_request_context(
+                "/sitemap.xml", base_url="https://social.jpastack.com"
+            ):
+                social_xml = generate_sitemap().get_data(as_text=True)
+            with app.test_request_context(
+                "/sitemap.xml", base_url="https://jpastack.com"
+            ):
+                landing_xml = generate_sitemap().get_data(as_text=True)
+        self.assertIn(
+            "<loc>https://professional.jpastack.com/apps/stickman-run-app</loc>",
+            professional_xml,
+        )
+        self.assertIn(
+            "<loc>https://social.jpastack.com/apps/stickman-run-app</loc>",
+            social_xml,
+        )
+        self.assertNotIn("/apps/stickman-run-app", landing_xml)
+
+    def test_built_app_paths_encode_slugs_and_skip_empty_ones(self):
+        from unittest import mock
+
+        from app.sitemap import _built_app_paths
+
+        with mock.patch(
+            "app.sitemap._active_built_app_slugs",
+            return_value=["stickman run", "", "ok-app"],
+        ):
+            self.assertEqual(
+                _built_app_paths(), ["/apps/stickman%20run", "/apps/ok-app"]
+            )
+
+    def test_active_built_app_slugs_returns_empty_on_failure(self):
+        from unittest import mock
+
+        from app.sitemap import _active_built_app_slugs
+
+        with mock.patch(
+            "app.Repositories.BuiltAppRepository.BuiltAppRepository.__init__",
+            return_value=None,
+        ), mock.patch(
+            "app.Services.BuiltAppService.BuiltAppService.get_active_built_apps",
+            side_effect=RuntimeError("mongo unavailable"),
+        ):
+            self.assertEqual(_active_built_app_slugs(), [])
+
 
 if __name__ == "__main__":
     unittest.main()

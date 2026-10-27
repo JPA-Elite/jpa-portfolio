@@ -81,13 +81,16 @@
     </a>
 </div>
 
+{% if current_site != 'professional' %}
 <div class="social-footer__mode-toggle" id="modeToggleContainer">
     <span class="social-footer__mode-label" id="modeToggleLabel">Switch to Professional Mode</span>
     <button id="modeToggleBtn" class="social-footer__mode-btn" type="button" aria-label="Toggle mode">
         <ion-icon name="swap-horizontal-outline"></ion-icon>
     </button>
 </div>
+{% endif %}
 </div>
+{% if current_site != 'professional' %}
 <script>
 (function () {
     var container = document.getElementById("modeToggleContainer");
@@ -123,5 +126,6 @@
     });
 })();
 </script>
+{% endif %}
 <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
 <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>

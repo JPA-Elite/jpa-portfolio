@@ -183,19 +183,32 @@ test.describe("Portfolio", () => {
     }
   });
 
-  test("switches from professional mode to social mode", async ({ page }) => {
+  test("hides the mode switch in professional mode", async ({ page }) => {
     await openPortfolio(page);
+
+    await expect(page.locator("#modeToggleContainer")).toHaveCount(0);
+    await expect(page.locator("#modeToggleBtn")).toHaveCount(0);
+  });
+
+  test("switches from social mode to professional mode", async ({ page, baseURL }) => {
+    const socialUrl = new URL(baseURL);
+    socialUrl.hostname = "jpastack.local";
+    socialUrl.pathname = "/portfolio";
+    socialUrl.search = "";
+    socialUrl.hash = "";
+
+    await page.goto(socialUrl.toString(), { waitUntil: "domcontentloaded" });
 
     const modeButton = page.locator("#modeToggleBtn");
     await expect(modeButton).toBeVisible();
-    await expect(page.locator("#modeToggleLabel")).toContainText(/social/i);
+    await expect(page.locator("#modeToggleLabel")).toContainText(/professional/i);
 
     await Promise.all([
-      page.waitForURL((url) => url.hostname === "jpastack.local"),
+      page.waitForURL((url) => url.hostname === "professional.jpastack.local"),
       modeButton.click(),
     ]);
 
-    await expect(page).toHaveURL(/^http:\/\/jpastack\.local(?::\d+)?\/portfolio$/);
+    await expect(page).toHaveURL(/^http:\/\/professional\.jpastack\.local(?::\d+)?\/portfolio$/);
   });
 
   test("does not render the admin panel in professional mode", async ({ page }) => {

@@ -180,6 +180,64 @@ class SeoContextTests(unittest.TestCase):
         self.assertIn('name="robots" content="noindex,nofollow"', html)
         self.assertNotIn('rel="canonical"', html)
 
+    def test_component_renders_brand_site_name_and_structured_data(self):
+        app = _make_app()
+        app.context_processor(inject_page_seo)
+
+        @app.route("/gallery", endpoint="pages.gallery")
+        def gallery_page():
+            from flask import render_template
+
+            return render_template("components/seo_meta.html")
+
+        response = app.test_client().get(
+            "/gallery", headers={"Host": "social.jpastack.com"}
+        )
+        html = response.get_data(as_text=True)
+        self.assertIn('property="og:site_name" content="JPAStack"', html)
+        self.assertIn('name="application-name" content="JPAStack"', html)
+        self.assertEqual(html.count('type="application/ld+json"'), 1)
+        self.assertIn('"@type": "WebSite"', html)
+        self.assertIn('"name": "JPAStack"', html)
+
+
+class SeoSiteNameTests(unittest.TestCase):
+    def test_site_name_is_brand_for_both_variants(self):
+        for site in (PROFESSIONAL, SOCIAL):
+            with self.subTest(site=site):
+                self.assertEqual(resolve_page_seo("pages.portfolio", site)["site_name"], "JPAStack")
+
+    def test_structured_data_declares_website_name_url_and_person(self):
+        app = _make_app()
+        with app.test_request_context(
+            "/gallery", headers={"Host": "social.jpastack.com"}
+        ):
+            meta = page_seo_context()
+        website, person = meta["structured_data"]["@graph"]
+        self.assertEqual(website["@type"], "WebSite")
+        self.assertEqual(website["name"], "JPAStack")
+        self.assertEqual(website["url"], "https://social.jpastack.com/")
+        self.assertIn("Joshua Algadipe", website["alternateName"])
+        self.assertEqual(person["@type"], "Person")
+        self.assertEqual(person["name"], "Joshua Algadipe")
+
+    def test_structured_data_is_empty_for_noindex_pages(self):
+        app = _make_app()
+        with app.test_request_context(
+            "/add_portfolio_form", headers={"Host": "social.jpastack.com"}
+        ):
+            meta = page_seo_context("pages.add_portfolio_form")
+        self.assertEqual(meta["structured_data"], {})
+
+    def test_www_host_canonicalizes_to_configured_landing_domain(self):
+        app = _make_app()
+        with app.test_request_context("/", headers={"Host": "www.jpastack.com"}):
+            meta = page_seo_context("pages.index")
+        self.assertEqual(meta["canonical"], "https://jpastack.com/")
+        self.assertEqual(
+            meta["structured_data"]["@graph"][0]["url"], "https://jpastack.com/"
+        )
+
 
 class SitemapTests(unittest.TestCase):
     def test_professional_sitemap_lists_only_professional_pages(self):

@@ -2,6 +2,7 @@ from flask import request, url_for
 
 from app.domains import (
     PROFESSIONAL_PERSONAL_PATHS,
+    SITE_LANDING,
     SITE_PROFESSIONAL,
     SITE_SOCIAL,
     current_site,
@@ -12,8 +13,10 @@ from app.domains import (
 PROFESSIONAL = SITE_PROFESSIONAL
 SOCIAL = SITE_SOCIAL
 
-SITE_NAME = "Joshua Algadipe"
+SITE_NAME = "JPAStack"
 AUTHOR = "Joshua Algadipe"
+SITE_ALTERNATE_NAMES = ("Joshua Algadipe", "JPAStack Portfolio", "jpastack.com")
+SITE_JOB_TITLE = "Software Engineer"
 DEFAULT_OG_IMAGE = "images/1x1_the_eys_will_move_and_also_its_m.webp"
 DEFAULT_ROBOTS = "index,follow"
 NOINDEX_ROBOTS = "noindex,nofollow"
@@ -237,15 +240,31 @@ def resolve_page_seo(endpoint=None, site=None, overrides=None):
     return meta
 
 
+def _request_site_host(cfg):
+    try:
+        site = current_site(request.host)
+    except Exception:
+        return ""
+    if site == SITE_PROFESSIONAL:
+        return cfg.get("professional_domain") or cfg.get("landing_domain") or ""
+    if site == SITE_SOCIAL:
+        return cfg.get("social_domain") or cfg.get("landing_domain") or ""
+    if site == SITE_LANDING:
+        return cfg.get("landing_domain") or ""
+    return ""
+
+
 def _canonical_base(variant):
     try:
         cfg = get_domain_config()
     except Exception:
         cfg = {}
-    if variant == PROFESSIONAL:
-        host = cfg.get("professional_domain") or cfg.get("landing_domain") or ""
-    else:
-        host = cfg.get("social_domain") or cfg.get("landing_domain") or ""
+    host = _request_site_host(cfg)
+    if not host:
+        if variant == PROFESSIONAL:
+            host = cfg.get("professional_domain") or cfg.get("landing_domain") or ""
+        else:
+            host = cfg.get("social_domain") or cfg.get("landing_domain") or ""
     if host:
         return f"https://{host}"
     try:
@@ -263,6 +282,36 @@ def _absolute(variant, value):
     if text.startswith("/"):
         return f"{_canonical_base(variant)}{text}"
     return text
+
+
+def site_structured_data(meta):
+    if meta.get("robots") == NOINDEX_ROBOTS:
+        return {}
+    base = (_canonical_base(meta.get("site")) or "").rstrip("/")
+    if not base:
+        return {}
+    site_id = f"{base}/#website"
+    person_id = f"{base}/#person"
+    person = {
+        "@type": "Person",
+        "@id": person_id,
+        "name": AUTHOR,
+        "url": f"{base}/",
+        "jobTitle": SITE_JOB_TITLE,
+    }
+    image = meta.get("image")
+    if image:
+        person["image"] = image
+    website = {
+        "@type": "WebSite",
+        "@id": site_id,
+        "url": f"{base}/",
+        "name": SITE_NAME,
+        "alternateName": list(SITE_ALTERNATE_NAMES),
+        "inLanguage": "en",
+        "publisher": {"@id": person_id},
+    }
+    return {"@context": "https://schema.org", "@graph": [website, person]}
 
 
 def page_seo_context(endpoint=None, site=None, overrides=None):
@@ -283,6 +332,7 @@ def page_seo_context(endpoint=None, site=None, overrides=None):
         except Exception:
             image = ""
     meta["image"] = _absolute(meta["site"], image)
+    meta["structured_data"] = site_structured_data(meta)
     return meta
 
 

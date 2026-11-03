@@ -186,6 +186,14 @@ def landing_hosts(config=None):
     return hosts
 
 
+def _same_site_host(host, configured):
+    if not host or not configured:
+        return False
+    if host == configured:
+        return True
+    return host.removeprefix("www.") == configured.removeprefix("www.")
+
+
 def current_site(host=None):
     if host is None:
         if has_request_context():
@@ -196,13 +204,13 @@ def current_site(host=None):
     if not normalized:
         return SITE_UNKNOWN
     cfg = get_domain_config()
-    if cfg.get("professional_domain") and normalized == cfg["professional_domain"]:
+    if _same_site_host(normalized, cfg.get("professional_domain")):
         return SITE_PROFESSIONAL
-    if cfg.get("admin_domain") and normalized == cfg["admin_domain"]:
+    if _same_site_host(normalized, cfg.get("admin_domain")):
         return SITE_ADMIN
-    if cfg.get("social_domain") and normalized == cfg["social_domain"]:
+    if _same_site_host(normalized, cfg.get("social_domain")):
         return SITE_SOCIAL
-    if cfg.get("landing_domain") and normalized == cfg["landing_domain"]:
+    if _same_site_host(normalized, cfg.get("landing_domain")):
         return SITE_LANDING
     return SITE_UNKNOWN
 

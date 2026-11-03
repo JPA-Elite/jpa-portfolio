@@ -6,6 +6,7 @@
 {% if page_seo.canonical %}<link rel="canonical" href="{{ page_seo.canonical }}">
 {% endif %}<meta property="og:type" content="{{ page_seo.og_type }}">
 <meta property="og:site_name" content="{{ page_seo.site_name }}">
+<meta name="application-name" content="{{ page_seo.site_name }}">
 <meta property="og:title" content="{{ page_seo.title }}">
 <meta property="og:description" content="{{ page_seo.description }}">
 {% if page_seo.canonical %}<meta property="og:url" content="{{ page_seo.canonical }}">
@@ -14,4 +15,7 @@
 <meta name="twitter:title" content="{{ page_seo.title }}">
 <meta name="twitter:description" content="{{ page_seo.description }}">
 {% if page_seo.image %}<meta name="twitter:image" content="{{ page_seo.image }}">
+{% endif %}{% if page_seo.structured_data %}
+<script type="application/ld+json">{{ page_seo.structured_data | tojson }}</script>
 {% endif %}
+

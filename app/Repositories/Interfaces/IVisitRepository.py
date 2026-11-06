@@ -26,3 +26,7 @@ class IVisitRepository(ABC):
     def find_all_image_captures(self):
         pass
 
+    @abstractmethod
+    def get_device_breakdown(self, max_slices: int = 6):
+        pass
+

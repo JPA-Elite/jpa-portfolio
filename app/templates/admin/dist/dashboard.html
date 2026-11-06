@@ -109,6 +109,40 @@
     </div>
     <div class="row mt-3">
       <div class="col-12">
+        <div class="card shadow-sm mb-4 visitor-devices-card">
+          <div class="card-header d-flex flex-wrap justify-content-between align-items-center gap-2">
+            <div>
+              <h3 class="card-title mb-1">Visitor Devices</h3>
+              <p class="visitor-devices-subtitle mb-0">How your visitors reach you, by operating system</p>
+            </div>
+            <span class="visitor-devices-total" id="deviceBreakdownTotal">0 visits</span>
+          </div>
+          <div class="card-body">
+            <div class="visitor-devices-layout">
+              <div class="visitor-devices-chart-wrap" id="deviceBreakdownChart">
+                <svg class="visitor-devices-chart" viewBox="0 0 220 220" role="img"
+                  aria-label="Visitor device distribution">
+                  <circle class="visitor-devices-ring-bg" cx="110" cy="110" r="82"></circle>
+                  <g id="deviceDonutSegments"></g>
+                </svg>
+                <div class="visitor-devices-center">
+                  <strong id="deviceBreakdownTotalCount">0</strong>
+                  <span>total visits</span>
+                </div>
+              </div>
+              <div class="visitor-devices-details">
+                <ul class="visitor-devices-legend" id="deviceBreakdownLegend"></ul>
+                <p class="visitor-devices-empty" id="deviceBreakdownEmpty" hidden>
+                  No visitor device data yet. New visits will appear here.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row mt-3">
+      <div class="col-12">
         <div class="card shadow-sm mb-4">
           <div class="card-header d-flex flex-wrap justify-content-between align-items-center gap-2 admin-table-toolbar">
             <h3 class="card-title">Recent Activity</h3>

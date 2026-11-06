@@ -15,6 +15,10 @@ class IVlogCommentRepository(ABC):
         pass
 
     @abstractmethod
+    def count_comments_by_vlog_ids(self, vlog_ids: list[str]):
+        pass
+
+    @abstractmethod
     def add_comment(self, comment: VlogComment):
         pass
 

@@ -52,6 +52,137 @@ function formatSiteLabel(item) {
     return "Professional";
 }
 
+const DEVICE_CHART_COLORS = ["#6366f1", "#0ea5e9", "#10b981", "#f59e0b", "#ef4444", "#8b5cf6", "#64748b"];
+const DEVICE_CHART_RADIUS = 82;
+const DEVICE_CHART_CIRCUMFERENCE = 2 * Math.PI * DEVICE_CHART_RADIUS;
+
+function escapeHtml(value = "") {
+    return String(value).replace(/[&<>"']/g, (character) => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;",
+    }[character]));
+}
+
+function formatSharePercentage(share) {
+    const percentage = share * 100;
+    if (percentage > 0 && percentage < 10) return `${percentage.toFixed(1)}%`;
+    return `${Math.round(percentage)}%`;
+}
+
+function renderDeviceBreakdown(items) {
+    const segmentsGroup = document.getElementById("deviceDonutSegments");
+    const legend = document.getElementById("deviceBreakdownLegend");
+    const totalCount = document.getElementById("deviceBreakdownTotalCount");
+    const totalBadge = document.getElementById("deviceBreakdownTotal");
+    const emptyState = document.getElementById("deviceBreakdownEmpty");
+    const chart = document.getElementById("deviceBreakdownChart");
+
+    if (!segmentsGroup || !legend || !totalCount) return;
+
+    const rows = (Array.isArray(items) ? items : [])
+        .map((item) => ({
+            label: String(item?.label || "Other"),
+            count: Math.max(0, Number(item?.count || 0)),
+        }))
+        .filter((item) => item.count > 0);
+
+    const total = rows.reduce((sum, item) => sum + item.count, 0);
+    segmentsGroup.innerHTML = "";
+    legend.innerHTML = "";
+
+    if (!rows.length || total === 0) {
+        totalCount.textContent = "0";
+        if (totalBadge) totalBadge.textContent = "0 visits";
+        if (emptyState) emptyState.hidden = false;
+        if (chart) chart.classList.add("is-empty");
+        return;
+    }
+
+    if (emptyState) emptyState.hidden = true;
+    if (chart) chart.classList.remove("is-empty");
+    totalCount.textContent = total.toLocaleString();
+    if (totalBadge) totalBadge.textContent = `${total.toLocaleString()} ${total === 1 ? "visit" : "visits"}`;
+
+    const gap = rows.length > 1 ? Math.min(4, DEVICE_CHART_CIRCUMFERENCE * 0.008) : 0;
+    const segmentElements = [];
+    const legendElements = [];
+    let offset = 0;
+
+    rows.forEach((item, index) => {
+        const color = DEVICE_CHART_COLORS[index % DEVICE_CHART_COLORS.length];
+        const share = item.count / total;
+        const arcLength = Math.max(share * DEVICE_CHART_CIRCUMFERENCE - gap, 0.6);
+
+        const segment = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+        segment.setAttribute("cx", "110");
+        segment.setAttribute("cy", "110");
+        segment.setAttribute("r", String(DEVICE_CHART_RADIUS));
+        segment.setAttribute("transform", "rotate(-90 110 110)");
+        segment.setAttribute("stroke", color);
+        segment.setAttribute("stroke-dasharray", `0 ${DEVICE_CHART_CIRCUMFERENCE}`);
+        segment.setAttribute("stroke-dashoffset", String(-offset));
+        segment.setAttribute("tabindex", "0");
+        segment.setAttribute("role", "img");
+        segment.setAttribute(
+            "aria-label",
+            `${item.label}: ${formatSharePercentage(share)} (${item.count} visits)`
+        );
+        segment.classList.add("visitor-devices-segment");
+        segment.dataset.index = String(index);
+        segmentsGroup.appendChild(segment);
+        segmentElements.push(segment);
+
+        const legendItem = document.createElement("li");
+        legendItem.className = "visitor-devices-legend-item";
+        legendItem.dataset.index = String(index);
+        legendItem.tabIndex = 0;
+        legendItem.innerHTML = `
+            <span class="visitor-devices-swatch" style="--device-color:${color}"></span>
+            <span class="visitor-devices-legend-text">
+                <span class="visitor-devices-legend-label">${escapeHtml(item.label)}</span>
+                <span class="visitor-devices-legend-count">${item.count.toLocaleString()} ${item.count === 1 ? "visit" : "visits"}</span>
+            </span>
+            <span class="visitor-devices-legend-value">${formatSharePercentage(share)}</span>`;
+        legend.appendChild(legendItem);
+        legendElements.push(legendItem);
+
+        offset += share * DEVICE_CHART_CIRCUMFERENCE;
+
+        requestAnimationFrame(() => {
+            segment.setAttribute(
+                "stroke-dasharray",
+                `${arcLength} ${DEVICE_CHART_CIRCUMFERENCE - arcLength}`
+            );
+        });
+    });
+
+    const setActive = (activeIndex) => {
+        segmentElements.forEach((element, index) => {
+            element.classList.toggle("is-active", index === activeIndex);
+            element.classList.toggle("is-dimmed", activeIndex !== null && index !== activeIndex);
+        });
+        legendElements.forEach((element, index) => {
+            element.classList.toggle("is-active", index === activeIndex);
+            element.classList.toggle("is-dimmed", activeIndex !== null && index !== activeIndex);
+        });
+    };
+
+    const bindHighlight = (elements) => {
+        elements.forEach((element, index) => {
+            element.addEventListener("mouseenter", () => setActive(index));
+            element.addEventListener("mouseleave", () => setActive(null));
+            element.addEventListener("focus", () => setActive(index));
+            element.addEventListener("blur", () => setActive(null));
+        });
+    };
+
+    bindHighlight(segmentElements);
+    bindHighlight(legendElements);
+}
+
 const SEARCH_DEBOUNCE_MS = 300;
 
 document.addEventListener("DOMContentLoaded", async () => {
@@ -74,6 +205,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         animateCount(videoCount, 0, Number(summary?.total_video || 0), 700);
         animateCount(keyProjectCount, 0, Number(summary?.total_projects || 0), 700);
         animateCount(companyRoadmapCount, 0, Number(summary?.total_roadmaps || 0), 700);
+        renderDeviceBreakdown(summary?.device_breakdown);
         if (lastUpdated) {
             lastUpdated.textContent = formatTimestamp();
         }

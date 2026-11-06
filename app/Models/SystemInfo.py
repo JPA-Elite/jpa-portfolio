@@ -16,6 +16,7 @@ class SystemInfo:
         os=None,
         os_version=None,
         page=None,
+        site=None,
         timestamp=None,
         occurred_at=None,
         visit_date=None,
@@ -44,6 +45,7 @@ class SystemInfo:
         self.os = os
         self.os_version = os_version
         self.page = page
+        self.site = site
         self.timestamp = timestamp
         self.occurred_at = occurred_at
         self.image_capture = image_capture
@@ -70,6 +72,7 @@ class SystemInfo:
             "os": self.os,
             "os_version": self.os_version,
             "page": self.page,
+            "site": self.site,
             "timestamp": self.timestamp,
             "occurred_at": self.occurred_at,
             "visit_date": self.visit_date,
@@ -105,6 +108,7 @@ class SystemInfo:
             os=data.get("os"),
             os_version=data.get("os_version"),
             page=data.get("page"),
+            site=data.get("site"),
             timestamp=data.get("timestamp"),
             occurred_at=data.get("occurred_at"),
             visit_date=data.get("visit_date"),

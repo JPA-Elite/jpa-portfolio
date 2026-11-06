@@ -221,6 +221,15 @@ def is_admin_path(path):
     return path == "/admin" or path.startswith("/admin/")
 
 
+def page_site(path):
+    clean_path = "/" + str(path or "").strip("/")
+    if is_admin_path(clean_path):
+        return SITE_ADMIN
+    if clean_path in PROFESSIONAL_PERSONAL_PATHS:
+        return SITE_SOCIAL
+    return SITE_PROFESSIONAL
+
+
 def is_shared_path(path):
     if not path:
         return False

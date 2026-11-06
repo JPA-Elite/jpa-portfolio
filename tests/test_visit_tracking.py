@@ -104,7 +104,12 @@ class VisitTrackingRequestTests(unittest.TestCase):
         _args, kwargs = worker.call_args
         self.assertEqual(
             kwargs["args"],
-            ("/", "203.0.113.10", "visit-tracking-test-agent"),
+            (
+                "/",
+                "203.0.113.10",
+                "visit-tracking-test-agent",
+                app_module.current_site("jpastack.com"),
+            ),
         )
         self.assertTrue(kwargs["daemon"])
 

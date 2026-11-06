@@ -3,6 +3,7 @@ from app.Models.SystemInfo import SystemInfo
 from app.configurations import SortOrder
 from app.constants.messages import DISPLAY_RECORDS_DELETE_MSG
 from app.utils import delete_image_from_cloudinary
+from app.domains import SITE_ADMIN, SITE_PROFESSIONAL, SITE_SOCIAL, page_site
 
 class VisitService:
     def __init__(self, repository: IVisitRepository):
@@ -10,6 +11,9 @@ class VisitService:
 
     def get_paginated_system_info(self, page, per_page, order: SortOrder = SortOrder.DESC, search: str = ""):
         documents, total_docs = self.repository.get_paginated_documents(page, per_page, order, search)
+        for doc in documents:
+            if isinstance(doc, dict) and doc.get("site") not in (SITE_PROFESSIONAL, SITE_SOCIAL, SITE_ADMIN):
+                doc["site"] = page_site(doc.get("page"))
         system_info_list = [SystemInfo(**doc) for doc in documents]
         return system_info_list, total_docs
 

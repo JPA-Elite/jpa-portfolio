@@ -3,11 +3,23 @@ from app.Repositories.BaseRepository import BaseRepository
 from datetime import datetime
 from app.configurations import SortOrder
 from app.constants.db_collections import MongoCollections as mc
+from app.domains import PROFESSIONAL_PERSONAL_PATHS, SITE_SOCIAL, SITE_PROFESSIONAL, page_site
 import re
 
 class VisitRepository(IVisitRepository, BaseRepository):
     def __init__(self):
         super().__init__(mc.VISITORS)
+
+    def _site_search_conditions(self, needle: str):
+        lowered = str(needle or "").strip().lower()
+        if lowered == SITE_SOCIAL:
+            return [{"page": {"$in": list(PROFESSIONAL_PERSONAL_PATHS)}}]
+        if lowered == SITE_PROFESSIONAL:
+            return [{
+                "page": {"$nin": list(PROFESSIONAL_PERSONAL_PATHS)},
+                "site": {"$in": [None, SITE_PROFESSIONAL]},
+            }]
+        return []
 
     def _build_search_query(self, search: str = ""):
         needle = str(search or "").strip()
@@ -15,16 +27,16 @@ class VisitRepository(IVisitRepository, BaseRepository):
             return {}
         pattern = re.escape(needle)
         searchable_fields = (
-            "system", "device", "brand", "browser", "os", "page",
+            "system", "device", "brand", "browser", "os", "page", "site",
             "ip_address", "city", "region", "country", "location",
             "timestamp",
         )
-        return {
-            "$or": [
-                {field: {"$regex": pattern, "$options": "i"}}
-                for field in searchable_fields
-            ]
-        }
+        conditions = [
+            {field: {"$regex": pattern, "$options": "i"}}
+            for field in searchable_fields
+        ]
+        conditions.extend(self._site_search_conditions(needle))
+        return {"$or": conditions}
 
     def _legacy_paginated_documents(self, page, per_page, order: SortOrder, search: str = ""):
         all_documents = list(self.find())
@@ -40,13 +52,14 @@ class VisitRepository(IVisitRepository, BaseRepository):
         needle = str(search or "").strip().lower()
         if needle:
             searchable_fields = (
-                "system", "device", "brand", "browser", "os", "page",
+                "system", "device", "brand", "browser", "os", "page", "site",
                 "ip_address", "city", "region", "country", "location",
             )
             documents = [
                 doc for doc in documents
                 if needle in doc["timestamp"].strftime("%m/%d/%Y - %I:%M %p").lower()
                 or any(needle in str(doc.get(field) or "").lower() for field in searchable_fields)
+                or needle == page_site(doc.get("page"))
             ]
 
         sorted_documents = sorted(

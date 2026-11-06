@@ -404,12 +404,13 @@ TRACKED_VISIT_ENDPOINTS = frozenset({
 visit_tracker = PortfolioService(repository=PortfolioRepository())
 
 
-def _record_visit_in_background(page, user_ip, user_agent_string):
+def _record_visit_in_background(page, user_ip, user_agent_string, site=None):
     try:
         visit_tracker.record_visit(
             page=page,
             user_ip=user_ip,
             user_agent_string=user_agent_string,
+            site=site,
         )
     except Exception:
         pass
@@ -430,7 +431,7 @@ def record_page_visit():
         page = request.path
         worker = threading.Thread(
             target=_record_visit_in_background,
-            args=(page, user_ip, user_agent_string),
+            args=(page, user_ip, user_agent_string, current_site(request.host)),
             daemon=True,
         )
         worker.start()

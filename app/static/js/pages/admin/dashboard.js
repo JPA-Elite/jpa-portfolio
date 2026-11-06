@@ -40,6 +40,18 @@ function formatVisitTimestamp(item) {
     return item.timestamp || "-";
 }
 
+const SOCIAL_PAGE_PATHS = new Set(["/vlog", "/music", "/concern", "/donation", "/visitors"]);
+const KNOWN_SITES = new Set(["professional", "social", "admin"]);
+
+function formatSiteLabel(item) {
+    const site = String(item?.site || "").trim().toLowerCase();
+    if (KNOWN_SITES.has(site)) return site.charAt(0).toUpperCase() + site.slice(1);
+    const page = String(item?.page || "").trim().replace(/\/+$/, "") || "/";
+    if (page === "/admin" || page.startsWith("/admin/")) return "Admin";
+    if (SOCIAL_PAGE_PATHS.has(page)) return "Social";
+    return "Professional";
+}
+
 const SEARCH_DEBOUNCE_MS = 300;
 
 document.addEventListener("DOMContentLoaded", async () => {
@@ -294,7 +306,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             if (currentPage > totalPages()) currentPage = totalPages();
 
             if (total === 0) {
-                tableBody.innerHTML = '<tr><td colspan="10" class="text-center text-muted">No visit records found.</td></tr>';
+                tableBody.innerHTML = '<tr><td colspan="11" class="text-center text-muted">No visit records found.</td></tr>';
                 pageInfo.textContent = "";
                 prevBtn.disabled = true;
                 nextBtn.disabled = true;
@@ -319,6 +331,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                         <td>${item.device || "-"}</td>
                         <td>${item.browser || "-"}</td>
                         <td>${item.os || "-"}</td>
+                        <td>${formatSiteLabel(item)}</td>
                         <td>${item.page || "-"}</td>
                         <td>${ip}</td>
                         <td>${item.city || "-"}</td>
@@ -360,7 +373,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         async function loadVisits() {
             const token = ++requestToken;
-            tableBody.innerHTML = '<tr><td colspan="10" class="text-center">Loading...</td></tr>';
+            tableBody.innerHTML = '<tr><td colspan="11" class="text-center">Loading...</td></tr>';
             try {
                 const json = await dashboardService.fetchVisits({
                     page: currentPage,

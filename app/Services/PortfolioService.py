@@ -7,6 +7,7 @@ from datetime import datetime
 import pytz
 import requests
 from app.constants.messages import SYSTEM_INFO_ADD_MSG, VISIT_ALREADY_RECORDED_MSG
+from app.domains import SITE_ADMIN, SITE_PROFESSIONAL, SITE_SOCIAL, page_site
 
 class PortfolioService:
     def __init__(self, repository: IPortfolioRepository):
@@ -31,7 +32,7 @@ class PortfolioService:
         except Exception:
             return {"ip": ip, "city": "Unknown", "region": "Unknown", "country": "Unknown", "location": "Unknown"}
 
-    def record_visit(self, page, user_ip=None, user_agent_string=None):
+    def record_visit(self, page, user_ip=None, user_agent_string=None, site=None):
         try:
             if user_ip is None:
                 user_ip = self.get_client_ip()
@@ -64,6 +65,7 @@ class PortfolioService:
                 os=user_agent.os.family,
                 os_version=user_agent.os.version_string,
                 page=page,
+                site=site if site in (SITE_PROFESSIONAL, SITE_SOCIAL, SITE_ADMIN) else page_site(page),
                 timestamp=current_time.strftime("%m/%d/%Y - %I:%M %p"),
                 occurred_at=current_time.isoformat(),
                 visit_date=visit_date,

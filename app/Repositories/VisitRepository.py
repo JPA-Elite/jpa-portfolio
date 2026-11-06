@@ -6,6 +6,48 @@ from app.constants.db_collections import MongoCollections as mc
 from app.domains import PROFESSIONAL_PERSONAL_PATHS, SITE_SOCIAL, SITE_PROFESSIONAL, page_site
 import re
 
+_PLATFORM_LABELS = {
+    "": "Other",
+    "other": "Other",
+    "unknown": "Other",
+    "ios": "iOS",
+    "iphone": "iOS",
+    "ipad": "iOS",
+    "ipod": "iOS",
+    "mac": "macOS",
+    "macos": "macOS",
+    "mac os x": "macOS",
+    "macintosh": "macOS",
+    "chrome os": "ChromeOS",
+    "chromeos": "ChromeOS",
+    "windows": "Windows",
+    "android": "Android",
+    "linux": "Linux",
+    "ubuntu": "Linux",
+    "debian": "Linux",
+    "fedora": "Linux",
+}
+
+
+def _normalize_platform_label(value):
+    text = str(value or "").strip()
+    if not text:
+        return "Other"
+    lowered = text.lower()
+    if lowered in _PLATFORM_LABELS:
+        return _PLATFORM_LABELS[lowered]
+    if lowered.startswith("windows"):
+        return "Windows"
+    if lowered.startswith(("iphone", "ipad", "ipod")):
+        return "iOS"
+    if lowered.startswith("mac"):
+        return "macOS"
+    if lowered.startswith("android"):
+        return "Android"
+    if lowered.startswith("chrome"):
+        return "ChromeOS"
+    return text[:1].upper() + text[1:]
+
 class VisitRepository(IVisitRepository, BaseRepository):
     def __init__(self):
         super().__init__(mc.VISITORS)
@@ -107,6 +149,70 @@ class VisitRepository(IVisitRepository, BaseRepository):
             return list(cursor), total_docs
         except Exception:
             return self._legacy_paginated_documents(page, per_page, order, search)
+
+    def get_device_breakdown(self, max_slices: int = 6):
+        try:
+            max_slices = max(2, int(max_slices))
+        except (TypeError, ValueError):
+            max_slices = 6
+
+        platform_expression = {
+            "$let": {
+                "vars": {
+                    "os": {"$trim": {"input": {"$ifNull": ["$os", ""]}}},
+                    "device": {"$trim": {"input": {"$ifNull": ["$device", ""]}}},
+                },
+                "in": {
+                    "$cond": [
+                        {"$in": [{"$toLower": "$$os"}, ["", "other", "unknown"]]},
+                        {
+                            "$cond": [
+                                {"$in": [{"$toLower": "$$device"}, ["", "other", "unknown"]]},
+                                "Other",
+                                "$$device",
+                            ]
+                        },
+                        "$$os",
+                    ]
+                },
+            }
+        }
+
+        pipeline = [
+            {"$match": {"os": {"$not": {"$regex": "^other$", "$options": "i"}}}},
+            {"$group": {"_id": platform_expression, "count": {"$sum": 1}}},
+            {"$sort": {"count": -1}},
+        ]
+
+        try:
+            entries = list(self.aggregate(pipeline))
+        except Exception:
+            entries = []
+
+        merged = {}
+        for entry in entries:
+            label = _normalize_platform_label(entry.get("_id"))
+            try:
+                count = int(entry.get("count", 0) or 0)
+            except (TypeError, ValueError):
+                count = 0
+            if count <= 0:
+                continue
+            merged[label] = merged.get(label, 0) + count
+
+        ordered = [{"label": label, "count": count} for label, count in merged.items()]
+        ordered.sort(key=lambda item: item["count"], reverse=True)
+
+        if len(ordered) > max_slices:
+            head = [item for item in ordered[: max_slices - 1] if item["label"] != "Other"]
+            total = sum(item["count"] for item in ordered)
+            head_total = sum(item["count"] for item in head)
+            remainder = total - head_total
+            if remainder > 0:
+                head.append({"label": "Other", "count": remainder})
+            ordered = head
+
+        return ordered
 
     def delete_system_info_by_id(self, object_id):
         from bson import ObjectId

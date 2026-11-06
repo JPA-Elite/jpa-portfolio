@@ -27,6 +27,10 @@ test.describe("Admin dashboard", () => {
     await expect(page.locator("#activityPageInfo")).toHaveText("1-10 of 13");
     await expect(page.locator("#visitsTableBody tr")).toHaveCount(10);
     await expect(page.locator("#visitsPageInfo")).toHaveText("1-10 of 13");
+    await expect(page.locator("#deviceBreakdownTotalCount")).toHaveText("128");
+    await expect(page.locator("#deviceBreakdownLegend")).toContainText("Windows");
+    await expect(page.locator("#deviceBreakdownLegend")).toContainText("iOS");
+    await expect(page.locator("#deviceDonutSegments circle")).toHaveCount(6);
   });
 
   test("paginates recent activity records", async ({ page }) => {

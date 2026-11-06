@@ -7,6 +7,10 @@ class IBuiltAppLikeRepository(ABC):
         pass
 
     @abstractmethod
+    def get_dislikes_count(self, app_id: str):
+        pass
+
+    @abstractmethod
     def get_user_vote(self, app_id: str, ip_address: str):
         pass
 

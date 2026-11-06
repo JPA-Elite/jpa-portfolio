@@ -49,7 +49,7 @@ class ActivityLogRepository(IActivityLogRepository, BaseRepository):
             doc["_id"] = str(doc.get("_id"))
         return docs
 
-    def build_search_query(self, search: str = ""):
+    def _build_search_query(self, search: str = ""):
         needle = str(search or "").strip()
         if not needle:
             return {}
@@ -74,7 +74,7 @@ class ActivityLogRepository(IActivityLogRepository, BaseRepository):
         except (TypeError, ValueError):
             per_page = 10
         per_page = max(1, min(per_page, 100))
-        query = self.build_search_query(search)
+        query = self._build_search_query(search)
         total = int(self.count_documents(query))
         if total == 0:
             return [], 0

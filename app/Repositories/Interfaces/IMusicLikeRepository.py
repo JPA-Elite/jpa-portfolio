@@ -7,6 +7,10 @@ class IMusicLikeRepository(ABC):
         pass
 
     @abstractmethod
+    def get_dislikes_count(self, music_id: str):
+        pass
+
+    @abstractmethod
     def get_likes_counts_by_ids(self, music_ids: list[str], is_like: bool = True):
         pass
 

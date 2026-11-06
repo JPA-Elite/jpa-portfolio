@@ -7,6 +7,14 @@ class IVlogLikeRepository(ABC):
         pass
 
     @abstractmethod
+    def get_vlog_likes_counts_by_ids(self, vlog_ids: list[str]):
+        pass
+
+    @abstractmethod
+    def get_vlog_liked_states_by_ids_and_ip(self, vlog_ids: list[str], ip_address: str):
+        pass
+
+    @abstractmethod
     def get_vlog_likes_by_id_and_ip(self, vlog_id: str, ip_address: str, fields: dict = None):
         pass
 

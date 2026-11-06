@@ -168,6 +168,16 @@ class DashboardService:
             current_app.logger.debug("VisitService.count_visits unavailable; using zero counts")
             return {"visitor_total_count": 0, "bot_total_count": 0}
 
+    def _device_breakdown(self):
+        visit_repo = getattr(self.visit_service, "repository", None)
+        breakdown_fn = getattr(visit_repo, "get_device_breakdown", None)
+        if callable(breakdown_fn):
+            try:
+                return breakdown_fn()
+            except Exception:
+                current_app.logger.debug("Visit device breakdown unavailable", exc_info=True)
+        return []
+
     def get_summary(self, recent_limit: int = 0):
         try:
             try:
@@ -214,6 +224,7 @@ class DashboardService:
                 "total_video": int(video_total),
                 "total_projects": int(key_project_total),
                 "total_roadmaps": int(company_roadmap_total),
+                "device_breakdown": self._device_breakdown(),
                 "recent_activity": recent,
             }
         except Exception:

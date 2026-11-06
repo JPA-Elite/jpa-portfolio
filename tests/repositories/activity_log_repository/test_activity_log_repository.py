@@ -217,10 +217,10 @@ class ActivityLogRepositoryTests(unittest.TestCase):
         self.assertEqual(cursor.sort_calls[0][0], ([("_id", 1)],))
 
     def test_build_search_query_is_empty_for_blank_search(self):
-        self.assertEqual(self.repo.build_search_query("   "), {})
+        self.assertEqual(self.repo._build_search_query("   "), {})
 
     def test_build_search_query_escapes_regex_and_searches_all_fields(self):
-        query = self.repo.build_search_query("ad.min")
+        query = self.repo._build_search_query("ad.min")
 
         self.assertEqual(len(query["$or"]), 5)
         self.assertEqual(

@@ -869,6 +869,14 @@ export function handleAdminRequest(route, state, url) {
       total_video: state.video.length,
       total_projects: state.keyProjects.length,
       total_roadmaps: state.roadmaps.length,
+      device_breakdown: [
+        { label: "Windows", count: 52 },
+        { label: "iOS", count: 34 },
+        { label: "Android", count: 21 },
+        { label: "macOS", count: 13 },
+        { label: "Linux", count: 6 },
+        { label: "Other", count: 2 },
+      ],
     });
   }
 

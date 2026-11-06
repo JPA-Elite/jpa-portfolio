@@ -328,7 +328,7 @@ msgid "chat_education_reply"
 msgstr "My background includes hands-on internships and roles at TrustArc and Chronostep, plus a Business Intern experience. My resume highlights full-stack development, API security, and internal projects."
 
 msgid "chat_summary_reply"
-msgstr "I am a Software Engineer with 5+ years of experience, 12+ projects shipped, and 8 certifications — focused on Full Stack, API Security, Cloud-Native, and UI Engineering."
+msgstr "I am a Software Engineer with 3+ years of experience, 12+ projects shipped, and 8 certifications — focused on Full Stack, API Security, Cloud-Native, and UI Engineering."
 
 msgid "chat_about_reply"
 msgstr "I am a passionate software developer who builds user-friendly applications, loves learning new technologies, and is goal-oriented. I'm experienced across frontend, backend, cloud, and automation."

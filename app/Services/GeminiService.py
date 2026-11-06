@@ -1,3 +1,4 @@
+import json
 import os
 import re
 import time
@@ -17,15 +18,31 @@ GEMINI_FALLBACK_MODELS = [
 ]
 
 GEMINI_EXHAUSTED_TTL_SECONDS = 3600
+GEMINI_DEFAULT_TIMEOUT_SECONDS = 10
+GEMINI_TOTAL_BUDGET_SECONDS = 18
+GEMINI_MAX_OUTPUT_TOKENS = 600
+
+
+def _env_int(name, default):
+    try:
+        return int(os.getenv(name, default))
+    except (TypeError, ValueError):
+        return default
 
 
 class GeminiService:
-    def __init__(self, api_key=None, api_keys=None, model=None, timeout=25, fallback_models=None):
+    def __init__(self, api_key=None, api_keys=None, model=None, timeout=None, fallback_models=None, total_budget=None):
         self._api_keys = api_keys
         if api_key is not None:
             self._api_keys = [api_key]
         self._model = model
-        self.timeout = timeout
+        self.timeout = timeout if timeout is not None else _env_int(
+            "GEMINI_TIMEOUT_SECONDS", GEMINI_DEFAULT_TIMEOUT_SECONDS
+        )
+        self.total_budget = total_budget if total_budget is not None else _env_int(
+            "GEMINI_TOTAL_BUDGET_SECONDS", GEMINI_TOTAL_BUDGET_SECONDS
+        )
+        self.max_output_tokens = _env_int("GEMINI_MAX_OUTPUT_TOKENS", GEMINI_MAX_OUTPUT_TOKENS)
         self.fallback_models = list(fallback_models or GEMINI_FALLBACK_MODELS)
         self._working_model = None
         self._working_key = None
@@ -74,9 +91,42 @@ class GeminiService:
         text = text.strip()
         if GEMINI_UNRELATED_MARKER in text.upper():
             return None
-        if re.sub(r"[^a-z]+", "", text.lower()) in {"related", "unrelated", "notrelated", "notunrelated"}:
+        if self._is_related_marker(text):
             return None
         return text
+
+    def stream_answer(self, question, context, history=None):
+        if not self.is_available():
+            return
+        if not (question or "").strip():
+            return
+        prompt = self._build_prompt(context, question, history=history)
+        pending = ""
+        for text in self._generate_stream(prompt):
+            if not text:
+                continue
+            if pending is None:
+                yield text
+                continue
+            pending += text
+            if len(pending) < len(GEMINI_UNRELATED_MARKER) + 1:
+                continue
+            if GEMINI_UNRELATED_MARKER in pending.upper() or self._is_related_marker(pending):
+                return
+            yield pending
+            pending = None
+        if pending is not None and pending.strip():
+            if GEMINI_UNRELATED_MARKER in pending.upper() or self._is_related_marker(pending):
+                return
+            yield pending
+
+    def _is_related_marker(self, text):
+        return re.sub(r"[^a-z]+", "", (text or "").lower()) in {
+            "related",
+            "unrelated",
+            "notrelated",
+            "notunrelated",
+        }
 
     def _build_prompt(self, context, question, history=None):
         history_block = ""
@@ -174,14 +224,99 @@ class GeminiService:
         except Exception:
             return None
 
+    def _iter_sse_text(self, response):
+        for line in response.iter_lines(decode_unicode=True):
+            if not line:
+                continue
+            line = line.strip()
+            if line.startswith("data:"):
+                line = line[5:].strip()
+            if not line or line == "[DONE]":
+                continue
+            try:
+                data = json.loads(line)
+            except Exception:
+                continue
+            candidates = data.get("candidates") or []
+            if not candidates:
+                continue
+            parts = (candidates[0].get("content") or {}).get("parts") or []
+            for part in parts:
+                if part.get("thought"):
+                    continue
+                text = part.get("text")
+                if text:
+                    yield text
+
+    def _generate_stream(self, prompt):
+        payload = {
+            "contents": [{"parts": [{"text": prompt}]}],
+            "generationConfig": {
+                "temperature": 0.4,
+                "maxOutputTokens": self.max_output_tokens,
+            },
+        }
+        self._prune_exhausted()
+        deadline = time.time() + self.total_budget
+        for model in self._model_chain():
+            for key in self._key_chain():
+                if time.time() >= deadline:
+                    return
+                combo = (key, model)
+                if combo in self._exhausted:
+                    continue
+                url = f"{GEMINI_API_BASE}/{model}:streamGenerateContent"
+                try:
+                    response = requests.post(
+                        url,
+                        params={"key": key, "alt": "sse"},
+                        json=payload,
+                        timeout=self.timeout,
+                        stream=True,
+                    )
+                except Exception:
+                    continue
+                if response.status_code == 200:
+                    self._working_model = model
+                    self._working_key = key
+                    produced = False
+                    try:
+                        for text in self._iter_sse_text(response):
+                            produced = True
+                            yield text
+                    except Exception:
+                        if produced:
+                            return
+                    finally:
+                        try:
+                            response.close()
+                        except Exception:
+                            pass
+                    if produced:
+                        return
+                    continue
+                if response.status_code == 429:
+                    self._exhausted[combo] = time.time()
+                    continue
+                if 400 <= response.status_code < 500:
+                    break
+                if not self._should_try_next(response):
+                    return
+
     def _generate(self, prompt):
         payload = {
             "contents": [{"parts": [{"text": prompt}]}],
-            "generationConfig": {"temperature": 0.4, "maxOutputTokens": 2048},
+            "generationConfig": {
+                "temperature": 0.4,
+                "maxOutputTokens": self.max_output_tokens,
+            },
         }
         self._prune_exhausted()
-        for key in self._key_chain():
-            for model in self._model_chain():
+        deadline = time.time() + self.total_budget
+        for model in self._model_chain():
+            for key in self._key_chain():
+                if time.time() >= deadline:
+                    return None
                 combo = (key, model)
                 if combo in self._exhausted:
                     continue

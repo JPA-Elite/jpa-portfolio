@@ -38,7 +38,7 @@ def _fake_gettext(key):
         "chat_developers_reply": "Made by me with J-AlDev and Brocode Devs.",
         "chat_certifications_reply": "Certs: Angular, Java, SQL, Flask.",
         "chat_education_reply": "Education: TrustArc and Chronostep.",
-        "chat_summary_reply": "5+ years, 12+ projects, 8 certifications.",
+        "chat_summary_reply": "3+ years, 12+ projects, 8 certifications.",
         "chat_about_reply": "I am a passionate software developer.",
         "chat_donation_reply": "Donate via GCash on the Donation page.",
         "chat_booking_reply": "Book: Website Development, Web Apps, and more.",

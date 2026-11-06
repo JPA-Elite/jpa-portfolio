@@ -328,7 +328,7 @@ msgid "chat_education_reply"
 msgstr "Mon parcours comprend des stages pratiques et des rôles chez TrustArc et Chronostep, ainsi qu'une expérience de Business Intern. Mon CV met en avant le développement full-stack, la sécurité des API et les projets internes."
 
 msgid "chat_summary_reply"
-msgstr "Je suis ingénieur logiciel avec plus de 5 ans d'expérience, 12+ projets livrés et 8 certifications — spécialisé en Full Stack, Sécurité des API, Cloud-Native et Ingénierie UI."
+msgstr "Je suis ingénieur logiciel avec plus de 3 ans d'expérience, 12+ projets livrés et 8 certifications — spécialisé en Full Stack, Sécurité des API, Cloud-Native et Ingénierie UI."
 
 msgid "chat_about_reply"
 msgstr "Je suis un développeur passionné qui crée des applications conviviales, aime apprendre de nouvelles technologies et est orienté objectifs. Je maîtrise le frontend, le backend, le cloud et l'automatisation."

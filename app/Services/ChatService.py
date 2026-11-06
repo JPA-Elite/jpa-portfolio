@@ -19,6 +19,25 @@ CHAT_COVERAGE_THRESHOLD = 0.5
 CHAT_FUZZY_WORD_RATIO = 0.8
 CHAT_KB_GUARD_THRESHOLD = 0.62
 
+CHAT_AI_KB_CHAR_BUDGET = 18000
+CHAT_AI_KB_MAX_SECTIONS = 24
+CHAT_AI_ALWAYS_KEYS = {"name", "age", "job", "skills", "contact", "education", "booking"}
+CHAT_AI_ALWAYS_HEADINGS = {
+    "What is your name?",
+    "What is your age?",
+    "When is your birthday?",
+    "What is your job?",
+    "Tell me about yourself",
+    "Summary",
+    "Skills",
+    "Education",
+    "Certifications",
+    "Contact",
+    "Booking",
+    "What pages does this website have?",
+    "What is this chat assistant?",
+}
+
 DYNAMIC_KB_QUESTIONS = {"What is your job?"}
 
 CHAT_STOPWORDS = {
@@ -632,13 +651,7 @@ class ChatService:
         pool = present or entries
         return max(pool, key=lambda entry: entry.get("sort_order") or 0)
 
-    def _current_company_reply(self):
-        if self.company_roadmap_service is None:
-            return None
-        try:
-            items = self.company_roadmap_service.get_active_company_roadmaps()
-        except Exception:
-            return None
+    def _company_reply_from(self, items):
         entries = [self._as_dict(item) for item in (items or [])]
         current = self._current_roadmap_entry(entries)
         if not current:
@@ -648,6 +661,15 @@ class ChatService:
         if not role or not company:
             return None
         return gettext("chat_current_role_reply").format(role=role, company=company)
+
+    def _current_company_reply(self):
+        if self.company_roadmap_service is None:
+            return None
+        try:
+            items = self.company_roadmap_service.get_active_company_roadmaps()
+        except Exception:
+            return None
+        return self._company_reply_from(items)
 
     def _kb_match(self, expanded):
         qa = self.get_qa_data()
@@ -669,6 +691,46 @@ class ChatService:
         return False
 
     def resolve(self, message, qa_data=None, session_id=None):
+        prepared = self._prepare_resolution(message, qa_data, session_id)
+        if isinstance(prepared, dict):
+            return prepared
+        message, normalized, expanded, work_restricted = prepared
+
+        ai_answer = None
+        if not self._blocks_ai(expanded, work_restricted):
+            ai_answer = self._ai_chat_answer(message)
+        if ai_answer:
+            return self._reply(ai_answer)
+
+        return self._resolve_after_ai(message, normalized, expanded, work_restricted, qa_data)
+
+    def resolve_stream(self, message, qa_data=None, session_id=None):
+        prepared = self._prepare_resolution(message, qa_data, session_id)
+        if isinstance(prepared, dict):
+            yield {"type": "final", "result": prepared}
+            return
+        message, normalized, expanded, work_restricted = prepared
+
+        answer = ""
+        if not self._blocks_ai(expanded, work_restricted):
+            for token in self._ai_chat_answer_stream(message):
+                answer += token
+                yield {"type": "token", "text": token}
+        answer = answer.strip()
+        if answer:
+            yield {"type": "final", "result": self._reply(answer)}
+            return
+        yield {
+            "type": "final",
+            "result": self._resolve_after_ai(message, normalized, expanded, work_restricted, qa_data),
+        }
+
+    def _blocks_ai(self, expanded, work_restricted):
+        if not work_restricted:
+            return False
+        return any(self._contains_word(expanded, word) for word in ("she", "her", "hers", "herself"))
+
+    def _prepare_resolution(self, message, qa_data=None, session_id=None):
         message = (message or "").strip()
         self._session_id = session_id or None
         self._last_topic = None
@@ -762,13 +824,9 @@ class ChatService:
         if self._is_unrelated(normalized, expanded):
             return self._reply(gettext("chat_unrelated_reply"))
 
-        if work_restricted and any(self._contains_word(expanded, word) for word in ("she", "her", "hers", "herself")):
-            ai_answer = None
-        else:
-            ai_answer = self._ai_chat_answer(message)
-        if ai_answer:
-            return self._reply(ai_answer)
+        return message, normalized, expanded, work_restricted
 
+    def _resolve_after_ai(self, message, normalized, expanded, work_restricted, qa_data):
         girlfriend_reply = self._resolve_girlfriend(normalized)
         if girlfriend_reply:
             return self._reply(girlfriend_reply)
@@ -1135,7 +1193,7 @@ class ChatService:
                 self.gemini_service = candidate
         return self.gemini_service
 
-    def _ai_context(self):
+    def _ai_context(self, question=None):
         base = self._site_base_url()
         try:
             professional_site = self._is_professional_site()
@@ -1185,8 +1243,12 @@ class ChatService:
         ]
         locale = self._current_locale()
         age = str(self._age())
-        dynamic_reply = self._current_company_reply()
-        for section in self._knowledge_base().sections():
+        try:
+            roadmaps, _ = self._fetch_roadmaps()
+        except Exception:
+            roadmaps = []
+        dynamic_reply = self._company_reply_from(roadmaps)
+        for section in self._ai_kb_sections(question):
             loc = (section.get("localized") or {}).get(locale) or {}
             heading = loc.get("heading") or section["heading"]
             body = loc.get("body") or section.get("body")
@@ -1196,7 +1258,7 @@ class ChatService:
                 parts.append(f"Q: {heading}\nA: {body.replace('{age}', age)}")
         for topic, fetcher in (
             ("projects", self._fetch_projects),
-            ("experience", self._fetch_roadmaps),
+            ("experience", lambda: (roadmaps, [])),
             ("gallery", self._fetch_gallery),
             ("vlog", self._fetch_vlog),
             ("music", self._fetch_music),
@@ -1209,10 +1271,6 @@ class ChatService:
                 record = self._item_record(topic, item)
                 if record.get("detail"):
                     parts.append(f"{topic.upper()}: {record['detail']}")
-        try:
-            roadmaps, _ = self._fetch_roadmaps()
-        except Exception:
-            roadmaps = []
         for entry in (roadmaps or [])[:10]:
             company = str(entry.get("company_name") or "").strip()
             if not company:
@@ -1240,6 +1298,56 @@ class ChatService:
         if company_rules:
             parts.append(company_rules)
         return "\n".join(parts)
+
+    def _ai_kb_sections(self, question=None):
+        sections = self._knowledge_base().sections()
+        if not question:
+            return sections
+        locale = self._current_locale()
+        tokens = set(self._normalize_tokens(question))
+        selected = []
+        remaining = CHAT_AI_KB_CHAR_BUDGET
+        used = set()
+        for section in sections:
+            heading = section.get("heading") or ""
+            loc = (section.get("localized") or {}).get(locale) or {}
+            localized_heading = loc.get("heading") or heading
+            if heading in CHAT_AI_ALWAYS_HEADINGS or section.get("key") in CHAT_AI_ALWAYS_KEYS or localized_heading in CHAT_AI_ALWAYS_HEADINGS:
+                selected.append(section)
+                used.add(id(section))
+                remaining -= len(section.get("body") or "")
+        if not tokens or remaining <= 0 or len(selected) >= CHAT_AI_KB_MAX_SECTIONS:
+            return selected
+        ranked = []
+        for section in sections:
+            if id(section) in used:
+                continue
+            score = self._ai_kb_score(section, tokens, locale)
+            if score:
+                ranked.append((score, section))
+        ranked.sort(key=lambda item: item[0], reverse=True)
+        for score, section in ranked:
+            if len(selected) >= CHAT_AI_KB_MAX_SECTIONS or remaining <= 0:
+                break
+            selected.append(section)
+            remaining -= len(section.get("body") or "")
+        return selected
+
+    def _ai_kb_score(self, section, tokens, locale):
+        if not tokens:
+            return 0
+        loc = (section.get("localized") or {}).get(locale) or {}
+        text = " ".join(
+            [
+                str(section.get("heading") or ""),
+                str(section.get("body") or ""),
+                " ".join(section.get("aliases") or []),
+                str(loc.get("heading") or ""),
+                str(loc.get("body") or ""),
+                " ".join(loc.get("aliases") or []),
+            ]
+        ).lower()
+        return len(tokens & set(self._normalize_tokens(text)))
 
     def _company_rules_text(self, roadmaps):
         entries = [self._as_dict(item) for item in (roadmaps or [])]
@@ -1290,7 +1398,7 @@ class ChatService:
         if gemini is None:
             return None
         try:
-            context = self._ai_context()
+            context = self._ai_context(message)
         except Exception:
             context = ""
         try:
@@ -1301,6 +1409,31 @@ class ChatService:
             return gemini.answer(message, context, history=history)
         except Exception:
             return None
+
+    def _ai_chat_answer_stream(self, message):
+        gemini = self._get_gemini_service()
+        if gemini is None:
+            return
+        stream = getattr(gemini, "stream_answer", None)
+        if stream is None:
+            answer = self._ai_chat_answer(message)
+            if answer:
+                yield answer
+            return
+        try:
+            context = self._ai_context(message)
+        except Exception:
+            context = ""
+        try:
+            history = self._ai_history(message)
+        except Exception:
+            history = []
+        try:
+            for token in stream(message, context, history=history):
+                if token:
+                    yield token
+        except Exception:
+            return
 
     def _contains_word(self, text, word):
         return re.search(rf"\b{re.escape(word)}\b", text) is not None

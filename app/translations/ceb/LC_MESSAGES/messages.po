@@ -328,7 +328,7 @@ msgid "chat_education_reply"
 msgstr "Ang akong background naglakip sa hands-on nga mga internship ug mga tahas sa TrustArc ug Chronostep, ug usa ka Business Intern nga kasinatian. Ang akong resume nagpakita sa full-stack development, API security, ug internal nga mga proyekto."
 
 msgid "chat_summary_reply"
-msgstr "Ako usa ka Software Engineer nga may 5+ ka tuig nga kasinatian, 12+ ka proyekto nga nahuman, ug 8 ka sertipikasyon — nakapokus sa Full Stack, API Security, Cloud-Native, ug UI Engineering."
+msgstr "Ako usa ka Software Engineer nga may 3+ ka tuig nga kasinatian, 12+ ka proyekto nga nahuman, ug 8 ka sertipikasyon — nakapokus sa Full Stack, API Security, Cloud-Native, ug UI Engineering."
 
 msgid "chat_about_reply"
 msgstr "Ako usa ka passionate nga software developer nga nagbuhat og user-friendly nga mga aplikasyon, ganahan magtuon og bag-ong teknolohiya, ug goal-oriented. Na-expose ako sa frontend, backend, cloud, ug automation."

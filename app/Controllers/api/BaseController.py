@@ -1,4 +1,5 @@
 from flask import redirect, stream_with_context, url_for, request, jsonify, Response
+import json
 import requests
 from app.Services.PortfolioService import PortfolioService
 from app.Services.VisitService import VisitService
@@ -95,6 +96,36 @@ def chat_route():
     result = chat_service.resolve(message, session_id=session_id)
 
     return jsonify(result)
+
+def _sse_event(payload):
+    return f"data: {json.dumps(payload, ensure_ascii=False)}\n\n"
+
+def chat_stream_route():
+    form = BaseControllerRequest()
+    data, error_response, status_code = form.validated()
+    if error_response:
+        return error_response, status_code
+
+    message = data["message"]
+    session_id = data.get("session_id") or None
+
+    def generate():
+        yield _sse_event({"type": "start"})
+        try:
+            for event in chat_service.resolve_stream(message, session_id=session_id):
+                yield _sse_event(event)
+        except Exception:
+            yield _sse_event({"type": "error"})
+        yield "data: [DONE]\n\n"
+
+    return Response(
+        stream_with_context(generate()),
+        mimetype="text/event-stream",
+        headers={
+            "Cache-Control": "no-cache, no-transform",
+            "X-Accel-Buffering": "no",
+        },
+    )
 
 def download_song_route():
     form = BaseControllerRequest()

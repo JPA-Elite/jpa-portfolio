@@ -53,7 +53,8 @@ const cacheMessage = 'chatMessagesCache';
 const cacheChatboxVisible = 'chatboxVisible';
 const cacheChatOptionsCollapsed = 'chatOptionsCollapsed';
 const cacheChatSession = 'chatSessionId';
-const BOT_TYPING_DELAY_MS = 320;
+const CHAT_TYPING_TICK_MS = 16;
+const CHAT_TYPING_CHARS_PER_TICK = 3;
 const CHATBOX_ANIM_MS = 550;
 const cacheChatMuted = 'chatMuted';
 const cacheChatMaximized = 'chatMaximized';
@@ -65,6 +66,7 @@ let chatMuted = localStorage.getItem(cacheChatMuted) === 'true';
 let chatRequestPending = false;
 let chatTypingActive = null;
 let chatTypingToken = 0;
+let chatStreamController = null;
 
 function isChatSpeaking() {
     try {
@@ -77,7 +79,7 @@ function isChatSpeaking() {
 function updateChatStopButton() {
     const stopButton = document.getElementById("stopChat");
     const sendButton = document.getElementById("sendChat");
-    const busy = Boolean(chatTypingActive) || isChatSpeaking();
+    const busy = Boolean(chatTypingActive) || isChatSpeaking() || Boolean(chatStreamController);
     if (stopButton) {
         if (busy) stopButton.removeAttribute("hidden");
         else stopButton.setAttribute("hidden", "");
@@ -98,6 +100,11 @@ function stopChatResponse() {
     const active = chatTypingActive;
     cancelChatTyping();
     stopChatSpeech();
+    if (chatStreamController) {
+        chatStreamController.abort();
+        chatStreamController = null;
+    }
+    updateChatStopButton();
     if (active && active.element) {
         active.element.textContent = active.text;
         linkifyChatMessage(active.element);
@@ -387,10 +394,6 @@ function removeTypingIndicator() {
     typingIndicatorRow = null;
 }
 
-function wait(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-}
-
 function initializeChatOptions(qaArray = []) {
     const chatOptions = document.getElementById("chatOptions");
     if (!chatOptions) return;
@@ -439,7 +442,28 @@ function toggleChatbox() {
     }
 }
 
-async function fetchChatAnswer(message) {
+async function fetchChatAnswer(message, onToken) {
+    let streamed = false;
+    const forward = (text) => {
+        streamed = true;
+        if (typeof onToken === "function") onToken(text);
+    };
+    const controller = typeof AbortController === "function" ? new AbortController() : null;
+    chatStreamController = controller;
+    updateChatStopButton();
+
+    try {
+        const data = await chatService.streamMessage(message, getChatSessionId(), forward, controller?.signal);
+        if (data?.answer) return data.answer;
+    } catch (error) {
+        console.error("Failed to stream chat answer:", error);
+    } finally {
+        if (chatStreamController === controller) chatStreamController = null;
+        updateChatStopButton();
+    }
+
+    if (streamed) return null;
+
     try {
         const data = await chatService.sendMessage(message, getChatSessionId());
         return data?.answer || null;
@@ -447,6 +471,53 @@ async function fetchChatAnswer(message) {
         console.error("Failed to fetch chat answer:", error);
         return null;
     }
+}
+
+function startStreamingMessage() {
+    const chatMessages = document.getElementById("chatMessages");
+    if (!chatMessages) return null;
+    const timestamp = Date.now();
+    const { row, bubble } = createMessageRow("bot", timestamp);
+    bubble.style.color = "black";
+    chatMessages.appendChild(row);
+    hideHelpCardIfHasMessages();
+    scrollChatToBottom("auto");
+    return { row, bubble, timestamp, text: "" };
+}
+
+async function runBotReply(message) {
+    showTypingIndicator();
+    let stream = null;
+
+    const onToken = (text) => {
+        if (!stream) {
+            stream = startStreamingMessage();
+            removeTypingIndicator();
+        }
+        if (!stream) return;
+        stream.text += text;
+        stream.bubble.textContent = stream.text;
+        const chatMessages = document.getElementById("chatMessages");
+        if (chatMessages) chatMessages.scrollTop = chatMessages.scrollHeight;
+    };
+
+    const answer = await fetchChatAnswer(message, onToken);
+    removeTypingIndicator();
+
+    const finalText = (answer || stream?.text || "").trim();
+    if (!finalText) return;
+
+    const botTimestamp = stream?.timestamp || Date.now();
+    if (stream) {
+        stream.bubble.textContent = finalText;
+        linkifyChatMessage(stream.bubble);
+        scrollChatToBottom("smooth");
+    } else {
+        displayMessage(finalText, "", "black", true, { role: "bot", timestamp: botTimestamp });
+    }
+
+    speakChatAnswer(finalText);
+    cacheMessages(finalText, "bot", botTimestamp);
 }
 
 async function sendMessage() {
@@ -464,17 +535,7 @@ async function sendMessage() {
         cacheMessages(message, "user", userTimestamp);
         input.value = "";
 
-        const answer = await fetchChatAnswer(message);
-
-        if (answer) {
-            showTypingIndicator();
-            speakChatAnswer(answer);
-            await wait(BOT_TYPING_DELAY_MS);
-            removeTypingIndicator();
-            const botTimestamp = Date.now();
-            displayMessage(answer, "", "black", true, { role: "bot", timestamp: botTimestamp });
-            cacheMessages(answer, "bot", botTimestamp);
-        }
+        await runBotReply(message);
 
         setChatComposerLoading(false);
         chatRequestPending = false;
@@ -492,18 +553,7 @@ async function sendPredefinedMessage(question, data = []) {
     displayMessage(question, "transparent", "black", true, { role: "user", timestamp: userTimestamp });
     cacheMessages(question, "user", userTimestamp);
 
-    const answer = await fetchChatAnswer(question);
-
-    if (answer) {
-        showTypingIndicator();
-        speakChatAnswer(answer);
-        await wait(BOT_TYPING_DELAY_MS);
-        removeTypingIndicator();
-
-        const botTimestamp = Date.now();
-        displayMessage(answer, "", "black", true, { role: "bot", timestamp: botTimestamp });
-        cacheMessages(answer, "bot", botTimestamp);
-    }
+    await runBotReply(question);
 
     setChatComposerLoading(false);
     chatRequestPending = false;
@@ -598,13 +648,13 @@ function addTypingEffect(element, text, typeEffect = true) {
     function typeNextCharacter() {
         if (token !== chatTypingToken) return;
         if (index < text.length) {
-            element.textContent += text.charAt(index);
-            index++;
+            index = Math.min(index + CHAT_TYPING_CHARS_PER_TICK, text.length);
+            element.textContent = text.slice(0, index);
             const chatMessages = document.getElementById("chatMessages");
             if (chatMessages) {
-                scrollChatToBottom("auto");
+                chatMessages.scrollTop = chatMessages.scrollHeight;
             }
-            setTimeout(typeNextCharacter, 50);
+            setTimeout(typeNextCharacter, CHAT_TYPING_TICK_MS);
         } else {
             const active = chatTypingActive;
             chatTypingActive = null;

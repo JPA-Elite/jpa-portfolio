@@ -395,7 +395,7 @@ class ChatServiceIntentTests(unittest.TestCase):
         fake_request = MagicMock()
         fake_request.host = "professional.jpastack.local"
         with patch.object(flask, "request", fake_request), \
-             patch.dict(os.environ, {"PROFESSIONAL_DOMAIN": "professional.jpastack.local"}):
+            patch.dict(os.environ, {"PROFESSIONAL_DOMAIN": "professional.jpastack.local"}):
             result = self._resolve("what is the survey link")
         self.assertIn("https://forms.gle/5UqVgzzxgkJS11Qj9", result["answer"])
 
@@ -404,7 +404,7 @@ class ChatServiceAiTests(unittest.TestCase):
     def _resolve(self, message, gemini=None):
         service = ChatService(gemini_service=gemini)
         with patch("app.Services.ChatService.gettext", side_effect=_fake_gettext), \
-             patch("app.Services.ChatService.ChatService._get_gemini_service", new=lambda self: self.gemini_service):
+            patch("app.Services.ChatService.ChatService._get_gemini_service", new=lambda self: self.gemini_service):
             return service.resolve(message, QA)
 
     def test_ai_answers_when_rules_cannot_match(self):

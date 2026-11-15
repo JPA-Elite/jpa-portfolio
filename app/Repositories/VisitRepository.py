@@ -286,4 +286,3 @@ class VisitRepository(IVisitRepository, BaseRepository):
         except TypeError:
             docs = self.find({})
         return [doc.get("image_capture") for doc in docs if doc.get("image_capture")]
-

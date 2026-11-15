@@ -43,4 +43,3 @@ def delete_login_attempt_route(login_attempt_id):
         return jsonify({"message": LOGIN_ATTEMPT_DELETE_MSG}), 200
     else:
         return jsonify({"message": LOGIN_ATTEMPT_NOT_FOUND_ERROR}), 404
-

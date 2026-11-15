@@ -125,4 +125,3 @@ class VlogLikeRepository(IVlogLikeRepository, BaseRepository):
             }
         )
         return result.modified_count > 0
-

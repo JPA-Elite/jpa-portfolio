@@ -89,4 +89,3 @@ class GalleryRepository(IGalleryRepository, BaseRepository):
         results = list(self.aggregate(pipeline))
         tags = [r["_id"] for r in results]
         return tags
-

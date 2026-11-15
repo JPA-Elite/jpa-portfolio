@@ -70,4 +70,3 @@ class VlogLikeService:
             "like": True,
             "created": True
         }
-

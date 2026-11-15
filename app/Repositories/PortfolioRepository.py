@@ -18,4 +18,3 @@ class PortfolioRepository(IPortfolioRepository, BaseRepository):
             "page": page,
             "visit_date": visit_date,
         })
-

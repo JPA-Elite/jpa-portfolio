@@ -48,4 +48,3 @@ class CompanyRoadmapServiceI18nTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
-

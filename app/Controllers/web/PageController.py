@@ -456,4 +456,3 @@ def is_philippines():
         print(f"GeoIP error: {e}")
 
         return True
-

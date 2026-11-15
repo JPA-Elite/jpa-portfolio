@@ -615,4 +615,3 @@ window.addGallery = addGallery;
 window.updateGallery = updateGallery;
 window.deleteGallery = deleteGallery;
 window.playGalleryPreview = playGalleryPreview;
-

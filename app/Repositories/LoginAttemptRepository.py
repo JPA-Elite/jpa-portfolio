@@ -113,4 +113,3 @@ class LoginAttemptRepository(ILoginAttemptRepository, BaseRepository):
 
         result = self.delete_one(query)
         return result.deleted_count > 0
-

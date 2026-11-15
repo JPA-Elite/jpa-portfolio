@@ -1452,7 +1452,6 @@ audioPlayer.addEventListener("ended", () => {
 const volumeSlider = document.getElementById("volumeSlider");
 volumeSlider.addEventListener("input", (e) => updateVolume(e.target.value));
 
-
 function toggleSidebar() {
     var sidebar = document.getElementById("sidebar");
     var toggleButton = document.getElementById("navbarToggle");
@@ -1498,7 +1497,6 @@ if (mobileMediaDropdown && mobileMediaToggle) {
         mobileMediaDropdown.classList.toggle("is-open");
     });
 }
-
 
 const desktopMediaDropdown = document.querySelector(".media-dropdown");
 const desktopMediaTrigger = document.querySelector(".media-dropdown-trigger");
@@ -1655,7 +1653,6 @@ function drawVisualizer() {
 
 function startVisualizer() { if (!audioContext) initVisualizer(); else if (audioContext?.state==='suspended') audioContext.resume(); resizeCanvas(); if (!visualizerRunning) { visualizerRunning=true; drawVisualizer(); } }
 function stopVisualizer() { visualizerRunning = false; }
-
 
 window.handleSearch = handleSearch;
 window.clearSearch = clearSearch;

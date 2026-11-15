@@ -737,8 +737,6 @@ main {
     border: 1px solid #333;
 }
 
-
-
 .now-playing {
     font-size: 22px;
     color: white;
@@ -1183,7 +1181,6 @@ nav #navbarMenu > li.active {
     pointer-events: none;
     /* font-style: italic; */
 }
-
 
 /* Keep media dropdown interactive even when current page is inside media routes */
 #navbarMenu .media-dropdown.active,
@@ -2984,7 +2981,6 @@ body.lyrics-modal-open {
     }
 }
 
-
 #mobileNavList .mobile-media-submenu a {
     font-size: 14px;
     font-weight: 600;
@@ -3005,7 +3001,6 @@ body.lyrics-modal-open {
     }
 }
 
-
 #mobileNavList .mobile-media-submenu li {
     transition: none !important;
 }
@@ -3014,7 +3009,6 @@ body.lyrics-modal-open {
     padding-left: 0 !important;
     background: transparent !important;
 }
-
 
 /* Keep mobile media item sizing/alignment consistent with other sidebar tabs */
 #mobileNavList .mobile-media-toggle > ion-icon:first-child {
@@ -3042,7 +3036,6 @@ body.lyrics-modal-open {
         padding: 12px 12px 12px 0 !important;
     }
 }
-
 
 /* Align top-level mobile sidebar rows (Portfolio/Media/Concern) from the same left icon edge */
 #mobileNavList > li > a,

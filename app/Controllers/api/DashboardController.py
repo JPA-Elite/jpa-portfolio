@@ -151,4 +151,3 @@ def dashboard_summary_route(recent_limit: int = 0):
         else:
             summary = {}
     return jsonify(summary)
-

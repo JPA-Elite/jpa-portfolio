@@ -12,4 +12,3 @@ class IPortfolioRepository(ABC):
     @abstractmethod
     def find_visit_for_day(self, ip_address, page, visit_date):
         pass
-

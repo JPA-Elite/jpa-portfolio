@@ -246,7 +246,7 @@
         },
         "tags": [
             "christmas", "party", "celebration", "gifts"
-        ]   
+        ]
     },
     {
         "id": 14,
@@ -265,7 +265,7 @@
         },
         "tags": [
             "valentines day", "potluck", "celebration", "lunch"
-        ] 
+        ]
     },
     {
         "id": 15,
@@ -285,7 +285,7 @@
         "image_url": "https://raw.githubusercontent.com/JPA-Elite/jpa-profile/a357774ded3e75f16ceb73c01bc0741ad95bdd83/flask/static/images/church-min.JPG",
         "tags": [
             "siquijor", "church", "old", "history"
-        ]            
+        ]
     },
     {
         "id": 16,
@@ -305,7 +305,7 @@
         "image_url": "https://raw.githubusercontent.com/JPA-Elite/jpa-profile/a357774ded3e75f16ceb73c01bc0741ad95bdd83/flask/static/images/beach-min.JPG",
         "tags": [
             "siquijor", "beach", "adventure", "nature"
-        ]     
+        ]
     },
     {
         "id": 17,
@@ -343,7 +343,7 @@
         },
         "tags": [
             "siquijor", "cave", "adventure", "nature"
-        ]    
+        ]
     },
     {
         "id": 19,

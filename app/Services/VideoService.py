@@ -107,4 +107,3 @@ class VideoService:
 
     def get_all_tags(self, limit: int = 50):
         return self.repository.get_all_tags(limit)
-

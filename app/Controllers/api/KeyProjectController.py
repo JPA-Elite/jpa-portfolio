@@ -76,4 +76,3 @@ def delete_key_project_route(project_id):
 
 def _clear_key_project_caches():
     clear_cache_by_prefix("profile_ui_")
-

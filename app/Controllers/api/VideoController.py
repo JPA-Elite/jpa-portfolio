@@ -78,4 +78,3 @@ def delete_video_route(video_id):
         return jsonify({"message": VIDEO_DELETE_MSG}), 200
     else:
         return jsonify({"message": VIDEO_NOT_FOUND_ERROR}), 404
-

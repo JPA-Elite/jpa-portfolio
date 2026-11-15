@@ -87,7 +87,6 @@ if (!window.__modal_js_loaded__) {
             .filter(Boolean);
     }
 
-
     function updateCarousel() {
         const carouselInner = document.getElementById('carouselInner');
         const carouselIndicators = document.getElementById('carouselIndicators');
@@ -1651,7 +1650,6 @@ if (!window.__modal_js_loaded__) {
         }
     });
 
-
     // expose needed functions globally
     window.submitComment = submitComment;
     window.openModal = openModal;
@@ -1665,4 +1663,3 @@ if (!window.__modal_js_loaded__) {
     window.toggleCommentMic = toggleCommentMic;
     window.toggleCommentPanel = toggleCommentPanel;
 }
-

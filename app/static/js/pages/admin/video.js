@@ -544,4 +544,3 @@ document.addEventListener("DOMContentLoaded", () => {
 window.addVideo = addVideo;
 window.updateVideo = updateVideo;
 window.deleteVideo = deleteVideo;
-

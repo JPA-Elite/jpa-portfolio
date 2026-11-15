@@ -112,4 +112,3 @@ class VlogCommentService:
         if ip_address and "," in ip_address:
             ip_address = ip_address.split(",")[0].strip()
         return self.repository.delete_all_by_content_and_ip("vlog_id", vlog_id, ip_address)
-

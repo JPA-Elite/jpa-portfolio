@@ -43,4 +43,3 @@ class ICompanyRoadmapRepository(ABC):
     @abstractmethod
     def delete_company_roadmap(self, roadmap_id: str):
         pass
-

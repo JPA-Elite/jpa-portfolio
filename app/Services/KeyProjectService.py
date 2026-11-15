@@ -362,4 +362,3 @@ class KeyProjectService:
                 "slides": [],
             },
         ]
-

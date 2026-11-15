@@ -262,4 +262,3 @@ class OtpService:
                 server.starttls(context=ssl.create_default_context())
             server.login(self.smtp_username, self.smtp_password)
             server.send_message(msg)
-

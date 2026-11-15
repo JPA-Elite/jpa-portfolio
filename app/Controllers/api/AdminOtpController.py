@@ -143,4 +143,3 @@ def admin_otp_email_save_route():
         return jsonify({"ok": True, "message": "OTP email updated"})
     except Exception as e:
         return jsonify({"ok": False, "message": str(e)}), 400
-

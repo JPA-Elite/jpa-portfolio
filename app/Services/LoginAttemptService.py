@@ -46,4 +46,3 @@ class LoginAttemptService:
             return False
 
         return self.repository.delete_login_attempt(login_attempt_id)
-

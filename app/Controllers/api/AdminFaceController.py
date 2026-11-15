@@ -219,4 +219,3 @@ def admin_face_verify_route():
         return jsonify({"ok": True, "message": "Face verified", "distance": dist})
     except Exception as e:
         return jsonify({"ok": False, "message": str(e)}), 400
-

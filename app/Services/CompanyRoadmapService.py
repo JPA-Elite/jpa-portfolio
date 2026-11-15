@@ -489,4 +489,3 @@ class CompanyRoadmapService:
         if not url or "res.cloudinary.com" not in str(url):
             return
         cleanup_uploaded_files(None, url)
-

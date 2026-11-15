@@ -26,7 +26,7 @@ from app.utils import verify_hcaptcha
 from app.forms.LoginForm import LoginForm
 from app.security import AdminLoginSecurity, get_request_ip
 
-# Initialize Services 
+# Initialize Services
 auth_service = AuthService(
     repository=AuthRepository(),
     attempt_repository=LoginAttemptRepository()
@@ -234,4 +234,3 @@ def admin_face_recognition_route():
 
     response.headers["Permissions-Policy"] = "camera=(self)"
     return response
-

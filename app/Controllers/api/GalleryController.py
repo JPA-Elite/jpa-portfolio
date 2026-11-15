@@ -78,4 +78,3 @@ def delete_gallery_route(gallery_id):
         return jsonify({"message": GALLERY_DELETE_MSG}), 200
     else:
         return jsonify({"message": GALLERY_NOT_FOUND_ERROR}), 404
-

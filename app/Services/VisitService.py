@@ -56,4 +56,3 @@ class VisitService:
             return result
         except Exception as e:
             return {"status": "error", "message": str(e)}
-

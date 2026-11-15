@@ -127,7 +127,7 @@ def generate_sitemap():
     <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 {entries}
     </urlset>"""
-    
+
     return Response(sitemap_xml, mimetype="application/xml")
 
 @sitemap_bp.route("/sitemap.xml")

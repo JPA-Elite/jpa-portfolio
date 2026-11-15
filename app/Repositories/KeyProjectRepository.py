@@ -96,4 +96,3 @@ class KeyProjectRepository(IKeyProjectRepository, BaseRepository):
     def delete_key_project(self, project_id: str):
         result = self.delete_one({"_id": ObjectId(project_id)})
         return result.deleted_count > 0
-

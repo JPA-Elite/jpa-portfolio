@@ -53,4 +53,3 @@ class GalleryLikeRepository(IGalleryLikeRepository, BaseRepository):
             }
         )
         return result.modified_count > 0
-

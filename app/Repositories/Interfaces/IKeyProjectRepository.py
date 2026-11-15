@@ -43,4 +43,3 @@ class IKeyProjectRepository(ABC):
     @abstractmethod
     def delete_key_project(self, project_id: str):
         pass
-

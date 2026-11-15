@@ -29,4 +29,3 @@ class IVisitRepository(ABC):
     @abstractmethod
     def get_device_breakdown(self, max_slices: int = 6):
         pass
-

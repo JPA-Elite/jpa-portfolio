@@ -81,4 +81,3 @@ class MusicRepository(IMusicRepository, BaseRepository):
 
     def get_total_music_count(self) -> int:
         return self.count_documents({})
-

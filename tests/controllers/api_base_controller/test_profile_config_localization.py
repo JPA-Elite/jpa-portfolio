@@ -7,7 +7,6 @@ from flask import Flask, Response
 from app.Repositories.BaseRepository import BaseRepository
 from tests.controllers.shared._controller_test_helpers import _fake_get_mongo_client, _patch_module_dependencies
 
-
 class ProfileConfigLocalizationTests(unittest.TestCase):
     def _module(self, stack):
         stack.enter_context(patch.object(BaseRepository, "get_mongo_client", new=_fake_get_mongo_client))
@@ -45,7 +44,6 @@ class ProfileConfigLocalizationTests(unittest.TestCase):
         response = self._localized_qa("en")
         self.assertIsInstance(response, Response)
         self.assertEqual(response.headers.get("Cache-Control"), "no-store")
-
 
 if __name__ == "__main__":
     unittest.main()

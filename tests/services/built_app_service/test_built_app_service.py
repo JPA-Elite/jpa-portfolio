@@ -10,13 +10,11 @@ from app.configurations import SortOrder
 
 from tests.services._service_fixtures import built_app_doc
 
-
 def _png_file_storage():
     buffer = io.BytesIO()
     Image.new("RGB", (8, 6), "blue").save(buffer, "PNG")
     buffer.seek(0)
     return FileStorage(stream=buffer, filename="snap.png", content_type="image/png")
-
 
 class BuiltAppServiceTests(unittest.TestCase):
     def setUp(self):
@@ -389,7 +387,6 @@ class BuiltAppServiceTests(unittest.TestCase):
         self.assertEqual(first["snapshots"], [])
         self.assertEqual(first["sort_order"], 1)
         self.assertEqual(first["icon_image_url"], "")
-
 
 if __name__ == "__main__":
     unittest.main()

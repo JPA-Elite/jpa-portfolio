@@ -8,10 +8,8 @@ from flask import Flask
 
 from app.Repositories.BaseRepository import BaseRepository
 
-
 def _fake_get_mongo_client(self, collection_name):
     return object(), {}, MagicMock()
-
 
 class ApiAdminFaceControllerTests(unittest.TestCase):
     @classmethod
@@ -310,7 +308,6 @@ class ApiAdminFaceControllerTests(unittest.TestCase):
 
         self.assertEqual(self.module._face_l1_distance(first, first), 0.0)
         self.assertEqual(self.module._face_l1_distance(first, second), 1.0)
-
 
 if __name__ == "__main__":
     unittest.main()

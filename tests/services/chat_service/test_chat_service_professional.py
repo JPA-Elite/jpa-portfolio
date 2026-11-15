@@ -10,7 +10,6 @@ from app.Services.ChatService import (
 
 from tests.services._service_fixtures import build_test_app
 
-
 class ChatServiceProfessionalTests(unittest.TestCase):
     def setUp(self):
         self.app = build_test_app()
@@ -110,7 +109,6 @@ class ChatServiceProfessionalTests(unittest.TestCase):
         self.assertEqual(by_label.get("What are your skills?"), "Skills")
         self.assertEqual(by_label.get("How can I contact you?"), "Contact")
         self.assertEqual(by_label.get("How do I book your services?"), "Booking")
-
 
 if __name__ == "__main__":
     unittest.main()

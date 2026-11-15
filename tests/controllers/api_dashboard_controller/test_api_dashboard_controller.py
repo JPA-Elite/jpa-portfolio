@@ -11,14 +11,12 @@ from tests.controllers.shared._controller_test_helpers import (
     run_controller_module_smoke_test,
 )
 
-
 class ApiDashboardControllerModuleTests(unittest.TestCase):
     def test_module_import_and_public_functions(self):
         run_controller_module_smoke_test(self, "app.Controllers.api.DashboardController")
 
     def test_all_public_functions_execute(self):
         run_controller_module_functions_test(self, "app.Controllers.api.DashboardController")
-
 
 class ApiDashboardControllerClearVisitorsTests(unittest.TestCase):
     def test_clear_all_visitors_route_returns_ok_for_dict_result(self):
@@ -42,7 +40,6 @@ class ApiDashboardControllerClearVisitorsTests(unittest.TestCase):
                 response = module.clear_all_visitors_route()
 
         self.assertEqual(response.get_json(), {"ok": True, "message": "All visitors cleared."})
-
 
 if __name__ == "__main__":
     unittest.main()

@@ -9,7 +9,6 @@ from app.Repositories.BaseRepository import BaseRepository
 from app.Repositories.MusicLikeRepository import MusicLikeRepository
 from tests.test_support import VALID_OBJECT_ID
 
-
 class MusicLikeRepositoryTests(unittest.TestCase):
     def setUp(self):
         self.collection = MagicMock()
@@ -178,7 +177,6 @@ class MusicLikeRepositoryTests(unittest.TestCase):
         result = self.repo.delete_vote("music-1", "203.0.113.5")
 
         self.assertFalse(result)
-
 
 if __name__ == "__main__":
     unittest.main()

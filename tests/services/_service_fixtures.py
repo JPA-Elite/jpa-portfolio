@@ -4,12 +4,10 @@ from flask import Flask
 
 from tests.test_support import VALID_OBJECT_ID
 
-
 def build_test_app():
     app = Flask(__name__)
     app.secret_key = "test-secret"
     return app
-
 
 def gallery_doc():
     return {
@@ -20,7 +18,6 @@ def gallery_doc():
         "image_url": "/img.jpg",
         "tags": ["tag1"],
     }
-
 
 def video_doc():
     return {
@@ -33,7 +30,6 @@ def video_doc():
         "tags": ["tag1"],
     }
 
-
 def music_doc():
     return {
         "_id": VALID_OBJECT_ID,
@@ -45,7 +41,6 @@ def music_doc():
         "duration": "1:23",
         "lyrics": "Lyrics",
     }
-
 
 def key_project_doc():
     return {
@@ -62,7 +57,6 @@ def key_project_doc():
         "is_active": True,
         "slides": [],
     }
-
 
 def built_app_doc():
     return {
@@ -81,7 +75,6 @@ def built_app_doc():
         "sort_order": 1,
         "is_active": True,
     }
-
 
 def roadmap_doc():
     return {
@@ -106,7 +99,6 @@ def roadmap_doc():
         "is_active": True,
     }
 
-
 def comment_doc(item_key="gallery_id"):
     return {
         "_id": VALID_OBJECT_ID,
@@ -117,7 +109,6 @@ def comment_doc(item_key="gallery_id"):
         "liked_ips": ["127.0.0.1"],
         "created_at": datetime.now(),
     }
-
 
 def system_info_doc():
     return {

@@ -4,7 +4,6 @@ from unittest.mock import MagicMock
 from app.Services.LoginAttemptService import LoginAttemptService
 from app.configurations import SortOrder
 
-
 class LoginAttemptServiceTests(unittest.TestCase):
     def setUp(self):
         self.repo = MagicMock()
@@ -47,7 +46,6 @@ class LoginAttemptServiceTests(unittest.TestCase):
 
         self.assertTrue(result)
         self.repo.delete_login_attempt.assert_called_once_with("127.0.0.1")
-
 
 if __name__ == "__main__":
     unittest.main()

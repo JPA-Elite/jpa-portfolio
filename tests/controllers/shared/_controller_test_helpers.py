@@ -9,7 +9,6 @@ from flask import Flask, Response
 from app.Repositories.BaseRepository import BaseRepository
 from tests.test_support import VALID_OBJECT_ID
 
-
 class _DummyModel:
     def __init__(self, data):
         self._data = dict(data)
@@ -20,7 +19,6 @@ class _DummyModel:
 
     def to_dict(self):
         return dict(self._data)
-
 
 class _DummyHTTPResponse:
     def __init__(self):
@@ -34,7 +32,6 @@ class _DummyHTTPResponse:
     def iter_content(self, chunk_size=4096):
         yield b"x" * min(chunk_size, 16)
 
-
 class _DummyRedirectResponse:
     def __init__(self, location="/mock"):
         self.location = location
@@ -43,7 +40,6 @@ class _DummyRedirectResponse:
 
     def set_cookie(self, key, value="", *args, **kwargs):
         self.headers[f"Set-Cookie-{key}"] = value
-
 
 class _DummyForm:
     def __init__(self):
@@ -54,10 +50,8 @@ class _DummyForm:
     def validate_on_submit(self):
         return False
 
-
 def _fake_get_mongo_client(self, collection_name):
     return object(), {"name": "fake_db"}, SimpleNamespace(name=collection_name)
-
 
 def _gallery_doc():
     return {
@@ -68,7 +62,6 @@ def _gallery_doc():
         "image_url": "/img.jpg",
         "tags": ["tag1"],
     }
-
 
 def _video_doc():
     return {
@@ -81,7 +74,6 @@ def _video_doc():
         "tags": ["tag1"],
     }
 
-
 def _music_doc():
     return {
         "_id": VALID_OBJECT_ID,
@@ -93,7 +85,6 @@ def _music_doc():
         "duration": "1:23",
         "lyrics": "Lyrics",
     }
-
 
 def _key_project_doc():
     return {
@@ -118,7 +109,6 @@ def _key_project_doc():
         ],
     }
 
-
 def _built_app_doc():
     return {
         "_id": VALID_OBJECT_ID,
@@ -136,7 +126,6 @@ def _built_app_doc():
         "sort_order": 1,
         "is_active": True,
     }
-
 
 def _company_roadmap_doc():
     return {
@@ -169,7 +158,6 @@ def _company_roadmap_doc():
         "is_active": True,
     }
 
-
 def _system_info_doc():
     return {
         "_id": VALID_OBJECT_ID,
@@ -197,14 +185,11 @@ def _system_info_doc():
         "location": "0,0",
     }
 
-
 def _login_attempt_doc():
     return {"_id": "127.0.0.1", "attempts": 0, "lockout_until": None}
 
-
 def _dummy_like_doc():
     return _DummyModel({"like": True})
-
 
 def _dummy_model_list(kind: str):
     if kind == "gallery":
@@ -224,7 +209,6 @@ def _dummy_model_list(kind: str):
     if kind == "login_attempt":
         return [_DummyModel(_login_attempt_doc())]
     return [_DummyModel({"id": "item-1"})]
-
 
 def _build_service_mock(name="service"):
     svc = MagicMock(name=name)
@@ -316,7 +300,6 @@ def _build_service_mock(name="service"):
     svc.get_qa_data.return_value = [{"question": "What is your name?", "answer": "My name is Joshua."}]
     return svc
 
-
 def _patch_module_dependencies(stack: ExitStack, module):
     # Replace services with flexible mocks.
     for attr_name in list(vars(module).keys()):
@@ -380,7 +363,6 @@ def _patch_module_dependencies(stack: ExitStack, module):
         fake_requests.get.return_value = _DummyHTTPResponse()
         stack.enter_context(patch.object(module, "requests", fake_requests))
 
-
 def _iter_controller_functions(module):
     for name, fn in inspect.getmembers(module, inspect.isfunction):
         if fn.__module__ != module.__name__:
@@ -389,14 +371,12 @@ def _iter_controller_functions(module):
             continue
         yield name, fn
 
-
 def _dummy_arg_for_param(param_name: str):
     if param_name.endswith("_id") or param_name == "id":
         return "item-1"
     if param_name == "lang_code":
         return "en"
     return "value"
-
 
 def _request_context_kwargs(module_path: str, function_name: str):
     query = {
@@ -502,7 +482,6 @@ def _request_context_kwargs(module_path: str, function_name: str):
     base_kwargs["method"] = "GET"
     return base_kwargs
 
-
 def run_controller_module_smoke_test(testcase, module_path: str, min_public_functions: int = 1):
     with patch.object(BaseRepository, "get_mongo_client", new=_fake_get_mongo_client):
         module = importlib.import_module(module_path)
@@ -514,7 +493,6 @@ def run_controller_module_smoke_test(testcase, module_path: str, min_public_func
         min_public_functions,
         f"{module_path} exposes {len(functions)} public functions; expected at least {min_public_functions}",
     )
-
 
 def run_controller_module_functions_test(testcase, module_path: str):
     app = Flask(__name__)

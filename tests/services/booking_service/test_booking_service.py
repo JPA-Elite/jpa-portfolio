@@ -5,7 +5,6 @@ from unittest.mock import MagicMock, patch
 
 from app.Services.BookingService import BookingService
 
-
 class BookingServiceTests(unittest.TestCase):
     def setUp(self):
         self.repo = MagicMock()
@@ -200,7 +199,6 @@ class BookingServiceTests(unittest.TestCase):
         self.assertEqual(message["To"], "noreply@example.com")
         self.assertEqual(message["From"], "noreply@example.com")
         self.assertNotIn("Service:", message.get_content())
-
 
 if __name__ == "__main__":
     unittest.main()

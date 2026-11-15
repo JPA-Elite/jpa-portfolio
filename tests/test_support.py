@@ -5,9 +5,7 @@ from bson import ObjectId
 
 from app.configurations import SortOrder
 
-
 VALID_OBJECT_ID = "507f1f77bcf86cd799439011"
-
 
 class DummyModel:
     def __init__(self, data=None, **kwargs):
@@ -69,7 +67,6 @@ class DummyModel:
         }
         return data
 
-
 class FakeCursor:
     def __init__(self, items=None):
         self.items = list(items or [])
@@ -85,7 +82,6 @@ class FakeCursor:
 
     def __iter__(self):
         return iter(self.items)
-
 
 class FakeCollection:
     def __init__(self):
@@ -160,7 +156,6 @@ class FakeCollection:
     def distinct(self, *args, **kwargs):
         return ["tag1", "tag2"]
 
-
 @dataclass
 class DummyFile:
     filename: str = "file.dat"
@@ -170,10 +165,8 @@ class DummyFile:
         with open(path, "wb") as fp:
             fp.write(b"dummy")
 
-
 def dummy_repo_model():
     return DummyModel()
-
 
 def dummy_repo_param(name):
     name = str(name)

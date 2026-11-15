@@ -6,7 +6,6 @@ from app.configurations import SortOrder
 
 from tests.services._service_fixtures import video_doc
 
-
 class VideoServiceTests(unittest.TestCase):
     def setUp(self):
         self.repo = MagicMock()
@@ -93,7 +92,6 @@ class VideoServiceTests(unittest.TestCase):
 
         self.assertEqual(result, ["tag1", "tag2"])
         self.repo.get_all_tags.assert_called_once_with(5)
-
 
 if __name__ == "__main__":
     unittest.main()

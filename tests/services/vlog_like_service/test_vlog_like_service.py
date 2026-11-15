@@ -4,7 +4,6 @@ from unittest.mock import MagicMock
 from app.Services.VlogLikeService import VlogLikeService
 from tests.test_support import VALID_OBJECT_ID
 
-
 class VlogLikeServiceTests(unittest.TestCase):
     def setUp(self):
         self.repo = MagicMock()
@@ -85,7 +84,6 @@ class VlogLikeServiceTests(unittest.TestCase):
         self.assertTrue(result["like"])
         self.assertEqual(result["ip_address"], "127.0.0.1")
         self.repo.get_vlog_likes_by_id_and_ip.assert_called_once_with("v1", "127.0.0.1")
-
 
 if __name__ == "__main__":
     unittest.main()

@@ -5,7 +5,6 @@ from flask import Flask
 from app.extensions import cache
 from app.utils import clear_cache_by_prefix
 
-
 class ClearCacheByPrefixTests(unittest.TestCase):
     def _init_cache(self, cache_type):
         app = Flask(__name__)
@@ -63,7 +62,6 @@ class ClearCacheByPrefixTests(unittest.TestCase):
                 backend._cache = original_store
                 del backend.clear
         self.assertEqual(calls, ["clear"])
-
 
 if __name__ == "__main__":
     unittest.main()

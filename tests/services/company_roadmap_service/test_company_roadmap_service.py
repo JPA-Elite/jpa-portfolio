@@ -6,7 +6,6 @@ from app.configurations import SortOrder
 
 from tests.services._service_fixtures import roadmap_doc
 
-
 class CompanyRoadmapServiceTests(unittest.TestCase):
     def setUp(self):
         self.repo = MagicMock()
@@ -170,7 +169,6 @@ class CompanyRoadmapServiceTests(unittest.TestCase):
         seeded_models = self.repo.add_many_company_roadmaps.call_args[0][0]
         self.assertEqual(len(seeded_models), 4)
         self.assertEqual(seeded_models[0].company_name, "Municipality of Vallehermoso")
-
 
 if __name__ == "__main__":
     unittest.main()

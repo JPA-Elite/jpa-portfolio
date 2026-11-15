@@ -11,7 +11,6 @@ from app.constants.messages import (
     MANY_FAILED_ATTEMPTS_ERROR,
 )
 
-
 class AuthServiceLoginTests(unittest.TestCase):
     def setUp(self):
         self.auth_repo = MagicMock()
@@ -101,7 +100,6 @@ class AuthServiceLoginTests(unittest.TestCase):
         self.assertFalse(is_locked)
         self.assertEqual(message, INVALID_USE_OR_PASS_ERROR.format(attempts=2))
         self.assertNotEqual(message, LOGIN_ATTEMPT_LOCKED_MSG.format(minutes=0))
-
 
 if __name__ == "__main__":
     unittest.main()

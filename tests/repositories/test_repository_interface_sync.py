@@ -6,9 +6,7 @@ from abc import ABC
 
 from app.Repositories.BaseRepository import BaseRepository
 
-
 REPOSITORY_DIR = pathlib.Path(__file__).resolve().parents[2] / "app" / "Repositories"
-
 
 def _repository_classes():
     for path in sorted(REPOSITORY_DIR.glob("*.py")):
@@ -22,13 +20,11 @@ def _repository_classes():
                 continue
             yield cls
 
-
 def _interface_of(cls):
     for base in cls.__bases__:
         if base is not BaseRepository and issubclass(base, ABC):
             return base
     return None
-
 
 def _public_methods(cls):
     return {
@@ -37,13 +33,11 @@ def _public_methods(cls):
         if fn.__module__ == cls.__module__ and not name.startswith("_")
     }
 
-
 def _signature_shape(fn):
     return [
         (parameter.name, parameter.kind, parameter.default)
         for parameter in inspect.signature(fn).parameters.values()
     ]
-
 
 class RepositoryInterfaceSyncTests(unittest.TestCase):
     def test_every_repository_has_a_matching_interface(self):
@@ -94,7 +88,6 @@ class RepositoryInterfaceSyncTests(unittest.TestCase):
                         _signature_shape(getattr(cls, method_name)),
                         f"{cls.__name__}.{method_name} signature differs from {interface.__name__}",
                     )
-
 
 if __name__ == "__main__":
     unittest.main()

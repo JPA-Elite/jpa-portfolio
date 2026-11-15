@@ -7,7 +7,6 @@ from app.Repositories.BaseRepository import BaseRepository
 from app.Repositories.VisitRepository import VisitRepository
 from app.configurations import SortOrder
 
-
 class _FakeCursor:
     def __init__(self, docs):
         self._docs = list(docs)
@@ -24,14 +23,12 @@ class _FakeCursor:
     def __iter__(self):
         return iter(self._docs)
 
-
 class _FakeCollection:
     def __init__(self, docs):
         self._docs = list(docs)
 
     def find(self, *args, **kwargs):
         return _FakeCursor([dict(doc) for doc in self._docs])
-
 
 def _visit_doc(page, timestamp, browser="Chrome", system="Windows"):
     return {
@@ -48,7 +45,6 @@ def _visit_doc(page, timestamp, browser="Chrome", system="Windows"):
         "country": "PH",
         "location": "10,20",
     }
-
 
 class VisitRepositorySearchTests(unittest.TestCase):
     def _repository_with(self, docs):
@@ -116,7 +112,6 @@ class VisitRepositorySearchTests(unittest.TestCase):
 
         self.assertEqual(total, 1)
         self.assertEqual(documents[0]["page"], "/music")
-
 
 if __name__ == "__main__":
     unittest.main()

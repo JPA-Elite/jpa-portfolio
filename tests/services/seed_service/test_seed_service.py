@@ -3,7 +3,6 @@ from unittest.mock import MagicMock
 
 from app.Services.SeedService import SeedService
 
-
 class SeedServiceTests(unittest.TestCase):
     def test_ensure_seeded_skips_seed_when_records_exist(self):
         count_fn = MagicMock(return_value=1)
@@ -31,7 +30,6 @@ class SeedServiceTests(unittest.TestCase):
         result = SeedService.ensure_seeded(lambda: 0, seed_fn)
 
         self.assertEqual(result, {"inserted": 2})
-
 
 if __name__ == "__main__":
     unittest.main()

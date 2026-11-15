@@ -6,10 +6,8 @@ from flask import Flask
 
 from app.Repositories.BaseRepository import BaseRepository
 
-
 def _fake_get_mongo_client(self, collection_name):
     return object(), {}, MagicMock()
-
 
 class ApiBookingControllerTests(unittest.TestCase):
     @classmethod
@@ -176,7 +174,6 @@ class ApiBookingControllerTests(unittest.TestCase):
             response.get_json(), {"ok": False, "message": "rate service down"}
         )
         self.service.increment_count.assert_not_called()
-
 
 if __name__ == "__main__":
     unittest.main()

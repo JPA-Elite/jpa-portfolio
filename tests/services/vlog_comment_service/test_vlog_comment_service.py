@@ -6,7 +6,6 @@ from app.Services.VlogCommentService import VlogCommentService
 from tests.services._service_fixtures import comment_doc
 from tests.test_support import VALID_OBJECT_ID
 
-
 class VlogCommentServiceTests(unittest.TestCase):
     def setUp(self):
         self.repo = MagicMock()
@@ -152,7 +151,6 @@ class VlogCommentServiceTests(unittest.TestCase):
         self.assertEqual(result["like_count"], 1)
         saved_comment = self.repo.update_comment.call_args[0][0]
         self.assertEqual(saved_comment["liked_ips"], ["127.0.0.1"])
-
 
 if __name__ == "__main__":
     unittest.main()

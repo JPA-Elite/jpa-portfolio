@@ -6,7 +6,6 @@ from app.configurations import SortOrder
 
 from tests.services._service_fixtures import gallery_doc
 
-
 class GalleryServiceTests(unittest.TestCase):
     def setUp(self):
         self.repo = MagicMock()
@@ -94,7 +93,6 @@ class GalleryServiceTests(unittest.TestCase):
 
         self.assertEqual(result, ["a", "b"])
         self.repo.get_all_tags.assert_called_once_with(10)
-
 
 if __name__ == "__main__":
     unittest.main()

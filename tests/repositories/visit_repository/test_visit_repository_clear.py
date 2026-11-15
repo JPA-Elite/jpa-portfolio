@@ -6,7 +6,6 @@ from unittest.mock import patch
 from app.Repositories.BaseRepository import BaseRepository
 from app.Repositories.VisitRepository import VisitRepository
 
-
 class _ClearCollection:
     def __init__(self, deleted_count=0, error=None):
         self.deleted_count = deleted_count
@@ -16,7 +15,6 @@ class _ClearCollection:
         if self.error:
             raise self.error
         return SimpleNamespace(deleted_count=self.deleted_count)
-
 
 class VisitRepositoryClearTests(unittest.TestCase):
     def _repository_with(self, collection):
@@ -55,7 +53,6 @@ class VisitRepositoryClearTests(unittest.TestCase):
 
         self.assertEqual(result["status"], "error")
         self.assertIn("boom", result["message"])
-
 
 if __name__ == "__main__":
     unittest.main()

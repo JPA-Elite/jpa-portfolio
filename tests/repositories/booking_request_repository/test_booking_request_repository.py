@@ -10,7 +10,6 @@ from app.Repositories.BookingRequestRepository import BookingRequestRepository
 from app.configurations import SortOrder
 from tests.test_support import VALID_OBJECT_ID
 
-
 class _RecordingCursor:
     def __init__(self, docs):
         self.docs = list(docs)
@@ -32,7 +31,6 @@ class _RecordingCursor:
 
     def __iter__(self):
         return iter(self.docs)
-
 
 class BookingRequestRepositoryTests(unittest.TestCase):
     def setUp(self):
@@ -171,7 +169,6 @@ class BookingRequestRepositoryTests(unittest.TestCase):
         self.assertEqual(
             query["created_at"]["$gte"], datetime.utcfromtimestamp(1700000000)
         )
-
 
 if __name__ == "__main__":
     unittest.main()

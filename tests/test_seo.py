@@ -19,7 +19,6 @@ TEMPLATE_FOLDER = os.path.join(
     os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "app", "templates"
 )
 
-
 def _make_app():
     app = Flask(__name__, template_folder=TEMPLATE_FOLDER)
     app.config["LANDING_DOMAIN"] = "jpastack.com"
@@ -28,7 +27,6 @@ def _make_app():
     app.config["ADMIN_DOMAIN"] = "config.jpastack.com"
     app.config["DOMAIN_ROUTING_ENABLED"] = True
     return app
-
 
 class SeoResolutionTests(unittest.TestCase):
     def test_site_variant_maps_professional_and_everything_else_to_social(self):
@@ -105,7 +103,6 @@ class SeoResolutionTests(unittest.TestCase):
                 social = resolve_page_seo(endpoint, SOCIAL)
                 if page_key != "visitors":
                     self.assertEqual(social["robots"], "index,follow")
-
 
 class SeoContextTests(unittest.TestCase):
     def test_canonical_uses_site_domain_and_request_path(self):
@@ -200,7 +197,6 @@ class SeoContextTests(unittest.TestCase):
         self.assertIn('"@type": "WebSite"', html)
         self.assertIn('"name": "JPAStack"', html)
 
-
 class SeoSiteNameTests(unittest.TestCase):
     def test_site_name_is_brand_for_both_variants(self):
         for site in (PROFESSIONAL, SOCIAL):
@@ -237,7 +233,6 @@ class SeoSiteNameTests(unittest.TestCase):
         self.assertEqual(
             meta["structured_data"]["@graph"][0]["url"], "https://jpastack.com/"
         )
-
 
 class SitemapTests(unittest.TestCase):
     def test_professional_sitemap_lists_only_professional_pages(self):
@@ -403,7 +398,6 @@ class SitemapTests(unittest.TestCase):
             side_effect=RuntimeError("mongo unavailable"),
         ):
             self.assertEqual(_active_built_app_slugs(), [])
-
 
 if __name__ == "__main__":
     unittest.main()

@@ -8,7 +8,6 @@ from app.constants.messages import SYSTEM_INFO_ADD_MSG, VISIT_ALREADY_RECORDED_M
 from tests.services._service_fixtures import build_test_app
 from tests.test_support import VALID_OBJECT_ID
 
-
 class PortfolioServiceTests(unittest.TestCase):
     def setUp(self):
         self.app = build_test_app()
@@ -110,7 +109,6 @@ class PortfolioServiceTests(unittest.TestCase):
         self.assertEqual(passed_ip, "1.2.3.4")
         self.assertEqual(passed_page, "/gallery")
         self.assertRegex(passed_date, r"^\d{4}-\d{2}-\d{2}$")
-
 
 if __name__ == "__main__":
     unittest.main()

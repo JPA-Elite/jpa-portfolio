@@ -5,7 +5,6 @@ from app.Services.ChatService import ChatService, PROFESSIONAL_QUESTION_HEADINGS
 
 from tests.services._service_fixtures import build_test_app
 
-
 class ChatServiceRecoveryTests(unittest.TestCase):
     def setUp(self):
         self.app = build_test_app()
@@ -70,7 +69,6 @@ class ChatServiceRecoveryTests(unittest.TestCase):
     def test_quick_questions_still_win_over_complaint(self):
         result = self._resolve("what can you answer")
         self.assertNotEqual(result["answer"], "chat_redirect_reply")
-
 
 if __name__ == "__main__":
     unittest.main()

@@ -6,10 +6,8 @@ from flask import Flask
 
 from app.Repositories.BaseRepository import BaseRepository
 
-
 def _fake_get_mongo_client(self, collection_name):
     return object(), {}, MagicMock()
-
 
 class ApiMusicLikeControllerTests(unittest.TestCase):
     @classmethod
@@ -198,7 +196,6 @@ class ApiMusicLikeControllerTests(unittest.TestCase):
         self.service.toggle_vote.assert_called_once_with(
             "m1", "10.0.0.1", False
         )
-
 
 if __name__ == "__main__":
     unittest.main()

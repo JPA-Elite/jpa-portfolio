@@ -4,7 +4,6 @@ from unittest.mock import MagicMock
 
 from app.Services.UserDisplayNameService import UserDisplayNameService
 
-
 class UserDisplayNameServiceTests(unittest.TestCase):
     def setUp(self):
         self.repo = MagicMock()
@@ -274,7 +273,6 @@ class UserDisplayNameServiceTests(unittest.TestCase):
 
         self.assertEqual(avatar_url, "/a.webp")
         self.assertEqual(remaining, self.service.DAILY_AVATAR_CHANGE_LIMIT)
-
 
 if __name__ == "__main__":
     unittest.main()

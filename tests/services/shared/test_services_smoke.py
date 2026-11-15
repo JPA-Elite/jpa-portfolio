@@ -6,7 +6,6 @@ from unittest.mock import MagicMock
 
 import app.Services as services_pkg
 
-
 class ServiceSmokeTests(unittest.TestCase):
     def _iter_service_classes(self):
         package_path = services_pkg.__path__
@@ -39,7 +38,6 @@ class ServiceSmokeTests(unittest.TestCase):
             len(instantiated), 13,
             f"Expected service coverage for all service classes, got {len(instantiated)}: {instantiated}"
         )
-
 
 if __name__ == "__main__":
     unittest.main()

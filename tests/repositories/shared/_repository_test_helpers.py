@@ -8,15 +8,12 @@ from flask import Flask
 from app.Repositories.BaseRepository import BaseRepository
 from tests.test_support import FakeCollection, dummy_repo_param
 
-
 def _fake_get_mongo_client(self, collection_name):
     return object(), {}, FakeCollection()
-
 
 def load_repository_class(module_name: str, class_name: str):
     module = importlib.import_module(f"app.Repositories.{module_name}")
     return module, getattr(module, class_name)
-
 
 def iter_repository_methods(repo_class):
     for name, fn in inspect.getmembers(repo_class, inspect.isfunction):
@@ -28,7 +25,6 @@ def iter_repository_methods(repo_class):
             continue
         yield name, fn
 
-
 def run_repository_smoke_test(testcase, module_name: str, class_name: str):
     _, repo_class = load_repository_class(module_name, class_name)
     with patch.object(BaseRepository, "get_mongo_client", new=_fake_get_mongo_client):
@@ -36,7 +32,6 @@ def run_repository_smoke_test(testcase, module_name: str, class_name: str):
         testcase.assertTrue(hasattr(repo, "collection"))
         testcase.assertTrue(hasattr(repo, "db"))
         testcase.assertTrue(hasattr(repo, "client"))
-
 
 def _execute_repository_method(module_name: str, class_name: str, method_name: str):
     _, repo_class = load_repository_class(module_name, class_name)
@@ -62,7 +57,6 @@ def _execute_repository_method(module_name: str, class_name: str, method_name: s
             result = method(*args)
 
     return result, args
-
 
 def _assert_repository_method_contract(testcase, class_name: str, method_name: str, result):
     # explicit exceptions first
@@ -167,7 +161,6 @@ def _assert_repository_method_contract(testcase, class_name: str, method_name: s
 
     testcase.fail(f"No repository contract assertion configured for {class_name}.{method_name}")
 
-
 def attach_repository_contract_tests(test_class, module_name: str, class_name: str):
     """Attach one unittest method per public repository method (individual coverage)."""
     _, repo_class = load_repository_class(module_name, class_name)
@@ -183,7 +176,6 @@ def attach_repository_contract_tests(test_class, module_name: str, class_name: s
 
         _generated_test.__name__ = test_name
         setattr(test_class, test_name, _generated_test)
-
 
 def run_repository_methods_test(testcase, module_name: str, class_name: str):
     _, repo_class = load_repository_class(module_name, class_name)

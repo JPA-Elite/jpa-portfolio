@@ -6,7 +6,6 @@ from app.Repositories.BaseRepository import BaseRepository
 from app.Repositories.BuiltAppLikeRepository import BuiltAppLikeRepository
 from tests.repositories.shared._repository_test_helpers import _fake_get_mongo_client
 
-
 class BuiltAppLikeRepositoryTests(unittest.TestCase):
     def _make_repo(self):
         patcher = patch.object(BaseRepository, "get_mongo_client", new=_fake_get_mongo_client)
@@ -35,7 +34,6 @@ class BuiltAppLikeRepositoryTests(unittest.TestCase):
         self.assertIsInstance(repo.add_vote(vote), str)
         self.assertTrue(repo.update_vote(vote))
         self.assertTrue(repo.delete_vote("app1", "127.0.0.1"))
-
 
 if __name__ == "__main__":
     unittest.main()

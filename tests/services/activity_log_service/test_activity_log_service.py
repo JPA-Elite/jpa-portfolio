@@ -3,7 +3,6 @@ from unittest.mock import MagicMock
 
 from app.Services.ActivityLogService import ActivityLogService
 
-
 class ActivityLogServiceTests(unittest.TestCase):
     def setUp(self):
         self.repo = MagicMock()
@@ -98,7 +97,6 @@ class ActivityLogServiceTests(unittest.TestCase):
 
         self.assertEqual(result, [{"path": "/admin"}])
         self.repo.find_recent.assert_called_once_with(12)
-
 
 if __name__ == "__main__":
     unittest.main()

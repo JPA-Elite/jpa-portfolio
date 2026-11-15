@@ -11,7 +11,6 @@ from app.configurations import SortOrder
 
 from tests.services._service_fixtures import build_test_app
 
-
 class _FakeCursor:
     def __init__(self, docs):
         self._docs = list(docs)
@@ -31,7 +30,6 @@ class _FakeCursor:
 
     def __iter__(self):
         return iter(self._docs)
-
 
 class _FakeActivityCollection:
     def __init__(self, docs):
@@ -58,7 +56,6 @@ class _FakeActivityCollection:
     def find(self, query, projection=None):
         return _FakeCursor([dict(doc) for doc in self._match(query)])
 
-
 def _activity_doc(index, method="POST", path="/admin/api/test"):
     return {
         "_id": ObjectId(f"{index:024x}"),
@@ -69,7 +66,6 @@ def _activity_doc(index, method="POST", path="/admin/api/test"):
         "remote_addr": "127.0.0.1",
         "user_id": f"user-{index}",
     }
-
 
 class DashboardServiceRecentActivityTests(unittest.TestCase):
     def setUp(self):
@@ -130,7 +126,6 @@ class DashboardServiceRecentActivityTests(unittest.TestCase):
 
         self.assertEqual(items, [])
         self.assertEqual(total, 0)
-
 
 if __name__ == "__main__":
     unittest.main()

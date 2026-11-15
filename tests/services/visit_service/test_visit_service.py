@@ -8,7 +8,6 @@ from app.constants.messages import DISPLAY_RECORDS_DELETE_MSG
 from tests.services._service_fixtures import system_info_doc
 from tests.test_support import VALID_OBJECT_ID
 
-
 class VisitServiceTests(unittest.TestCase):
     def setUp(self):
         self.repo = MagicMock()
@@ -100,7 +99,6 @@ class VisitServiceTests(unittest.TestCase):
 
         self.assertEqual(result["status"], "error")
         self.assertIn("boom", result["message"])
-
 
 if __name__ == "__main__":
     unittest.main()

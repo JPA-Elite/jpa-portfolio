@@ -7,7 +7,6 @@ from app.configurations import SortOrder
 
 from tests.services._service_fixtures import music_doc
 
-
 class MusicServiceTests(unittest.TestCase):
     def setUp(self):
         self.repo = MagicMock()
@@ -99,7 +98,6 @@ class MusicServiceTests(unittest.TestCase):
         self.assertTrue(result)
         mock_cleanup.assert_called_once_with("/song.mp3", "/cover.jpg")
         self.repo.delete_music.assert_called_once_with("m1")
-
 
 if __name__ == "__main__":
     unittest.main()

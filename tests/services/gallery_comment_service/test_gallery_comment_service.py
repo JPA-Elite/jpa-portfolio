@@ -6,7 +6,6 @@ from app.Services.GalleryCommentService import GalleryCommentService
 from tests.services._service_fixtures import comment_doc
 from tests.test_support import VALID_OBJECT_ID
 
-
 class GalleryCommentServiceTests(unittest.TestCase):
     def setUp(self):
         self.repo = MagicMock()
@@ -153,7 +152,6 @@ class GalleryCommentServiceTests(unittest.TestCase):
         self.assertEqual(result["like_count"], 1)
         updated_comment = self.repo.update_comment.call_args[0][0]
         self.assertEqual(updated_comment["liked_ips"], ["8.8.8.8"])
-
 
 if __name__ == "__main__":
     unittest.main()

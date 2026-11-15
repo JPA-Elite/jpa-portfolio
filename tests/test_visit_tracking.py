@@ -5,7 +5,6 @@ from flask import Flask
 
 from app.domains import is_local_host, should_track_visit
 
-
 class VisitTrackingHostTests(unittest.TestCase):
     def test_local_hosts_are_not_tracked(self):
         local_hosts = [
@@ -59,7 +58,6 @@ class VisitTrackingHostTests(unittest.TestCase):
                 self.assertFalse(is_local_host(host))
                 self.assertTrue(should_track_visit(host))
 
-
 class VisitTrackingRequestTests(unittest.TestCase):
     def _build_app(self):
         from app import app as app_module
@@ -112,7 +110,6 @@ class VisitTrackingRequestTests(unittest.TestCase):
             ),
         )
         self.assertTrue(kwargs["daemon"])
-
 
 if __name__ == "__main__":
     unittest.main()

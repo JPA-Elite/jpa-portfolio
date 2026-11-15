@@ -9,7 +9,6 @@ from app.Repositories.BaseRepository import BaseRepository
 from app.configurations import SortOrder
 from tests.test_support import VALID_OBJECT_ID
 
-
 class _RecordingCursor:
     def __init__(self, docs):
         self.docs = list(docs)
@@ -31,7 +30,6 @@ class _RecordingCursor:
 
     def __iter__(self):
         return iter(self.docs)
-
 
 class ActivityLogRepositoryTests(unittest.TestCase):
     def setUp(self):
@@ -243,7 +241,6 @@ class ActivityLogRepositoryTests(unittest.TestCase):
             query["$or"][4],
             {"timestamp": {"$regex": "ad\\.min", "$options": "i"}},
         )
-
 
 if __name__ == "__main__":
     unittest.main()

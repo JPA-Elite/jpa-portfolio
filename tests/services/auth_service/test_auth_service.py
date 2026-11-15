@@ -10,7 +10,6 @@ from app.constants.messages import (
 
 from tests.services._service_fixtures import build_test_app
 
-
 class AuthServiceTests(unittest.TestCase):
     def setUp(self):
         self.app = build_test_app()
@@ -78,7 +77,6 @@ class AuthServiceTests(unittest.TestCase):
             "user-1",
             {"username": "new-admin", "password": "hashed:newpass"},
         )
-
 
 if __name__ == "__main__":
     unittest.main()

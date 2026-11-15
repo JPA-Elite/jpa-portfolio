@@ -8,7 +8,6 @@ from app.domains import (
     resolve_professional_redirect,
 )
 
-
 def _make_app(routing_enabled=True, admin_domain="config.jpastack.local"):
     app = Flask(__name__)
     app.config["LANDING_DOMAIN"] = "jpastack.local"
@@ -17,7 +16,6 @@ def _make_app(routing_enabled=True, admin_domain="config.jpastack.local"):
     app.config["ADMIN_DOMAIN"] = admin_domain
     app.config["DOMAIN_ROUTING_ENABLED"] = routing_enabled
     return app
-
 
 class ProfessionalRedirectTests(unittest.TestCase):
     def test_personal_pages_redirect_to_professional_root(self):
@@ -127,7 +125,6 @@ class ProfessionalRedirectTests(unittest.TestCase):
                 "http://professional.jpastack.local/",
             )
 
-
 class LandingRedirectTests(unittest.TestCase):
     def test_landing_root_redirects_to_professional_host(self):
         app = _make_app()
@@ -205,7 +202,6 @@ class LandingRedirectTests(unittest.TestCase):
         app = _make_app(routing_enabled=False)
         with app.app_context():
             self.assertIsNone(resolve_domain_redirect("jpastack.local", "/portfolio"))
-
 
 if __name__ == "__main__":
     unittest.main()

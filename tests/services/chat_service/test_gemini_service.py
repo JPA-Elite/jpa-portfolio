@@ -3,7 +3,6 @@ from unittest.mock import patch
 
 from app.Services.GeminiService import GeminiService
 
-
 class _FakeResponse:
     def __init__(self, status_code, data):
         self.status_code = status_code
@@ -11,7 +10,6 @@ class _FakeResponse:
 
     def json(self):
         return self._data
-
 
 class GeminiServiceTests(unittest.TestCase):
     def test_unavailable_without_key(self):

@@ -31,10 +31,8 @@ from app.Models.Gallery import Gallery
 from app.Models.KeyProject import KeyProject
 from app.Models.Video import Video
 
-
 def mock_image(name):
     return f"/static/images/{name}"
-
 
 KEY_PROJECTS = [
     KeyProject(
@@ -186,7 +184,6 @@ BUILT_APPS = [
     ),
 ]
 
-
 GALLERY_ITEMS = [
     Gallery(
         id="pw-gallery-sunrise",
@@ -328,12 +325,10 @@ VLOG_ITEMS = [
     ),
 ]
 
-
 def _localized_text(value, locale):
     if isinstance(value, dict):
         return str(value.get(locale) or value.get("en") or "")
     return str(value or "")
-
 
 def _matches_search(item, search_query, locale):
     if not search_query:
@@ -347,7 +342,6 @@ def _matches_search(item, search_query, locale):
         ]
     ).casefold()
     return needle in haystack
-
 
 def _matches_tags(item, tags_query):
     if not tags_query:
@@ -363,11 +357,9 @@ def _matches_tags(item, tags_query):
 
     return any(tag in item.tags for tag in requested)
 
-
 def _paginate(items, page, per_page):
     start = max(0, (page - 1) * per_page)
     return items[start:start + per_page], len(items)
-
 
 def _all_tags(items):
     tags = []
@@ -376,7 +368,6 @@ def _all_tags(items):
             if tag not in tags:
                 tags.append(tag)
     return tags
-
 
 class GalleryMockService:
     def search_gallery_paginated(
@@ -393,7 +384,6 @@ class GalleryMockService:
     def get_all_tags(self, limit=50):
         return _all_tags(GALLERY_ITEMS)[:limit]
 
-
 class VideoMockService:
     def search_video_paginated(
         self, search_query, tags, locale, page, per_page, order=None
@@ -409,7 +399,6 @@ class VideoMockService:
     def get_all_tags(self, limit=50):
         return _all_tags(VLOG_ITEMS)[:limit]
 
-
 class KeyProjectMockService:
     def seed_default_projects_if_empty(self):
         return None
@@ -417,14 +406,12 @@ class KeyProjectMockService:
     def get_active_key_projects(self):
         return KEY_PROJECTS
 
-
 class CompanyRoadmapMockService:
     def seed_default_company_roadmaps_if_empty(self):
         return None
 
     def get_active_company_roadmaps(self):
         return COMPANY_ROADMAPS
-
 
 class BuiltAppMockService:
     def seed_default_built_apps_if_empty(self):
@@ -438,7 +425,6 @@ class BuiltAppMockService:
             if built_app.slug == slug:
                 return built_app
         return None
-
 
 class AdminAuthMockService:
     def authenticate_admin(self, username, password):
@@ -454,7 +440,6 @@ class AdminAuthMockService:
                 False,
             )
         return None, "Invalid username or password.", False
-
 
 class AdminOtpMockService:
     email = "admin@example.com"
@@ -487,10 +472,8 @@ class AdminOtpMockService:
             "retry_after_seconds": None,
         }
 
-
 AdminPageController.auth_service = AdminAuthMockService()
 AdminOtpController.OtpService = AdminOtpMockService
-
 
 @app.route("/__playwright/admin-session", methods=["GET"])
 def playwright_admin_session():
@@ -504,14 +487,12 @@ def playwright_admin_session():
         session["face_verified"] = True
     return "", 204
 
-
 @app.route("/__playwright/face-verify", methods=["POST"])
 def playwright_face_verify():
     if not session.get("user_id"):
         return jsonify({"ok": False, "message": "Not authenticated"}), 401
     session["face_verified"] = True
     return jsonify({"ok": True, "message": "Face verified successfully."})
-
 
 PageController.gallery_service = GalleryMockService()
 PageController.video_service = VideoMockService()
@@ -520,7 +501,6 @@ PageController.company_roadmap_service = CompanyRoadmapMockService()
 PageController.built_app_service = BuiltAppMockService()
 app_module.TRACKED_VISIT_ENDPOINTS = frozenset()
 app.config["SESSION_COOKIE_SECURE"] = False
-
 
 if __name__ == "__main__":
     port = int(os.environ.get("PLAYWRIGHT_MOCK_PORT", "4173"))

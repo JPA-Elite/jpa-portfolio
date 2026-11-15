@@ -4,7 +4,6 @@ from unittest.mock import MagicMock
 from app.Services.GalleryLikeService import GalleryLikeService
 from tests.test_support import VALID_OBJECT_ID
 
-
 class GalleryLikeServiceTests(unittest.TestCase):
     def setUp(self):
         self.repo = MagicMock()
@@ -78,7 +77,6 @@ class GalleryLikeServiceTests(unittest.TestCase):
         self.assertTrue(result["created"])
         self.assertEqual(result["ip_address"], "127.0.0.1")
         self.repo.get_gallery_likes_by_id_and_ip.assert_called_once_with("g-1", "127.0.0.1")
-
 
 if __name__ == "__main__":
     unittest.main()

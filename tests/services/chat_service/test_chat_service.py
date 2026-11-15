@@ -5,9 +5,7 @@ from unittest.mock import MagicMock, patch
 from app.Services.ChatService import ChatService
 from app.Services.KnowledgeBaseService import KnowledgeBaseService
 
-
 GIRLFRIEND_BIRTHDAY = datetime(2005, 4, 11)
-
 
 def _girlfriend_age():
     today = datetime.now()
@@ -15,7 +13,6 @@ def _girlfriend_age():
     if (today.month, today.day) < (GIRLFRIEND_BIRTHDAY.month, GIRLFRIEND_BIRTHDAY.day):
         age -= 1
     return age
-
 
 def _fake_gettext(key):
     return {
@@ -70,12 +67,10 @@ def _fake_gettext(key):
         "chat_unrelated_reply": "That question is unrelated to my conversation. Please focus on my skills, projects, experience, and everything on this site!",
     }.get(key, key)
 
-
 def _make_service(method, result):
     service = MagicMock()
     getattr(service, method).return_value = result
     return service
-
 
 def _localized_gettext_factory(replies):
     def _gettext(key):
@@ -83,7 +78,6 @@ def _localized_gettext_factory(replies):
             return replies[key]
         return _fake_gettext(key)
     return _gettext
-
 
 QA = [
     {"question": "What is your name?", "answer": "My name is Joshua P. Algadipe."},
@@ -97,7 +91,6 @@ QA = [
     {"question": "What type of person are you?", "answer": "I'm a bit enigmatic."},
     {"question": "What is your favorite programming language?", "answer": "My favorite programming language is Python."},
 ]
-
 
 class ChatServiceTests(unittest.TestCase):
     def setUp(self):
@@ -210,7 +203,6 @@ class ChatServiceTests(unittest.TestCase):
         self.assertEqual(result["answer"].count(" • "), 9)
         self.assertIn("Question 9?", result["answer"])
         self.assertNotIn("Question 10?", result["answer"])
-
 
 class ChatServiceIntentTests(unittest.TestCase):
     def setUp(self):
@@ -398,7 +390,6 @@ class ChatServiceIntentTests(unittest.TestCase):
             patch.dict(os.environ, {"PROFESSIONAL_DOMAIN": "professional.jpastack.local"}):
             result = self._resolve("what is the survey link")
         self.assertIn("https://forms.gle/5UqVgzzxgkJS11Qj9", result["answer"])
-
 
 class ChatServiceAiTests(unittest.TestCase):
     def _resolve(self, message, gemini=None):
@@ -605,7 +596,6 @@ class ChatServiceAiTests(unittest.TestCase):
         self.assertIn("COMPANY DEFINITION: Software development company.", context)
         self.assertIn("COMPANY HIGHLIGHTS: Full stack; Internal tools", context)
 
-
 class ChatServiceContentTests(unittest.TestCase):
     def setUp(self):
         self.service = ChatService()
@@ -757,7 +747,6 @@ class ChatServiceContentTests(unittest.TestCase):
         self.assertIn("Songs:", result["answer"])
         self.assertIn("Song A - Artist A", result["answer"])
 
-
 class ChatServiceSuggestTests(unittest.TestCase):
     def setUp(self):
         self.service = ChatService()
@@ -784,7 +773,6 @@ class ChatServiceSuggestTests(unittest.TestCase):
         self.assertIsNotNone(best)
         self.assertGreaterEqual(best["score"], 0.28)
         self.assertLess(best["score"], 0.36)
-
 
 class ChatServiceMultiTurnTests(unittest.TestCase):
     def setUp(self):
@@ -921,7 +909,6 @@ class ChatServiceMultiTurnTests(unittest.TestCase):
         self.assertFalse(self.service._has_item_reference("how about in backend"))
         self.assertFalse(self.service._has_item_reference("what about the weather"))
 
-
 class ChatServiceContentMatchTests(unittest.TestCase):
     def setUp(self):
         self.service = ChatService()
@@ -1019,7 +1006,6 @@ class ChatServiceContentMatchTests(unittest.TestCase):
         result = self._resolve("show mountain view photo", gallery=_make_service("search_gallery_paginated", (items, 2)))
         self.assertEqual(result["matched_question"], "Mountain-View")
 
-
 class ChatServiceFuzzyTopicTests(unittest.TestCase):
     def setUp(self):
         self.service = ChatService()
@@ -1045,7 +1031,6 @@ class ChatServiceFuzzyTopicTests(unittest.TestCase):
         result = self._resolve("your experince", roadmaps=_make_service("get_active_company_roadmaps", roadmaps))
         self.assertIn("TrustArc", result["answer"])
 
-
 class ChatServiceLocalizedAliasTests(unittest.TestCase):
     def setUp(self):
         self.service = ChatService()
@@ -1064,7 +1049,6 @@ class ChatServiceLocalizedAliasTests(unittest.TestCase):
         result = self._resolve("ano pangalan mo", "fil_PH")
         self.assertIn("Joshua", result["answer"])
 
-
 KB_TEXT = """\
 # Test knowledge base
 
@@ -1082,7 +1066,6 @@ I am a passionate software developer.
 Aliases: about you, about yourself
 """
 
-
 KB_TEXT_FUZZY = """\
 # Fuzzy test kb
 
@@ -1091,7 +1074,6 @@ Key: contact
 You can reach me on LinkedIn at joshua-linkedin.
 Aliases: linkedin url, contact info, how to contact me
 """
-
 
 KB_TEXT_L10N = """\
 # Localized test kb
@@ -1113,7 +1095,6 @@ Heading-ceb: Unsa imong hobby?
 Body-ceb: Ganahan ko mag-coding.
 Aliases-ceb: unsa imong hobby
 """
-
 
 class KnowledgeBaseServiceTests(unittest.TestCase):
     def test_parses_sections_headings_aliases_and_keys(self):
@@ -1160,7 +1141,6 @@ class KnowledgeBaseServiceTests(unittest.TestCase):
             ["sino ka", "ano pangalan mo"],
         )
         self.assertEqual(sections[1]["localized"]["ceb"]["body"], "Ganahan ko mag-coding.")
-
 
 class ChatServiceKnowledgeBaseTests(unittest.TestCase):
     def setUp(self):
@@ -1224,7 +1204,6 @@ class ChatServiceKnowledgeBaseTests(unittest.TestCase):
         self.assertIn("linkedin", result["answer"])
         self.assertEqual(result["matched_question"], "Contact information")
 
-
 class ChatServiceKnowledgeBaseLocalizedTests(unittest.TestCase):
     def setUp(self):
         self.kb = KnowledgeBaseService(text=KB_TEXT_L10N)
@@ -1281,7 +1260,6 @@ class ChatServiceKnowledgeBaseLocalizedTests(unittest.TestCase):
         result = self._resolve("what is your hobby?", "ceb", service=service)
         self.assertEqual(result["answer"], "I like drawing and coding.")
 
-
 class ChatServiceLocalizedCountTests(unittest.TestCase):
     def setUp(self):
         self.service = ChatService()
@@ -1323,7 +1301,6 @@ class ChatServiceLocalizedCountTests(unittest.TestCase):
             music=_make_service("get_paginated_music_list", ([{"title": "A", "artist": "B"}], 5)),
         )
         self.assertEqual(result["answer"], "Mayroon akong 5 na mga kanta sa aking koleksyon.")
-
 
 class ChatServiceDynamicJobTests(unittest.TestCase):
     def _service(self, roadmaps=None):
@@ -1376,7 +1353,6 @@ class ChatServiceDynamicJobTests(unittest.TestCase):
         result = self._resolve(self._service([]), "what is your current company")
         self.assertIn("Software Engineer currently at Chronostep", result["answer"])
 
-
 class RealGuideLocalizationTests(unittest.TestCase):
     def test_real_guide_is_localized_throughout(self):
         kb = KnowledgeBaseService()
@@ -1406,7 +1382,6 @@ class RealGuideLocalizationTests(unittest.TestCase):
                  patch("app.Services.ChatService.ChatService._get_gemini_service", new=lambda self: self.gemini_service):
                 result = service.resolve(message)
             self.assertIn(needle, result["answer"], f"{message} in {locale}")
-
 
 if __name__ == "__main__":
     unittest.main()

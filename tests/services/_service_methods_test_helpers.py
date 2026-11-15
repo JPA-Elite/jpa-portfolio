@@ -9,14 +9,12 @@ from flask import Flask, session
 
 from tests.test_support import VALID_OBJECT_ID
 
-
 def _fake_user_agent():
     return SimpleNamespace(
         device=SimpleNamespace(family="Phone", brand="Brand", model="Model"),
         browser=SimpleNamespace(family="Chrome", version_string="1.0"),
         os=SimpleNamespace(family="Android", version_string="14"),
     )
-
 
 def _base_existing_gallery():
     return {
@@ -27,7 +25,6 @@ def _base_existing_gallery():
         "image_url": "/gallery.jpg",
         "tags": ["tag1"],
     }
-
 
 def _base_existing_video():
     return {
@@ -40,7 +37,6 @@ def _base_existing_video():
         "file": None,
     }
 
-
 def _base_existing_music():
     return {
         "_id": VALID_OBJECT_ID,
@@ -52,7 +48,6 @@ def _base_existing_music():
         "duration": "1:23",
         "lyrics": "lyrics",
     }
-
 
 def _base_existing_key_project():
     return {
@@ -69,7 +64,6 @@ def _base_existing_key_project():
         "is_active": True,
         "slides": [],
     }
-
 
 def _base_existing_built_app():
     return {
@@ -88,7 +82,6 @@ def _base_existing_built_app():
         "sort_order": 1,
         "is_active": True,
     }
-
 
 def _base_existing_roadmap():
     return {
@@ -109,7 +102,6 @@ def _base_existing_roadmap():
         "is_active": True,
     }
 
-
 def _comment_doc(id_key):
     return {
         "_id": VALID_OBJECT_ID,
@@ -120,7 +112,6 @@ def _comment_doc(id_key):
         "liked_ips": ["127.0.0.1"],
         "created_at": datetime.utcnow(),
     }
-
 
 def _system_info_doc():
     return {
@@ -149,7 +140,6 @@ def _system_info_doc():
         "location": "0,0",
     }
 
-
 def _service_public_methods(service_cls):
     for name, fn in inspect.getmembers(service_cls, inspect.isfunction):
         if fn.__module__ != service_cls.__module__:
@@ -158,11 +148,9 @@ def _service_public_methods(service_cls):
             continue
         yield name, fn
 
-
 def _load_service_class(module_name: str, class_name: str):
     module = importlib.import_module(f"app.Services.{module_name}")
     return module, getattr(module, class_name)
-
 
 def _build_service_instance(service_cls):
     service_name = service_cls.__name__
@@ -250,7 +238,6 @@ def _build_service_instance(service_cls):
     if service_name == "AuthService":
         return service_cls(repository=repo, attempt_repository=attempt_repo)
     return service_cls(repository=repo)
-
 
 def _dummy_service_arg(service_name, method_name, param_name):
     if param_name in {"username"}:
@@ -357,7 +344,6 @@ def _dummy_service_arg(service_name, method_name, param_name):
 
     return "value"
 
-
 def _patch_targets():
     return [
         ("app.Services.AuthService.check_password_hash", lambda *_args, **_kwargs: True),
@@ -391,7 +377,6 @@ def _patch_targets():
         ("app.Services.PortfolioService.platform.platform", lambda: "Windows"),
         ("app.Services.PortfolioService.platform.architecture", lambda: ("64bit", "")),
     ]
-
 
 def run_service_methods_test(testcase, module_name: str, class_name: str):
     _module, service_cls = _load_service_class(module_name, class_name)

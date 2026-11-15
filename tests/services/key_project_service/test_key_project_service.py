@@ -6,7 +6,6 @@ from app.configurations import SortOrder
 
 from tests.services._service_fixtures import key_project_doc
 
-
 class KeyProjectServiceTests(unittest.TestCase):
     def setUp(self):
         self.repo = MagicMock()
@@ -180,7 +179,6 @@ class KeyProjectServiceTests(unittest.TestCase):
         seeded_models = self.repo.add_many_key_projects.call_args[0][0]
         self.assertEqual(len(seeded_models), 1)
         self.assertEqual(seeded_models[0].id, "seed-1")
-
 
 if __name__ == "__main__":
     unittest.main()

@@ -3,7 +3,6 @@ from unittest.mock import MagicMock
 
 from app.Services.BuiltAppLikeService import BuiltAppLikeService
 
-
 class BuiltAppLikeServiceTests(unittest.TestCase):
     def setUp(self):
         self.repo = MagicMock()
@@ -66,7 +65,6 @@ class BuiltAppLikeServiceTests(unittest.TestCase):
         self.assertEqual(result, {"action": "switched", "is_like": True})
         self.repo.update_vote.assert_called_once()
         self.repo.delete_vote.assert_not_called()
-
 
 if __name__ == "__main__":
     unittest.main()

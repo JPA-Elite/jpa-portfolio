@@ -6,10 +6,8 @@ from flask import Flask
 
 from app.Repositories.BaseRepository import BaseRepository
 
-
 def _fake_get_mongo_client(self, collection_name):
     return object(), {}, MagicMock()
-
 
 class ApiAdminOtpControllerTests(unittest.TestCase):
     @classmethod
@@ -322,7 +320,6 @@ class ApiAdminOtpControllerTests(unittest.TestCase):
         self.assertEqual(
             response.get_json(), {"ok": False, "message": "Not authenticated"}
         )
-
 
 if __name__ == "__main__":
     unittest.main()

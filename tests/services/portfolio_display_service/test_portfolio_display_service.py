@@ -6,7 +6,6 @@ from app.Services.PortfolioDisplayService import (
     resolve_project_stack_display,
 )
 
-
 class PortfolioDisplayServiceTests(unittest.TestCase):
     def test_localized_roadmap_employment_type_maps_known_values(self):
         translate = lambda key: f"translated:{key}"
@@ -132,7 +131,6 @@ class PortfolioDisplayServiceTests(unittest.TestCase):
         self.assertEqual(result["short_description"], "")
         self.assertEqual(result["full_description"], [])
         self.assertEqual(result["snapshots"], [])
-
 
 if __name__ == "__main__":
     unittest.main()

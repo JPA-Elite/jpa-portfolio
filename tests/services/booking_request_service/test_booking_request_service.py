@@ -5,7 +5,6 @@ from unittest.mock import MagicMock
 
 from app.Services.BookingRequestService import BookingRequestService
 
-
 class BookingRequestServiceTests(unittest.TestCase):
     def setUp(self):
         self.repo = MagicMock()
@@ -114,7 +113,6 @@ class BookingRequestServiceTests(unittest.TestCase):
 
         self.assertEqual(result["status"], "error")
         self.assertEqual(result["message"], "db down")
-
 
 if __name__ == "__main__":
     unittest.main()

@@ -5,7 +5,6 @@ from app.Models.MusicLike import MusicLike
 from app.Services.MusicLikeService import MusicLikeService
 from tests.test_support import VALID_OBJECT_ID
 
-
 class MusicLikeServiceTests(unittest.TestCase):
     def setUp(self):
         self.repo = MagicMock()
@@ -111,7 +110,6 @@ class MusicLikeServiceTests(unittest.TestCase):
 
         self.assertEqual(result, {"action": "added", "is_like": False})
         self.repo.get_user_vote.assert_called_once_with("music-1", "")
-
 
 if __name__ == "__main__":
     unittest.main()

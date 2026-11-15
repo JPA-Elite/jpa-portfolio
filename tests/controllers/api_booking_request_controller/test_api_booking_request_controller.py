@@ -9,10 +9,8 @@ from app.Models.BookingRequest import BookingRequest
 from app.Repositories.BaseRepository import BaseRepository
 from app.configurations import SortOrder
 
-
 def _fake_get_mongo_client(self, collection_name):
     return object(), {}, MagicMock()
-
 
 def _booking(name="Joshua", email="joshua@example.com"):
     return BookingRequest(
@@ -26,7 +24,6 @@ def _booking(name="Joshua", email="joshua@example.com"):
         created_at=datetime(2026, 10, 23, 4, 30),
         service="Consultation",
     )
-
 
 class ApiBookingRequestControllerTests(unittest.TestCase):
     @classmethod
@@ -188,7 +185,6 @@ class ApiBookingRequestControllerTests(unittest.TestCase):
         self.assertEqual(
             response.get_json(), {"ok": False, "message": "boom"}
         )
-
 
 if __name__ == "__main__":
     unittest.main()

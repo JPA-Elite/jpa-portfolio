@@ -3,7 +3,6 @@ from unittest.mock import MagicMock
 
 from app.Services.CompanyRoadmapService import CompanyRoadmapService
 
-
 class CompanyRoadmapServiceI18nTests(unittest.TestCase):
     def setUp(self):
         self.service = CompanyRoadmapService(repository=MagicMock())
@@ -44,7 +43,6 @@ class CompanyRoadmapServiceI18nTests(unittest.TestCase):
         self.assertEqual(merged["en"], ["New", "List"])
         self.assertEqual(merged["ceb"], ["Bag-o"])
         self.assertEqual(merged["fil_PH"], ["Bago"])
-
 
 if __name__ == "__main__":
     unittest.main()

@@ -6,7 +6,6 @@ from tests.repositories.shared._repository_test_helpers import (
     run_repository_smoke_test,
 )
 
-
 class AuthRepositoryTests(unittest.TestCase):
     def test_smoke_instantiation(self):
         run_repository_smoke_test(self, "AuthRepository", "AuthRepository")

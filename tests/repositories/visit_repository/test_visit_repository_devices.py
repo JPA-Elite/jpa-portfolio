@@ -5,7 +5,6 @@ from unittest.mock import patch
 from app.Repositories.BaseRepository import BaseRepository
 from app.Repositories.VisitRepository import VisitRepository
 
-
 class _FakeCollection:
     def __init__(self, entries=None, fail=False):
         self._entries = list(entries or [])
@@ -15,7 +14,6 @@ class _FakeCollection:
         if self._fail:
             raise RuntimeError("aggregation failed")
         return list(self._entries)
-
 
 class VisitRepositoryDeviceBreakdownTests(unittest.TestCase):
     def _repository_with(self, entries=None, fail=False):
@@ -68,7 +66,6 @@ class VisitRepositoryDeviceBreakdownTests(unittest.TestCase):
         repo = self._repository_with(fail=True)
 
         self.assertEqual(repo.get_device_breakdown(), [])
-
 
 if __name__ == "__main__":
     unittest.main()

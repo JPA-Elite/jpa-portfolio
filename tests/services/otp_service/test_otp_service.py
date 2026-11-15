@@ -4,7 +4,6 @@ from unittest.mock import patch
 
 from app.Services.OtpService import OtpService
 
-
 class FakeAuthRepository:
     store = {}
 
@@ -18,7 +17,6 @@ class FakeAuthRepository:
         doc = FakeAuthRepository.store.setdefault(str(user_id), {})
         doc.update(data)
         return True
-
 
 class OtpServiceTests(unittest.TestCase):
     def setUp(self):
@@ -93,7 +91,6 @@ class OtpServiceTests(unittest.TestCase):
         locked = OtpService().verify_otp("user-1", "000000")
         self.assertEqual(locked["reason"], "cooldown")
         self.assertIsNotNone(locked["retry_after_seconds"])
-
 
 if __name__ == "__main__":
     unittest.main()

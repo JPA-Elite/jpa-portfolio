@@ -12,10 +12,8 @@ from tests.controllers.shared._controller_test_helpers import (
     _patch_module_dependencies,
 )
 
-
 def _fake_gettext(key, *args, **kwargs):
     return key
-
 
 class _FakeStreamResponse:
     def __init__(self, status_code, lines):
@@ -30,10 +28,8 @@ class _FakeStreamResponse:
     def close(self):
         self.closed = True
 
-
 def _sse_line(text):
     return 'data: {"candidates": [{"content": {"parts": [{"text": "%s"}]}}]}' % text
-
 
 class GeminiStreamingTests(unittest.TestCase):
     def test_stream_answer_yields_text_chunks(self):
@@ -88,7 +84,6 @@ class GeminiStreamingTests(unittest.TestCase):
         self.assertEqual(service._working_model, "gemini-3.6-flash")
         self.assertTrue(second.closed)
 
-
 class ChatServiceStreamingTests(unittest.TestCase):
     def _stream(self, message, gemini=None):
         service = ChatService(gemini_service=gemini)
@@ -127,7 +122,6 @@ class ChatServiceStreamingTests(unittest.TestCase):
         self.assertEqual(tokens, ["Non streaming answer."])
         self.assertEqual(events[-1]["result"]["answer"], "Non streaming answer.")
 
-
 class ChatStreamRouteTests(unittest.TestCase):
     def _module(self, stack):
         stack.enter_context(patch.object(BaseRepository, "get_mongo_client", new=_fake_get_mongo_client))
@@ -161,7 +155,6 @@ class ChatStreamRouteTests(unittest.TestCase):
         self.assertIn('"type": "token"', body)
         self.assertIn('"answer": "Hi there"', body)
         self.assertIn("[DONE]", body)
-
 
 if __name__ == "__main__":
     unittest.main()

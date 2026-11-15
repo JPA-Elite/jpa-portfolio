@@ -65,22 +65,30 @@ def _built_app_paths():
     ]
 
 
-def _resolve_bases():
+def _request_base():
+    if not has_request_context():
+        return ""
     scheme = "https"
     request_host = ""
-    if has_request_context():
-        try:
-            scheme = (request.scheme or "https").strip().lower() or "https"
-        except Exception:
-            scheme = "https"
-        try:
-            request_host = (request.host or "").strip().lower()
-        except Exception:
-            request_host = ""
-        if ":" in request_host:
-            host_part, _, port_part = request_host.rpartition(":")
-            if port_part.isdigit() and host_part:
-                request_host = host_part
+    try:
+        scheme = (request.scheme or "https").strip().lower() or "https"
+    except Exception:
+        scheme = "https"
+    try:
+        request_host = (request.host or "").strip().lower()
+    except Exception:
+        request_host = ""
+    if not request_host:
+        return ""
+    return f"{scheme}://{request_host}".rstrip("/")
+
+
+def _resolve_bases():
+    request_base = _request_base()
+    if request_base:
+        return request_base, request_base
+
+    scheme = "https"
 
     def _config(name):
         try:
@@ -93,7 +101,7 @@ def _resolve_bases():
             pass
         return (os.getenv(name, "") or "").strip().lower()
 
-    landing_host = _config("LANDING_DOMAIN") or request_host or PRODUCTION_HOST
+    landing_host = _config("LANDING_DOMAIN") or PRODUCTION_HOST
     professional_host = _config("PROFESSIONAL_DOMAIN") or landing_host
     social_host = _config("SOCIAL_DOMAIN") or landing_host
     professional_base = f"{scheme}://{professional_host}".rstrip("/")

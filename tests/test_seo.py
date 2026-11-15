@@ -257,7 +257,7 @@ class SitemapTests(unittest.TestCase):
         self.assertNotIn("professional.jpastack.com/donation", xml)
         self.assertNotIn("<loc>https://jpastack.com/", xml)
 
-    def test_landing_sitemap_lists_professional_pages(self):
+    def test_landing_sitemap_uses_request_domain(self):
         from app.sitemap import generate_sitemap
 
         app = _make_app()
@@ -265,10 +265,46 @@ class SitemapTests(unittest.TestCase):
             "/sitemap.xml", base_url="https://jpastack.com"
         ):
             xml = generate_sitemap().get_data(as_text=True)
+        self.assertIn("<loc>https://jpastack.com/portfolio</loc>", xml)
+        self.assertIn("<loc>https://jpastack.com/build</loc>", xml)
+        self.assertNotIn("professional.jpastack.com", xml)
+        self.assertNotIn("social.jpastack.com", xml)
+
+    def test_sitemap_uses_request_domain_for_every_site(self):
+        from app.sitemap import generate_sitemap
+
+        app = _make_app()
+        cases = {
+            "https://jpastack.com": "https://jpastack.com",
+            "https://professional.jpastack.com": "https://professional.jpastack.com",
+            "https://social.jpastack.com": "https://social.jpastack.com",
+            "https://www.jpastack.com": "https://www.jpastack.com",
+            "http://localhost:5000": "http://localhost:5000",
+        }
+        for base_url, expected in cases.items():
+            with self.subTest(base_url=base_url):
+                with app.test_request_context("/sitemap.xml", base_url=base_url):
+                    xml = generate_sitemap().get_data(as_text=True)
+                locs = [
+                    line.strip()
+                    for line in xml.splitlines()
+                    if line.strip().startswith("<loc>")
+                ]
+                self.assertTrue(locs)
+                for loc in locs:
+                    self.assertTrue(loc.startswith(f"<loc>{expected}/"), loc)
+                for other_base in cases.values():
+                    if other_base == expected:
+                        continue
+                    self.assertNotIn(f"{other_base}/", xml)
+
+    def test_sitemap_falls_back_to_configured_domain_without_request(self):
+        from app.sitemap import generate_sitemap
+
+        app = _make_app()
+        with app.app_context():
+            xml = generate_sitemap().get_data(as_text=True)
         self.assertIn("<loc>https://professional.jpastack.com/portfolio</loc>", xml)
-        self.assertIn("<loc>https://professional.jpastack.com/build</loc>", xml)
-        self.assertNotIn("<loc>https://jpastack.com/", xml)
-        self.assertNotIn("professional.jpastack.com/vlog", xml)
 
     def test_social_sitemap_lists_only_social_pages(self):
         from app.sitemap import generate_sitemap

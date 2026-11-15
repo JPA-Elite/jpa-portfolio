@@ -270,6 +270,29 @@ class SitemapTests(unittest.TestCase):
         self.assertNotIn("professional.jpastack.com", xml)
         self.assertNotIn("social.jpastack.com", xml)
 
+    def test_landing_sitemap_matches_professional_paths(self):
+        from unittest import mock
+
+        from app.sitemap import generate_sitemap
+
+        app = _make_app()
+        with mock.patch(
+            "app.sitemap._active_built_app_slugs",
+            return_value=["stickman-run-app", "lifetrail"],
+        ):
+            with app.test_request_context(
+                "/sitemap.xml", base_url="https://jpastack.com"
+            ):
+                landing_xml = generate_sitemap().get_data(as_text=True)
+            with app.test_request_context(
+                "/sitemap.xml", base_url="https://professional.jpastack.com"
+            ):
+                professional_xml = generate_sitemap().get_data(as_text=True)
+        self.assertEqual(
+            landing_xml.replace("https://jpastack.com", ""),
+            professional_xml.replace("https://professional.jpastack.com", ""),
+        )
+
     def test_sitemap_uses_request_domain_for_every_site(self):
         from app.sitemap import generate_sitemap
 
@@ -320,7 +343,7 @@ class SitemapTests(unittest.TestCase):
         self.assertNotIn("professional.jpastack.com", xml)
         self.assertNotIn("https://jpastack.com", xml)
 
-    def test_professional_and_social_sitemaps_list_active_built_apps(self):
+    def test_all_sitemaps_list_active_built_apps(self):
         from unittest import mock
 
         from app.sitemap import generate_sitemap
@@ -349,7 +372,10 @@ class SitemapTests(unittest.TestCase):
             "<loc>https://social.jpastack.com/apps/stickman-run-app</loc>",
             social_xml,
         )
-        self.assertNotIn("/apps/stickman-run-app", landing_xml)
+        self.assertIn(
+            "<loc>https://jpastack.com/apps/stickman-run-app</loc>",
+            landing_xml,
+        )
 
     def test_built_app_paths_encode_slugs_and_skip_empty_ones(self):
         from unittest import mock

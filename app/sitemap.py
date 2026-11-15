@@ -3,7 +3,7 @@ from datetime import datetime
 from urllib.parse import quote
 import os
 
-from app.domains import SITE_PROFESSIONAL, SITE_SOCIAL, current_site
+from app.domains import SITE_SOCIAL, current_site
 
 sitemap_bp = Blueprint("sitemap", __name__)
 
@@ -120,10 +120,11 @@ def generate_sitemap():
             site = ""
     if site == SITE_SOCIAL:
         urls = [f"{social_base}{path}" for path in PUBLIC_PATHS + _built_app_paths()]
-    elif site == SITE_PROFESSIONAL:
-        urls = [f"{professional_base}{path}" for path in PROFESSIONAL_PATHS + _built_app_paths()]
     else:
-        urls = [f"{professional_base}{path}" for path in PROFESSIONAL_PATHS]
+        urls = [
+            f"{professional_base}{path}"
+            for path in PROFESSIONAL_PATHS + _built_app_paths()
+        ]
     entries = "\n".join(
         f"""        <url>
             <loc>{url}</loc>

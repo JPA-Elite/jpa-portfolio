@@ -11,7 +11,7 @@ make package-install      # py -3.11 -m pip install -r app/requirements.txt
 make start-build          # build frontend + run with dist assets
 npm run dev               # Vite dev server + Flask concurrently
 make start-local          # bare Flask (no Vite, no dist)
-make test                 # python -m unittest discover -s tests -p "test_*.py"
+make test                 # backend unit tests + Playwright frontend specs
 make compile-translations # pybabel compile -d translations
 ```
 
@@ -41,6 +41,8 @@ Routes (pages.py / api.py) → Controllers (Controllers/web, Controllers/api)
 - Repository tests: `tests/repositories/*/test_*.py` — use `_repository_test_helpers` for contract tests.
 - Service tests: `tests/services/*/test_*.py` — use `MagicMock()` repos, fixtures from `_service_fixtures.py`.
 - No integration / e2e tests. Tests are pure unit tests.
+- **Test file whitespace**: every backend (`tests/**/*.py`) and frontend (`tests/frontend/**/*.js`) test file must use a **single blank line** between classes, functions and methods — never two or more consecutive blank lines — with no trailing spaces/tabs and exactly one newline at end of file. Only blank lines may be adjusted; never re-indent code, and never strip spaces inside intentional test data strings (e.g. `"   "`, `"  Joshua  "`, `" ,  , "`), since those are part of the assertions.
+- **Matching test scope**: when adding or updating a test, keep the new file consistent with these rules and run `make test` (or `python scripts/run_tests.py` for backend only) before finishing.
 
 ## Database
 

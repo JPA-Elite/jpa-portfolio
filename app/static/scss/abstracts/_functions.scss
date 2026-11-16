@@ -1,0 +1,19 @@
+@use "sass:color";
+@use "sass:math";
+@use "tokens" as *;
+
+@function rem($pixels, $base: 16px) {
+    @return math.div($pixels, $base) * 1rem;
+}
+
+@function alpha($color, $opacity) {
+    @return rgba($color, $opacity);
+}
+
+@function shade($color, $amount) {
+    @return color.mix($black, $color, $amount);
+}
+
+@function tint($color, $amount) {
+    @return color.mix($white, $color, $amount);
+}

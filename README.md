@@ -81,6 +81,7 @@ make stop-docker-local
 Notes:
 
 - Python changes trigger an automatic server restart (a few seconds); template/static changes apply on the next browser refresh.
+- SCSS edits under `app/static/scss/` are recompiled by the container's watcher and apply on the next refresh.
 - If the browser still shows an old page, it is the *browser* cache, not Docker: hard-refresh (`Ctrl+Shift+R`) or test with `curl`.
 - For frontend Vite hot-reload (`:5173` + `VITE_DEV_SERVER`), keep using `npm run dev` outside Docker.
 

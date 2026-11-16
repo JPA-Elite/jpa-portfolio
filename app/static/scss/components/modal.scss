@@ -694,7 +694,7 @@
     position: absolute;
     right: 0;
     bottom: calc(100% + 8px);
-    width: min(260px, calc(100vw - 120px));
+    width: min(260px, #{calc(100vw - 120px)});
     display: grid;
     grid-template-columns: repeat(6, 1fr);
     gap: 6px;
@@ -984,7 +984,7 @@
 
     .image-modal-nav {
         top: auto;
-        bottom: max(52px, calc(env(safe-area-inset-bottom) + 40px));
+        bottom: max(52px, #{calc(env(safe-area-inset-bottom) + 40px)});
         transform: none;
         width: 46px;
         height: 46px;
@@ -1116,7 +1116,7 @@
     }
 
     .comment-emoji-picker {
-        width: min(220px, calc(100vw - 90px));
+        width: min(220px, #{calc(100vw - 90px)});
         grid-template-columns: repeat(5, 1fr);
         gap: 5px;
         padding: 7px;
@@ -1161,7 +1161,7 @@
     }
 
     .image-modal-nav {
-        bottom: max(46px, calc(env(safe-area-inset-bottom) + 34px));
+        bottom: max(46px, #{calc(env(safe-area-inset-bottom) + 34px)});
         width: 42px;
         height: 42px;
         border-radius: 12px;
@@ -1214,7 +1214,7 @@
     }
 
     .comment-emoji-picker {
-        width: min(210px, calc(100vw - 70px));
+        width: min(210px, #{calc(100vw - 70px)});
         grid-template-columns: repeat(4, 1fr);
     }
 

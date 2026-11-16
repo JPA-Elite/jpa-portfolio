@@ -17,9 +17,20 @@ make compile-translations # pybabel compile -d translations
 
 ## Frontend asset modes
 
-- **Dev mode** (`npm run dev`): Vite on `:5173`, Flask proxies assets via `VITE_DEV_SERVER`. Templates get live-reload injected. Sets `VITE_DEV_SERVER=http://127.0.0.1:5173`.
+- **Dev mode** (`npm run dev`): Vite on `:5173`, Flask proxies assets via `VITE_DEV_SERVER`. Templates get live-reload injected. Sets `VITE_DEV_SERVER=http://127.0.0.1:5173`. Also runs the SCSS watcher.
 - **Dist mode** (`make start-build` / `make start-local-dist`): Built assets served from `app/dist/frontend/`. Requires `FRONTEND_DIST=1 FRONTEND_DIST_TEMPLATES=1`.
 - Use `static_asset('path/to/file.js')` in templates — it resolves to hashed filename in dist mode or Vite proxy URL in dev mode.
+
+## Styles (SCSS)
+
+- First-party styles are authored as SCSS in `app/static/scss/` and compiled to `app/static/css/` (git-ignored) by `node scripts/build-styles.mjs`.
+- `make css-build` compiles once; `make css-watch` / `npm run css:watch` recompiles on change. `npm run dev`, `make start-local*`, `make start-build`, `make run-docker-local` and the Playwright `webServer` compile first.
+- Compiled output mirrors the source path (`scss/pages/x.scss` → `css/pages/x.css`), so `url(...)` values and `scripts/page-bundles.json` entries keep working.
+- Shared tokens, functions and mixins live in `app/static/scss/abstracts/` (`@use "abstracts" as *;`). Prefer them over raw hex/sizes in new code.
+- `app/static/scss/themes.scss` stays the runtime theme API (`:root[data-theme]` custom properties); SCSS variables are authoring-only.
+- Vendor CSS stays plain CSS and is never converted: `app/static/css/bootstrap/`, `app/static/css/plyr/`, `app/static/css/pages/admin/adminlte*.css`.
+- Use `@use`/`@forward`, never `@import`. Keep `calc()` inside `min()`/`max()`/`clamp()` wrapped as `#{calc(...)}` so the compiler does not rewrite it.
+- Never hand-edit files in `app/static/css/` — edit the matching `app/static/scss/` source and rebuild.
 
 ## Architecture
 

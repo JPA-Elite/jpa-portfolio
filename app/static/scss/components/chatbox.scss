@@ -72,9 +72,9 @@
     display: none;
     position: fixed;
     right: max(12px, env(safe-area-inset-right, 0px));
-    bottom: calc(max(64px, env(safe-area-inset-bottom, 0px)) + 8px);
-    width: min(380px, calc(100vw - 20px));
-    height: min(620px, calc(var(--chat-viewport-height, 100dvh) - 92px));
+    bottom: #{calc(max(64px, env(safe-area-inset-bottom, 0px)) + 8px)};
+    width: min(380px, #{calc(100vw - 20px)});
+    height: min(620px, #{calc(var(--chat-viewport-height, 100dvh) - 92px)});
     max-height: calc(var(--chat-viewport-height, 100dvh) - 92px);
     border-radius: 16px;
     border: 1px solid var(--chat-border);
@@ -696,7 +696,7 @@
     position: absolute;
     right: 0;
     bottom: calc(100% + 8px);
-    width: min(260px, calc(100vw - 120px));
+    width: min(260px, #{calc(100vw - 120px)});
     display: grid;
     grid-template-columns: repeat(6, 1fr);
     gap: 6px;
@@ -871,10 +871,10 @@
 
     .chatbox-modal {
         right: max(8px, env(safe-area-inset-right, 0px));
-        bottom: calc(max(58px, env(safe-area-inset-bottom, 0px)) + 6px);
+        bottom: #{calc(max(58px, env(safe-area-inset-bottom, 0px)) + 6px)};
         width: calc(100vw - 12px - env(safe-area-inset-left, 0px) - env(safe-area-inset-right, 0px));
         max-width: 100%;
-        height: min(560px, calc(var(--chat-viewport-height, 100dvh) - 72px));
+        height: min(560px, #{calc(var(--chat-viewport-height, 100dvh) - 72px)});
         max-height: calc(var(--chat-viewport-height, 100dvh) - 72px);
         border-radius: 14px;
     }
@@ -937,7 +937,7 @@
     }
 
     .chatbox-emoji-picker {
-        width: min(220px, calc(100vw - 90px));
+        width: min(220px, #{calc(100vw - 90px)});
         grid-template-columns: repeat(5, 1fr);
         gap: 5px;
         padding: 7px;
@@ -957,8 +957,8 @@
 
 @media (max-width: 768px) {
     .chatbox-modal {
-        width: min(420px, calc(100vw - 16px - env(safe-area-inset-left, 0px) - env(safe-area-inset-right, 0px)));
-        height: min(620px, calc(var(--chat-viewport-height, 100dvh) - 78px));
+        width: min(420px, #{calc(100vw - 16px - env(safe-area-inset-left, 0px) - env(safe-area-inset-right, 0px))});
+        height: min(620px, #{calc(var(--chat-viewport-height, 100dvh) - 78px)});
         max-height: calc(var(--chat-viewport-height, 100dvh) - 78px);
     }
 
@@ -969,14 +969,14 @@
 
 @media (max-height: 580px) {
     .chatbox-modal {
-        height: min(500px, calc(var(--chat-viewport-height, 100dvh) - 72px));
+        height: min(500px, #{calc(var(--chat-viewport-height, 100dvh) - 72px)});
         max-height: calc(var(--chat-viewport-height, 100dvh) - 72px);
     }
 }
 
 @media (max-height: 520px) {
     .chatbox-modal {
-        height: min(440px, calc(var(--chat-viewport-height, 100dvh) - 16px));
+        height: min(440px, #{calc(var(--chat-viewport-height, 100dvh) - 16px)});
         max-height: calc(var(--chat-viewport-height, 100dvh) - 16px);
         bottom: max(6px, env(safe-area-inset-bottom, 0px));
     }
@@ -984,7 +984,7 @@
 
 @media (max-height: 410px) {
     .chatbox-modal {
-        height: min(360px, calc(var(--chat-viewport-height, 100dvh) - 12px));
+        height: min(360px, #{calc(var(--chat-viewport-height, 100dvh) - 12px)});
         max-height: calc(var(--chat-viewport-height, 100dvh) - 12px);
     }
 }
@@ -1046,8 +1046,8 @@
 
 /* Maximized state: half-width, balanced height on desktop; full screen on mobile */
 .chatbox-modal.is-maximized {
-    width: min(50vw, calc(100vw - 24px));
-    height: min(85vh, calc(var(--chat-viewport-height, 100dvh) - 48px));
+    width: min(50vw, #{calc(100vw - 24px)});
+    height: min(85vh, #{calc(var(--chat-viewport-height, 100dvh) - 48px)});
     max-height: calc(var(--chat-viewport-height, 100dvh) - 48px);
     border-radius: 16px;
 }

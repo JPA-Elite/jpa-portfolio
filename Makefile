@@ -34,6 +34,12 @@ stop-docker-local:
 build-frontend:
 	npm run build:frontend
 
+css-build:
+	npm run css:build
+
+css-watch:
+	npm run css:watch
+
 frontend-install:
 	npm install
 
@@ -43,18 +49,18 @@ frontend-dev:
 clean-frontend:
 	python -c "import shutil; shutil.rmtree('app/dist/frontend', ignore_errors=True)"
 
-run-local:
+run-local: css-build
 	python -m app.app
 
-start-local:
+start-local: css-build
 	python -m app.app
 
 # Build frontend assets + run locally using dist
-start-local-dist:
+start-local-dist: css-build
 	FRONTEND_DIST=1 FRONTEND_DIST_TEMPLATES=1 python -m app.app
 
 # Build frontend assets + run locally using dist (cmd/PowerShell friendly)
-start-local-dist-cmd:
+start-local-dist-cmd: css-build
 	cmd /C "set FRONTEND_DIST=1 && set FRONTEND_DIST_TEMPLATES=1 && python -m app.app"
 
 start-build: build-frontend start-local-dist-cmd
@@ -63,10 +69,10 @@ dev:
 	npm run dev
 
 # Run Flask with Vite dev server assets (same-origin via proxy)
-start-local-vite:
+start-local-vite: css-build
 	VITE_DEV_SERVER=http://127.0.0.1:5173 python -m app.app
 
-start-local-vite-cmd:
+start-local-vite-cmd: css-build
 	cmd /C "set VITE_DEV_SERVER=http://127.0.0.1:5173 && python -m app.app"
 
 # Stop the Docker container

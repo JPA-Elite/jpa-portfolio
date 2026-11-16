@@ -338,6 +338,33 @@ def vite_hmr():
     return Markup(f'<script type="module" src="{src}"></script>')
 
 
+_STYLE_LIVE_ROOTS = ("scss", "css")
+_STYLE_LIVE_SKIP = {"bootstrap", "plyr"}
+
+
+def _latest_style_mtime():
+    static_root = app.static_folder or ""
+    if not static_root:
+        return 0.0
+    latest = 0.0
+    for sub in _STYLE_LIVE_ROOTS:
+        root = os.path.join(static_root, sub)
+        if not os.path.isdir(root):
+            continue
+        for dirpath, dirnames, filenames in os.walk(root):
+            dirnames[:] = [name for name in dirnames if name not in _STYLE_LIVE_SKIP]
+            for name in filenames:
+                if not name.endswith((".scss", ".css")):
+                    continue
+                try:
+                    mtime = os.path.getmtime(os.path.join(dirpath, name))
+                except OSError:
+                    continue
+                if mtime > latest:
+                    latest = mtime
+    return latest
+
+
 def _latest_template_mtime():
     root = app.template_folder or ""
     if not root or not os.path.isdir(root):
@@ -345,7 +372,7 @@ def _latest_template_mtime():
     now = time.time()
     if now - _template_mtime_cache["checked"] < 1.0:
         return _template_mtime_cache["mtime"]
-    latest = 0.0
+    latest = _latest_style_mtime()
     for dirpath, dirnames, filenames in os.walk(root):
         if "__pycache__" in dirnames:
             dirnames.remove("__pycache__")

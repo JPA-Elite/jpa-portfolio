@@ -6,6 +6,7 @@ import { execFileSync } from "child_process";
 import { build as viteBuild } from "vite";
 import { minify as terserMinify } from "terser";
 import { minify as cssoMinify } from "csso";
+import { compileStyles } from "./build-styles.mjs";
 
 const repoRoot = process.cwd();
 const staticRoot = path.resolve(repoRoot, "app", "static");
@@ -16,6 +17,7 @@ const pageBundleConfigPath = path.resolve(repoRoot, "scripts", "page-bundles.jso
 const HASH_EXTENSIONS = new Set([".css", ".js"]);
 const TEXT_EXTENSIONS = new Set([".css", ".js", ".html", ".json", ".svg", ".xml"]);
 const SKIP_EXTENSIONS = new Set([".map"]);
+const SKIP_STATIC_PREFIXES = ["scss/", "css/.scss-manifest.json"];
 const BUNDLE_ENTRY_ROOT = path.resolve(staticRoot, "js", "pages");
 const ALREADY_MINIFIED = /\.min\.\w+$/;
 
@@ -317,6 +319,8 @@ const writePageBundles = async (manifest, config) => {
 cleanDir(outDir);
 fs.mkdirSync(outDir, { recursive: true });
 
+compileStyles({ style: "expanded" });
+
 const bundleEntries = collectBundleEntries();
 const bundleEntrySet = new Set(bundleEntries);
 const bundleManifest = await buildBundles(bundleEntries);
@@ -332,6 +336,10 @@ walkFiles(staticRoot, (filePath) => {
     return;
   }
   const relPath = path.relative(staticRoot, filePath);
+  const relPosix = toPosix(relPath);
+  if (SKIP_STATIC_PREFIXES.some((prefix) => relPosix.startsWith(prefix))) {
+    return;
+  }
   const outPath = path.join(outDir, relPath);
 
   ensureDir(outPath);

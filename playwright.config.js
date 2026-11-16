@@ -31,7 +31,7 @@ export default defineConfig({
     video: "off",
   },
   webServer: {
-    command: "python tests/frontend/mock_server.py",
+    command: "npm run css:build && python tests/frontend/mock_server.py",
     port,
     reuseExistingServer: false,
     stdout: "ignore",

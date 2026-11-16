@@ -9,6 +9,7 @@ const outDir = path.resolve(repoRoot, "app", "dist", "frontend", "static");
 const TEXT_EXTENSIONS = new Set([".js", ".css"]);
 const SKIP_EXTENSIONS = new Set([".map"]);
 const BUNDLE_SKIP_PREFIXES = ["js/bootstrap/", "css/bootstrap/"];
+const COPY_SKIP_PREFIXES = ["scss/", "css/.scss-manifest.json"];
 
 const toPosix = (value) => value.split(path.sep).join("/");
 
@@ -52,6 +53,9 @@ const copyStaticAssets = (bundledSet) => ({
       const relPosix = toPosix(relPath);
       const ext = path.extname(filePath).toLowerCase();
       if (SKIP_EXTENSIONS.has(ext)) {
+        return;
+      }
+      if (COPY_SKIP_PREFIXES.some((prefix) => relPosix.startsWith(prefix))) {
         return;
       }
       if (bundledSet.has(relPosix)) {

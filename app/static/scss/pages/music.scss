@@ -2666,7 +2666,7 @@ body.lyrics-modal-open {
 
 .visualizer-settings {
     position: fixed;
-    width: min(420px, calc(100% - 28px));
+    width: min(420px, #{calc(100% - 28px)});
     max-height: min(78vh, 760px);
     overflow-y: auto;
     background: rgba(18, 23, 38, 0.56);

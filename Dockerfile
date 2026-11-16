@@ -29,9 +29,9 @@ COPY ./app/requirements.txt /app/
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy frontend build config and install node deps
-COPY ./package.json /app/
+COPY ./package.json ./package-lock.json /app/
 COPY ./vite.config.mjs /app/
-RUN npm install
+RUN npm ci --no-audit --no-fund
 
 # Copy the rest of the app
 COPY . /app

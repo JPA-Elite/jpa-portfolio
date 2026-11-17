@@ -2,7 +2,7 @@ import unittest
 from unittest.mock import MagicMock, patch
 
 from app.Services.VisitService import VisitService
-from app.configurations import SortOrder
+from app.core.configurations import SortOrder
 from app.constants.messages import DISPLAY_RECORDS_DELETE_MSG
 
 from tests.services._service_fixtures import system_info_doc

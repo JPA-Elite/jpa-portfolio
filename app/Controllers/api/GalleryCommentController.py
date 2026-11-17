@@ -1,9 +1,10 @@
-from flask import request, jsonify
+from flask import request
 from app.Services.GalleryCommentService import GalleryCommentService
 from app.Services.UserDisplayNameService import UserDisplayNameService
 from app.Repositories.GalleryCommentRepository import GalleryCommentRepository
 from app.Repositories.UserDisplayNameRepository import UserDisplayNameRepository
-from app.configurations import HTTPMethod as http, HTTPStatus as status
+from app.core.configurations import HTTPMethod as http, HTTPStatus as status
+from app.core.responses import json_response, status_response
 from app.Requests.api.GalleryCommentRequest import GalleryCommentRequest
 from app.constants.messages import COMMENT_NOT_FOUND_ERROR, COMMENT_DELETE_FORBIDDEN, COMMENT_DELETE_SUCCESS, COMMENT_DELETE_ALL_SUCCESS
 
@@ -25,7 +26,7 @@ def gallery_comments_route():
         ip_address = data["ip_address"]
         comments, total = gallery_comment_service.get_comments(gallery_id, ip_address=ip_address, page=page, limit=limit)
         display_name, avatar_url, remaining_changes = gallery_comment_service.get_profile(ip_address)
-        return jsonify({
+        return json_response({
             "comments": comments,
             "total": total,
             "page": page,
@@ -39,7 +40,7 @@ def gallery_comments_route():
     text = data["text"]
     ip_address = data["ip_address"]
     comment_id = gallery_comment_service.add_comment(gallery_id, ip_address, text)
-    return jsonify({"status": "success", "comment_id": comment_id})
+    return status_response("success", comment_id=comment_id)
 
 def gallery_like_comment_route():
     form = GalleryCommentRequest()
@@ -51,9 +52,9 @@ def gallery_like_comment_route():
     ip_address = data["ip_address"]
     result = gallery_comment_service.toggle_like(comment_id, ip_address)
     if result is None:
-        return jsonify({"status": "error", "message": COMMENT_NOT_FOUND_ERROR}), status.NOT_FOUND
+        return status_response("error", COMMENT_NOT_FOUND_ERROR, status.NOT_FOUND)
 
-    return jsonify({"status": "success", **result})
+    return status_response("success", **result)
 
 def gallery_delete_comment_route(comment_id=None):
     form = GalleryCommentRequest()
@@ -63,11 +64,11 @@ def gallery_delete_comment_route(comment_id=None):
 
     result = gallery_comment_service.delete_comment(data.get("comment_id") or comment_id, data["ip_address"])
     if result is None:
-        return jsonify({"status": "error", "message": COMMENT_NOT_FOUND_ERROR}), status.NOT_FOUND
+        return status_response("error", COMMENT_NOT_FOUND_ERROR, status.NOT_FOUND)
     if result is False:
-        return jsonify({"status": "error", "message": COMMENT_DELETE_FORBIDDEN}), status.FORBIDDEN
+        return status_response("error", COMMENT_DELETE_FORBIDDEN, status.FORBIDDEN)
 
-    return jsonify({"status": "success", "message": COMMENT_DELETE_SUCCESS})
+    return status_response("success", COMMENT_DELETE_SUCCESS)
 
 def gallery_delete_all_comments_route():
     form = GalleryCommentRequest()
@@ -76,4 +77,4 @@ def gallery_delete_all_comments_route():
         return error_response, status_code
 
     deleted = gallery_comment_service.delete_all_comments(data["gallery_id"], data["ip_address"])
-    return jsonify({"status": "success", "deleted": deleted, "message": COMMENT_DELETE_ALL_SUCCESS})
+    return status_response("success", COMMENT_DELETE_ALL_SUCCESS, deleted=deleted)

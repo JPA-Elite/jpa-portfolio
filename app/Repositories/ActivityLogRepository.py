@@ -2,7 +2,7 @@ from bson import ObjectId
 from bson.errors import InvalidId
 from app.Repositories.BaseRepository import BaseRepository
 from app.Repositories.Interfaces.IActivityLogRepository import IActivityLogRepository
-from app.configurations import SortOrder
+from app.core.configurations import SortOrder
 from app.constants.db_collections import MongoCollections as mc
 import re
 

@@ -267,7 +267,7 @@ def _dummy_service_arg(service_name, method_name, param_name):
     if param_name in {"per_page", "limit"}:
         return 5
     if param_name == "order":
-        from app.configurations import SortOrder
+        from app.core.configurations import SortOrder
         return SortOrder.ASC
     if param_name == "search_query":
         return "test"

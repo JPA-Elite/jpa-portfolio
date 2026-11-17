@@ -6,7 +6,7 @@ from PIL import Image
 from werkzeug.datastructures import FileStorage, MultiDict
 
 from app.Services.BuiltAppService import BuiltAppService
-from app.configurations import SortOrder
+from app.core.configurations import SortOrder
 
 from tests.services._service_fixtures import built_app_doc
 

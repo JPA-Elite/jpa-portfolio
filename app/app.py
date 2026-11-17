@@ -1,5 +1,5 @@
 from flask import Flask, g, redirect, render_template, request, send_from_directory, url_for, Response, abort
-from app.configurations import (
+from app.core.configurations import (
     ERROR_404_PAGE,
     LANGUAGES,
     BABEL_DEFAULT_LOCALE,
@@ -10,11 +10,11 @@ from app.configurations import (
     HTTPStatus as status,
 )
 from flask_babel import Babel
-from app.pages import pages_bp
-from app.api import api_bp
+from app.routes.pages import pages_bp
+from app.routes.api import api_bp
 from datetime import datetime, timedelta
 import json
-from app.sitemap import sitemap_bp
+from app.routes.sitemap import sitemap_bp
 import os
 import requests
 from markupsafe import Markup
@@ -22,9 +22,9 @@ import threading
 import time
 from werkzeug.middleware.proxy_fix import ProxyFix
 from app.extensions import cache
-from app.domains import current_site, get_domain_config, resolve_domain_redirect, resolve_professional_redirect, should_track_visit
+from app.site.domains import current_site, get_domain_config, resolve_domain_redirect, resolve_professional_redirect, should_track_visit
 from app.security import init_ddos_guard
-from app.seo import NOINDEX_ROBOTS, inject_page_seo, page_seo_context
+from app.site.seo import NOINDEX_ROBOTS, inject_page_seo, page_seo_context
 from app.Services.PortfolioService import PortfolioService
 from app.Repositories.PortfolioRepository import PortfolioRepository
 from dotenv import load_dotenv
@@ -566,7 +566,7 @@ def inject_preset_avatars():
 
 @app.context_processor
 def inject_profile_image():
-    from app.configurations import PROFILE_IMAGE
+    from app.core.configurations import PROFILE_IMAGE
     return dict(profile_image=PROFILE_IMAGE)
 
 @app.errorhandler(404)

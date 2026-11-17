@@ -3,7 +3,7 @@ from app.Controllers.api.VlogLikeController import (
     get_vlog_likes_count_route,
     get_vlog_likes_counts_batch_route,
 )
-from app.configurations import HTTPMethod as http
+from app.core.configurations import HTTPMethod as http
 from flask import Blueprint, request, current_app
 from datetime import datetime
 import json
@@ -63,7 +63,7 @@ from app.Controllers.api.VlogCommentController import (
 )
 from app.Controllers.api.CommentAvatarController import comment_avatar_route, comment_avatar_upload_route
 from app.Controllers.api.UserDisplayNameController import comment_username_route
-from app.auth.middleware import admin_login_required
+from app.security.middleware import admin_login_required
 from app.Controllers.api.AuthController import update_profile_route
 from app.Controllers.api.AdminFaceController import (
     admin_face_register_route,

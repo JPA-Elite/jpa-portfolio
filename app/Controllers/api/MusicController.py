@@ -1,7 +1,7 @@
-from flask import jsonify
 from app.Services.MusicService import MusicService
 from app.Repositories.MusicRepository import MusicRepository
-from app.configurations import SortOrder, SortOrderStr, HTTPStatus as status
+from app.core.configurations import SortOrder, SortOrderStr, HTTPStatus as status
+from app.core.responses import created_response, json_response, message_response
 from app.Requests.api.MusicRequest import MusicRequest
 from app.constants.messages import MUSIC_ADD_MSG, MUSIC_DELETE_MSG, MUSIC_NOT_FOUND_ERROR, MUSIC_UPDATE_FAILED_ERROR, MUSIC_UPDATE_MSG
 from app.Models.Music import Music
@@ -35,7 +35,7 @@ def music_list_route():
         "category": category,
     }
 
-    return jsonify(response_data)
+    return json_response(response_data)
 
 def add_music_route():
     form = MusicRequest()
@@ -45,7 +45,7 @@ def add_music_route():
 
     music_id = music_service.add_music(data)
 
-    return jsonify({"message": MUSIC_ADD_MSG, "music_id": music_id}), status.CREATED
+    return created_response(MUSIC_ADD_MSG, music_id=music_id)
 
 def update_music_route(music_id):
     form = MusicRequest()
@@ -55,9 +55,9 @@ def update_music_route(music_id):
 
     success = music_service.update_music(music_id, data)
     if success:
-        return jsonify({"message": MUSIC_UPDATE_MSG}), status.OK
+        return message_response(MUSIC_UPDATE_MSG)
     else:
-        return jsonify({"message": MUSIC_UPDATE_FAILED_ERROR}), status.BAD_REQUEST
+        return message_response(MUSIC_UPDATE_FAILED_ERROR, status.BAD_REQUEST)
 
 def delete_music_route(music_id):
     form = MusicRequest()
@@ -67,9 +67,9 @@ def delete_music_route(music_id):
 
     success = music_service.delete_music(music_id)
     if success:
-        return jsonify({"message": MUSIC_DELETE_MSG}), status.OK
+        return message_response(MUSIC_DELETE_MSG)
     else:
-        return jsonify({"message": MUSIC_NOT_FOUND_ERROR}), status.NOT_FOUND
+        return message_response(MUSIC_NOT_FOUND_ERROR, status.NOT_FOUND)
 
 def music_categories_route():
     """Get all categories with counts"""
@@ -78,4 +78,4 @@ def music_categories_route():
     categories = [c for c in all_categories if c]
     counts = {k: v for k, v in counts.items() if k}
     counts["All"] = music_service.get_total_music_count()
-    return jsonify({"categories": categories, "counts": counts})
+    return json_response({"categories": categories, "counts": counts})

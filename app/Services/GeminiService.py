@@ -4,7 +4,7 @@ import re
 import time
 
 import requests
-from app.configurations import HTTPStatus as status
+from app.core.configurations import HTTPStatus as status
 
 GEMINI_DEFAULT_MODEL = "gemini-3.7-flash"
 GEMINI_UNRELATED_MARKER = "UNRELATED"

@@ -1,7 +1,6 @@
 import json
-from flask import request, jsonify
+from flask import request
 from app.Requests.api.BaseRequest import BaseRequest
-from app.configurations import HTTPStatus as status
 
 
 class GalleryLikeRequest(BaseRequest):
@@ -15,7 +14,7 @@ class GalleryLikeRequest(BaseRequest):
         if "add" in route:
             return self._validate_toggle()
 
-        return None, jsonify({"errors": {"_global": "Unknown route."}}), status.BAD_REQUEST
+        return self._unknown_route()
 
     def _validate_counts(self):
         client_ip = request.headers.get("X-Forwarded-For", request.remote_addr)
@@ -42,7 +41,7 @@ class GalleryLikeRequest(BaseRequest):
         client_ip = request.headers.get("X-Forwarded-For", request.remote_addr)
 
         if not self._require("gallery_id", gallery_id):
-            return None, *self._error_response(400)
+            return None, *self._error_response()
 
         return self._success_response({
             "gallery_id": json.loads(gallery_id),

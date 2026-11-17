@@ -1,7 +1,7 @@
 from flask_babel import gettext
-from app.configurations import get_locale
+from app.core.configurations import get_locale
 from app.constants.portfolio_locales import KEY_PROJECT_LOCALES
-from app.utils_i18n import locale_key, localized_value_from_map, merge_seed_localized_map
+from app.core.i18n import locale_key, localized_value_from_map, merge_seed_localized_map
 
 
 def localized_roadmap_employment_type(value, gettext_fn=None):

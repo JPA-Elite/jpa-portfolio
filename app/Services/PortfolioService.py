@@ -7,7 +7,7 @@ from datetime import datetime
 import pytz
 import requests
 from app.constants.messages import SYSTEM_INFO_ADD_MSG, VISIT_ALREADY_RECORDED_MSG
-from app.domains import SITE_ADMIN, SITE_PROFESSIONAL, SITE_SOCIAL, page_site
+from app.site.domains import SITE_ADMIN, SITE_PROFESSIONAL, SITE_SOCIAL, page_site
 
 class PortfolioService:
     def __init__(self, repository: IPortfolioRepository):

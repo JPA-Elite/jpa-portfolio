@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from app.configurations import SortOrder
+from app.core.configurations import SortOrder
 
 
 class IBookingRequestRepository(ABC):

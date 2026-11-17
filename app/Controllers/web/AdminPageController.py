@@ -1,7 +1,7 @@
 from datetime import timedelta
 import os
 from flask import current_app, flash, make_response, redirect, render_template, request, session, url_for
-from app.configurations import (
+from app.core.configurations import (
     ADMIN_DASHBOARD_PAGE,
     ADMIN_GALLERY_PAGE,
     ADMIN_LOGIN_ATTEMPTS_PAGE,
@@ -16,15 +16,15 @@ from app.configurations import (
     ADMIN_BOOKING_REQUESTS_PAGE,
     HTTPStatus as status,
 )
-from app.configurations import HTTPMethod as http
+from app.core.configurations import HTTPMethod as http
 from app.constants.login_roles import ROLE_ADMIN
 from app.Services.AuthService import AuthService
 from app.Repositories.AuthRepository import AuthRepository
 from app.Repositories.LoginAttemptRepository import LoginAttemptRepository
 from app.constants.messages import CAPTCHA_VERIFICATION_ERROR, LOGOUT_SUCCESS_MSG, WELCOME_ADMIN_MSG
 from app.Requests.web.AdminPageRequest import AdminPageRequest
-from app.utils import verify_hcaptcha
-from app.forms.LoginForm import LoginForm
+from app.security.hcaptcha import verify_hcaptcha
+from app.Requests.LoginForm import LoginForm
 from app.security import AdminLoginSecurity, get_request_ip
 
 # Initialize Services

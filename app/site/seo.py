@@ -1,6 +1,6 @@
 from flask import request, url_for
 
-from app.domains import (
+from app.site.domains import (
     PROFESSIONAL_PERSONAL_PATHS,
     SITE_LANDING,
     SITE_PROFESSIONAL,

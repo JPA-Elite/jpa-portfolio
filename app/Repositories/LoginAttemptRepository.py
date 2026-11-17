@@ -5,7 +5,7 @@ from app.Repositories.BaseRepository import BaseRepository
 from app.constants.db_collections import MongoCollections as mc
 from app.Repositories.Interfaces.ILoginAttemptRepository import ILoginAttemptRepository
 from bson import ObjectId, errors as bson_errors
-from app.configurations import SortOrder
+from app.core.configurations import SortOrder
 from app.security import get_request_ip
 from user_agents import parse as parse_user_agent
 

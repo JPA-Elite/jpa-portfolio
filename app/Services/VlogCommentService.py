@@ -1,7 +1,7 @@
 from app.Repositories.Interfaces.IVlogCommentRepository import IVlogCommentRepository
 from app.Models.VlogComment import VlogComment
 from app.constants.avatars import DEFAULT_AVATAR_URL
-from app.utils import num_to_alpha_lower
+from app.utils.data import num_to_alpha_lower
 
 class VlogCommentService:
     def __init__(self, repository: IVlogCommentRepository, display_name_service=None):

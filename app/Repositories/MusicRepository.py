@@ -1,7 +1,7 @@
 import re
 from app.Repositories.Interfaces.IMusicRepository import IMusicRepository
 from app.Repositories.BaseRepository import BaseRepository
-from app.configurations import SortOrder
+from app.core.configurations import SortOrder
 from app.constants.db_collections import MongoCollections as mc
 from bson import ObjectId
 from app.Models.Music import Music

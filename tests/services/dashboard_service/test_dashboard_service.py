@@ -7,7 +7,7 @@ from bson import ObjectId
 
 from app.Repositories.BaseRepository import BaseRepository
 from app.Services.DashboardService import DashboardService
-from app.configurations import SortOrder
+from app.core.configurations import SortOrder
 
 from tests.services._service_fixtures import build_test_app
 

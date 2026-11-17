@@ -7,7 +7,7 @@ from flask import Flask
 
 from app.Models.BookingRequest import BookingRequest
 from app.Repositories.BaseRepository import BaseRepository
-from app.configurations import SortOrder
+from app.core.configurations import SortOrder
 
 def _fake_get_mongo_client(self, collection_name):
     return object(), {}, MagicMock()

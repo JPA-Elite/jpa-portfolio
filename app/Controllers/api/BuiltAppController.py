@@ -1,9 +1,9 @@
-from flask import jsonify
 from app.Repositories.BuiltAppRepository import BuiltAppRepository
 from app.Services.BuiltAppService import BuiltAppService
-from app.configurations import SortOrder, HTTPStatus as status
+from app.core.configurations import SortOrder, HTTPStatus as status
+from app.core.responses import created_response, json_response, message_response
 from app.Requests.api.BuiltAppRequest import BuiltAppRequest
-from app.utils import clear_cache_by_prefix
+from app.utils.cache import clear_cache_by_prefix
 
 built_app_service = BuiltAppService(repository=BuiltAppRepository())
 
@@ -35,7 +35,7 @@ def built_app_list_route():
         "platform": data["platform_filter"],
         "is_active": data["is_active_filter"],
     }
-    return jsonify(response_data)
+    return json_response(response_data)
 
 
 def add_built_app_route():
@@ -46,7 +46,7 @@ def add_built_app_route():
 
     app_id = built_app_service.add_built_app(data)
     _clear_built_app_caches()
-    return jsonify({"message": "Built app added successfully.", "app_id": app_id}), status.CREATED
+    return created_response("Built app added successfully.", app_id=app_id)
 
 
 def update_built_app_route(app_id):
@@ -57,10 +57,10 @@ def update_built_app_route(app_id):
 
     success = built_app_service.update_built_app(app_id, data)
     if not success:
-        return jsonify({"message": "Built app not found."}), status.NOT_FOUND
+        return message_response("Built app not found.", status.NOT_FOUND)
 
     _clear_built_app_caches()
-    return jsonify({"message": "Built app updated successfully."}), status.OK
+    return message_response("Built app updated successfully.")
 
 
 def delete_built_app_route(app_id):
@@ -71,10 +71,10 @@ def delete_built_app_route(app_id):
 
     success = built_app_service.delete_built_app(app_id)
     if not success:
-        return jsonify({"message": "Built app not found."}), status.NOT_FOUND
+        return message_response("Built app not found.", status.NOT_FOUND)
 
     _clear_built_app_caches()
-    return jsonify({"message": "Built app deleted successfully."}), status.OK
+    return message_response("Built app deleted successfully.")
 
 
 def _clear_built_app_caches():

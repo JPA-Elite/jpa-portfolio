@@ -3,7 +3,7 @@ from datetime import datetime
 from urllib.parse import quote
 import os
 
-from app.domains import SITE_SOCIAL, current_site
+from app.site.domains import SITE_SOCIAL, current_site
 
 sitemap_bp = Blueprint("sitemap", __name__)
 

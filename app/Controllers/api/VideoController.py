@@ -1,10 +1,10 @@
-from flask import jsonify
 from app.Services.VideoService import VideoService
 from app.Repositories.VideoRepository import VideoRepository
-from app.configurations import SortOrder, SortOrderStr, HTTPStatus as status
+from app.core.configurations import SortOrder, SortOrderStr, HTTPStatus as status
+from app.core.responses import created_response, json_response, message_response
 from app.Requests.api.VideoRequest import VideoRequest
 from app.constants.messages import VIDEO_ADD_MSG, VIDEO_DELETE_MSG, VIDEO_NOT_FOUND_ERROR, VIDEO_UPDATE_FAILED_ERROR, VIDEO_UPDATE_MSG
-from app.utils import clear_cache_by_prefix
+from app.utils.cache import clear_cache_by_prefix
 
 # Initialize Services
 video_service = VideoService(repository=VideoRepository())
@@ -41,7 +41,7 @@ def video_list_route():
         "search": search_query,
     }
 
-    return jsonify(response_data)
+    return json_response(response_data)
 
 def add_video_route():
     form = VideoRequest()
@@ -51,7 +51,7 @@ def add_video_route():
 
     video_id = video_service.add_video(data)
     clear_cache_by_prefix("vlog_")
-    return jsonify({"message": VIDEO_ADD_MSG, "video_id": video_id}), status.CREATED
+    return created_response(VIDEO_ADD_MSG, video_id=video_id)
 
 def update_video_route(video_id):
     form = VideoRequest()
@@ -62,9 +62,9 @@ def update_video_route(video_id):
     success = video_service.update_video(video_id, data)
     if success:
         clear_cache_by_prefix("vlog_")
-        return jsonify({"message": VIDEO_UPDATE_MSG}), status.OK
+        return message_response(VIDEO_UPDATE_MSG)
     else:
-        return jsonify({"message": VIDEO_UPDATE_FAILED_ERROR}), status.BAD_REQUEST
+        return message_response(VIDEO_UPDATE_FAILED_ERROR, status.BAD_REQUEST)
 
 def delete_video_route(video_id):
     form = VideoRequest()
@@ -75,6 +75,6 @@ def delete_video_route(video_id):
     success = video_service.delete_video(video_id)
     if success:
         clear_cache_by_prefix("vlog_")
-        return jsonify({"message": VIDEO_DELETE_MSG}), status.OK
+        return message_response(VIDEO_DELETE_MSG)
     else:
-        return jsonify({"message": VIDEO_NOT_FOUND_ERROR}), status.NOT_FOUND
+        return message_response(VIDEO_NOT_FOUND_ERROR, status.NOT_FOUND)

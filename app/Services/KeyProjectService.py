@@ -4,9 +4,9 @@ import uuid
 from flask import current_app
 from app.Models.KeyProject import KeyProject
 from app.Repositories.Interfaces.IKeyProjectRepository import IKeyProjectRepository
-from app.configurations import SortOrder
+from app.core.configurations import SortOrder
 from app.constants.cloudinary import CloudinaryFolders, CloudinaryResourceType
-from app.utils import cleanup_uploaded_files, convert_to_webp, upload_file_to_cloudinary
+from app.utils.media import cleanup_uploaded_files, convert_to_webp, upload_file_to_cloudinary
 
 class KeyProjectService:
     def __init__(self, repository: IKeyProjectRepository):
@@ -268,11 +268,11 @@ class KeyProjectService:
         cleanup_uploaded_files(None, url)
 
     def _localized_map(self, value, fallback=None):
-        from app.utils_i18n import normalized_text_map
+        from app.core.i18n import normalized_text_map
         if isinstance(value, dict) and any(str(value.get(locale) or "").strip() for locale in ("en", "ceb", "fr", "fil_PH")):
             return normalized_text_map(value)
         if isinstance(value, str) and value.strip():
-            from app.utils_i18n import same_text_map
+            from app.core.i18n import same_text_map
             return same_text_map(value.strip())
         if isinstance(fallback, dict):
             return normalized_text_map(fallback)

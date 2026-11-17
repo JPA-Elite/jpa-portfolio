@@ -3,7 +3,7 @@ from types import SimpleNamespace
 from unittest.mock import MagicMock, patch
 
 from app.Services.MusicService import MusicService
-from app.configurations import SortOrder
+from app.core.configurations import SortOrder
 
 from tests.services._service_fixtures import music_doc
 

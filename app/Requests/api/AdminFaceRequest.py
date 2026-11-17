@@ -1,6 +1,5 @@
-from flask import jsonify, request
+from flask import request
 from app.Requests.api.BaseRequest import BaseRequest
-from app.configurations import HTTPStatus as status
 
 
 class AdminFaceRequest(BaseRequest):
@@ -14,7 +13,7 @@ class AdminFaceRequest(BaseRequest):
         if "verify" in route:
             return self._validate_verify()
 
-        return None, jsonify({"errors": {"_global": "Unknown route."}}), status.BAD_REQUEST
+        return self._unknown_route()
 
     def _validate_register(self):
         payload = request.get_json(silent=True) or {}
@@ -26,12 +25,12 @@ class AdminFaceRequest(BaseRequest):
             b64 = payload.get("image_b64")
             if not b64 or not isinstance(b64, str):
                 self._errors["image_b64"] = "Missing image_b64"
-                return None, *self._error_response(400)
+                return None, *self._error_response()
             b64_list = [b64]
 
         if not b64_list:
             self._errors["image_b64"] = "Missing image captures"
-            return None, *self._error_response(400)
+            return None, *self._error_response()
 
         return self._success_response({"image_b64_list": b64_list})
 
@@ -48,11 +47,11 @@ class AdminFaceRequest(BaseRequest):
             b64 = payload.get("image_b64")
             if not b64 or not isinstance(b64, str):
                 self._errors["image_b64"] = "Missing image_b64"
-                return None, *self._error_response(400)
+                return None, *self._error_response()
             b64_list = [b64]
 
         if not b64_list:
             self._errors["image_b64"] = "Missing image captures"
-            return None, *self._error_response(400)
+            return None, *self._error_response()
 
         return self._success_response({"image_b64_list": b64_list})

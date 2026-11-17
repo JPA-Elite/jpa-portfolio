@@ -3,7 +3,7 @@ from bson import ObjectId, errors as bson_errors
 from app.Repositories.BaseRepository import BaseRepository
 from app.Repositories.Interfaces.IBookingRequestRepository import IBookingRequestRepository
 from app.constants.db_collections import MongoCollections as mc
-from app.configurations import SortOrder
+from app.core.configurations import SortOrder
 
 class BookingRequestRepository(IBookingRequestRepository, BaseRepository):
     def __init__(self):

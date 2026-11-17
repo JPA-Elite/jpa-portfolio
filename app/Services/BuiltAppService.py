@@ -5,10 +5,10 @@ import uuid
 from flask import current_app
 from app.Models.BuiltApp import BuiltApp
 from app.Repositories.Interfaces.IBuiltAppRepository import IBuiltAppRepository
-from app.configurations import SortOrder
+from app.core.configurations import SortOrder
 from app.constants.built_apps import BUILT_APPS
 from app.constants.cloudinary import CloudinaryFolders, CloudinaryResourceType
-from app.utils import cleanup_uploaded_files, convert_to_webp, upload_file_to_cloudinary
+from app.utils.media import cleanup_uploaded_files, convert_to_webp, upload_file_to_cloudinary
 
 
 class BuiltAppService:

@@ -1,9 +1,9 @@
 from app.Repositories.Interfaces.IVisitRepository import IVisitRepository
 from app.Models.SystemInfo import SystemInfo
-from app.configurations import SortOrder
+from app.core.configurations import SortOrder
 from app.constants.messages import DISPLAY_RECORDS_DELETE_MSG
-from app.utils import delete_image_from_cloudinary
-from app.domains import SITE_ADMIN, SITE_PROFESSIONAL, SITE_SOCIAL, page_site
+from app.utils.media import delete_image_from_cloudinary
+from app.site.domains import SITE_ADMIN, SITE_PROFESSIONAL, SITE_SOCIAL, page_site
 
 class VisitService:
     def __init__(self, repository: IVisitRepository):

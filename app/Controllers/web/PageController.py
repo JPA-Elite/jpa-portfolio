@@ -14,8 +14,8 @@ from app.Repositories.CompanyRoadmapRepository import CompanyRoadmapRepository
 from app.Services.GalleryLikeService import GalleryLikeService
 from app.Repositories.GalleryLikeRepository import GalleryLikeRepository
 from app.Requests.web.PageRequest import PageRequest
-from app.utils import get_random_tags
-from app.configurations import (
+from app.utils.data import get_random_tags
+from app.core.configurations import (
     ADD_PORTFOLIO_PAGE,
     APP_DETAILS_PAGE,
     CONCERN_PAGE,
@@ -54,19 +54,19 @@ from app.data.seeds.key_project_seeds import KEY_PROJECT_SEED_I18N as _KEY_PROJE
 from app.data.seeds.career_roadmap_seeds import CAREER_ROADMAP_SEED_I18N as _CAREER_ROADMAP_SEED_I18N
 
 
-from app.utils_i18n import locale_key as _locale_key
-from app.utils_i18n import normalized_text_map as _normalized_project_text_map
-from app.utils_i18n import merge_seed_localized_map as _merge_seed_localized_map
-from app.utils_i18n import localized_value_from_map as _localized_value_from_map
-from app.utils_i18n import normalized_list_map as _normalized_localized_list_map
-from app.utils_i18n import merge_seed_localized_list_map as _merge_seed_localized_list_map
-from app.utils_i18n import localized_list_from_map as _localized_list_from_map
+from app.core.i18n import locale_key as _locale_key
+from app.core.i18n import normalized_text_map as _normalized_project_text_map
+from app.core.i18n import merge_seed_localized_map as _merge_seed_localized_map
+from app.core.i18n import localized_value_from_map as _localized_value_from_map
+from app.core.i18n import normalized_list_map as _normalized_localized_list_map
+from app.core.i18n import merge_seed_localized_list_map as _merge_seed_localized_list_map
+from app.core.i18n import localized_list_from_map as _localized_list_from_map
 
 
 from app.Services.PortfolioDisplayService import localized_roadmap_employment_type as _employment_type_source
 from app.Services.PortfolioDisplayService import resolve_project_stack_display as _resolve_project_stack_display
 from app.Services.PortfolioDisplayService import resolve_built_app_display as _built_app_display_source
-from app.seo import NOINDEX_ROBOTS, page_seo_context
+from app.site.seo import NOINDEX_ROBOTS, page_seo_context
 
 
 def _localized_roadmap_employment_type(value):

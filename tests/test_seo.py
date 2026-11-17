@@ -3,7 +3,7 @@ import unittest
 
 from flask import Flask
 
-from app.seo import (
+from app.site.seo import (
     NOINDEX_ROBOTS,
     PROFESSIONAL,
     PROFESSIONAL_EXCLUDED_PAGES,
@@ -236,7 +236,7 @@ class SeoSiteNameTests(unittest.TestCase):
 
 class SitemapTests(unittest.TestCase):
     def test_professional_sitemap_lists_only_professional_pages(self):
-        from app.sitemap import generate_sitemap
+        from app.routes.sitemap import generate_sitemap
 
         app = _make_app()
         with app.test_request_context(
@@ -253,7 +253,7 @@ class SitemapTests(unittest.TestCase):
         self.assertNotIn("<loc>https://jpastack.com/", xml)
 
     def test_landing_sitemap_uses_request_domain(self):
-        from app.sitemap import generate_sitemap
+        from app.routes.sitemap import generate_sitemap
 
         app = _make_app()
         with app.test_request_context(
@@ -268,11 +268,11 @@ class SitemapTests(unittest.TestCase):
     def test_landing_sitemap_matches_professional_paths(self):
         from unittest import mock
 
-        from app.sitemap import generate_sitemap
+        from app.routes.sitemap import generate_sitemap
 
         app = _make_app()
         with mock.patch(
-            "app.sitemap._active_built_app_slugs",
+            "app.routes.sitemap._active_built_app_slugs",
             return_value=["stickman-run-app", "lifetrail"],
         ):
             with app.test_request_context(
@@ -289,7 +289,7 @@ class SitemapTests(unittest.TestCase):
         )
 
     def test_sitemap_uses_request_domain_for_every_site(self):
-        from app.sitemap import generate_sitemap
+        from app.routes.sitemap import generate_sitemap
 
         app = _make_app()
         cases = {
@@ -317,7 +317,7 @@ class SitemapTests(unittest.TestCase):
                     self.assertNotIn(f"{other_base}/", xml)
 
     def test_sitemap_falls_back_to_configured_domain_without_request(self):
-        from app.sitemap import generate_sitemap
+        from app.routes.sitemap import generate_sitemap
 
         app = _make_app()
         with app.app_context():
@@ -325,7 +325,7 @@ class SitemapTests(unittest.TestCase):
         self.assertIn("<loc>https://professional.jpastack.com/portfolio</loc>", xml)
 
     def test_social_sitemap_lists_only_social_pages(self):
-        from app.sitemap import generate_sitemap
+        from app.routes.sitemap import generate_sitemap
 
         app = _make_app()
         with app.test_request_context(
@@ -341,11 +341,11 @@ class SitemapTests(unittest.TestCase):
     def test_all_sitemaps_list_active_built_apps(self):
         from unittest import mock
 
-        from app.sitemap import generate_sitemap
+        from app.routes.sitemap import generate_sitemap
 
         app = _make_app()
         with mock.patch(
-            "app.sitemap._active_built_app_slugs", return_value=["stickman-run-app"]
+            "app.routes.sitemap._active_built_app_slugs", return_value=["stickman-run-app"]
         ):
             with app.test_request_context(
                 "/sitemap.xml", base_url="https://professional.jpastack.com"
@@ -375,10 +375,10 @@ class SitemapTests(unittest.TestCase):
     def test_built_app_paths_encode_slugs_and_skip_empty_ones(self):
         from unittest import mock
 
-        from app.sitemap import _built_app_paths
+        from app.routes.sitemap import _built_app_paths
 
         with mock.patch(
-            "app.sitemap._active_built_app_slugs",
+            "app.routes.sitemap._active_built_app_slugs",
             return_value=["stickman run", "", "ok-app"],
         ):
             self.assertEqual(
@@ -388,7 +388,7 @@ class SitemapTests(unittest.TestCase):
     def test_active_built_app_slugs_returns_empty_on_failure(self):
         from unittest import mock
 
-        from app.sitemap import _active_built_app_slugs
+        from app.routes.sitemap import _active_built_app_slugs
 
         with mock.patch(
             "app.Repositories.BuiltAppRepository.BuiltAppRepository.__init__",

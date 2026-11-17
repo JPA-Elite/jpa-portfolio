@@ -19,8 +19,10 @@ from app.Repositories.VideoRepository import VideoRepository
 from flask_babel import gettext
 from urllib.parse import urlparse, parse_qs, urlencode, urlunparse
 from app.Requests.api.BaseControllerRequest import BaseControllerRequest
-from app.utils import safe_filename_parts, stream_generator
-from app.configurations import HTTPStatus as status
+from app.utils.filenames import safe_filename_parts
+from app.utils.streaming import stream_generator
+from app.core.configurations import HTTPStatus as status
+from app.core.responses import json_response
 
 # Initialize Services
 portfolio_service = PortfolioService(repository=PortfolioRepository())
@@ -75,7 +77,7 @@ def delete_page_system_info_route():
     records = data["records"]
 
     result = visit_service.delete_page_system_info(records)
-    return jsonify(result)
+    return json_response(result)
 
 def profile_config_route():
     qa_data = chat_service.get_qa_data()
@@ -96,7 +98,7 @@ def chat_route():
     session_id = data.get("session_id") or None
     result = chat_service.resolve(message, session_id=session_id)
 
-    return jsonify(result)
+    return json_response(result)
 
 def _sse_event(payload):
     return f"data: {json.dumps(payload, ensure_ascii=False)}\n\n"
@@ -175,7 +177,7 @@ def get_client_ip_route():
         return error_response, status_code
 
     client_ip = request.headers.get('X-Forwarded-For', request.remote_addr)
-    return jsonify({"ip": client_ip})
+    return json_response({"ip": client_ip})
 
 def proxy_audio_route():
     form = BaseControllerRequest()

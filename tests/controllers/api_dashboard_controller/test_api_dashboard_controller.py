@@ -37,8 +37,9 @@ class ApiDashboardControllerClearVisitorsTests(unittest.TestCase):
             return_value={"status": "success", "message": "All visitors cleared."},
         ):
             with app.test_request_context("/admin/api/clear-all-visitors", method="DELETE"):
-                response = module.clear_all_visitors_route()
+                response, status_code = module.clear_all_visitors_route()
 
+        self.assertEqual(status_code, 200)
         self.assertEqual(response.get_json(), {"ok": True, "message": "All visitors cleared."})
 
 if __name__ == "__main__":

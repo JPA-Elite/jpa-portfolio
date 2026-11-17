@@ -3,9 +3,9 @@ import tempfile
 import uuid
 from app.Models.CompanyRoadmap import CompanyRoadmap
 from app.Repositories.Interfaces.ICompanyRoadmapRepository import ICompanyRoadmapRepository
-from app.configurations import SortOrder
+from app.core.configurations import SortOrder
 from app.constants.cloudinary import CloudinaryFolders, CloudinaryResourceType
-from app.utils import cleanup_uploaded_files, convert_to_webp, upload_file_to_cloudinary
+from app.utils.media import cleanup_uploaded_files, convert_to_webp, upload_file_to_cloudinary
 from app.constants.portfolio_locales import KEY_PROJECT_LOCALES as _ROADMAP_I18N_LOCALES
 
 class CompanyRoadmapService:

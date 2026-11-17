@@ -3,7 +3,7 @@ import re
 from app.Repositories.Interfaces.IKeyProjectRepository import IKeyProjectRepository
 from app.Repositories.BaseRepository import BaseRepository
 from app.constants.db_collections import MongoCollections as mc
-from app.configurations import SortOrder
+from app.core.configurations import SortOrder
 from app.Models.KeyProject import KeyProject
 
 class KeyProjectRepository(IKeyProjectRepository, BaseRepository):

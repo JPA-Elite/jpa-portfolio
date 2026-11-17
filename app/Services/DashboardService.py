@@ -12,7 +12,7 @@ from app.Repositories.Interfaces.ICompanyRoadmapRepository import ICompanyRoadma
 from app.Repositories.Interfaces.IActivityLogRepository import IActivityLogRepository
 from app.Services.VisitService import VisitService
 from app.Repositories.VisitRepository import VisitRepository
-from app.configurations import SortOrder
+from app.core.configurations import SortOrder
 from flask import current_app
 import os
 import json

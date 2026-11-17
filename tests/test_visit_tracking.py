@@ -3,7 +3,7 @@ from unittest.mock import patch
 
 from flask import Flask
 
-from app.domains import is_local_host, should_track_visit
+from app.site.domains import is_local_host, should_track_visit
 
 class VisitTrackingHostTests(unittest.TestCase):
     def test_local_hosts_are_not_tracked(self):

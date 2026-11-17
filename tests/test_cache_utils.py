@@ -3,7 +3,7 @@ import unittest
 from flask import Flask
 
 from app.extensions import cache
-from app.utils import clear_cache_by_prefix
+from app.utils.cache import clear_cache_by_prefix
 
 class ClearCacheByPrefixTests(unittest.TestCase):
     def _init_cache(self, cache_type):

@@ -1,6 +1,6 @@
-from flask import jsonify, request
+from flask import request
 from app.Requests.api.BaseRequest import BaseRequest
-from app.configurations import SortOrder, HTTPStatus as status
+from app.core.configurations import SortOrder
 
 
 class DashboardRequest(BaseRequest):
@@ -22,7 +22,7 @@ class DashboardRequest(BaseRequest):
         if "summary" in route:
             return self._validate_summary()
 
-        return None, jsonify({"errors": {"_global": "Unknown route."}}), status.BAD_REQUEST
+        return self._unknown_route()
 
     def _validate_visits_list(self):
         page = self._get_int("page", 1)

@@ -5,7 +5,7 @@ from unittest.mock import patch
 
 from app.Repositories.BaseRepository import BaseRepository
 from app.Repositories.VisitRepository import VisitRepository
-from app.configurations import SortOrder
+from app.core.configurations import SortOrder
 
 class _FakeCursor:
     def __init__(self, docs):

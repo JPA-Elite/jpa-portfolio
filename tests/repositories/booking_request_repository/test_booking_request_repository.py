@@ -7,7 +7,7 @@ from bson import ObjectId
 
 from app.Repositories.BaseRepository import BaseRepository
 from app.Repositories.BookingRequestRepository import BookingRequestRepository
-from app.configurations import SortOrder
+from app.core.configurations import SortOrder
 from tests.test_support import VALID_OBJECT_ID
 
 class _RecordingCursor:

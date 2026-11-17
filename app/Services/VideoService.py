@@ -1,10 +1,10 @@
 import uuid
 from app.Repositories.Interfaces.IVideoRepository import IVideoRepository
 from app.Models.Video import Video
-from app.configurations import SortOrder
+from app.core.configurations import SortOrder
 import tempfile, os
 from app.constants.cloudinary import CloudinaryFolders, CloudinaryResourceType
-from app.utils import cleanup_uploaded_files, upload_file_to_cloudinary
+from app.utils.media import cleanup_uploaded_files, upload_file_to_cloudinary
 
 class VideoService:
     def __init__(self, repository: IVideoRepository):

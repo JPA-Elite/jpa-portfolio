@@ -1,12 +1,13 @@
 import json
-from flask import jsonify, request
+from flask import request
 from app.Repositories.CompanyRoadmapRepository import CompanyRoadmapRepository
 from app.Services.CompanyRoadmapService import CompanyRoadmapService
-from app.configurations import SortOrder, SortOrderStr, HTTPStatus as status
+from app.core.configurations import SortOrder, SortOrderStr, HTTPStatus as status
+from app.core.responses import created_response, json_response, message_response
 from app.Requests.api.CompanyRoadmapRequest import CompanyRoadmapRequest
-from app.utils import clear_cache_by_prefix
+from app.utils.cache import clear_cache_by_prefix
 
-from app.utils_i18n import get_i18n_text_map as _get_i18n_text_map_source
+from app.core.i18n import get_i18n_text_map as _get_i18n_text_map_source
 
 company_roadmap_service = CompanyRoadmapService(repository=CompanyRoadmapRepository())
 
@@ -46,7 +47,7 @@ def company_roadmap_list_route():
         "employment_type": data["employment_type_filter"],
         "is_active": data["is_active_filter"],
     }
-    return jsonify(response_data)
+    return json_response(response_data)
 
 
 def add_company_roadmap_route():
@@ -57,7 +58,7 @@ def add_company_roadmap_route():
 
     roadmap_id = company_roadmap_service.add_company_roadmap(data)
     _clear_company_roadmap_caches()
-    return jsonify({"message": "Company roadmap entry added successfully.", "roadmap_id": roadmap_id}), status.CREATED
+    return created_response("Company roadmap entry added successfully.", roadmap_id=roadmap_id)
 
 
 def update_company_roadmap_route(roadmap_id):
@@ -68,10 +69,10 @@ def update_company_roadmap_route(roadmap_id):
 
     success = company_roadmap_service.update_company_roadmap(roadmap_id, data)
     if not success:
-        return jsonify({"message": "Company roadmap entry not found."}), status.NOT_FOUND
+        return message_response("Company roadmap entry not found.", status.NOT_FOUND)
 
     _clear_company_roadmap_caches()
-    return jsonify({"message": "Company roadmap entry updated successfully."}), status.OK
+    return message_response("Company roadmap entry updated successfully.")
 
 
 def delete_company_roadmap_route(roadmap_id):
@@ -82,10 +83,10 @@ def delete_company_roadmap_route(roadmap_id):
 
     success = company_roadmap_service.delete_company_roadmap(roadmap_id)
     if not success:
-        return jsonify({"message": "Company roadmap entry not found."}), status.NOT_FOUND
+        return message_response("Company roadmap entry not found.", status.NOT_FOUND)
 
     _clear_company_roadmap_caches()
-    return jsonify({"message": "Company roadmap entry deleted successfully."}), status.OK
+    return message_response("Company roadmap entry deleted successfully.")
 
 
 def _clear_company_roadmap_caches():

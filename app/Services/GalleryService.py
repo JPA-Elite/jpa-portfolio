@@ -1,10 +1,10 @@
 import uuid
 from app.Repositories.Interfaces.IGalleryRepository import IGalleryRepository
 from app.Models.Gallery import Gallery
-from app.configurations import SortOrder
+from app.core.configurations import SortOrder
 import tempfile, os
 from app.constants.cloudinary import CloudinaryFolders, CloudinaryResourceType
-from app.utils import cleanup_uploaded_files, convert_to_webp, upload_file_to_cloudinary
+from app.utils.media import cleanup_uploaded_files, convert_to_webp, upload_file_to_cloudinary
 
 class GalleryService:
     def __init__(self, repository: IGalleryRepository):

@@ -1,6 +1,6 @@
 from flask import request
 from app.Requests.api.BaseRequest import BaseRequest
-from app.configurations import SortOrder, SortOrderStr
+from app.core.configurations import SortOrder, SortOrderStr
 
 class BookingRequestRequest(BaseRequest):
     def validated(self):

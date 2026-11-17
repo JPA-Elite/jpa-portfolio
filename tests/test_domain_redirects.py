@@ -2,7 +2,7 @@ import unittest
 
 from flask import Flask
 
-from app.domains import (
+from app.site.domains import (
     PROFESSIONAL_PERSONAL_PATHS,
     resolve_domain_redirect,
     resolve_professional_redirect,

@@ -1,6 +1,7 @@
-from flask import jsonify, request
+from flask import request
 from typing import Any, Dict, Optional, Tuple
-from app.configurations import HTTPStatus as status
+from app.core.configurations import HTTPStatus as status
+from app.core.responses import errors_response
 
 
 class BaseRequest:
@@ -10,8 +11,14 @@ class BaseRequest:
     def validated(self) -> Tuple[Optional[Dict[str, Any]], Any, int]:
         raise NotImplementedError("Subclasses must implement validated()")
 
-    def _error_response(self, status_code: int = 400):
-        return jsonify({"errors": self._errors}), status_code
+    def _error_response(self, status_code: int = status.BAD_REQUEST):
+        return errors_response(self._errors, status_code)
+
+    def _invalid(self, errors: Dict[str, str], status_code: int = status.BAD_REQUEST):
+        return None, *errors_response(errors, status_code)
+
+    def _unknown_route(self):
+        return self._invalid({"_global": "Unknown route."})
 
     def _success_response(self, data: Dict[str, Any]):
         return data, None, status.OK

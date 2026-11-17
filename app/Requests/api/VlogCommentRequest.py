@@ -1,6 +1,5 @@
-from flask import request, jsonify
+from flask import request
 from app.Requests.api.BaseRequest import BaseRequest
-from app.configurations import HTTPStatus as status
 
 
 class VlogCommentRequest(BaseRequest):
@@ -16,7 +15,7 @@ class VlogCommentRequest(BaseRequest):
                 return self._validate_list()
             return self._validate_store()
 
-        return None, jsonify({"errors": {"_global": "Unknown route."}}), status.BAD_REQUEST
+        return self._unknown_route()
 
     def _validate_list(self):
         ip_address = request.headers.get("X-Forwarded-For", request.remote_addr)
@@ -68,7 +67,7 @@ class VlogCommentRequest(BaseRequest):
         vlog_id = data.get("vlog_id")
 
         if not self._require("vlog_id", vlog_id):
-            return None, *self._error_response(400)
+            return None, *self._error_response()
 
         return self._success_response({
             "vlog_id": vlog_id,
@@ -81,7 +80,7 @@ class VlogCommentRequest(BaseRequest):
         ip_address = request.headers.get("X-Forwarded-For", request.remote_addr)
 
         if not self._require("comment_id", comment_id):
-            return None, *self._error_response(400)
+            return None, *self._error_response()
 
         return self._success_response({
             "comment_id": comment_id,

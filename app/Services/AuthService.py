@@ -1,4 +1,4 @@
-from flask import jsonify, request, session
+from flask import request, session
 from werkzeug.security import check_password_hash
 from app.Repositories.Interfaces.IAuthRepository import IAuthRepository
 from app.Repositories.Interfaces.ILoginAttemptRepository import ILoginAttemptRepository
@@ -9,9 +9,10 @@ import os
 import tempfile
 from app.constants.messages import INVALID_USE_OR_PASS_ERROR, LOGIN_ATTEMPT_LOCKED_MSG, LOGIN_SUCCESS_MSG, MANY_FAILED_ATTEMPTS_ERROR, PROFILE_UPDATE_MSG, UNAUTHORIZED_ACCESS_ERROR, USER_NAME_REQUIRED_ERROR, USER_NOT_FOUND_ERROR
 from app.constants.cloudinary import CloudinaryFolders, CloudinaryResourceType
-from app.utils import cleanup_uploaded_files, convert_to_webp, upload_file_to_cloudinary
+from app.utils.media import cleanup_uploaded_files, convert_to_webp, upload_file_to_cloudinary
 from app.extensions import cache
-from app.configurations import HTTPStatus as status
+from app.core.configurations import HTTPStatus as status
+from app.core.responses import message_response
 
 class AuthService:
     def __init__(self, repository: IAuthRepository, attempt_repository: ILoginAttemptRepository):
@@ -46,7 +47,7 @@ class AuthService:
 
     def update_profile(self):
         if 'user_id' not in session:
-            return jsonify({"message": UNAUTHORIZED_ACCESS_ERROR}), status.UNAUTHORIZED
+            return message_response(UNAUTHORIZED_ACCESS_ERROR, status.UNAUTHORIZED)
 
         data = request.get_json(silent=True) or request.form
         username = (data.get('username') or "").strip()
@@ -57,10 +58,10 @@ class AuthService:
         user = self.repository.find_by_id(user_id)
 
         if not user:
-            return jsonify({"message": USER_NOT_FOUND_ERROR}), status.NOT_FOUND
+            return message_response(USER_NOT_FOUND_ERROR, status.NOT_FOUND)
 
         if not username:
-            return jsonify({"message": USER_NAME_REQUIRED_ERROR}), status.BAD_REQUEST
+            return message_response(USER_NAME_REQUIRED_ERROR, status.BAD_REQUEST)
 
         update_data = {"username": username}
         if password:
@@ -90,7 +91,7 @@ class AuthService:
             self.repository.update_user(user_id, update_data)
         except Exception as error:
             cleanup_uploaded_files(None, new_profile_image)
-            return jsonify({"message": f"Failed to update profile image: {error}"}), status.INTERNAL_SERVER_ERROR
+            return message_response(f"Failed to update profile image: {error}", status.INTERNAL_SERVER_ERROR)
 
         if new_profile_image and existing_profile_image and str(existing_profile_image).startswith("http"):
             cleanup_uploaded_files(None, existing_profile_image)
@@ -100,11 +101,11 @@ class AuthService:
             session["profile_image"] = new_profile_image
         self._clear_admin_page_cache()
 
-        return jsonify({
-            "message": PROFILE_UPDATE_MSG,
-            "username": session.get("username"),
-            "profile_image": session.get("profile_image"),
-        }), status.OK
+        return message_response(
+            PROFILE_UPDATE_MSG,
+            username=session.get("username"),
+            profile_image=session.get("profile_image"),
+        )
 
     def get_face_records(self, user_id: str):
         return self.repository.get_face_records(str(user_id))

@@ -1,9 +1,10 @@
-from flask import jsonify, request
+from flask import request
 
 from app.Repositories.UserDisplayNameRepository import UserDisplayNameRepository
 from app.Requests.api.UserDisplayNameRequest import UserDisplayNameRequest
 from app.Services.UserDisplayNameService import UserDisplayNameService
-from app.configurations import HTTPMethod as http, HTTPStatus as status
+from app.core.configurations import HTTPMethod as http, HTTPStatus as status
+from app.core.responses import errors_response, json_response, status_response
 from app.constants.messages import NAME_CHANGE_LIMIT_ERROR
 
 user_display_name_service = UserDisplayNameService(repository=UserDisplayNameRepository())
@@ -17,7 +18,7 @@ def comment_username_route():
 
     if request.method == http.GET:
         display_name, remaining_changes = user_display_name_service.get_display_name(data["ip_address"])
-        return jsonify({
+        return json_response({
             "display_name": display_name,
             "remaining_changes": remaining_changes,
         })
@@ -26,13 +27,14 @@ def comment_username_route():
         data["ip_address"], data["display_name"]
     )
     if display_name is None:
-        return jsonify({
-            "errors": {"_global": NAME_CHANGE_LIMIT_ERROR},
-            "remaining_changes": remaining_changes,
-        }), status.TOO_MANY_REQUESTS
+        return errors_response(
+            {"_global": NAME_CHANGE_LIMIT_ERROR},
+            status.TOO_MANY_REQUESTS,
+            remaining_changes=remaining_changes,
+        )
 
-    return jsonify({
-        "status": "success",
-        "display_name": display_name,
-        "remaining_changes": remaining_changes,
-    })
+    return status_response(
+        "success",
+        display_name=display_name,
+        remaining_changes=remaining_changes,
+    )

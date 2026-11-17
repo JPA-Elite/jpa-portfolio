@@ -1,13 +1,14 @@
 import os
 import tempfile
 
-from flask import jsonify, request
+from flask import request
 
 from app.Repositories.UserDisplayNameRepository import UserDisplayNameRepository
 from app.Requests.api.CommentAvatarRequest import CommentAvatarRequest
 from app.Requests.api.CommentAvatarUploadRequest import CommentAvatarUploadRequest
 from app.Services.UserDisplayNameService import UserDisplayNameService
-from app.configurations import HTTPMethod as http, HTTPStatus as status
+from app.core.configurations import HTTPMethod as http, HTTPStatus as status
+from app.core.responses import errors_response, json_response, status_response
 from app.constants.cloudinary import CloudinaryFolders, CloudinaryResourceType
 from app.constants.messages import (
     AVATAR_CHANGE_LIMIT_ERROR,
@@ -15,7 +16,7 @@ from app.constants.messages import (
     COMMENT_AVATAR_UPLOAD_ERROR,
     COMMENT_AVATAR_UPLOAD_SUCCESS,
 )
-from app.utils import cleanup_uploaded_files, compress_avatar_image, upload_file_to_cloudinary
+from app.utils.media import cleanup_uploaded_files, compress_avatar_image, upload_file_to_cloudinary
 
 MAX_COMPRESSED_AVATAR_BYTES = 2 * 1024 * 1024
 
@@ -30,34 +31,36 @@ def comment_avatar_route():
 
     if request.method == http.GET:
         avatar_url, remaining = user_display_name_service.get_avatar_status(data["ip_address"])
-        return jsonify({"avatar_url": avatar_url, "remaining_avatar_changes": remaining})
+        return json_response({"avatar_url": avatar_url, "remaining_avatar_changes": remaining})
 
     if request.method == http.DELETE:
         current_url, remaining = user_display_name_service.get_avatar_status(data["ip_address"])
         if not current_url:
-            return jsonify({"status": "success", "avatar_url": None})
+            return status_response("success", avatar_url=None)
         if remaining <= 0:
-            return jsonify({
-                "errors": {"avatar": AVATAR_CHANGE_LIMIT_ERROR},
-                "code": "avatar_limit_reached",
-                "remaining_avatar_changes": 0,
-            }), status.TOO_MANY_REQUESTS
+            return errors_response(
+                {"avatar": AVATAR_CHANGE_LIMIT_ERROR},
+                status.TOO_MANY_REQUESTS,
+                code="avatar_limit_reached",
+                remaining_avatar_changes=0,
+            )
         saved_url, previous_url = user_display_name_service.save_avatar(data["ip_address"], None)
         if previous_url and str(previous_url).startswith("http"):
             cleanup_uploaded_files(image_url=previous_url)
-        return jsonify({"status": "success", "avatar_url": None})
+        return status_response("success", avatar_url=None)
 
     avatar_url = data["avatar_url"]
     saved_url, previous_url = user_display_name_service.save_avatar(data["ip_address"], avatar_url)
     if saved_url is None:
-        return jsonify({
-            "errors": {"avatar_url": AVATAR_CHANGE_LIMIT_ERROR},
-            "code": "avatar_limit_reached",
-            "remaining_avatar_changes": 0,
-        }), status.TOO_MANY_REQUESTS
+        return errors_response(
+            {"avatar_url": AVATAR_CHANGE_LIMIT_ERROR},
+            status.TOO_MANY_REQUESTS,
+            code="avatar_limit_reached",
+            remaining_avatar_changes=0,
+        )
     if previous_url and str(previous_url).startswith("http"):
         cleanup_uploaded_files(image_url=previous_url)
-    return jsonify({"status": "success", "avatar_url": avatar_url})
+    return status_response("success", avatar_url=avatar_url)
 
 
 def comment_avatar_upload_route():
@@ -77,10 +80,10 @@ def comment_avatar_upload_route():
         if os.path.getsize(webp_path) > MAX_COMPRESSED_AVATAR_BYTES:
             os.remove(path)
             os.remove(webp_path)
-            return jsonify({
-                "errors": {"avatar": COMMENT_AVATAR_SIZE_ERROR},
-                "code": "avatar_too_large",
-            }), status.BAD_REQUEST
+            return errors_response(
+                {"avatar": COMMENT_AVATAR_SIZE_ERROR},
+                code="avatar_too_large",
+            )
 
         new_avatar_url = upload_file_to_cloudinary(
             webp_path,
@@ -94,24 +97,25 @@ def comment_avatar_upload_route():
 
         if not new_avatar_url or str(new_avatar_url).startswith("Error"):
             cleanup_uploaded_files(image_url=new_avatar_url)
-            return jsonify({"errors": {"_global": COMMENT_AVATAR_UPLOAD_ERROR}}), status.INTERNAL_SERVER_ERROR
+            return errors_response({"_global": COMMENT_AVATAR_UPLOAD_ERROR}, status.INTERNAL_SERVER_ERROR)
 
         saved_url, previous_url = user_display_name_service.save_avatar(data["ip_address"], new_avatar_url)
         if saved_url is None:
             cleanup_uploaded_files(image_url=new_avatar_url)
-            return jsonify({
-                "errors": {"avatar": AVATAR_CHANGE_LIMIT_ERROR},
-                "code": "avatar_limit_reached",
-                "remaining_avatar_changes": 0,
-            }), status.TOO_MANY_REQUESTS
+            return errors_response(
+                {"avatar": AVATAR_CHANGE_LIMIT_ERROR},
+                status.TOO_MANY_REQUESTS,
+                code="avatar_limit_reached",
+                remaining_avatar_changes=0,
+            )
         if previous_url and str(previous_url).startswith("http"):
             cleanup_uploaded_files(image_url=previous_url)
 
-        return jsonify({
-            "status": "success",
-            "avatar_url": new_avatar_url,
-            "message": COMMENT_AVATAR_UPLOAD_SUCCESS,
-        })
+        return status_response(
+            "success",
+            COMMENT_AVATAR_UPLOAD_SUCCESS,
+            avatar_url=new_avatar_url,
+        )
     except Exception as error:
         cleanup_uploaded_files(image_url=new_avatar_url)
-        return jsonify({"errors": {"_global": f"{COMMENT_AVATAR_UPLOAD_ERROR}: {error}"}}), status.INTERNAL_SERVER_ERROR
+        return errors_response({"_global": f"{COMMENT_AVATAR_UPLOAD_ERROR}: {error}"}, status.INTERNAL_SERVER_ERROR)

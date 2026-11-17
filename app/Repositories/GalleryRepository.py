@@ -1,6 +1,6 @@
 from app.Repositories.Interfaces.IGalleryRepository import IGalleryRepository
 from app.Repositories.BaseRepository import BaseRepository
-from app.configurations import SortOrder
+from app.core.configurations import SortOrder
 from app.constants.db_collections import MongoCollections as mc
 from bson import ObjectId
 from app.Models.Gallery import Gallery

@@ -2,7 +2,7 @@ import unittest
 from unittest.mock import MagicMock
 
 from app.Services.LoginAttemptService import LoginAttemptService
-from app.configurations import SortOrder
+from app.core.configurations import SortOrder
 
 class LoginAttemptServiceTests(unittest.TestCase):
     def setUp(self):

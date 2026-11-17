@@ -1,7 +1,7 @@
 from flask import request
 
 from app.Requests.api.BaseRequest import BaseRequest
-from app.configurations import HTTPMethod as http
+from app.core.configurations import HTTPMethod as http
 from app.constants.avatars import PRESET_AVATARS
 
 
@@ -19,11 +19,11 @@ class CommentAvatarRequest(BaseRequest):
         avatar_url = (data.get("avatar_url") or "").strip()
 
         if not self._require("avatar_url", avatar_url):
-            return None, *self._error_response(400)
+            return None, *self._error_response()
 
         if avatar_url not in PRESET_AVATARS:
             self._errors["avatar_url"] = "Invalid avatar selection."
-            return None, *self._error_response(400)
+            return None, *self._error_response()
 
         return self._success_response({
             "ip_address": ip_address,

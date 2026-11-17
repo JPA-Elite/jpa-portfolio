@@ -33,14 +33,14 @@ Languages: flask (python)
 
 ## SEO METADATA
 
-All page titles, descriptions, keywords, canonical URLs, and social (Open Graph / Twitter) tags live in one place: `app/seo.py`.
+All page titles, descriptions, keywords, canonical URLs, and social (Open Graph / Twitter) tags live in one place: `app/site/seo.py`.
 
 - `SITE_DEFAULTS` — fallback metadata per site (`professional` vs `social`).
 - `PAGE_SEO` — per-page metadata for each site, keyed by page name (`portfolio`, `gallery`, `vlog`, `music`, `concern`, `donation`, `build`, `app_details`, ...).
 - `ENDPOINT_PAGE_KEYS` — maps Flask endpoints to those page keys.
 - `PROFESSIONAL_EXCLUDED_PAGES` — personal pages (`vlog`, `music`, `concern`, `donation`, `visitors`) that stay out of the professional sitemap and render as `noindex,nofollow` on the professional site.
 
-The `inject_page_seo()` context processor exposes `page_seo` to every template, and `app/templates/components/seo_meta.html` renders the tags. To change what Google shows for a page, edit `app/seo.py` only — no template edits needed. Per-request overrides (built app details, 404) pass a `page_seo=page_seo_context(overrides={...})` argument to `render_template`.
+The `inject_page_seo()` context processor exposes `page_seo` to every template, and `app/templates/components/seo_meta.html` renders the tags. To change what Google shows for a page, edit `app/site/seo.py` only — no template edits needed. Per-request overrides (built app details, 404) pass a `page_seo=page_seo_context(overrides={...})` argument to `render_template`.
 
 On the professional domain, direct visits to `/vlog`, `/music`, `/concern`, `/donation`, `/visitors`, and any `/admin...` URL redirect to the professional home. The social domain and the admin domain keep their normal pages.
 
@@ -87,7 +87,7 @@ Notes:
 
 ### Local custom domains (`*.jpastack.local`)
 
-The app separates traffic by hostname (`app/domains.py`):
+The app separates traffic by hostname (`app/site/domains.py`):
 
 - Professional landing: `http://professional.jpastack.local`
 - Social landing: `http://jpastack.local` or `http://social.jpastack.local`

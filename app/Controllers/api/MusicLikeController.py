@@ -1,8 +1,7 @@
-from flask import request, jsonify
 from app.Services.MusicLikeService import MusicLikeService
 from app.Repositories.MusicLikeRepository import MusicLikeRepository
 from app.Requests.api.MusicLikeRequest import MusicLikeRequest
-from app.configurations import HTTPStatus as status
+from app.core.responses import json_response, message_response
 
 music_like_service = MusicLikeService(repository=MusicLikeRepository())
 
@@ -19,11 +18,11 @@ def music_like_counts_route():
     dislike_counts = music_like_service.get_dislikes_count(music_id)
     existing_vote = music_like_service.get_user_vote(music_id, client_ip)
 
-    return jsonify({
+    return json_response({
         "like_counts": like_counts,
         "dislike_counts": dislike_counts,
         "user_vote": existing_vote.get("is_like") if existing_vote else None
-    }), status.OK
+    })
 
 def music_like_counts_batch_route():
     form = MusicLikeRequest()
@@ -35,7 +34,7 @@ def music_like_counts_batch_route():
     music_ids = data["music_ids"]
 
     if not music_ids:
-        return jsonify({"items": {}}), status.OK
+        return json_response({"items": {}})
 
     like_counts = music_like_service.get_likes_counts_by_ids(music_ids)
     dislike_counts = music_like_service.get_dislikes_counts_by_ids(music_ids)
@@ -49,7 +48,7 @@ def music_like_counts_batch_route():
             "user_vote": vote.get("is_like") if vote else None
         }
 
-    return jsonify({"items": items}), status.OK
+    return json_response({"items": items})
 
 def music_toggle_vote_route():
     form = MusicLikeRequest()
@@ -62,4 +61,4 @@ def music_toggle_vote_route():
     client_ip = data["client_ip"]
 
     result = music_like_service.toggle_vote(music_id, client_ip, bool(is_like))
-    return jsonify({"message": "Vote updated", "data": result}), status.OK
+    return message_response("Vote updated", data=result)

@@ -6,10 +6,10 @@ import re
 import yt_dlp
 from app.Repositories.Interfaces.IMusicRepository import IMusicRepository
 from app.Models.Music import Music
-from app.configurations import SortOrder
+from app.core.configurations import SortOrder
 import tempfile, os
 from app.constants.cloudinary import CloudinaryFolders, CloudinaryResourceType
-from app.utils import cleanup_uploaded_files, convert_to_webp, upload_file_to_cloudinary
+from app.utils.media import cleanup_uploaded_files, convert_to_webp, upload_file_to_cloudinary
 from mutagen import File as MutagenFile
 
 class MusicService:

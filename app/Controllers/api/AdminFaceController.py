@@ -2,12 +2,13 @@ import base64
 from datetime import datetime
 import cv2
 import numpy as np
-from flask import jsonify, request, session
+from flask import request, session
 from app.Services.AuthService import AuthService
 from app.Repositories.AuthRepository import AuthRepository
 from app.Repositories.LoginAttemptRepository import LoginAttemptRepository
 from app.Requests.api.AdminFaceRequest import AdminFaceRequest
-from app.configurations import HTTPStatus as status
+from app.core.configurations import HTTPStatus as status
+from app.core.responses import ok_error_response, ok_response
 
 _FACE_CASCADE = cv2.CascadeClassifier(cv2.data.haarcascades + "haarcascade_frontalface_default.xml")
 auth_service = AuthService(
@@ -104,14 +105,14 @@ def admin_face_register_route():
             crops.append(face_crop_norm)
 
         if not crops:
-            return jsonify({"ok": False, "message": "No valid face crops captured"}), status.BAD_REQUEST
+            return ok_error_response("No valid face crops captured")
 
         reference_gray_160 = np.median(np.stack(crops, axis=0), axis=0).astype(np.uint8)
         face_crop_b64 = _encode_crop_to_b64(reference_gray_160)
 
         user_id = session.get("user_id")
         if not user_id:
-            return jsonify({"ok": False, "message": "Not authenticated"}), status.UNAUTHORIZED
+            return ok_error_response("Not authenticated", status.UNAUTHORIZED)
 
         auth_service.save_face_reference(
             str(user_id),
@@ -119,9 +120,9 @@ def admin_face_register_route():
             datetime.utcnow().isoformat() + "Z",
         )
 
-        return jsonify({"ok": True, "message": "Face reference registered"})
+        return ok_response("Face reference registered")
     except Exception as e:
-        return jsonify({"ok": False, "message": str(e)}), status.BAD_REQUEST
+        return ok_error_response(str(e))
 
 def admin_face_records_route():
 
@@ -133,7 +134,7 @@ def admin_face_records_route():
     try:
         user_id = session.get("user_id")
         if not user_id:
-            return jsonify({"ok": False, "message": "Not authenticated"}), status.UNAUTHORIZED
+            return ok_error_response("Not authenticated", status.UNAUTHORIZED)
 
         user_doc = auth_service.get_face_records(str(user_id))
 
@@ -159,9 +160,9 @@ def admin_face_records_route():
                 }
             )
 
-        return jsonify({"ok": True, "rows": rows})
+        return ok_response(rows=rows)
     except Exception as e:
-        return jsonify({"ok": False, "message": str(e)}), status.BAD_REQUEST
+        return ok_error_response(str(e))
 
 def admin_face_verify_route():
 
@@ -181,16 +182,16 @@ def admin_face_verify_route():
             crops.append(face_crop_norm)
 
         if not crops:
-            return jsonify({"ok": False, "message": "No valid face crops captured"}), status.BAD_REQUEST
+            return ok_error_response("No valid face crops captured")
 
         user_id = session.get("user_id")
         if not user_id:
-            return jsonify({"ok": False, "message": "Not authenticated"}), status.UNAUTHORIZED
+            return ok_error_response("Not authenticated", status.UNAUTHORIZED)
 
         user_doc = auth_service.get_face_records(str(user_id))
         ref_crop_b64 = (user_doc or {}).get("face_reference_crop_b64")
         if not ref_crop_b64:
-            return jsonify({"ok": False, "message": "No registered face found. Please register first."}), status.BAD_REQUEST
+            return ok_error_response("No registered face found. Please register first.")
 
         ref_gray_160 = _b64_png_to_gray_160(ref_crop_b64)
 
@@ -199,15 +200,10 @@ def admin_face_verify_route():
 
         THRESHOLD_L1 = 22.0
         if dist > THRESHOLD_L1:
-            return (
-                jsonify(
-                    {
-                        "ok": False,
-                        "message": "Face does not match. Please try again.",
-                        "distance": dist,
-                    }
-                ),
-                403,
+            return ok_error_response(
+                "Face does not match. Please try again.",
+                status.FORBIDDEN,
+                distance=dist,
             )
 
         auth_service.mark_face_verified(
@@ -217,6 +213,6 @@ def admin_face_verify_route():
         )
 
         session["face_verified"] = True
-        return jsonify({"ok": True, "message": "Face verified", "distance": dist})
+        return ok_response("Face verified", distance=dist)
     except Exception as e:
-        return jsonify({"ok": False, "message": str(e)}), status.BAD_REQUEST
+        return ok_error_response(str(e))

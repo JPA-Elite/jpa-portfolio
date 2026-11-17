@@ -1,8 +1,7 @@
-from flask import request, jsonify
 from app.Services.BuiltAppLikeService import BuiltAppLikeService
 from app.Repositories.BuiltAppLikeRepository import BuiltAppLikeRepository
 from app.Requests.api.BuiltAppLikeRequest import BuiltAppLikeRequest
-from app.configurations import HTTPStatus as status
+from app.core.responses import json_response, message_response
 
 built_app_like_service = BuiltAppLikeService(repository=BuiltAppLikeRepository())
 
@@ -19,11 +18,11 @@ def built_app_like_counts_route():
     dislike_counts = built_app_like_service.get_dislikes_count(app_id)
     existing_vote = built_app_like_service.get_user_vote(app_id, client_ip)
 
-    return jsonify({
+    return json_response({
         "like_counts": like_counts,
         "dislike_counts": dislike_counts,
         "user_vote": existing_vote.get("is_like") if existing_vote else None
-    }), status.OK
+    })
 
 def built_app_toggle_vote_route():
     form = BuiltAppLikeRequest()
@@ -36,4 +35,4 @@ def built_app_toggle_vote_route():
     client_ip = data["client_ip"]
 
     result = built_app_like_service.toggle_vote(app_id, client_ip, bool(is_like))
-    return jsonify({"message": "Vote updated", "data": result}), status.OK
+    return message_response("Vote updated", data=result)

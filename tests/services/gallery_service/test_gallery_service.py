@@ -2,7 +2,7 @@ import unittest
 from unittest.mock import MagicMock, patch
 
 from app.Services.GalleryService import GalleryService
-from app.configurations import SortOrder
+from app.core.configurations import SortOrder
 
 from tests.services._service_fixtures import gallery_doc
 

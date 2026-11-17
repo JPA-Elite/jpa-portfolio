@@ -1,7 +1,7 @@
 from app.Repositories.Interfaces.IGalleryCommentRepository import IGalleryCommentRepository
 from app.Models.GalleryComment import GalleryComment
 from app.constants.avatars import DEFAULT_AVATAR_URL
-from app.utils import num_to_alpha_lower
+from app.utils.data import num_to_alpha_lower
 
 class GalleryCommentService:
     def __init__(self, repository: IGalleryCommentRepository, display_name_service=None):

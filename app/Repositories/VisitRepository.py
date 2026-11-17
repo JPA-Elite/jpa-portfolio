@@ -1,9 +1,9 @@
 from app.Repositories.Interfaces.IVisitRepository import IVisitRepository
 from app.Repositories.BaseRepository import BaseRepository
 from datetime import datetime
-from app.configurations import SortOrder
+from app.core.configurations import SortOrder
 from app.constants.db_collections import MongoCollections as mc
-from app.domains import PROFESSIONAL_PERSONAL_PATHS, SITE_SOCIAL, SITE_PROFESSIONAL, page_site
+from app.site.domains import PROFESSIONAL_PERSONAL_PATHS, SITE_SOCIAL, SITE_PROFESSIONAL, page_site
 import re
 
 _PLATFORM_LABELS = {

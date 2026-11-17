@@ -6,7 +6,7 @@ from dataclasses import dataclass
 from typing import Optional, Sequence
 from flask import jsonify, request
 from app.extensions import cache
-from app.configurations import HTTPStatus as status
+from app.core.configurations import HTTPStatus as status
 
 
 def _env_flag(name: str, default: bool):

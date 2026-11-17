@@ -1,9 +1,9 @@
-from flask import jsonify
 from app.Services.BookingRequestService import BookingRequestService
 from app.Repositories.BookingRequestRepository import BookingRequestRepository
 from app.Requests.api.BookingRequestRequest import BookingRequestRequest
 from app.constants.messages import BOOKING_REQUEST_DELETE_MSG, BOOKING_REQUEST_NOT_FOUND_ERROR
-from app.configurations import HTTPStatus as status
+from app.core.configurations import HTTPStatus as status
+from app.core.responses import json_response, message_response, ok_error_response, result_response
 
 booking_request_service = BookingRequestService(repository=BookingRequestRepository())
 
@@ -24,7 +24,7 @@ def booking_request_list_route():
         "search": data["search_query"],
     }
 
-    return jsonify(response_data)
+    return json_response(response_data)
 
 def delete_booking_request_route(booking_id):
     form = BookingRequestRequest()
@@ -34,9 +34,9 @@ def delete_booking_request_route(booking_id):
 
     success = booking_request_service.delete_booking(booking_id)
     if success:
-        return jsonify({"message": BOOKING_REQUEST_DELETE_MSG}), status.OK
+        return message_response(BOOKING_REQUEST_DELETE_MSG)
     else:
-        return jsonify({"message": BOOKING_REQUEST_NOT_FOUND_ERROR}), status.NOT_FOUND
+        return message_response(BOOKING_REQUEST_NOT_FOUND_ERROR, status.NOT_FOUND)
 
 def clear_all_booking_requests_route():
     try:
@@ -46,6 +46,6 @@ def clear_all_booking_requests_route():
             return error_response, status_code
 
         result = booking_request_service.delete_all_booking_requests()
-        return jsonify({"ok": result.get("status") == "success", "message": result.get("message", "")})
+        return result_response(result)
     except Exception as e:
-        return jsonify({"ok": False, "message": str(e)})
+        return ok_error_response(str(e), status.OK)

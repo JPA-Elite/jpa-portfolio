@@ -1,10 +1,10 @@
 import json
-from flask import jsonify
 from app.Repositories.KeyProjectRepository import KeyProjectRepository
 from app.Services.KeyProjectService import KeyProjectService
-from app.configurations import SortOrder, SortOrderStr, HTTPStatus as status
+from app.core.configurations import SortOrder, SortOrderStr, HTTPStatus as status
+from app.core.responses import created_response, json_response, message_response
 from app.Requests.api.KeyProjectRequest import KeyProjectRequest
-from app.utils import clear_cache_by_prefix
+from app.utils.cache import clear_cache_by_prefix
 
 key_project_service = KeyProjectService(repository=KeyProjectRepository())
 
@@ -36,7 +36,7 @@ def key_project_list_route():
         "status": data["status_filter"],
         "is_active": data["is_active_filter"],
     }
-    return jsonify(response_data)
+    return json_response(response_data)
 
 def add_key_project_route():
     form = KeyProjectRequest()
@@ -46,7 +46,7 @@ def add_key_project_route():
 
     project_id = key_project_service.add_key_project(data)
     _clear_key_project_caches()
-    return jsonify({"message": "Key project added successfully.", "project_id": project_id}), status.CREATED
+    return created_response("Key project added successfully.", project_id=project_id)
 
 def update_key_project_route(project_id):
     form = KeyProjectRequest()
@@ -56,10 +56,10 @@ def update_key_project_route(project_id):
 
     success = key_project_service.update_key_project(project_id, data)
     if not success:
-        return jsonify({"message": "Key project not found."}), status.NOT_FOUND
+        return message_response("Key project not found.", status.NOT_FOUND)
 
     _clear_key_project_caches()
-    return jsonify({"message": "Key project updated successfully."}), status.OK
+    return message_response("Key project updated successfully.")
 
 def delete_key_project_route(project_id):
     form = KeyProjectRequest()
@@ -69,10 +69,10 @@ def delete_key_project_route(project_id):
 
     success = key_project_service.delete_key_project(project_id)
     if not success:
-        return jsonify({"message": "Key project not found."}), status.NOT_FOUND
+        return message_response("Key project not found.", status.NOT_FOUND)
 
     _clear_key_project_caches()
-    return jsonify({"message": "Key project deleted successfully."}), status.OK
+    return message_response("Key project deleted successfully.")
 
 def _clear_key_project_caches():
     clear_cache_by_prefix("profile_ui_")

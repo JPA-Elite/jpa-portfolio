@@ -6,7 +6,7 @@ from datetime import datetime
 from flask_babel import gettext, get_locale
 
 from app.Services.KnowledgeBaseService import KnowledgeBaseService
-from app.configurations import SortOrder
+from app.core.configurations import SortOrder
 
 CHAT_MATCH_THRESHOLD = 0.36
 CHAT_SUGGEST_THRESHOLD = 0.28
@@ -563,7 +563,7 @@ class ChatService:
 
     def _is_professional_site(self):
         try:
-            from app.domains import current_site
+            from app.site.domains import current_site
 
             return current_site() == "professional"
         except Exception:
@@ -987,7 +987,7 @@ class ChatService:
         professional = False
         try:
             from flask import request as flask_request
-            from app.domains import current_site
+            from app.site.domains import current_site
 
             professional = current_site(flask_request.host) == "professional"
         except Exception:

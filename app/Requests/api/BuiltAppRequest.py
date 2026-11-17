@@ -1,8 +1,8 @@
 import json
-from flask import jsonify, request
+from flask import request
 from app.Models.BuiltApp import normalize_technologies
 from app.Requests.api.BaseRequest import BaseRequest
-from app.configurations import SortOrder, SortOrderStr, HTTPStatus as status
+from app.core.configurations import SortOrder, SortOrderStr
 
 
 class BuiltAppRequest(BaseRequest):
@@ -18,7 +18,7 @@ class BuiltAppRequest(BaseRequest):
         if "delete" in route:
             return self._validate_delete()
 
-        return None, jsonify({"errors": {"_global": "Unknown route."}}), status.BAD_REQUEST
+        return self._unknown_route()
 
     def _validate_list(self):
         page = self._get_int("page", 1)
@@ -76,7 +76,7 @@ class BuiltAppRequest(BaseRequest):
         }
 
         if not isinstance(data["name"], dict) or not (data["name"].get("en") or "").strip():
-            return None, jsonify({"errors": {"name.en": "English name is required."}}), status.BAD_REQUEST
+            return self._invalid({"name.en": "English name is required."})
 
         return self._success_response(data)
 

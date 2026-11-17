@@ -35,15 +35,28 @@ make compile-translations # pybabel compile -d translations
 ## Architecture
 
 ```
-Routes (pages.py / api.py) → Controllers (Controllers/web, Controllers/api)
+Routes (routes/pages.py, routes/api.py) → Controllers (Controllers/web, Controllers/api)
   → Services (Services/) → Repositories (Repositories/, extend BaseRepository)
 ```
 
 - Controllers are plain functions, not classes. Routes use `HTTPMethod` enum.
 - Repositories implement interfaces from `Repositories/Interfaces/`.
 - Models are simple classes with `to_dict()` / `from_dict()`.
-- Forms/validators in `Requests/`.
+- Forms/validators in `Requests/` (includes `LoginForm.py`).
 - All repos use `pymongo` directly — no ORM.
+
+Key packages:
+
+```
+app/core/       HTTPMethod/HTTPStatus/SortOrder enums, locale config, response helpers, i18n text maps
+app/routes/     blueprints and route wiring (pages, api, sitemap)
+app/site/       hostname/domain routing and SEO metadata
+app/security/   admin login, DDoS guard, hCaptcha, admin_login_required decorator
+app/utils/      pagination/filtering, cache helpers, Cloudinary/media, filenames, streaming
+```
+
+- `app/app.py` builds the Flask app, `app/manage.py` is the CLI entrypoint, `app/extensions.py` holds shared singletons (`cache`).
+- Controllers return response helpers from `app/core/responses.py` (`json_response`, `ok_response`, `message_response`, ...) instead of calling `jsonify` directly.
 
 ## Testing
 
@@ -75,6 +88,6 @@ Routes (pages.py / api.py) → Controllers (Controllers/web, Controllers/api)
 - Do not rename DB collection names or table names.
 - Mobile responsiveness required for all new pages.
 - **Always keep mobile responsive when changing desktop code**: every desktop-view change (CSS, templates, JS) must also verify the mobile breakpoints (`1024px`, `900px`, `768px`, `480px`) still render without overflow or overlap. Never leave a desktop-only layout unhandled on small screens.
-- **Never modify the cache key_prefix names in `app/pages.py`** (e.g. `portfolio_ui_v10_{get_locale()}...`, `vlog_ui_v37_...`, `gallery_ui_v34_...`). Keep the version numbers/names exactly as they are.
+- **Never modify the cache key_prefix names in `app/routes/pages.py`** (e.g. `portfolio_ui_v10_{get_locale()}...`, `vlog_ui_v37_...`, `gallery_ui_v34_...`). Keep the version numbers/names exactly as they are.
 - **Never build the frontend** (`npm run build:frontend` / `make start-build`) to save time — edit source files only.
 - **Clean up temp files**: whenever you create temporary files (scratch files, scripts, etc.), delete them once all the changes are done and verified.

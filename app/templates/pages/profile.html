@@ -29,11 +29,6 @@
             </span>
         </div>
         <div class="summary-hero__panel" id="project-details">
-            <div class="section-eyebrow">
-                <ion-icon name="sparkles-outline" aria-hidden="true"></ion-icon>
-                {{ _('Summary_Eyebrow') }}
-            </div>
-            <h2 class="summary-hero__title">{{ _('Summary') }}</h2>
             <p class="summary-hero__lead">{{ _('Software_Expertise_Description') }}</p>
             <div class="summary-stats">
                 <div class="summary-stat">
@@ -56,12 +51,6 @@
             <button class="mobile-toggle" onclick="toggleContent()">
                 <ion-icon name="chevron-down"></ion-icon>
             </button>
-            <div class="summary-tags">
-                <span class="summary-tag">{{ _('Full_Stack') }}</span>
-                <span class="summary-tag">{{ _('API_Security') }}</span>
-                <span class="summary-tag">{{ _('Cloud_Native') }}</span>
-                <span class="summary-tag">{{ _('UI_Engineering') }}</span>
-            </div>
         </div>
     </div>
     {% if get_locale() == en_locale %}

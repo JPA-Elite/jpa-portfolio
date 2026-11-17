@@ -1,45 +1,3 @@
-@keyframes scroll {
-    0% {
-        transform: translateX(0)
-    }
-
-    to {
-        transform: translateX(calc(-100% - var(--gap)))
-    }
-}
-
-@keyframes scroll-abs {
-    0% {
-        transform: translateX(calc(100% + var(--gap)))
-    }
-
-    to {
-        transform: translateX(0)
-    }
-}
-
-@keyframes shimmer {
-    0% {
-        left: -100%
-    }
-
-    to {
-        left: 200%
-    }
-}
-
-@keyframes contactHeading {
-
-    0%,
-    to {
-        background-position: 0 50%
-    }
-
-    50% {
-        background-position: 100% 50%
-    }
-}
-
 .project-image,
 .project-intro {
     display: flex;
@@ -701,37 +659,8 @@
     list-style-type: none
 }
 
-@media (prefers-reduced-motion:reduce) {
-    .marquee__content {
-        animation-play-state: paused !important
-    }
-}
-
-.enable-animation.is-animating .marquee__content {
-    animation: scroll 14s linear infinite;
-    will-change: transform
-}
-
-.marquee--reverse .marquee__content {
-    animation-direction: reverse
-}
-
-.marquee--hover-pause:hover .marquee__content {
-    animation-play-state: paused
-}
-
 .marquee--fit-content {
     max-width: fit-content
-}
-
-.marquee--pos-absolute .marquee__content:last-child {
-    position: absolute;
-    top: 0;
-    left: 0
-}
-
-.enable-animation .marquee--pos-absolute .marquee__content:last-child {
-    animation-name: scroll-abs
 }
 
 .marquee__content>* {
@@ -1089,8 +1018,7 @@ section>*+* {
     height: 16px;
     border-radius: 8px;
     background: linear-gradient(90deg, rgba(255, 255, 255, .04)0, rgba(255, 255, 255, .08) 40%, rgba(255, 255, 255, .04) 80%);
-    background-size: 200% 100%;
-    animation: shimmer 1.8s ease-in-out infinite
+    background-size: 200% 100%
 }
 
 .skeleton-line--title {
@@ -1124,8 +1052,7 @@ section>*+* {
     height: 140px;
     border-radius: 14px;
     background: linear-gradient(90deg, rgba(255, 255, 255, .04)0, rgba(255, 255, 255, .08) 40%, rgba(255, 255, 255, .04) 80%);
-    background-size: 200% 100%;
-    animation: shimmer 1.8s ease-in-out infinite
+    background-size: 200% 100%
 }
 
 .skeleton-cert-grid {
@@ -1140,8 +1067,7 @@ section>*+* {
     aspect-ratio: 1 / 1.55;
     border-radius: 3px;
     background: linear-gradient(90deg, rgba(255, 255, 255, .04)0, rgba(255, 255, 255, .08) 40%, rgba(255, 255, 255, .04) 80%);
-    background-size: 200% 100%;
-    animation: shimmer 1.8s ease-in-out infinite
+    background-size: 200% 100%
 }
 
 .lazy-content,
@@ -1766,16 +1692,11 @@ section>*+* {
     gap: 30px;
     justify-items: center;
     width: 100%;
-    opacity: 0;
     position: relative;
-    right: -40px;
-    transition: all 1s ease;
     overflow: hidden
 }
 
 .skills-container.active {
-    opacity: 1;
-    right: 0;
     display: grid
 }
 
@@ -1837,54 +1758,77 @@ section>*+* {
     font-size: 13px
 }
 
-.bar,
-.progress {
-    border-radius: 10px;
-    position: relative
+.skill-rating {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    flex: 0 0 auto
 }
 
-.progress {
-    flex: 2;
-    background: #e5e7eb;
-    height: 8px;
-    overflow: visible
+.skill-rating__stars {
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+    --star-size: 17px
 }
 
-.bar {
-    height: 100%;
-    background: linear-gradient(90deg, #4f46e5, #06b6d4);
-    width: 0;
-    opacity: 0;
-    overflow: hidden
+.skill-star {
+    position: relative;
+    display: inline-block;
+    width: var(--star-size);
+    height: var(--star-size);
+    transition: transform .18s ease
 }
 
-.bar::after {
-    content: "";
+.skill-star svg {
+    display: block;
+    width: 100%;
+    height: 100%
+}
+
+.skill-star__outline {
+    fill: rgba(148, 163, 184, .14);
+    stroke: rgba(148, 163, 184, .55);
+    stroke-width: 1.4;
+    stroke-linejoin: round
+}
+
+.skill-rating .skill-star__fill {
     position: absolute;
     top: 0;
-    left: -100%;
-    width: 60%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, .45), transparent);
-    animation: shimmer 1.8s ease-in-out infinite
+    bottom: 0;
+    left: 0;
+    width: var(--fill, 0%);
+    overflow: hidden;
+    color: #f6b93b
 }
 
-.bar.animated {
-    opacity: 1
+.skill-star__fill svg {
+    width: var(--star-size);
+    height: var(--star-size);
+    fill: currentColor;
+    filter: drop-shadow(0 0 3px rgba(246, 185, 59, .4))
 }
 
-.percent {
-    flex-basis: 45px;
-    text-align: right;
-    font-size: .9rem;
-    color: #4b5563;
-    font-variant-numeric: tabular-nums;
-    transition: color .3s ease
+.skill .skill-rating__score {
+    padding: 2px 7px;
+    border-radius: 999px;
+    font-size: .74rem;
+    font-weight: 700;
+    line-height: 1.35;
+    letter-spacing: .01em;
+    color: #a16207;
+    background: rgba(246, 185, 59, .16);
+    border: 1px solid rgba(246, 185, 59, .34);
+    font-variant-numeric: tabular-nums
 }
 
-.percent.counting {
-    color: #4f46e5;
-    font-weight: 700
+.skill-rating:hover .skill-star {
+    transform: translateY(-2px) scale(1.06)
+}
+
+.skill-rating:hover .skill-star__fill svg {
+    filter: drop-shadow(0 0 5px rgba(246, 185, 59, .65))
 }
 
 .hidden {
@@ -1934,7 +1878,6 @@ section>*+* {
         font-size: 1.1rem
     }
 
-    .percent,
     .skill span {
         font-size: .7rem
     }
@@ -2011,6 +1954,15 @@ section>*+* {
 
     .skills-card h3 {
         font-size: 1rem
+    }
+
+    .skill-rating__stars {
+        --star-size: 15px
+    }
+
+    .skill .skill-rating__score {
+        padding: 2px 6px;
+        font-size: .68rem
     }
 }
 
@@ -2579,12 +2531,15 @@ ion-icon.voice-icon {
     box-shadow: inset 0 1px 0 rgba(255, 255, 255, .03), 0 18px 32px rgba(0, 0, 0, .28)
 }
 
-[data-theme=dark] .progress {
-    background: rgba(255, 255, 255, .12)
+[data-theme=dark] .skill-star__outline {
+    fill: rgba(255, 255, 255, .04);
+    stroke: rgba(255, 255, 255, .24)
 }
 
-[data-theme=dark] .percent {
-    color: rgba(255, 255, 255, .7)
+[data-theme=dark] .skill .skill-rating__score {
+    color: #fcd34d;
+    background: rgba(246, 185, 59, .12);
+    border-color: rgba(246, 185, 59, .3)
 }
 
 @media only screen and (max-width:768px) {
@@ -2786,8 +2741,7 @@ ion-icon.voice-icon {
 }
 
 .career-roadmap__timeline {
-    position: relative;
-    --roadmap-progress: 0
+    position: relative
 }
 
 .career-roadmap__rail {
@@ -2806,10 +2760,9 @@ ion-icon.voice-icon {
     width: 100%;
     height: 100%;
     transform-origin: top;
-    transform: scaleY(var(--roadmap-progress));
+    transform: scaleY(1);
     background: linear-gradient(180deg, rgba(59, 130, 246, .95), rgba(45, 212, 191, .8));
-    box-shadow: 0 0 12px rgba(45, 212, 191, .22);
-    transition: transform .18s linear
+    box-shadow: 0 0 12px rgba(45, 212, 191, .22)
 }
 
 .career-roadmap__item {
@@ -2817,16 +2770,7 @@ ion-icon.voice-icon {
     display: grid;
     grid-template-columns: 32px minmax(0, 1fr);
     gap: 14px;
-    padding: 8px 0 14px;
-    opacity: 0;
-    transform: translateY(22px) scale(.985);
-    transition: opacity .6s ease, transform .6s cubic-bezier(.2, .8, .2, 1);
-    transition-delay: calc(var(--roadmap-item-index, 0)*70ms)
-}
-
-.career-roadmap__item.is-visible {
-    opacity: 1;
-    transform: translateY(0) scale(1)
+    padding: 8px 0 14px
 }
 
 .career-roadmap__marker {
@@ -3654,8 +3598,7 @@ ion-icon.voice-icon {
     background-size: 250% 100%;
     -webkit-background-clip: text;
     background-clip: text;
-    -webkit-text-fill-color: transparent;
-    animation: contactHeading 8s ease-in-out infinite
+    -webkit-text-fill-color: transparent
 }
 
 .contact-intro p {
@@ -3915,8 +3858,7 @@ ion-icon.voice-icon {
     background-size: 250% 100%;
     -webkit-background-clip: text;
     background-clip: text;
-    -webkit-text-fill-color: transparent;
-    animation: contactHeading 8s ease-in-out infinite
+    -webkit-text-fill-color: transparent
 }
 
 .about-feature__lead {
@@ -4066,8 +4008,7 @@ ion-icon.voice-icon {
     background-size: 250% 100%;
     -webkit-background-clip: text;
     background-clip: text;
-    -webkit-text-fill-color: transparent;
-    animation: contactHeading 8s ease-in-out infinite
+    -webkit-text-fill-color: transparent
 }
 
 .resume-timeline__lead {
@@ -4413,18 +4354,7 @@ ion-icon.voice-icon {
     width: 220px;
     height: 220px;
     display: grid;
-    place-items: center;
-    animation: summaryFloat 6s ease-in-out infinite
-}
-
-@keyframes summaryFloat {
-    0%, to {
-        transform: translateY(0)
-    }
-
-    50% {
-        transform: translateY(-10px)
-    }
+    place-items: center
 }
 
 .summary-avatar__ring {
@@ -4483,18 +4413,7 @@ ion-icon.voice-icon {
     width: 8px;
     height: 8px;
     border-radius: 50%;
-    background: var(--accent-color);
-    animation: badgePulse 1.8s ease-out infinite
-}
-
-@keyframes badgePulse {
-    0% {
-        box-shadow: 0 0 0 0 rgba(41, 98, 255, .4)
-    }
-
-    to {
-        box-shadow: 0 0 0 9px rgba(41, 98, 255, 0)
-    }
+    background: var(--accent-color)
 }
 
 .summary-hero__profile .profile-name {
@@ -4573,14 +4492,7 @@ ion-icon.voice-icon {
     border-radius: 14px;
     text-align: center;
     border: 1px solid var(--border-color);
-    background: var(--bg-secondary);
-    opacity: 0;
-    transition: opacity .5s ease;
-    transition-delay: calc(var(--stat-index, 0) * 120ms)
-}
-
-.summary-stat.is-revealed {
-    opacity: 1
+    background: var(--bg-secondary)
 }
 
 .summary-stat__num {
@@ -4676,14 +4588,6 @@ ion-icon.voice-icon {
 [data-theme=dark] .summary-tag {
     background: rgba(255, 255, 255, .05);
     border-color: rgba(255, 255, 255, .08)
-}
-
-@media (prefers-reduced-motion:reduce) {
-    .summary-avatar,
-    .summary-avatar__ring,
-    .summary-badge__dot {
-        animation: none
-    }
 }
 
 @media only screen and (max-width:768px) {
@@ -4958,23 +4862,6 @@ ion-icon.voice-icon {
     opacity: 1
 }
 
-.built-apps__extra .store-card {
-    opacity: 0;
-    transform: translateY(18px) scale(.97)
-}
-
-.built-apps__extra.is-open .store-card {
-    animation: builtAppReveal .55s cubic-bezier(.22, 1, .36, 1) forwards;
-    animation-delay: calc(var(--i) * 90ms)
-}
-
-@keyframes builtAppReveal {
-    to {
-        opacity: 1;
-        transform: translateY(0) scale(1)
-    }
-}
-
 .built-apps__more {
     display: flex;
     justify-content: center;
@@ -5061,16 +4948,9 @@ ion-icon.voice-icon {
 @media (prefers-reduced-motion:reduce) {
 
     .built-apps__extra,
-    .built-apps__extra .store-card,
     .built-apps__show-more ion-icon,
     .store-card,
     .store-card__download {
-        transition: none;
-        animation: none
-    }
-
-    .built-apps__extra.is-open .store-card {
-        opacity: 1;
-        transform: none
+        transition: none
     }
 }

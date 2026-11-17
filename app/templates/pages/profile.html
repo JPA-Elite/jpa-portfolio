@@ -1,5 +1,7 @@
 {% extends 'base.html' %}
 
+{% import 'components/macros.html' as ui %}
+
 {% block head %}{% endblock %}
 
 {% block content %}
@@ -433,72 +435,6 @@
             </div>
             {% endif %}
         </section>
-
-        <section class="enable-animation" id="profile-marquee-section">
-            <div class="tech-stack-showcase">
-                <div class="tech-stack-showcase__header">
-                    <div>
-                        <span class="tech-stack-showcase__eyebrow">
-                            <ion-icon name="sparkles-outline" aria-hidden="true"></ion-icon>
-                            {{ _('Tech_Stack_Eyebrow') }}
-                        </span>
-                        <h4>{{ _('Tech_Stack_Heading') }}</h4>
-                        <p>{{ _('Tech_Stack_Description') }}</p>
-                    </div>
-                    <div class="tech-stack-showcase__legend" aria-hidden="true">
-                        <span class="tech-pill">{{ _('Languages') }}</span>
-                        <span class="tech-pill tech-pill--alt">{{ _('Frameworks') }}</span>
-                    </div>
-                </div>
-
-                <div class="tech-stack-row tech-stack-row--languages">
-                    <span class="tech-stack-row__label">{{ _('Languages') }}</span>
-                    <div class="marquee">
-                        <ul class="marquee__content">
-                            <li><img src="{{ url_for('static', filename='images/javascript.webp') }}" alt="javascript-logo"></li>
-                            <li><img src="{{ url_for('static', filename='images/python.webp') }}" alt="python-logo"></li>
-                            <li><img style="position: relative;top: -10px;"
-                                    src="{{ url_for('static', filename='images/java.webp') }}" alt="java-logo"></li>
-                            <li><img src="{{ url_for('static', filename='images/php.webp') }}" alt="php-logo"></li>
-                            <li><img src="{{ url_for('static', filename='images/c++.webp') }}" alt="c++-logo"></li>
-                            <li><img src="{{ url_for('static', filename='images/c#.webp') }}" alt="c#-logo"></li>
-                        </ul>
-                        <ul aria-hidden="true" class="marquee__content">
-                            <li><img src="{{ url_for('static', filename='images/javascript.webp') }}" alt="javascript-logo"></li>
-                            <li><img src="{{ url_for('static', filename='images/python.webp') }}" alt="python-logo"></li>
-                            <li><img style="position: relative;top: -10px;"
-                                    src="{{ url_for('static', filename='images/java.webp') }}" alt="java-logo"></li>
-                            <li><img src="{{ url_for('static', filename='images/php.webp') }}" alt="php-logo"></li>
-                            <li><img src="{{ url_for('static', filename='images/c++.webp') }}" alt="c++-logo"></li>
-                            <li><img src="{{ url_for('static', filename='images/c#.webp') }}" alt="c#-logo"></li>
-                        </ul>
-                    </div>
-                </div>
-
-                <div class="tech-stack-row tech-stack-row--frameworks">
-                    <span class="tech-stack-row__label">{{ _('Frameworks') }}</span>
-                    <div class="marquee marquee--reverse">
-                        <ul class="marquee__content">
-                            <li><img src="{{ url_for('static', filename='images/laravel.webp') }}" alt="laravel-logo"></li>
-                            <li><img src="{{ url_for('static', filename='images/angular.webp') }}" alt="angular-logo"></li>
-                            <li><img src="{{ url_for('static', filename='images/react.webp') }}" alt="react-logo"></li>
-                            <li><img src="{{ url_for('static', filename='images/next-js.webp') }}" alt="next-js-logo"></li>
-                            <li><img src="{{ url_for('static', filename='images/flask.webp') }}" alt="flask-logo"></li>
-                            <li><img src="{{ url_for('static', filename='images/vue.webp') }}" alt="vue-logo"></li>
-                        </ul>
-
-                        <ul aria-hidden="true" class="marquee__content">
-                            <li><img src="{{ url_for('static', filename='images/laravel.webp') }}" alt="laravel-logo"></li>
-                            <li><img src="{{ url_for('static', filename='images/angular.webp') }}" alt="angular-logo"></li>
-                            <li><img src="{{ url_for('static', filename='images/react.webp') }}" alt="react-logo"></li>
-                            <li><img src="{{ url_for('static', filename='images/next-js.webp') }}" alt="next-js-logo"></li>
-                            <li><img src="{{ url_for('static', filename='images/flask.webp') }}" alt="flask-logo"></li>
-                            <li><img src="{{ url_for('static', filename='images/vue.webp') }}" alt="vue-logo"></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </section>
         <!-- Skills & Expertise Section -->
         <section id="skills">
             <div class="skills-tabs">
@@ -516,54 +452,42 @@
                             <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg" alt="HTML" class="skill-icon" onerror="this.style.display='none'">
                             <span>HTML</span>
                         </span>
-                        <div class="progress">
-                            <div class="bar" style="width:95%"></div>
-                        </div><span class="percent">95%</span>
+                        {{ ui.skill_rating(95, 'HTML') }}
                     </div>
                     <div class="skill">
                         <span class="skill-icon-wrap">
                             <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg" alt="CSS" class="skill-icon" onerror="this.style.display='none'">
                             <span>CSS</span>
                         </span>
-                        <div class="progress">
-                            <div class="bar" style="width:93%"></div>
-                        </div><span class="percent">93%</span>
+                        {{ ui.skill_rating(93, 'CSS') }}
                     </div>
                     <div class="skill">
                         <span class="skill-icon-wrap">
                             <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg" alt="JavaScript" class="skill-icon" onerror="this.style.display='none'">
                             <span>JavaScript</span>
                         </span>
-                        <div class="progress">
-                            <div class="bar" style="width:90%"></div>
-                        </div><span class="percent">90%</span>
+                        {{ ui.skill_rating(90, 'JavaScript') }}
                     </div>
                     <div class="skill">
                         <span class="skill-icon-wrap">
                             <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg" alt="TypeScript" class="skill-icon" onerror="this.style.display='none'">
                             <span>TypeScript</span>
                         </span>
-                        <div class="progress">
-                            <div class="bar" style="width:85%"></div>
-                        </div><span class="percent">85%</span>
+                        {{ ui.skill_rating(85, 'TypeScript') }}
                     </div>
                     <div class="skill">
                         <span class="skill-icon-wrap">
                             <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/jquery/jquery-original.svg" alt="jQuery" class="skill-icon" onerror="this.style.display='none'">
                             <span>jQuery</span>
                         </span>
-                        <div class="progress">
-                            <div class="bar" style="width:82%"></div>
-                        </div><span class="percent">82%</span>
+                        {{ ui.skill_rating(82, 'jQuery') }}
                     </div>
                     <div class="skill">
                         <span class="skill-icon-wrap">
                             <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/apache/apache-original.svg" alt="AJAX" class="skill-icon" style="opacity:0.7" onerror="this.style.display='none'">
                             <span>AJAX</span>
                         </span>
-                        <div class="progress">
-                            <div class="bar" style="width:80%"></div>
-                        </div><span class="percent">80%</span>
+                        {{ ui.skill_rating(80, 'AJAX') }}
                     </div>
                 </div>
 
@@ -574,63 +498,49 @@
                             <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg" alt="Node.js" class="skill-icon" onerror="this.style.display='none'">
                             <span>Node.js</span>
                         </span>
-                        <div class="progress">
-                            <div class="bar" style="width:60%"></div>
-                        </div><span class="percent">60%</span>
+                        {{ ui.skill_rating(60, 'Node.js') }}
                     </div>
                     <div class="skill">
                         <span class="skill-icon-wrap">
                             <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/php/php-original.svg" alt="PHP" class="skill-icon" onerror="this.style.display='none'">
                             <span>PHP</span>
                         </span>
-                        <div class="progress">
-                            <div class="bar" style="width:84%"></div>
-                        </div><span class="percent">84%</span>
+                        {{ ui.skill_rating(84, 'PHP') }}
                     </div>
                     <div class="skill">
                         <span class="skill-icon-wrap">
                             <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/java/java-original.svg" alt="Java" class="skill-icon" onerror="this.style.display='none'">
                             <span>Java</span>
                         </span>
-                        <div class="progress">
-                            <div class="bar" style="width:82%"></div>
-                        </div><span class="percent">82%</span>
+                        {{ ui.skill_rating(82, 'Java') }}
                     </div>
                     <div class="skill">
                         <span class="skill-icon-wrap">
                             <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" alt="Python" class="skill-icon" onerror="this.style.display='none'">
                             <span>Python</span>
                         </span>
-                        <div class="progress">
-                            <div class="bar" style="width:80%"></div>
-                        </div><span class="percent">80%</span>
+                        {{ ui.skill_rating(80, 'Python') }}
                     </div>
                     <div class="skill">
                         <span class="skill-icon-wrap">
                             <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mysql/mysql-original.svg" alt="SQL" class="skill-icon" onerror="this.style.display='none'">
                             <span>SQL</span>
                         </span>
-                        <div class="progress">
-                            <div class="bar" style="width:78%"></div>
-                        </div><span class="percent">78%</span>
+                        {{ ui.skill_rating(78, 'SQL') }}
                     </div>
                     <div class="skill">
                         <span class="skill-icon-wrap">
                             <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mysql/mysql-original.svg" alt="MySQL" class="skill-icon" onerror="this.style.display='none'">
                             <span>MySQL</span>
                         </span>
-                        <div class="progress">
-                            <div class="bar" style="width:80%"></div>
-                        </div><span class="percent">80%</span>
+                        {{ ui.skill_rating(80, 'MySQL') }}
                     </div>
                     <div class="skill">
                         <span class="skill-icon-wrap">
                             <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postgresql/postgresql-original.svg" alt="Postgres" class="skill-icon" onerror="this.style.display='none'">
                             <span>Postgres</span>
                         </span>
-                        <div class="progress">
-                            <div class="bar" style="width:72%"></div>
-                        </div><span class="percent">72%</span>
+                        {{ ui.skill_rating(72, 'Postgres') }}
                     </div>
                 </div>
             </div>
@@ -644,36 +554,28 @@
                             <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/angular/angular-original.svg" alt="Angular" class="skill-icon" onerror="this.style.display='none'">
                             <span>Angular</span>
                         </span>
-                        <div class="progress">
-                            <div class="bar" style="width:88%"></div>
-                        </div><span class="percent">88%</span>
+                        {{ ui.skill_rating(88, 'Angular') }}
                     </div>
                     <div class="skill">
                         <span class="skill-icon-wrap">
                             <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vuejs/vuejs-original.svg" alt="Vue.js" class="skill-icon" onerror="this.style.display='none'">
                             <span>Vue.js</span>
                         </span>
-                        <div class="progress">
-                            <div class="bar" style="width:85%"></div>
-                        </div><span class="percent">85%</span>
+                        {{ ui.skill_rating(85, 'Vue.js') }}
                     </div>
                     <div class="skill">
                         <span class="skill-icon-wrap">
                             <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nextjs/nextjs-original.svg" alt="Next.js" class="skill-icon" onerror="this.style.display='none'">
                             <span>Next.js</span>
                         </span>
-                        <div class="progress">
-                            <div class="bar" style="width:87%"></div>
-                        </div><span class="percent">87%</span>
+                        {{ ui.skill_rating(87, 'Next.js') }}
                     </div>
                     <div class="skill">
                         <span class="skill-icon-wrap">
                             <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/tailwindcss/tailwindcss-original.svg" alt="Tailwind CSS" class="skill-icon" onerror="this.style.display='none'">
                             <span>Tailwind CSS</span>
                         </span>
-                        <div class="progress">
-                            <div class="bar" style="width:90%"></div>
-                        </div><span class="percent">90%</span>
+                        {{ ui.skill_rating(90, 'Tailwind CSS') }}
                     </div>
                 </div>
 
@@ -684,27 +586,21 @@
                             <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/laravel/laravel-original.svg" alt="Laravel" class="skill-icon" onerror="this.style.display='none'">
                             <span>Laravel</span>
                         </span>
-                        <div class="progress">
-                            <div class="bar" style="width:89%"></div>
-                        </div><span class="percent">89%</span>
+                        {{ ui.skill_rating(89, 'Laravel') }}
                     </div>
                     <div class="skill">
                         <span class="skill-icon-wrap">
                             <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/spring/spring-original.svg" alt="Spring Boot" class="skill-icon" onerror="this.style.display='none'">
                             <span>Spring Boot</span>
                         </span>
-                        <div class="progress">
-                            <div class="bar" style="width:78%"></div>
-                        </div><span class="percent">78%</span>
+                        {{ ui.skill_rating(78, 'Spring Boot') }}
                     </div>
                     <div class="skill">
                         <span class="skill-icon-wrap">
                             <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/flask/flask-original.svg" alt="Flask" class="skill-icon" onerror="this.style.display='none'">
                             <span>Flask</span>
                         </span>
-                        <div class="progress">
-                            <div class="bar" style="width:80%"></div>
-                        </div><span class="percent">80%</span>
+                        {{ ui.skill_rating(80, 'Flask') }}
                     </div>
                 </div>
             </div>
@@ -718,72 +614,56 @@
                             <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg" alt="Git" class="skill-icon" onerror="this.style.display='none'">
                             <span>Git</span>
                         </span>
-                        <div class="progress">
-                            <div class="bar" style="width:95%"></div>
-                        </div><span class="percent">95%</span>
+                        {{ ui.skill_rating(95, 'Git') }}
                     </div>
                     <div class="skill">
                         <span class="skill-icon-wrap">
                             <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/bitbucket/bitbucket-original.svg" alt="Bitbucket" class="skill-icon" onerror="this.style.display='none'">
                             <span>Bitbucket</span>
                         </span>
-                        <div class="progress">
-                            <div class="bar" style="width:85%"></div>
-                        </div><span class="percent">85%</span>
+                        {{ ui.skill_rating(85, 'Bitbucket') }}
                     </div>
                     <div class="skill">
                         <span class="skill-icon-wrap">
                             <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postman/postman-original.svg" alt="Postman API" class="skill-icon" onerror="this.style.display='none'">
                             <span>Postman API</span>
                         </span>
-                        <div class="progress">
-                            <div class="bar" style="width:90%"></div>
-                        </div><span class="percent">90%</span>
+                        {{ ui.skill_rating(90, 'Postman API') }}
                     </div>
                     <div class="skill">
                         <span class="skill-icon-wrap">
                             <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/swagger/swagger-original.svg" alt="Swagger API" class="skill-icon" onerror="this.style.display='none'">
                             <span>Swagger API</span>
                         </span>
-                        <div class="progress">
-                            <div class="bar" style="width:88%"></div>
-                        </div><span class="percent">88%</span>
+                        {{ ui.skill_rating(88, 'Swagger API') }}
                     </div>
                     <div class="skill">
                         <span class="skill-icon-wrap">
                             <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/eslint/eslint-original.svg" alt="ESLint" class="skill-icon" onerror="this.style.display='none'">
                             <span>ESLint</span>
                         </span>
-                        <div class="progress">
-                            <div class="bar" style="width:80%"></div>
-                        </div><span class="percent">80%</span>
+                        {{ ui.skill_rating(80, 'ESLint') }}
                     </div>
                     <div class="skill">
                         <span class="skill-icon-wrap">
                             <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/figma/figma-original.svg" alt="Figma" class="skill-icon" onerror="this.style.display='none'">
                             <span>Figma</span>
                         </span>
-                        <div class="progress">
-                            <div class="bar" style="width:83%"></div>
-                        </div><span class="percent">83%</span>
+                        {{ ui.skill_rating(83, 'Figma') }}
                     </div>
                     <div class="skill">
                         <span class="skill-icon-wrap">
                             <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/bash/bash-original.svg" alt="CMD" class="skill-icon" onerror="this.style.display='none'">
                             <span>CMD</span>
                         </span>
-                        <div class="progress">
-                            <div class="bar" style="width:92%"></div>
-                        </div><span class="percent">92%</span>
+                        {{ ui.skill_rating(92, 'CMD') }}
                     </div>
                     <div class="skill">
                         <span class="skill-icon-wrap">
                             <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/linux/linux-original.svg" alt="Make" class="skill-icon" onerror="this.style.display='none'">
                             <span>Make</span>
                         </span>
-                        <div class="progress">
-                            <div class="bar" style="width:78%"></div>
-                        </div><span class="percent">78%</span>
+                        {{ ui.skill_rating(78, 'Make') }}
                     </div>
                 </div>
 
@@ -794,9 +674,7 @@
                             <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg" alt="Docker" class="skill-icon" onerror="this.style.display='none'">
                             <span>Docker</span>
                         </span>
-                        <div class="progress">
-                            <div class="bar" style="width:60%"></div>
-                        </div><span class="percent">60%</span>
+                        {{ ui.skill_rating(60, 'Docker') }}
                     </div>
                     <div class="skill">
                         <span class="skill-icon-wrap">
@@ -805,36 +683,28 @@
                             </svg>
                             <span>Pusher</span>
                         </span>
-                        <div class="progress">
-                            <div class="bar" style="width:75%"></div>
-                        </div><span class="percent">75%</span>
+                        {{ ui.skill_rating(75, 'Pusher') }}
                     </div>
                     <div class="skill">
                         <span class="skill-icon-wrap">
                             <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/jira/jira-original.svg" alt="Agile" class="skill-icon" onerror="this.style.display='none'">
                             <span>Agile</span>
                         </span>
-                        <div class="progress">
-                            <div class="bar" style="width:88%"></div>
-                        </div><span class="percent">88%</span>
+                        {{ ui.skill_rating(88, 'Agile') }}
                     </div>
                     <div class="skill">
                         <span class="skill-icon-wrap">
                             <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/ssh/ssh-original.svg" alt="SSH" class="skill-icon" onerror="this.style.display='none'">
                             <span>SSH</span>
                         </span>
-                        <div class="progress">
-                            <div class="bar" style="width:80%"></div>
-                        </div><span class="percent">80%</span>
+                        {{ ui.skill_rating(80, 'SSH') }}
                     </div>
                     <div class="skill">
                         <span class="skill-icon-wrap">
                             <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/ngrok/ngrok-original.svg" alt="ngrok" class="skill-icon" onerror="this.style.display='none'">
                             <span>ngrok</span>
                         </span>
-                        <div class="progress">
-                            <div class="bar" style="width:80%"></div>
-                        </div><span class="percent">80%</span>
+                        {{ ui.skill_rating(80, 'ngrok') }}
                     </div>
                 </div>
             </div>
@@ -878,7 +748,7 @@
         window.profileCertificationsGallery = {{ certification_gallery | tojson }};
     </script>
     <div class="cert-headline">
-        <span class="cert-headline__num" data-count="{{ certification_gallery|length }}">0</span>
+        <span class="cert-headline__num" data-count="{{ certification_gallery|length }}">{{ certification_gallery|length }}</span>
         <span class="cert-headline__label">{{ _('Certifications') }}</span>
     </div>
     <div class="cert-polaroid" data-mobile-slider data-mobile-slider-label="{{ _('Certifications') }}">

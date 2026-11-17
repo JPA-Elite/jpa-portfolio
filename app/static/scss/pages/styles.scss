@@ -3,7 +3,6 @@
 /* ── Lazy Reveal (shared across pages) ── */
 .lazy-pending {
     opacity: 0;
-    transition: opacity 0.5s ease;
 }
 
 .lazy-pending.is-revealed {
@@ -344,12 +343,6 @@ section {
     background-color: var(--card-bg);
     border-radius: 8px;
     box-shadow: 0 2px 10px var(--shadow-color);
-    opacity: 0;
-    transition: opacity 1s ease-out;
-}
-
-section.visible {
-    opacity: 1;
 }
 
 section h2 {

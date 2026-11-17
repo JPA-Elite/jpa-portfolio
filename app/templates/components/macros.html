@@ -16,3 +16,20 @@
     <div class="dtp-dropdown"></div>
 </div>
 {% endmacro %}
+
+{% macro skill_rating(percent, label) %}
+{% set rating = (percent | float) / 20 %}
+<div class="skill-rating" title="{{ label }}: {{ '%.1f'|format(rating) }} / 5">
+    <span class="skill-rating__stars" role="img" aria-label="{{ '%.1f'|format(rating) }} / 5">
+        {%- for index in range(5) %}
+        {%- set raw_fill = (rating - index) * 100 %}
+        {%- set fill = 100 if raw_fill > 100 else (0 if raw_fill < 0 else raw_fill) %}
+        <span class="skill-star" style="--fill: {{ '%.0f'|format(fill) }}%">
+            <svg class="skill-star__outline" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+            <span class="skill-star__fill"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg></span>
+        </span>
+        {%- endfor %}
+    </span>
+    <span class="skill-rating__score" aria-hidden="true">{{ '%.1f'|format(rating) }}</span>
+</div>
+{% endmacro %}

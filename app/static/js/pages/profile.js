@@ -110,75 +110,6 @@ function setupProfileGifHover() {
     });
 }
 
-function animateSkillBars(container, forceReplay) {
-    const bars = container.querySelectorAll('.bar');
-    const percents = container.querySelectorAll('.percent');
-
-    bars.forEach((bar, i) => {
-        if (!forceReplay && bar.classList.contains('animated')) return;
-
-        bar.classList.remove('animated');
-        const rawWidth = bar.style.width;
-        const target = parseFloat(rawWidth);
-        // Force reflow so browser picks up width: 0 immediately
-        bar.style.width = '0';
-        bar.style.opacity = '1';
-        void bar.offsetWidth;
-
-        const delay = i * 100;
-        const duration = 1200;
-        const startTime = Date.now() + delay;
-
-        function tick() {
-            const elapsed = Date.now() - startTime;
-            if (elapsed < 0) {
-                setTimeout(tick, 20);
-                return;
-            }
-            const progress = Math.min(elapsed / duration, 1);
-            const eased = 1 - Math.pow(1 - progress, 3); // easeOutCubic
-            bar.style.width = (eased * target) + '%';
-            if (progress < 1) {
-                setTimeout(tick, 16);
-            } else {
-                bar.style.width = rawWidth;
-                bar.classList.add('animated');
-            }
-        }
-
-        setTimeout(tick, 20);
-    });
-
-    // Count-up for percent spans
-    percents.forEach((el, i) => {
-        if (forceReplay) el.classList.remove('counting');
-        const target = parseInt(el.textContent, 10);
-        const delay = i * 100;
-        el.classList.add('counting');
-        let current = 0;
-        const duration = 1200;
-        const startTime = Date.now() + delay;
-
-        function tick() {
-            const elapsed = Date.now() - startTime;
-            if (elapsed < 0) {
-                setTimeout(tick, 20);
-                return;
-            }
-            const progress = Math.min(elapsed / duration, 1);
-            current = Math.round((1 - Math.pow(1 - progress, 3)) * target);
-            el.textContent = current + '%';
-            if (progress < 1) {
-                setTimeout(tick, 16);
-            } else {
-                el.classList.remove('counting');
-            }
-        }
-
-        setTimeout(tick, 20);
-    });
-}
-
 function setupSkillsTabs() {
     const tabs = document.querySelectorAll(".tab");
     const sections = document.querySelectorAll(".skills-container");
@@ -203,124 +134,9 @@ function setupSkillsTabs() {
 
             tab.classList.add("active");
             targetSection.classList.remove("hidden");
-            void targetSection.offsetWidth;
             targetSection.classList.add("active");
-            animateSkillBars(targetSection, true); // force replay on tab switch
         });
     });
-
-    // Animate bars on page load for the active tab
-    const activeSection = document.querySelector(".skills-container.active");
-    if (activeSection) {
-        setTimeout(() => animateSkillBars(activeSection), 400);
-    }
-}
-
-function setupSkillsScrollAnimation() {
-    const skillsSection = document.getElementById("skills");
-    if (!skillsSection) return;
-
-    const triggerAnimation = () => {
-        const activeTab = document.querySelector(".skills-container.active");
-        if (activeTab) animateSkillBars(activeTab, true);
-    };
-
-    if (!("IntersectionObserver" in window)) {
-        triggerAnimation();
-        return;
-    }
-
-    const observer = new IntersectionObserver(
-        (entries) => {
-            entries.forEach((entry) => {
-                if (entry.isIntersecting) {
-                    triggerAnimation();
-                }
-            });
-        },
-        { threshold: 0.15 }
-    );
-
-    observer.observe(skillsSection);
-}
-
-function setupMarqueeVisibility() {
-    const marqueeSection = document.getElementById("profile-marquee-section");
-    if (!marqueeSection) return;
-
-    const enableAnimation = () => marqueeSection.classList.add("is-animating");
-    const disableAnimation = () => marqueeSection.classList.remove("is-animating");
-
-    if (!("IntersectionObserver" in window)) {
-        enableAnimation();
-        return;
-    }
-
-    const observer = new IntersectionObserver(
-        entries => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    enableAnimation();
-                } else {
-                    disableAnimation();
-                }
-            });
-        },
-        { threshold: 0.1 }
-    );
-
-    observer.observe(marqueeSection);
-}
-
-function setupCareerRoadmapReveal() {
-    const roadmapSection = document.getElementById("company-roadmap");
-    const timeline = document.getElementById("careerRoadmapTimeline");
-    const items = Array.from(document.querySelectorAll(".js-roadmap-item"));
-
-    if (!roadmapSection || !timeline || !items.length) return;
-
-    items.forEach((item, index) => {
-        item.style.setProperty("--roadmap-item-index", String(index));
-    });
-
-    const updateTimelineProgress = () => {
-        const rect = roadmapSection.getBoundingClientRect();
-        const viewportHeight = window.innerHeight || document.documentElement.clientHeight || 1;
-        const start = viewportHeight * 0.18;
-        const end = viewportHeight * 0.82;
-        const total = rect.height + (end - start);
-        const progressed = end - rect.top;
-        const ratio = Math.max(0, Math.min(1, total > 0 ? progressed / total : 0));
-        timeline.style.setProperty("--roadmap-progress", ratio.toFixed(4));
-    };
-
-    if (!("IntersectionObserver" in window)) {
-        items.forEach((item) => item.classList.add("is-visible"));
-        updateTimelineProgress();
-        window.addEventListener("scroll", updateTimelineProgress, { passive: true });
-        window.addEventListener("resize", updateTimelineProgress, { passive: true });
-        return;
-    }
-
-    const observer = new IntersectionObserver(
-        (entries) => {
-            entries.forEach((entry) => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add("is-visible");
-                }
-            });
-            updateTimelineProgress();
-        },
-        {
-            threshold: 0.12,
-            rootMargin: "0px 0px -8% 0px",
-        }
-    );
-
-    items.forEach((item) => observer.observe(item));
-    updateTimelineProgress();
-    window.addEventListener("scroll", updateTimelineProgress, { passive: true });
-    window.addEventListener("resize", updateTimelineProgress, { passive: true });
 }
 
 function setupMobileImageSliders() {
@@ -606,113 +422,6 @@ function setupContactCopy() {
     });
 }
 
-function setupStatReveal() {
-    const container = document.querySelector(".summary-stats");
-    if (!container) return;
-
-    const stats = container.querySelectorAll(".summary-stat");
-    if (!stats.length) return;
-
-    stats.forEach((el, i) => el.style.setProperty("--stat-index", String(i)));
-
-    if ("IntersectionObserver" in window) {
-        const observer = new IntersectionObserver(
-            (entries) => {
-                entries.forEach((entry) => {
-                    if (entry.isIntersecting) {
-                        setTimeout(() => {
-                            stats.forEach((el) => el.classList.add("is-revealed"));
-                            animateStatCounters(stats);
-                        }, 200);
-                        observer.unobserve(entry.target);
-                    }
-                });
-            },
-            { threshold: 0.3 }
-        );
-        observer.observe(container);
-    } else {
-        stats.forEach((el) => el.classList.add("is-revealed"));
-        animateStatCounters(stats);
-    }
-}
-
-function animateStatCounters(stats) {
-    stats.forEach((el, i) => {
-        const numEl = el.querySelector(".summary-stat__num");
-        if (!numEl) return;
-
-        const originalText = numEl.textContent.trim();
-        const match = originalText.match(/^(\d+)(.*)/);
-        if (!match) return;
-
-        const target = parseInt(match[1], 10);
-        const suffix = match[2] || "";
-        const delay = i * 150;
-        const duration = 1200;
-        const startTime = Date.now() + delay;
-
-        function tick() {
-            const elapsed = Date.now() - startTime;
-            if (elapsed < 0) {
-                setTimeout(tick, 20);
-                return;
-            }
-            const progress = Math.min(elapsed / duration, 1);
-            const eased = 1 - Math.pow(1 - progress, 3);
-            const current = Math.round(eased * target);
-            numEl.textContent = current + suffix;
-            if (progress < 1) {
-                setTimeout(tick, 16);
-            }
-        }
-
-        setTimeout(tick, 20);
-    });
-}
-
-function parallaxScroll(refSel, targetsSel, opts) {
-    if (window.innerWidth < 768) return;
-    const ref = document.querySelector(refSel);
-    if (!ref) return;
-    var targets = null;
-
-    function findTargets() {
-        if (!targets || !targets.length) targets = document.querySelectorAll(targetsSel);
-        return targets.length ? targets : null;
-    }
-
-    const sMin = opts.sMin || 0.85;
-    const oMin = opts.oMin || 0.75;
-    const yMax = opts.yMax || -30;
-    const rMax = opts.rMax || 0;
-    const ringEl = opts.ring ? document.querySelector(opts.ring) : null;
-
-    const update = () => {
-        var els = findTargets();
-        if (!els) return;
-
-        const rect = ref.getBoundingClientRect();
-        let p = 0;
-        if (rect.top < 0) p = Math.min(1, -rect.top / rect.height);
-
-        const s = 1 - p * (1 - sMin);
-        const y = p * yMax;
-        const r = p * rMax;
-        const o = 1 - p * (1 - oMin);
-        const tf = "scale(" + s + ") translateY(" + y + "px) rotate(" + r + "deg)";
-
-        for (var i = 0; i < els.length; i++) {
-            els[i].style.transform = tf;
-            els[i].style.opacity = o;
-        }
-        if (ringEl) ringEl.style.transform = "rotate(" + p * 90 + "deg)";
-    };
-
-    window.addEventListener("scroll", update, { passive: true });
-    update();
-}
-
 function setupTagTooltips() {
     const tooltip = document.createElement("div");
     tooltip.className = "summary-tag-tooltip";
@@ -739,43 +448,6 @@ function setupTagTooltips() {
             }, 80);
         });
     });
-}
-
-function setupCertReveal() {
-    const numEl = document.querySelector(".cert-headline__num");
-    const section = document.getElementById("certifications");
-    if (!numEl || !section) return;
-
-    const trigger = () => animateCertCount(numEl);
-
-    if (section.classList.contains("is-revealed")) {
-        trigger();
-        return;
-    }
-
-    const mo = new MutationObserver(() => {
-        if (section.classList.contains("is-revealed")) {
-            mo.disconnect();
-            trigger();
-        }
-    });
-    mo.observe(section, { attributes: true, attributeFilter: ["class"] });
-}
-
-function animateCertCount(el) {
-    const target = parseInt(el.dataset.count || el.textContent.trim(), 10);
-    if (isNaN(target)) return;
-    const duration = 1000;
-    const startTime = Date.now();
-
-    function tick() {
-        const elapsed = Date.now() - startTime;
-        const progress = Math.min(elapsed / duration, 1);
-        const eased = 1 - Math.pow(1 - progress, 3);
-        el.textContent = Math.round(eased * target);
-        if (progress < 1) requestAnimationFrame(tick);
-    }
-    tick();
 }
 
 function setupBuiltAppsShowMore() {
@@ -828,16 +500,8 @@ document.addEventListener("DOMContentLoaded", () => {
     setupCarousel();
     setupProfileGifHover();
     setupSkillsTabs();
-    setupSkillsScrollAnimation();
-    setupMarqueeVisibility();
-    setupCareerRoadmapReveal();
     setupMobileImageSliders();
     setupContactCopy();
-    setupStatReveal();
-    setupCertReveal();
-    parallaxScroll("#portfolio", ".summary-hero__profile", { sMin: 0.85, oMin: 0.75, yMax: -30 });
-    parallaxScroll("#portfolio", ".summary-hero__panel", { sMin: 0.85, oMin: 0.75, yMax: -30 });
-
     setupTagTooltips();
     setupBuiltAppsShowMore();
     setupBuiltAppsHashScroll();

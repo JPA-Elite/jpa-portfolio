@@ -105,7 +105,6 @@ def clear_cache_by_prefix(prefix: str):
     if isinstance(store, dict):
         for key in list(store.keys()):
             if isinstance(key, str) and key.startswith(prefix):
-                print("Deleting cache key:", key)
                 try:
                     cache.delete(key)
                 except Exception:

@@ -14,6 +14,7 @@ from app.configurations import (
     ADMIN_VIDEO_PAGE,
     ADMIN_FACE_RECOGNITION_PAGE,
     ADMIN_BOOKING_REQUESTS_PAGE,
+    HTTPStatus as status,
 )
 from app.configurations import HTTPMethod as http
 from app.constants.login_roles import ROLE_ADMIN
@@ -33,7 +34,7 @@ auth_service = AuthService(
 )
 admin_login_security = AdminLoginSecurity()
 
-def _render_admin_login(form, errors=None, status_code=200, show_face_modal: bool = False):
+def _render_admin_login(form, errors=None, status_code=status.OK, show_face_modal: bool = False):
 
     security_context = admin_login_security.issue_form_challenge()
 
@@ -74,7 +75,7 @@ def admin_login_route():
 
         if session.get("_admin_otp_pending"):
             form = LoginForm()
-            return _render_admin_login(form, errors={}, status_code=200, show_face_modal=True)
+            return _render_admin_login(form, errors={}, status_code=status.OK, show_face_modal=True)
 
         session.pop("user_id", None)
         session.pop("role", None)
@@ -90,7 +91,7 @@ def admin_login_route():
         session.pop("role", None)
 
         flash("Invalid login request. Please try again.", "warning")
-        return _render_admin_login(form, status_code=400)
+        return _render_admin_login(form, status_code=status.BAD_REQUEST)
 
     if form.validate_on_submit():
         username = (form.username.data or "").strip()
@@ -102,18 +103,18 @@ def admin_login_route():
         if not password:
             errors["password"] = "Password is required."
         if errors:
-            return _render_admin_login(form, errors=errors, status_code=400)
+            return _render_admin_login(form, errors=errors, status_code=status.BAD_REQUEST)
 
         form_gate = admin_login_security.validate_form_submission()
         if not form_gate.allowed:
             admin_login_security.record_failure(username)
             flash(form_gate.message, "warning")
-            return _render_admin_login(form, status_code=400)
+            return _render_admin_login(form, status_code=status.BAD_REQUEST)
 
         pre_auth_gate = admin_login_security.check_before_auth(username)
         if not pre_auth_gate.allowed:
             flash(pre_auth_gate.message, "danger")
-            return _render_admin_login(form, status_code=429)
+            return _render_admin_login(form, status_code=status.TOO_MANY_REQUESTS)
 
         page_form = AdminPageRequest()
         form_data, error_response, status_code = page_form.validated()
@@ -127,7 +128,7 @@ def admin_login_route():
             current_app.logger.info("hCaptcha failed: %s", details)
             admin_login_security.record_failure(username)
             flash(CAPTCHA_VERIFICATION_ERROR, "warning")
-            return _render_admin_login(form, status_code=400)
+            return _render_admin_login(form, status_code=status.BAD_REQUEST)
 
         password = password
         remember = form.remember.data
@@ -139,7 +140,7 @@ def admin_login_route():
             session.pop("_admin_otp_pending", None)
             session.pop("face_verified", None)
             flash(message, "danger")
-            return _render_admin_login(form, status_code=429)
+            return _render_admin_login(form, status_code=status.TOO_MANY_REQUESTS)
 
         if user:
 

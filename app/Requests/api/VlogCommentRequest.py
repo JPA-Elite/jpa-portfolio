@@ -1,5 +1,6 @@
 from flask import request, jsonify
 from app.Requests.api.BaseRequest import BaseRequest
+from app.configurations import HTTPStatus as status
 
 
 class VlogCommentRequest(BaseRequest):
@@ -15,7 +16,7 @@ class VlogCommentRequest(BaseRequest):
                 return self._validate_list()
             return self._validate_store()
 
-        return None, jsonify({"errors": {"_global": "Unknown route."}}), 400
+        return None, jsonify({"errors": {"_global": "Unknown route."}}), status.BAD_REQUEST
 
     def _validate_list(self):
         ip_address = request.headers.get("X-Forwarded-For", request.remote_addr)

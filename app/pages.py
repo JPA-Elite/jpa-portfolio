@@ -1,6 +1,6 @@
 # pages.py
 from flask import Blueprint, redirect, request, url_for
-from app.configurations import HTTPMethod as http, get_locale
+from app.configurations import HTTPMethod as http, get_locale, HTTPStatus as status
 from app.auth.middleware import admin_login_required
 from app.Controllers.web.PageController import add_portfolio_form_route, booking_route, built_app_details_route, concern_route, donation_route, gallery_route, index_route, music_route, portfolio_redirect, profile_route, vlog_route
 from app.Controllers.web.AdminPageController import admin_booking_requests_route, admin_built_apps_route, admin_company_roadmaps_route, admin_dashboard_route, admin_face_recognition_route, admin_gallery_route, admin_key_projects_route, admin_login_attempts_route, admin_login_route, admin_logout_route, admin_music_route, admin_settings_route, admin_video_route
@@ -56,7 +56,7 @@ def booking():
 
 @pages_bp.route("/booking", methods=[http.GET])
 def booking_redirect():
-    return redirect(url_for("pages.booking"), code=301)
+    return redirect(url_for("pages.booking"), code=status.MOVED_PERMANENTLY)
 
 @pages_bp.route("/add_portfolio_form", methods=[http.GET])
 @cache.cached(key_prefix=lambda: f"add_portfolio_form_{get_locale()}_{request.query_string.decode()}", unless=skip_cache_on_professional_host)

@@ -6,6 +6,7 @@ from dataclasses import dataclass
 from typing import Optional, Sequence
 from flask import jsonify, request
 from app.extensions import cache
+from app.configurations import HTTPStatus as status
 
 
 def _env_flag(name: str, default: bool):
@@ -220,7 +221,7 @@ def _build_429_response(limit_name: str, result: RateLimitResult):
         )
         response.headers["Content-Type"] = "application/json; charset=utf-8"
 
-    response.status_code = 429
+    response.status_code = status.TOO_MANY_REQUESTS
     response.headers["Retry-After"] = str(result.retry_after or 1)
     response.headers["X-RateLimit-Limit"] = str(result.limit)
     response.headers["X-RateLimit-Remaining"] = str(result.remaining)

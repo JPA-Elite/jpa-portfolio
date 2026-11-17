@@ -1,7 +1,7 @@
 from flask import jsonify
 from app.Repositories.BuiltAppRepository import BuiltAppRepository
 from app.Services.BuiltAppService import BuiltAppService
-from app.configurations import SortOrder
+from app.configurations import SortOrder, HTTPStatus as status
 from app.Requests.api.BuiltAppRequest import BuiltAppRequest
 from app.utils import clear_cache_by_prefix
 
@@ -46,7 +46,7 @@ def add_built_app_route():
 
     app_id = built_app_service.add_built_app(data)
     _clear_built_app_caches()
-    return jsonify({"message": "Built app added successfully.", "app_id": app_id}), 201
+    return jsonify({"message": "Built app added successfully.", "app_id": app_id}), status.CREATED
 
 
 def update_built_app_route(app_id):
@@ -57,10 +57,10 @@ def update_built_app_route(app_id):
 
     success = built_app_service.update_built_app(app_id, data)
     if not success:
-        return jsonify({"message": "Built app not found."}), 404
+        return jsonify({"message": "Built app not found."}), status.NOT_FOUND
 
     _clear_built_app_caches()
-    return jsonify({"message": "Built app updated successfully."}), 200
+    return jsonify({"message": "Built app updated successfully."}), status.OK
 
 
 def delete_built_app_route(app_id):
@@ -71,10 +71,10 @@ def delete_built_app_route(app_id):
 
     success = built_app_service.delete_built_app(app_id)
     if not success:
-        return jsonify({"message": "Built app not found."}), 404
+        return jsonify({"message": "Built app not found."}), status.NOT_FOUND
 
     _clear_built_app_caches()
-    return jsonify({"message": "Built app deleted successfully."}), 200
+    return jsonify({"message": "Built app deleted successfully."}), status.OK
 
 
 def _clear_built_app_caches():

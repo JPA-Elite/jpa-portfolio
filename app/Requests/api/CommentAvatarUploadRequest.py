@@ -1,7 +1,7 @@
 from flask import request, jsonify
 
 from app.Requests.api.BaseRequest import BaseRequest
-from app.configurations import HTTPMethod as http
+from app.configurations import HTTPMethod as http, HTTPStatus as status
 
 MAX_RAW_AVATAR_BYTES = 20 * 1024 * 1024
 ALLOWED_AVATAR_EXTENSIONS = {"png", "jpg", "jpeg", "webp", "gif"}
@@ -10,7 +10,7 @@ ALLOWED_AVATAR_EXTENSIONS = {"png", "jpg", "jpeg", "webp", "gif"}
 class CommentAvatarUploadRequest(BaseRequest):
     def validated(self):
         if request.method != http.POST:
-            return None, jsonify({"errors": {"_global": "Method not allowed."}}), 405
+            return None, jsonify({"errors": {"_global": "Method not allowed."}}), status.METHOD_NOT_ALLOWED
 
         ip_address = request.headers.get("X-Forwarded-For", request.remote_addr)
         avatar_file = request.files.get("avatar")

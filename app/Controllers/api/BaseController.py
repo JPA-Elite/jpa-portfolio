@@ -20,6 +20,7 @@ from flask_babel import gettext
 from urllib.parse import urlparse, parse_qs, urlencode, urlunparse
 from app.Requests.api.BaseControllerRequest import BaseControllerRequest
 from app.utils import safe_filename_parts, stream_generator
+from app.configurations import HTTPStatus as status
 
 # Initialize Services
 portfolio_service = PortfolioService(repository=PortfolioRepository())
@@ -148,8 +149,8 @@ def download_song_route():
     utf8_name = f"{utf8_quoted_base}.mp3"
 
     r = requests.get(url, stream=True, timeout=30)
-    if r.status_code != 200:
-        return {"error": "Failed to download file"}, 500
+    if r.status_code != status.OK:
+        return {"error": "Failed to download file"}, status.INTERNAL_SERVER_ERROR
 
     content_type = r.headers.get("Content-Type", "application/octet-stream")
 

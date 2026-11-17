@@ -2,7 +2,7 @@ import json
 from flask import jsonify
 from app.Repositories.KeyProjectRepository import KeyProjectRepository
 from app.Services.KeyProjectService import KeyProjectService
-from app.configurations import SortOrder, SortOrderStr
+from app.configurations import SortOrder, SortOrderStr, HTTPStatus as status
 from app.Requests.api.KeyProjectRequest import KeyProjectRequest
 from app.utils import clear_cache_by_prefix
 
@@ -46,7 +46,7 @@ def add_key_project_route():
 
     project_id = key_project_service.add_key_project(data)
     _clear_key_project_caches()
-    return jsonify({"message": "Key project added successfully.", "project_id": project_id}), 201
+    return jsonify({"message": "Key project added successfully.", "project_id": project_id}), status.CREATED
 
 def update_key_project_route(project_id):
     form = KeyProjectRequest()
@@ -56,10 +56,10 @@ def update_key_project_route(project_id):
 
     success = key_project_service.update_key_project(project_id, data)
     if not success:
-        return jsonify({"message": "Key project not found."}), 404
+        return jsonify({"message": "Key project not found."}), status.NOT_FOUND
 
     _clear_key_project_caches()
-    return jsonify({"message": "Key project updated successfully."}), 200
+    return jsonify({"message": "Key project updated successfully."}), status.OK
 
 def delete_key_project_route(project_id):
     form = KeyProjectRequest()
@@ -69,10 +69,10 @@ def delete_key_project_route(project_id):
 
     success = key_project_service.delete_key_project(project_id)
     if not success:
-        return jsonify({"message": "Key project not found."}), 404
+        return jsonify({"message": "Key project not found."}), status.NOT_FOUND
 
     _clear_key_project_caches()
-    return jsonify({"message": "Key project deleted successfully."}), 200
+    return jsonify({"message": "Key project deleted successfully."}), status.OK
 
 def _clear_key_project_caches():
     clear_cache_by_prefix("profile_ui_")

@@ -1,7 +1,7 @@
 from flask import jsonify
 from app.Services.MusicService import MusicService
 from app.Repositories.MusicRepository import MusicRepository
-from app.configurations import SortOrder, SortOrderStr
+from app.configurations import SortOrder, SortOrderStr, HTTPStatus as status
 from app.Requests.api.MusicRequest import MusicRequest
 from app.constants.messages import MUSIC_ADD_MSG, MUSIC_DELETE_MSG, MUSIC_NOT_FOUND_ERROR, MUSIC_UPDATE_FAILED_ERROR, MUSIC_UPDATE_MSG
 from app.Models.Music import Music
@@ -45,7 +45,7 @@ def add_music_route():
 
     music_id = music_service.add_music(data)
 
-    return jsonify({"message": MUSIC_ADD_MSG, "music_id": music_id}), 201
+    return jsonify({"message": MUSIC_ADD_MSG, "music_id": music_id}), status.CREATED
 
 def update_music_route(music_id):
     form = MusicRequest()
@@ -55,9 +55,9 @@ def update_music_route(music_id):
 
     success = music_service.update_music(music_id, data)
     if success:
-        return jsonify({"message": MUSIC_UPDATE_MSG}), 200
+        return jsonify({"message": MUSIC_UPDATE_MSG}), status.OK
     else:
-        return jsonify({"message": MUSIC_UPDATE_FAILED_ERROR}), 400
+        return jsonify({"message": MUSIC_UPDATE_FAILED_ERROR}), status.BAD_REQUEST
 
 def delete_music_route(music_id):
     form = MusicRequest()
@@ -67,9 +67,9 @@ def delete_music_route(music_id):
 
     success = music_service.delete_music(music_id)
     if success:
-        return jsonify({"message": MUSIC_DELETE_MSG}), 200
+        return jsonify({"message": MUSIC_DELETE_MSG}), status.OK
     else:
-        return jsonify({"message": MUSIC_NOT_FOUND_ERROR}), 404
+        return jsonify({"message": MUSIC_NOT_FOUND_ERROR}), status.NOT_FOUND
 
 def music_categories_route():
     """Get all categories with counts"""

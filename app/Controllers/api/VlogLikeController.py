@@ -6,6 +6,7 @@ from app.Repositories.VlogCommentRepository import VlogCommentRepository
 from app.Requests.api.VlogLikeRequest import VlogLikeRequest
 from app.constants.messages import VIDEO_LIKE_TOGGLE_MSG
 from app.utils import clear_cache_by_prefix
+from app.configurations import HTTPStatus as status
 
 # Initialize Services
 vlog_like_service = VlogLikeService(repository=VlogLikeRepository())
@@ -30,7 +31,7 @@ def get_vlog_likes_count_route():
             "comment_counts": comment_counts,
             "like_counts": like_counts,
             "is_liked": is_liked['like'] if is_liked else False
-        }), 200
+        }), status.OK
 
 def get_vlog_likes_counts_batch_route():
     form = VlogLikeRequest()
@@ -42,7 +43,7 @@ def get_vlog_likes_counts_batch_route():
     client_ip = data["client_ip"]
 
     if not vlog_ids:
-        return jsonify({"items": {}}), 200
+        return jsonify({"items": {}}), status.OK
 
     comment_counts_by_vlog = vlog_comment_service.count_comments_by_vlog_ids(vlog_ids)
     like_counts_by_vlog = vlog_like_service.get_vlog_likes_counts_by_ids(vlog_ids)
@@ -56,7 +57,7 @@ def get_vlog_likes_counts_batch_route():
             "is_liked": liked_states_by_vlog.get(vlog_id, False)
         }
 
-    return jsonify({"items": items}), 200
+    return jsonify({"items": items}), status.OK
 
 def add_vlog_like_route():
     form = VlogLikeRequest()
@@ -77,7 +78,7 @@ def add_vlog_like_route():
         return jsonify({
             "message": VIDEO_LIKE_TOGGLE_MSG,
             "data": result
-        }), 200
+        }), status.OK
 
     except Exception as e:
-        return jsonify({"error": str(e)}), 500
+        return jsonify({"error": str(e)}), status.INTERNAL_SERVER_ERROR

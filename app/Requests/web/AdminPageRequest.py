@@ -1,5 +1,6 @@
 from flask import jsonify, request
 from app.Requests.api.BaseRequest import BaseRequest
+from app.configurations import HTTPStatus as status
 
 
 class AdminPageRequest(BaseRequest):
@@ -13,7 +14,7 @@ class AdminPageRequest(BaseRequest):
                 return self._validate_admin_face()
             return self._success_response({})
 
-        return None, jsonify({"errors": {"_global": "Unknown route."}}), 400
+        return None, jsonify({"errors": {"_global": "Unknown route."}}), status.BAD_REQUEST
 
     def _validate_admin_login(self):
         if request.method == "POST":

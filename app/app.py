@@ -7,6 +7,7 @@ from app.configurations import (
     CEB_LOCALE,
     TL_LOCALE,
     get_locale,
+    HTTPStatus as status,
 )
 from flask_babel import Babel
 from app.pages import pages_bp
@@ -114,7 +115,7 @@ def enforce_domain_routing():
     except Exception:
         professional_target = None
     if professional_target:
-        return redirect(professional_target, code=301)
+        return redirect(professional_target, code=status.MOVED_PERMANENTLY)
     try:
         target = resolve_domain_redirect(
             request.host,
@@ -126,7 +127,7 @@ def enforce_domain_routing():
     except Exception:
         target = None
     if target:
-        code = 301 if request.method in ("GET", "HEAD") else 307
+        code = status.MOVED_PERMANENTLY if request.method in ("GET", "HEAD") else status.TEMPORARY_REDIRECT
         return redirect(target, code=code)
     try:
         g.site = current_site(request.host)
@@ -474,7 +475,7 @@ babel.init_app(app, locale_selector=get_locale)
 def remove_csp(response):
     response.headers.pop("Content-Security-Policy", None)
     try:
-        if request.path.startswith("/static/") and response.status_code == 200:
+        if request.path.startswith("/static/") and response.status_code == status.OK:
             response.headers.setdefault("Cache-Control", "public, max-age=31536000, immutable")
     except Exception:
         pass
@@ -523,7 +524,7 @@ if _vite_dev_server:
         try:
             resp = requests.get(target, timeout=10)
         except requests.RequestException:
-            abort(502)
+            abort(status.BAD_GATEWAY)
         excluded = {"content-encoding", "transfer-encoding", "connection"}
         headers = [(k, v) for k, v in resp.headers.items() if k.lower() not in excluded]
         return Response(resp.content, status=resp.status_code, headers=headers)
@@ -582,7 +583,7 @@ def not_found(error):
                 "canonical": "",
             }
         ),
-    ), 404
+    ), status.NOT_FOUND
 
 @app.route('/robots.txt')
 def robots():

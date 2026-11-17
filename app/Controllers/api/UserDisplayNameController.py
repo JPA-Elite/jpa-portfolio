@@ -3,7 +3,7 @@ from flask import jsonify, request
 from app.Repositories.UserDisplayNameRepository import UserDisplayNameRepository
 from app.Requests.api.UserDisplayNameRequest import UserDisplayNameRequest
 from app.Services.UserDisplayNameService import UserDisplayNameService
-from app.configurations import HTTPMethod as http
+from app.configurations import HTTPMethod as http, HTTPStatus as status
 from app.constants.messages import NAME_CHANGE_LIMIT_ERROR
 
 user_display_name_service = UserDisplayNameService(repository=UserDisplayNameRepository())
@@ -29,7 +29,7 @@ def comment_username_route():
         return jsonify({
             "errors": {"_global": NAME_CHANGE_LIMIT_ERROR},
             "remaining_changes": remaining_changes,
-        }), 429
+        }), status.TOO_MANY_REQUESTS
 
     return jsonify({
         "status": "success",

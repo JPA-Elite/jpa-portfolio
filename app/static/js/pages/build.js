@@ -1,4 +1,5 @@
 import { BookingService } from "../services/BookingService.js";
+import { HTTPStatus as status } from "../constants/httpStatus.js";
 
 const bookingService = new BookingService();
 
@@ -154,7 +155,7 @@ const bookingService = new BookingService();
                 messageCount.textContent = '0';
                 emailMsg.textContent = '';
                 validateForm();
-            } else if (result.status === 429) {
+            } else if (result.status === status.TOO_MANY_REQUESTS) {
                 let retryAfter = data.retry_after_seconds || 3600;
                 setStatus(data.message, 'error');
                 retryBlocked = true;

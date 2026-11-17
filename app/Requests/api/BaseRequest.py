@@ -1,5 +1,6 @@
 from flask import jsonify, request
 from typing import Any, Dict, Optional, Tuple
+from app.configurations import HTTPStatus as status
 
 
 class BaseRequest:
@@ -13,7 +14,7 @@ class BaseRequest:
         return jsonify({"errors": self._errors}), status_code
 
     def _success_response(self, data: Dict[str, Any]):
-        return data, None, 200
+        return data, None, status.OK
 
     @staticmethod
     def _get_form(key: str, default: Any = "") -> Any:

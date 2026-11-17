@@ -1,7 +1,7 @@
 import json
 from flask import jsonify, request
 from app.Requests.api.BaseRequest import BaseRequest
-from app.configurations import SortOrder, SortOrderStr
+from app.configurations import SortOrder, SortOrderStr, HTTPStatus as status
 
 
 class CompanyRoadmapRequest(BaseRequest):
@@ -17,7 +17,7 @@ class CompanyRoadmapRequest(BaseRequest):
         if "delete" in route:
             return self._validate_delete()
 
-        return None, jsonify({"errors": {"_global": "Unknown route."}}), 400
+        return None, jsonify({"errors": {"_global": "Unknown route."}}), status.BAD_REQUEST
 
     def _validate_list(self):
         page = self._get_int("page", 1)

@@ -1,5 +1,6 @@
 from flask import jsonify, request
 from app.Requests.api.BaseRequest import BaseRequest
+from app.configurations import HTTPStatus as status
 
 
 class AdminOtpRequest(BaseRequest):
@@ -17,7 +18,7 @@ class AdminOtpRequest(BaseRequest):
         if "email" in route and "save" in route:
             return self._validate_email_save()
 
-        return None, jsonify({"errors": {"_global": "Unknown route."}}), 400
+        return None, jsonify({"errors": {"_global": "Unknown route."}}), status.BAD_REQUEST
 
     def _validate_send(self):
         payload = request.get_json(silent=True) or {}

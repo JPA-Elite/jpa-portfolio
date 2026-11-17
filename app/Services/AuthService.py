@@ -11,6 +11,7 @@ from app.constants.messages import INVALID_USE_OR_PASS_ERROR, LOGIN_ATTEMPT_LOCK
 from app.constants.cloudinary import CloudinaryFolders, CloudinaryResourceType
 from app.utils import cleanup_uploaded_files, convert_to_webp, upload_file_to_cloudinary
 from app.extensions import cache
+from app.configurations import HTTPStatus as status
 
 class AuthService:
     def __init__(self, repository: IAuthRepository, attempt_repository: ILoginAttemptRepository):
@@ -45,7 +46,7 @@ class AuthService:
 
     def update_profile(self):
         if 'user_id' not in session:
-            return jsonify({"message": UNAUTHORIZED_ACCESS_ERROR}), 401
+            return jsonify({"message": UNAUTHORIZED_ACCESS_ERROR}), status.UNAUTHORIZED
 
         data = request.get_json(silent=True) or request.form
         username = (data.get('username') or "").strip()
@@ -56,10 +57,10 @@ class AuthService:
         user = self.repository.find_by_id(user_id)
 
         if not user:
-            return jsonify({"message": USER_NOT_FOUND_ERROR}), 404
+            return jsonify({"message": USER_NOT_FOUND_ERROR}), status.NOT_FOUND
 
         if not username:
-            return jsonify({"message": USER_NAME_REQUIRED_ERROR}), 400
+            return jsonify({"message": USER_NAME_REQUIRED_ERROR}), status.BAD_REQUEST
 
         update_data = {"username": username}
         if password:
@@ -89,7 +90,7 @@ class AuthService:
             self.repository.update_user(user_id, update_data)
         except Exception as error:
             cleanup_uploaded_files(None, new_profile_image)
-            return jsonify({"message": f"Failed to update profile image: {error}"}), 500
+            return jsonify({"message": f"Failed to update profile image: {error}"}), status.INTERNAL_SERVER_ERROR
 
         if new_profile_image and existing_profile_image and str(existing_profile_image).startswith("http"):
             cleanup_uploaded_files(None, existing_profile_image)
@@ -103,7 +104,7 @@ class AuthService:
             "message": PROFILE_UPDATE_MSG,
             "username": session.get("username"),
             "profile_image": session.get("profile_image"),
-        }), 200
+        }), status.OK
 
     def get_face_records(self, user_id: str):
         return self.repository.get_face_records(str(user_id))

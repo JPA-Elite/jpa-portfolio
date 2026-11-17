@@ -2,7 +2,7 @@ import json
 from flask import jsonify, request
 from app.Repositories.CompanyRoadmapRepository import CompanyRoadmapRepository
 from app.Services.CompanyRoadmapService import CompanyRoadmapService
-from app.configurations import SortOrder, SortOrderStr
+from app.configurations import SortOrder, SortOrderStr, HTTPStatus as status
 from app.Requests.api.CompanyRoadmapRequest import CompanyRoadmapRequest
 from app.utils import clear_cache_by_prefix
 
@@ -57,7 +57,7 @@ def add_company_roadmap_route():
 
     roadmap_id = company_roadmap_service.add_company_roadmap(data)
     _clear_company_roadmap_caches()
-    return jsonify({"message": "Company roadmap entry added successfully.", "roadmap_id": roadmap_id}), 201
+    return jsonify({"message": "Company roadmap entry added successfully.", "roadmap_id": roadmap_id}), status.CREATED
 
 
 def update_company_roadmap_route(roadmap_id):
@@ -68,10 +68,10 @@ def update_company_roadmap_route(roadmap_id):
 
     success = company_roadmap_service.update_company_roadmap(roadmap_id, data)
     if not success:
-        return jsonify({"message": "Company roadmap entry not found."}), 404
+        return jsonify({"message": "Company roadmap entry not found."}), status.NOT_FOUND
 
     _clear_company_roadmap_caches()
-    return jsonify({"message": "Company roadmap entry updated successfully."}), 200
+    return jsonify({"message": "Company roadmap entry updated successfully."}), status.OK
 
 
 def delete_company_roadmap_route(roadmap_id):
@@ -82,10 +82,10 @@ def delete_company_roadmap_route(roadmap_id):
 
     success = company_roadmap_service.delete_company_roadmap(roadmap_id)
     if not success:
-        return jsonify({"message": "Company roadmap entry not found."}), 404
+        return jsonify({"message": "Company roadmap entry not found."}), status.NOT_FOUND
 
     _clear_company_roadmap_caches()
-    return jsonify({"message": "Company roadmap entry deleted successfully."}), 200
+    return jsonify({"message": "Company roadmap entry deleted successfully."}), status.OK
 
 
 def _clear_company_roadmap_caches():

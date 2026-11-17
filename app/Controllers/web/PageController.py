@@ -33,6 +33,7 @@ from app.configurations import (
     BOOKING_PAGE,
     SortOrder,
     get_locale,
+    HTTPStatus as status,
 )
 from flask_babel import gettext
 from markupsafe import escape
@@ -185,10 +186,10 @@ def profile_route():
             ),
             "modal_slides": modal_slides,
         }
-        status = display_project.get("status") or "planned"
-        if status not in key_project_columns:
-            status = "planned"
-        key_project_columns[status].append(display_project)
+        project_status = display_project.get("status") or "planned"
+        if project_status not in key_project_columns:
+            project_status = "planned"
+        key_project_columns[project_status].append(display_project)
 
     for _column_key, _projects in key_project_columns.items():
         column_gallery = []
@@ -313,7 +314,7 @@ def built_app_details_route(slug):
                     "canonical": "",
                 }
             ),
-        ), 404
+        ), status.NOT_FOUND
 
     app_data = _resolve_built_app_display(app.to_dict())
     other_apps = [
@@ -437,7 +438,7 @@ def booking_route():
 
 def portfolio_redirect():
     from flask import redirect
-    return redirect("/portfolio", code=301)
+    return redirect("/portfolio", code=status.MOVED_PERMANENTLY)
 
 def is_philippines():
 

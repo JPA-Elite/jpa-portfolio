@@ -3,7 +3,7 @@ from app.Services.VlogCommentService import VlogCommentService
 from app.Services.UserDisplayNameService import UserDisplayNameService
 from app.Repositories.VlogCommentRepository import VlogCommentRepository
 from app.Repositories.UserDisplayNameRepository import UserDisplayNameRepository
-from app.configurations import HTTPMethod as http
+from app.configurations import HTTPMethod as http, HTTPStatus as status
 from app.Requests.api.VlogCommentRequest import VlogCommentRequest
 from app.constants.messages import COMMENT_NOT_FOUND_ERROR, COMMENT_DELETE_FORBIDDEN, COMMENT_DELETE_SUCCESS, COMMENT_DELETE_ALL_SUCCESS
 
@@ -53,7 +53,7 @@ def vlog_like_comment_route():
     ip_address = data["ip_address"]
     result = vlog_comment_service.toggle_like(comment_id, ip_address)
     if result is None:
-        return jsonify({"status": "error", "message": COMMENT_NOT_FOUND_ERROR}), 404
+        return jsonify({"status": "error", "message": COMMENT_NOT_FOUND_ERROR}), status.NOT_FOUND
 
     return jsonify({"status": "success", **result})
 
@@ -65,9 +65,9 @@ def vlog_delete_comment_route(comment_id=None):
 
     result = vlog_comment_service.delete_comment(data.get("comment_id") or comment_id, data["ip_address"])
     if result is None:
-        return jsonify({"status": "error", "message": COMMENT_NOT_FOUND_ERROR}), 404
+        return jsonify({"status": "error", "message": COMMENT_NOT_FOUND_ERROR}), status.NOT_FOUND
     if result is False:
-        return jsonify({"status": "error", "message": COMMENT_DELETE_FORBIDDEN}), 403
+        return jsonify({"status": "error", "message": COMMENT_DELETE_FORBIDDEN}), status.FORBIDDEN
 
     return jsonify({"status": "success", "message": COMMENT_DELETE_SUCCESS})
 

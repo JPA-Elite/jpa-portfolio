@@ -1,6 +1,7 @@
 from flask import jsonify, request, session
 from app.Services.OtpService import OtpService
 from app.Requests.api.AdminOtpRequest import AdminOtpRequest
+from app.configurations import HTTPStatus as status
 
 def admin_otp_send_route():
     form = AdminOtpRequest()
@@ -13,7 +14,7 @@ def admin_otp_send_route():
 
         user_id = session.get("user_id")
         if not user_id:
-            return jsonify({"ok": False, "message": "Not authenticated"}), 401
+            return jsonify({"ok": False, "message": "Not authenticated"}), status.UNAUTHORIZED
 
         svc = OtpService()
 
@@ -37,7 +38,7 @@ def admin_otp_send_route():
         msg = svc.send_otp(user_id=str(user_id), email=email)
         return jsonify({"ok": True, "message": msg})
     except Exception as e:
-        return jsonify({"ok": False, "message": str(e)}), 400
+        return jsonify({"ok": False, "message": str(e)}), status.BAD_REQUEST
 
 def admin_otp_verify_route():
     form = AdminOtpRequest()
@@ -50,7 +51,7 @@ def admin_otp_verify_route():
 
         user_id = session.get("user_id")
         if not user_id:
-            return jsonify({"ok": False, "message": "Not authenticated"}), 401
+            return jsonify({"ok": False, "message": "Not authenticated"}), status.UNAUTHORIZED
 
         svc = OtpService()
         result = svc.verify_otp(user_id=str(user_id), otp=otp)
@@ -59,9 +60,9 @@ def admin_otp_verify_route():
             retry_after = result.get("retry_after_seconds")
             attempts_remaining = result.get("attempts_remaining")
 
-            status_code = 403
+            status_code = status.FORBIDDEN
             if result.get("reason") == "cooldown":
-                status_code = 429
+                status_code = status.TOO_MANY_REQUESTS
 
             return (
                 jsonify(
@@ -79,7 +80,7 @@ def admin_otp_verify_route():
         session["face_verified"] = True
         return jsonify({"ok": True, "message": "OTP verified"})
     except Exception as e:
-        return jsonify({"ok": False, "message": str(e)}), 400
+        return jsonify({"ok": False, "message": str(e)}), status.BAD_REQUEST
 
 def admin_otp_reset_route():
     form = AdminOtpRequest()
@@ -92,7 +93,7 @@ def admin_otp_reset_route():
         session.pop("face_verified", None)
         return jsonify({"ok": True, "message": "OTP verification gate cleared"})
     except Exception as e:
-        return jsonify({"ok": False, "message": str(e)}), 400
+        return jsonify({"ok": False, "message": str(e)}), status.BAD_REQUEST
 
 def admin_otp_email_get_route():
     form = AdminOtpRequest()
@@ -103,7 +104,7 @@ def admin_otp_email_get_route():
     try:
         user_id = session.get("user_id")
         if not user_id:
-            return jsonify({"ok": False, "message": "Not authenticated"}), 401
+            return jsonify({"ok": False, "message": "Not authenticated"}), status.UNAUTHORIZED
 
         svc = OtpService()
         email = svc.get_user_email(str(user_id))
@@ -123,7 +124,7 @@ def admin_otp_email_get_route():
             }
         )
     except Exception as e:
-        return jsonify({"ok": False, "message": str(e)}), 400
+        return jsonify({"ok": False, "message": str(e)}), status.BAD_REQUEST
 
 def admin_otp_email_save_route():
     form = AdminOtpRequest()
@@ -136,10 +137,10 @@ def admin_otp_email_save_route():
 
         user_id = session.get("user_id")
         if not user_id:
-            return jsonify({"ok": False, "message": "Not authenticated"}), 401
+            return jsonify({"ok": False, "message": "Not authenticated"}), status.UNAUTHORIZED
 
         svc = OtpService()
         svc.update_user_email(str(user_id), email)
         return jsonify({"ok": True, "message": "OTP email updated"})
     except Exception as e:
-        return jsonify({"ok": False, "message": str(e)}), 400
+        return jsonify({"ok": False, "message": str(e)}), status.BAD_REQUEST

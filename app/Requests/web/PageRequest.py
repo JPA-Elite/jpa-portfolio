@@ -1,5 +1,6 @@
 from flask import jsonify, request
 from app.Requests.api.BaseRequest import BaseRequest
+from app.configurations import HTTPStatus as status
 
 
 class PageRequest(BaseRequest):
@@ -15,7 +16,7 @@ class PageRequest(BaseRequest):
         if "add_portfolio" in route:
             return self._validate_add_portfolio()
 
-        return None, jsonify({"errors": {"_global": "Unknown route."}}), 400
+        return None, jsonify({"errors": {"_global": "Unknown route."}}), status.BAD_REQUEST
 
     def _validate_gallery(self):
         search_query = str(self._get_args("search", "")).strip()

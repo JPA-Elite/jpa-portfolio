@@ -3,6 +3,7 @@ from app.Services.BookingRequestService import BookingRequestService
 from app.Repositories.BookingRequestRepository import BookingRequestRepository
 from app.Requests.api.BookingRequestRequest import BookingRequestRequest
 from app.constants.messages import BOOKING_REQUEST_DELETE_MSG, BOOKING_REQUEST_NOT_FOUND_ERROR
+from app.configurations import HTTPStatus as status
 
 booking_request_service = BookingRequestService(repository=BookingRequestRepository())
 
@@ -33,9 +34,9 @@ def delete_booking_request_route(booking_id):
 
     success = booking_request_service.delete_booking(booking_id)
     if success:
-        return jsonify({"message": BOOKING_REQUEST_DELETE_MSG}), 200
+        return jsonify({"message": BOOKING_REQUEST_DELETE_MSG}), status.OK
     else:
-        return jsonify({"message": BOOKING_REQUEST_NOT_FOUND_ERROR}), 404
+        return jsonify({"message": BOOKING_REQUEST_NOT_FOUND_ERROR}), status.NOT_FOUND
 
 def clear_all_booking_requests_route():
     try:

@@ -4,6 +4,7 @@ import re
 import time
 
 import requests
+from app.configurations import HTTPStatus as status
 
 GEMINI_DEFAULT_MODEL = "gemini-3.7-flash"
 GEMINI_UNRELATED_MARKER = "UNRELATED"
@@ -276,7 +277,7 @@ class GeminiService:
                     )
                 except Exception:
                     continue
-                if response.status_code == 200:
+                if response.status_code == status.OK:
                     self._working_model = model
                     self._working_key = key
                     produced = False
@@ -295,10 +296,10 @@ class GeminiService:
                     if produced:
                         return
                     continue
-                if response.status_code == 429:
+                if response.status_code == status.TOO_MANY_REQUESTS:
                     self._exhausted[combo] = time.time()
                     continue
-                if 400 <= response.status_code < 500:
+                if status.BAD_REQUEST <= response.status_code < status.INTERNAL_SERVER_ERROR:
                     break
                 if not self._should_try_next(response):
                     return
@@ -327,14 +328,14 @@ class GeminiService:
                     )
                 except Exception:
                     continue
-                if response.status_code == 200:
+                if response.status_code == status.OK:
                     self._working_model = model
                     self._working_key = key
                     return self._extract_text(response)
-                if response.status_code == 429:
+                if response.status_code == status.TOO_MANY_REQUESTS:
                     self._exhausted[combo] = time.time()
                     continue
-                if 400 <= response.status_code < 500:
+                if status.BAD_REQUEST <= response.status_code < status.INTERNAL_SERVER_ERROR:
                     break
                 if not self._should_try_next(response):
                     return None

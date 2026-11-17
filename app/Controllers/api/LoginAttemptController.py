@@ -1,7 +1,7 @@
 from flask import jsonify
 from app.Services.LoginAttemptService import LoginAttemptService
 from app.Repositories.LoginAttemptRepository import LoginAttemptRepository
-from app.configurations import SortOrder, SortOrderStr
+from app.configurations import SortOrder, SortOrderStr, HTTPStatus as status
 from app.Requests.api.LoginAttemptRequest import LoginAttemptRequest
 from app.constants.messages import LOGIN_ATTEMPT_DELETE_MSG, LOGIN_ATTEMPT_NOT_FOUND_ERROR
 
@@ -40,6 +40,6 @@ def delete_login_attempt_route(login_attempt_id):
 
     success = login_attempt_service.delete_login_attempt(login_attempt_id)
     if success:
-        return jsonify({"message": LOGIN_ATTEMPT_DELETE_MSG}), 200
+        return jsonify({"message": LOGIN_ATTEMPT_DELETE_MSG}), status.OK
     else:
-        return jsonify({"message": LOGIN_ATTEMPT_NOT_FOUND_ERROR}), 404
+        return jsonify({"message": LOGIN_ATTEMPT_NOT_FOUND_ERROR}), status.NOT_FOUND

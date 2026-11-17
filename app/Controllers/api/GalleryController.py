@@ -1,7 +1,7 @@
 from flask import jsonify
 from app.Services.GalleryService import GalleryService
 from app.Repositories.GalleryRepository import GalleryRepository
-from app.configurations import SortOrder, SortOrderStr
+from app.configurations import SortOrder, SortOrderStr, HTTPStatus as status
 from app.Requests.api.GalleryRequest import GalleryRequest
 from app.constants.messages import GALLERY_ADD_MSG, GALLERY_DELETE_MSG, GALLERY_NOT_FOUND_ERROR, GALLERY_UPDATE_ERROR, GALLERY_UPDATE_MSG
 from app.utils import clear_cache_by_prefix
@@ -51,7 +51,7 @@ def add_gallery_route():
 
     gallery_id = gallery_service.add_gallery(data)
     clear_cache_by_prefix("gallery_")
-    return jsonify({"message": GALLERY_ADD_MSG, "gallery_id": gallery_id}), 201
+    return jsonify({"message": GALLERY_ADD_MSG, "gallery_id": gallery_id}), status.CREATED
 
 def update_gallery_route(gallery_id):
     form = GalleryRequest()
@@ -62,9 +62,9 @@ def update_gallery_route(gallery_id):
     success = gallery_service.update_gallery(gallery_id, data)
     if success:
         clear_cache_by_prefix("gallery_")
-        return jsonify({"message": GALLERY_UPDATE_MSG}), 200
+        return jsonify({"message": GALLERY_UPDATE_MSG}), status.OK
     else:
-        return jsonify({"message": GALLERY_UPDATE_ERROR}), 400
+        return jsonify({"message": GALLERY_UPDATE_ERROR}), status.BAD_REQUEST
 
 def delete_gallery_route(gallery_id):
     form = GalleryRequest()
@@ -75,6 +75,6 @@ def delete_gallery_route(gallery_id):
     success = gallery_service.delete_gallery(gallery_id)
     if success:
         clear_cache_by_prefix("gallery_")
-        return jsonify({"message": GALLERY_DELETE_MSG}), 200
+        return jsonify({"message": GALLERY_DELETE_MSG}), status.OK
     else:
-        return jsonify({"message": GALLERY_NOT_FOUND_ERROR}), 404
+        return jsonify({"message": GALLERY_NOT_FOUND_ERROR}), status.NOT_FOUND

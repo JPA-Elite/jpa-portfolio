@@ -5,6 +5,7 @@ from app.Repositories.BookingRequestRepository import BookingRequestRepository
 from app.security.ddos_guard import get_request_ip
 from app.constants.messages import BOOKING_RATE_LIMIT_ERROR, BOOKING_EMAIL_SENT_MSG, CAPTCHA_VERIFICATION_ERROR
 from app.utils import verify_hcaptcha
+from app.configurations import HTTPStatus as status
 
 def booking_send_route():
     form = BookingRequest()
@@ -17,7 +18,7 @@ def booking_send_route():
     ip = get_request_ip()
     ok, _details = verify_hcaptcha(hcaptcha_token, remote_ip=ip)
     if not ok:
-        return jsonify({"ok": False, "message": CAPTCHA_VERIFICATION_ERROR}), 400
+        return jsonify({"ok": False, "message": CAPTCHA_VERIFICATION_ERROR}), status.BAD_REQUEST
 
     try:
         svc = BookingService(repository=BookingRequestRepository())
@@ -29,7 +30,7 @@ def booking_send_route():
                 "ok": False,
                 "message": BOOKING_RATE_LIMIT_ERROR.format(retry_after=minutes),
                 "retry_after_seconds": retry_after,
-            }), 429
+            }), status.TOO_MANY_REQUESTS
 
         svc.increment_count(ip)
         svc.save_booking(data, ip)
@@ -37,4 +38,4 @@ def booking_send_route():
 
         return jsonify({"ok": True, "message": BOOKING_EMAIL_SENT_MSG})
     except Exception as e:
-        return jsonify({"ok": False, "message": str(e)}), 400
+        return jsonify({"ok": False, "message": str(e)}), status.BAD_REQUEST

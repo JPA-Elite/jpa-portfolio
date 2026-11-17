@@ -7,6 +7,7 @@ from app.Services.AuthService import AuthService
 from app.Repositories.AuthRepository import AuthRepository
 from app.Repositories.LoginAttemptRepository import LoginAttemptRepository
 from app.Requests.api.AdminFaceRequest import AdminFaceRequest
+from app.configurations import HTTPStatus as status
 
 _FACE_CASCADE = cv2.CascadeClassifier(cv2.data.haarcascades + "haarcascade_frontalface_default.xml")
 auth_service = AuthService(
@@ -103,14 +104,14 @@ def admin_face_register_route():
             crops.append(face_crop_norm)
 
         if not crops:
-            return jsonify({"ok": False, "message": "No valid face crops captured"}), 400
+            return jsonify({"ok": False, "message": "No valid face crops captured"}), status.BAD_REQUEST
 
         reference_gray_160 = np.median(np.stack(crops, axis=0), axis=0).astype(np.uint8)
         face_crop_b64 = _encode_crop_to_b64(reference_gray_160)
 
         user_id = session.get("user_id")
         if not user_id:
-            return jsonify({"ok": False, "message": "Not authenticated"}), 401
+            return jsonify({"ok": False, "message": "Not authenticated"}), status.UNAUTHORIZED
 
         auth_service.save_face_reference(
             str(user_id),
@@ -120,7 +121,7 @@ def admin_face_register_route():
 
         return jsonify({"ok": True, "message": "Face reference registered"})
     except Exception as e:
-        return jsonify({"ok": False, "message": str(e)}), 400
+        return jsonify({"ok": False, "message": str(e)}), status.BAD_REQUEST
 
 def admin_face_records_route():
 
@@ -132,7 +133,7 @@ def admin_face_records_route():
     try:
         user_id = session.get("user_id")
         if not user_id:
-            return jsonify({"ok": False, "message": "Not authenticated"}), 401
+            return jsonify({"ok": False, "message": "Not authenticated"}), status.UNAUTHORIZED
 
         user_doc = auth_service.get_face_records(str(user_id))
 
@@ -160,7 +161,7 @@ def admin_face_records_route():
 
         return jsonify({"ok": True, "rows": rows})
     except Exception as e:
-        return jsonify({"ok": False, "message": str(e)}), 400
+        return jsonify({"ok": False, "message": str(e)}), status.BAD_REQUEST
 
 def admin_face_verify_route():
 
@@ -180,16 +181,16 @@ def admin_face_verify_route():
             crops.append(face_crop_norm)
 
         if not crops:
-            return jsonify({"ok": False, "message": "No valid face crops captured"}), 400
+            return jsonify({"ok": False, "message": "No valid face crops captured"}), status.BAD_REQUEST
 
         user_id = session.get("user_id")
         if not user_id:
-            return jsonify({"ok": False, "message": "Not authenticated"}), 401
+            return jsonify({"ok": False, "message": "Not authenticated"}), status.UNAUTHORIZED
 
         user_doc = auth_service.get_face_records(str(user_id))
         ref_crop_b64 = (user_doc or {}).get("face_reference_crop_b64")
         if not ref_crop_b64:
-            return jsonify({"ok": False, "message": "No registered face found. Please register first."}), 400
+            return jsonify({"ok": False, "message": "No registered face found. Please register first."}), status.BAD_REQUEST
 
         ref_gray_160 = _b64_png_to_gray_160(ref_crop_b64)
 
@@ -218,4 +219,4 @@ def admin_face_verify_route():
         session["face_verified"] = True
         return jsonify({"ok": True, "message": "Face verified", "distance": dist})
     except Exception as e:
-        return jsonify({"ok": False, "message": str(e)}), 400
+        return jsonify({"ok": False, "message": str(e)}), status.BAD_REQUEST

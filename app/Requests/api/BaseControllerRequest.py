@@ -1,5 +1,6 @@
 from flask import jsonify, request
 from app.Requests.api.BaseRequest import BaseRequest
+from app.configurations import HTTPStatus as status
 
 
 class BaseControllerRequest(BaseRequest):
@@ -19,7 +20,7 @@ class BaseControllerRequest(BaseRequest):
         if "chat" in route:
             return self._validate_chat()
 
-        return None, jsonify({"errors": {"_global": "Unknown route."}}), 400
+        return None, jsonify({"errors": {"_global": "Unknown route."}}), status.BAD_REQUEST
 
     def _validate_change_language(self):
         return self._success_response({})

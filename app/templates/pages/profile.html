@@ -55,14 +55,6 @@
             </button>
         </div>
     </div>
-    {% if get_locale() == en_locale %}
-    <ion-icon name="mic-outline" size="18" class="voice-icon" onclick="speak(
-        document.querySelector('#project-details').textContent,
-        getVoiceLocale('{{ get_locale() }}'),
-        this,
-        '#project-details'
-    )"></ion-icon>
-    {% endif %}
 </section>
 
 <!-- About Me -->
@@ -120,14 +112,6 @@
             </ul>
         </div>
     </div>
-    {% if get_locale() == en_locale %}
-    <ion-icon name="mic-outline" size="18" class="voice-icon" onclick="speak(
-        document.querySelector('#about').textContent,
-        getVoiceLocale('{{ get_locale() }}'),
-        this,
-        '#about'
-    )"></ion-icon>
-    {% endif %}
 </section>
 
 <!-- Resume -->
@@ -202,14 +186,6 @@
             </p>
         </div>
     </div>
-    {% if get_locale() == en_locale %}
-    <ion-icon name="mic-outline" size="18" class="voice-icon" onclick="speak(
-        document.querySelector('#resume').textContent,
-        getVoiceLocale('{{ get_locale() }}'),
-        this,
-        '#resume'
-    )"></ion-icon>
-    {% endif %}
 </section>
 
 <section id="company-roadmap" class="career-roadmap-section">
@@ -307,14 +283,6 @@
         </div>
         {% endfor %}
     </div>
-    {% if get_locale() == en_locale %}
-    <ion-icon name="mic-outline" size="18" class="voice-icon" onclick="speak(
-        document.querySelector('#company-roadmap').textContent,
-        getVoiceLocale('{{ get_locale() }}'),
-        this,
-        '#company-roadmap'
-    )"></ion-icon>
-    {% endif %}
 </section>
 
 <!-- Key Projects -->
@@ -861,14 +829,6 @@
             </div>
         </div>
     </div>
-    {% if get_locale() == en_locale %}
-    <ion-icon name="mic-outline" size="18" class="voice-icon" onclick="speak(
-        document.querySelector('#contact').textContent,
-        getVoiceLocale('{{ get_locale() }}'),
-        this,
-        '#contact'
-    )"></ion-icon>
-    {% endif %}
 </section>
 <script>
     window.profileI18n = {

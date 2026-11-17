@@ -2034,85 +2034,6 @@ section>*+* {
     z-index: 1
 }
 
-#about .voice-icon,
-#company-roadmap .voice-icon,
-#contact .voice-icon,
-#portfolio .voice-icon,
-#resume .voice-icon {
-    position: absolute;
-    top: 12px;
-    right: 12px;
-    bottom: auto;
-    left: auto;
-    padding: 3px;
-    margin: 0;
-    border-radius: 999px;
-    border: 1px solid rgba(255, 255, 255, .14);
-    background: radial-gradient(120% 120%at 20% 15%, rgba(255, 86, 154, .14), transparent 58%), radial-gradient(120% 120%at 100% 100%, rgba(56, 189, 248, .14), transparent 60%), rgba(15, 15, 19, .86);
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .08), 0 10px 20px rgba(0, 0, 0, .24);
-    backdrop-filter: blur(6px);
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    color: #fff;
-    font-size: 18px !important;
-    width: 34px !important;
-    height: 34px !important;
-    min-width: 34px !important;
-    min-height: 34px !important;
-    max-width: 34px !important;
-    max-height: 34px !important;
-    --size: 18px !important;
-    z-index: 3;
-    cursor: pointer
-}
-
-#about .voice-icon:hover,
-#company-roadmap .voice-icon:hover,
-#contact .voice-icon:hover,
-#portfolio .voice-icon:hover,
-#resume .voice-icon:hover {
-    border-color: rgba(59, 130, 246, .28)
-}
-
-#about .speech-word,
-#company-roadmap .speech-word,
-#contact .speech-word,
-#project-details .speech-word,
-#resume .speech-word {
-    transition: color .12s ease, font-weight .12s ease
-}
-
-#about .speech-word.is-speaking,
-#company-roadmap .speech-word.is-speaking,
-#contact .speech-word.is-speaking,
-#project-details .speech-word.is-speaking,
-#resume .speech-word.is-speaking {
-    color: #2962ff;
-    font-weight: 700;
-    text-decoration: underline;
-    text-decoration-color: #2962ff;
-    text-decoration-thickness: 2px;
-    text-underline-offset: .12em
-}
-
-@media only screen and (max-width:768px) {
-
-    #about .voice-icon,
-    #company-roadmap .voice-icon,
-    #contact .voice-icon,
-    #portfolio .voice-icon,
-    #resume .voice-icon {
-        top: 10px;
-        right: 10px;
-        width: 30px !important;
-        height: 30px !important;
-        font-size: 16px !important;
-        --size: 16px !important;
-        padding: 3px
-    }
-}
-
 #about>h2,
 #certifications>h2,
 #contact>h2,
@@ -2317,25 +2238,6 @@ section>*+* {
 
 [data-theme=light] .cert-polaroid__card:hover {
     box-shadow: 0 16px 40px rgba(0, 0, 0, .22), 0 4px 12px rgba(0, 0, 0, .12)
-}
-
-[data-theme=light] #about .voice-icon,
-[data-theme=light] #company-roadmap .voice-icon,
-[data-theme=light] #contact .voice-icon,
-[data-theme=light] #portfolio .voice-icon,
-[data-theme=light] #resume .voice-icon {
-    border-color: rgba(15, 23, 42, .12);
-    background: radial-gradient(120% 120%at 20% 15%, rgba(244, 114, 182, .16), transparent 58%), radial-gradient(120% 120%at 100% 100%, rgba(59, 130, 246, .14), transparent 60%), rgba(255, 255, 255, .9);
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, .95), 0 8px 16px rgba(15, 23, 42, .1);
-    color: #1f2937;
-    font-size: 16px !important;
-    width: 36px !important;
-    height: 36px !important;
-    --size: 16px !important
-}
-
-ion-icon.voice-icon {
-    pointer-events: auto !important
 }
 
 [data-theme=light] #certifications>p,
